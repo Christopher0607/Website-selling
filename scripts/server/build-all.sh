@@ -3,7 +3,7 @@
 #   1. master 母版（密码保护 + noindex）
 #   2. 三个样板站 demo-rimbun / demo-teduh / demo-kenanga（公开 + noindex + Demo 模式）
 #   3. 工作室网站（公开、可收录）
-# 可以重复执行（已经存在的站点只会更新内容）。全部大约 10–15 分钟。
+# 可以重复执行（已经存在的站点只会更新内容）。本地测试约 5 分钟（真服务器加上申请 SSL 大约 10–15 分钟）。
 source "$(dirname "$0")/../lib/common.sh"
 usage() { echo "用法: sudo $0 [--no-ssl] [--skip-studio]"; }
 NEW=(); STUDIO=1

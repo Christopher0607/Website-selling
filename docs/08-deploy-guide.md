@@ -92,12 +92,12 @@ nslookup master.kedailab.com
    ssh-keygen -t ed25519 -f ~/.ssh/github_deploy -N "" -C "agency-dev"
    cat ~/.ssh/github_deploy.pub
    ```
-   复制显示的那一行，然后在 GitHub：打开 `christopher0607/website-selling` → **Settings → Deploy keys → Add deploy key** → Title 填 `agency-dev`，Key 贴上，**不要**勾 Allow write access → Add key。
+   复制显示的那一行，然后在 GitHub：打开 `Christopher0607/Website-selling` → **Settings → Deploy keys → Add deploy key** → Title 填 `agency-dev`，Key 贴上，**不要**勾 Allow write access → Add key。
 
 3. 下载项目到 `/opt/agency`：
    ```
    apt-get update && apt-get install -y git
-   GIT_SSH_COMMAND="ssh -i ~/.ssh/github_deploy -o StrictHostKeyChecking=accept-new" git clone git@github.com:christopher0607/website-selling.git /opt/agency
+   GIT_SSH_COMMAND="ssh -i ~/.ssh/github_deploy -o StrictHostKeyChecking=accept-new" git clone git@github.com:Christopher0607/Website-selling.git /opt/agency
    cd /opt/agency && git config core.sshCommand "ssh -i /root/.ssh/github_deploy"
    ```
    > 如果 Claude Code 的工作还在 `ccr-...` 分支、还没合并到 main，加 `-b <分支名>`。
