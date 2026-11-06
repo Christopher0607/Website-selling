@@ -370,21 +370,39 @@ agency-core/
 
 ---
 
-## 10. 查证记录（任务 0.6 填写）
+## 10. 查证记录（任务 0.6，2026-11-06 Claude Code 查）
+
+> 第三方比较文章很多是竞争对手写的。付款网关的费率，**开户前一定要到官方价格页再确认**。
 
 | 项目 | 选择 | 理由 | 来源链接 | 查证日期 |
 |---|---|---|---|---|
-| Ubuntu LTS 版本 | | | | |
-| PHP 版本 | | | | |
-| 主题 Kadence 是否仍维护、兼容 WooCommerce | | | | |
-| 付款网关（FPX / 电子钱包 / 卡） | | | | |
-| 物流插件 | | | | |
-| 交易邮件服务 + 免费额度 | | | | |
-| 备份存储 | | | | |
-| 在线监控服务 | | | | |
-| Shopee 最新费率（给计算器和视频用） | | | | |
+| Ubuntu LTS 版本 | **24.04 LTS** | 所有脚本已在 24.04（PHP 8.3、Nginx 1.24、MariaDB 10.11）完整测试。26.04 默认 PHP 8.5，插件兼容性还在跟进，等 26.04.1 再升级 | [Ubuntu 26.04 PHP 版本](https://www.fosslinux.com/157253/php-version-ubuntu-featured.htm) | 2026-11-06 |
+| PHP 版本 | **8.3**（Ubuntu 24.04 自带） | WooCommerce 11.2.2 要求 ≥ 7.4；8.3 在本次测试没有任何 warning | [WooCommerce on wordpress.org](https://wordpress.org/plugins/woocommerce/) | 2026-11-06 |
+| 主题 Kadence | **Kadence 1.6.0** | wordpress.org 显示 2026-11-06 更新，持续维护 | [Kadence](https://wordpress.org/themes/kadence/) | 2026-11-06 |
+| 付款网关 | **默认 Billplz**（备选 ToyyibPay） | Billplz 的 WooCommerce 插件 3.28.15 在 2026-10-06 更新、测试到 WP 7.1.4；FPX 每笔固定费用（第三方资料：免费方案约 RM1.10–1.25、Standard 方案 RM999/年约 RM0.75），适合客单价较高的品牌。ToyyibPay 插件 2026-04 更新。SenangPay 插件 2024-11 后没更新，不推荐。**开户用客户自己的 SSM** | [Billplz 官方说明](https://support-billplz-prod.vercel.app/guide/understanding-billplz-pricing)、[比较（HitPay，竞争对手写的）](https://hitpayapp.com/my/blog/billplz-pricing-comparison) | 2026-11-06 |
+| 物流插件 | **EasyParcel**（只在客户需要自动下单时装） | `easyparcel-shipping` 1.0.76，2026-11-05 更新 | [EasyParcel plugin](https://wordpress.org/plugins/easyparcel-shipping/) | 2026-11-06 |
+| 交易邮件服务 | **Brevo 免费方案**（每天约 300 封） | FluentSMTP 2.4.5（2026-11-04 更新）支持 Brevo API；免费额度对小店够用，超过再升级。注意：免费邮件有 Brevo 标志 | [Brevo pricing 2026](https://dev.to/techsifted/brevo-pricing-2026-every-plan-explained-with-the-hidden-costs-4oe3) | 2026-11-06 |
+| 备份存储 | UpdraftPlus 1.26.14 → Google Drive（免费版支持）+ 服务器 `backup-site.sh` | 两层备份；UpdraftPlus 2026-10-26 更新 | [UpdraftPlus](https://wordpress.org/plugins/updraftplus/) | 2026-11-06 |
+| 在线监控 | UptimeRobot 免费方案 | 每个上线网站一个 HTTP 监控 + SSL 到期提醒 | 上线时再确认免费额度 | 2026-11-06 |
+| Shopee 最新费率 | 计算器默认：佣金 14%、交易费 3.5%（含 SST 3.78%）、平台支持费 RM0.50/单、费用加 8% SST | 交易费来自 Shopee 官方卖家教育中心；佣金按类别不同（第三方资料：2026-08-14 起多数 11–17%），所以计算器让卖家自己改 | [Shopee 官方：Transaction Fee](https://seller.shopee.com.my/edu/article/16038)、[WorldFirst 2026 整理](https://www.worldfirst.com/my/blog/e-commerce-online-sellers/shopee-seller-fees-malaysia/) | 2026-11-06 |
 
 ---
+
+## 10A. 实作说明（2026-11-06，跟上面规格不同的地方）
+
+以下是写脚本时做的调整，原因都写在这里。
+
+| 原本规格 | 实际做法 | 原因 |
+|---|---|---|
+| 脚本用 `scp` 传到 `~/agency-scripts/` | 整个 repo `git clone` 到服务器 `/opt/agency`，脚本直接在那里 `sudo` 执行；更新用 `git pull` | 不用每次手动传文件；服务器上的脚本永远和 git 一致 |
+| 页面缓存用 WP Super Cache | **Nginx FastCGI 缓存**（每站独立，2 分钟有效；购物车、结账、登录用户、带参数的网址都不缓存） | 不用插件、不用设定；登录的店主改东西马上看到 |
+| 工作室网站表单用 Fluent Forms | agency-core 自带 `[agc_lead_form]` | 少装一个插件；询价存在后台「Leads」+ 寄电邮 + 送出 `generate_lead` 事件 |
+| 购物车 / 结账页 | 用 WooCommerce **经典短代码**（不是区块版） | agency-core 的 Demo 模式、马来西亚结账栏位调整都针对经典结账，已测试 |
+| SSL 用 certbot nginx 插件 | certbot **webroot** 方式，Nginx 设定由脚本产生 | 设定文件可以随时重新产生（开关 basic auth、noindex 不会弄坏 SSL） |
+| 密码存在 `/home/deploy/.secrets/` | `/etc/agency/secrets/<代号>.env`（只有 root 能读） | 脚本都用 sudo 执行；看密码：`sudo cat /etc/agency/secrets/<代号>.env` |
+| 产品图用 AI 生成或图库 | 样板站用程式产生的原创插图（`scripts/local/make-product-images.py`） | 不用担心版权；客户站用客户自己的照片 |
+
+**新增的脚本：** `setup-store.sh`（把空站变成网店母版）、`build-demo.sh`（建 / 重建样板站）、`setup-studio.sh`（工作室网站）、`install-code.sh`（安装插件和子主题）、`site-config.sh`（SSL、basic auth、noindex 开关）。完整用法见 `docs/08-deploy-guide.md` 和 `scripts/README.md`。
 
 ## 11. 可选：WordPress MCP Adapter（Phase 7 再考虑）
 

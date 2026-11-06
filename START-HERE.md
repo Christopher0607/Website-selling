@@ -1,5 +1,8 @@
 # 从这里开始
 
+> **2026-11-06 更新：** Claude Code 已经把 Phase 0–5 里不需要服务器的部分全部做好并在本地测试过（脚本、母版网店、3 个样板站、工作室网站、费用计算器、销售话术、套餐单、30 个视频脚本）。
+> **你现在要做的：照 `docs/08-deploy-guide.md` 开 DigitalOcean 服务器，跑几个指令就全部上线。** 进度见 `PROGRESS.md`。
+
 这是你的「一人建站工作室」执行包。把整个文件夹交给 Claude Code，它会按顺序带你完成：
 
 1. 搭好服务器
@@ -26,6 +29,9 @@
 | `docs/05-content-video.md` | 你 + Claude Code | 30 个视频选题、脚本模板、不露脸的 AI 视频流程、广告 |
 | `docs/06-delivery-sop.md` | 你 + Claude Code | 签约 → 上线 → 月费维护的完整流程和检查清单 |
 | `docs/07-30-day-plan.md` | 你 | 30 天每天做什么、要看哪些数字 |
+| `docs/08-deploy-guide.md` | 你 | **部署到 DigitalOcean 的一步一步说明（从这里开始）** |
+| `scripts/` `wp/` `sites/` | Claude Code | 脚本、自建插件和子主题、每个站点的资料 |
+| `sales/` `content/` | 你 | 定稿话术、套餐单、报价单、合同要点；30 天内容日历和 30 个脚本 |
 | `templates/` | 两边 | 客户需求表、报价单、客户追踪表、品牌参数、内容日历、月报 |
 
 ---

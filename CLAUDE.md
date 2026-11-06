@@ -14,6 +14,7 @@
 - `docs/02-tech-spec.md`：技术标准（服务器、母版站、插件、脚本、合规）
 - `docs/03-build-phases.md`：任务清单和验收标准
 - `docs/04` ~ `docs/07`：销售、内容、交付、30 天计划
+- `docs/08-deploy-guide.md`：部署到 DigitalOcean 的步骤
 - `PROGRESS.md`：当前进度和工作日志
 
 ---
@@ -100,7 +101,9 @@
 - **能用 WP-CLI 做的就用 WP-CLI**，并写进脚本，方便下次重复。
 - **定制只放两个地方：** 子主题 `wp/child-theme/`（样式、模板）和自建插件 `wp/agency-core/`（功能）。不改 WordPress 核心，不改父主题。
 - **git：** 本地文件夹用 git 管理，每完成一个任务 commit 一次。`.env`、数据库备份、客户原始素材不进 git。
-- **运行位置：** 脚本源文件放在本地 `scripts/`，用 `scp` 传到服务器 `~/agency-scripts/` 再执行；所有远程操作用 `ssh deploy@<IP>` 执行，命令写清楚、可重复。
+- **运行位置（2026-11-06 更新）：** 整个 repo `git clone` 在服务器 `/opt/agency`，脚本直接 `sudo /opt/agency/scripts/server/<脚本>.sh` 执行；改了程式 → commit + push → 服务器 `cd /opt/agency && sudo git pull`。远程操作用 `ssh deploy@<IP>`（或 host 别名 `agency-dev`）。部署步骤见 `docs/08-deploy-guide.md`，脚本一览见 `scripts/README.md`。
+- **站点资料：** 登记 `/etc/agency/sites/<代号>.conf`、密码 `/etc/agency/secrets/<代号>.env`（只有 root 能读，聊天里不要显示完整密码）、日志 `/var/log/agency/`、备份 `/var/backups/agency/<代号>/`。
+- **网页版 Claude Code（云端）不能直接 SSH 到服务器**：在网页版就只改 repo、commit、push，再请俊宇在服务器 `git pull` 和执行指令，把输出贴回来。
 - **目录约定：**
 
   ```
