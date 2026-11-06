@@ -1,15 +1,16 @@
 sku,type,parent_sku,name,category,price,sale_price,stock,weight_kg,featured,short_description,description,image,attributes
-TD-01,variable,,Bawal Cotton Voile,Bawal,,,,0.15,1,"Breathable cotton voile, easy to shape.","<p>Breathable cotton voile square. 45&quot; × 45&quot;.</p><p><em>Concept product for a demo store.</em></p>",td-bawal-rose.webp|td-bawal-sage.webp,Colour:Rose|Sage|Sand
+TD-01,variable,,Bawal Cotton Voile,Bawal,,,,0.15,1,"Breathable cotton voile, easy to shape.","<p>Breathable cotton voile square, 45&quot; × 45&quot;. Iron-friendly, doesn't slip.</p><p><em>Concept product for a demo store.</em></p>",td-bawal-sand.webp|td-bawal-rose.webp|td-bawal-sage.webp,Colour:Sand|Rose|Sage
+TD-01-N,variation,TD-01,Bawal Cotton Voile Sand,,29.00,25.00,30,0.15,,,,td-bawal-sand.webp,Colour:Sand
 TD-01-R,variation,TD-01,Bawal Cotton Voile Rose,,29.00,,40,0.15,,,,td-bawal-rose.webp,Colour:Rose
 TD-01-S,variation,TD-01,Bawal Cotton Voile Sage,,29.00,,40,0.15,,,,td-bawal-sage.webp,Colour:Sage
-TD-01-N,variation,TD-01,Bawal Cotton Voile Sand,,29.00,25.00,30,0.15,,,,td-bawal-sand.webp,Colour:Sand
-TD-02,variable,,Shawl Chiffon Premium,Shawl,,,,0.2,1,"Soft chiffon shawl that doesn't slip.","<p>Premium chiffon shawl, 180 × 70 cm.</p><p><em>Concept product for a demo store.</em></p>",td-shawl-coral.webp,Colour:Coral|Mocha
-TD-02-C,variation,TD-02,Shawl Chiffon Coral,,39.00,,30,0.2,,,,td-shawl-coral.webp,Colour:Coral
-TD-02-M,variation,TD-02,Shawl Chiffon Mocha,,39.00,,30,0.2,,,,td-shawl-mocha.webp,Colour:Mocha
-TD-03,variable,,Instant Sarung,Instant,,,,0.2,1,"Slip on and go — for class or work.","<p>Instant tudung with soft inner. Sizes M and L.</p><p><em>Concept product for a demo store.</em></p>",td-instant.webp,Size:M|L
+TD-02,variable,,Shawl Chiffon Premium,Shawl,,,,0.2,1,"Soft chiffon shawl that doesn't slip.","<p>Premium chiffon shawl, 180 × 70 cm.</p><p><em>Concept product for a demo store.</em></p>",td-shawl-peach.webp|td-shawl-plum.webp|td-shawl-lavender.webp,Colour:Peach|Plum|Lavender
+TD-02-P,variation,TD-02,Shawl Chiffon Peach,,39.00,,30,0.2,,,,td-shawl-peach.webp,Colour:Peach
+TD-02-M,variation,TD-02,Shawl Chiffon Plum,,39.00,,30,0.2,,,,td-shawl-plum.webp,Colour:Plum
+TD-02-L,variation,TD-02,Shawl Chiffon Lavender,,39.00,,30,0.2,,,,td-shawl-lavender.webp,Colour:Lavender
+TD-03,variable,,Instant Sarung,Instant,,,,0.2,1,"Slip on and go — for class or work.","<p>Instant tudung with soft inner. Sizes M and L.</p><p><em>Concept product for a demo store.</em></p>",td-instant.webp|td-instant-2.webp,Size:M|L
 TD-03-M,variation,TD-03,Instant Sarung M,,35.00,,40,0.2,,,,td-instant.webp,Size:M
 TD-03-L,variation,TD-03,Instant Sarung L,,35.00,,40,0.2,,,,td-instant.webp,Size:L
-TD-04,simple,,Inner Ninja (3 pcs),Accessories,19.00,,80,0.1,,"Three-pack inner in basic colours.","<p>Three inners: black, white, nude.</p><p><em>Concept product for a demo store.</em></p>",td-inner.webp,
-TD-05,simple,,Magnetic Brooch Set,Accessories,22.00,,60,0.05,,"No more pin holes.","<p>Set of 4 magnetic brooches.</p><p><em>Concept product for a demo store.</em></p>",td-brooch.webp,
-TD-06,simple,,Raya Bundle (3 Bawal),Bundles,89.00,75.00,25,0.5,1,"Three bawal for Raya, gift-boxed.","<p>Three bawal in a gift box.</p><p><em>Concept product for a demo store.</em></p>",td-raya.webp,
-TD-07,simple,,Tudung Travel Pouch,Accessories,25.00,,40,0.1,,"Keep shawls neat in your bag.","<p>Zip pouch for 2–3 shawls.</p><p><em>Concept product for a demo store.</em></p>",td-pouch.webp,
+TD-04,simple,,Pashmina Cotton,Shawl,45.00,,40,0.25,1,"Light cotton pashmina in 8 colours.","<p>Soft cotton pashmina, 200 × 75 cm.</p><p><em>Concept product for a demo store.</em></p>",td-pashmina.webp|td-raya.webp,
+TD-05,simple,,Inner Tube (3 pcs),Accessories,19.00,,80,0.1,,"Three-pack inner in basic colours.","<p>Three inners: black, white, nude.</p><p><em>Concept product for a demo store.</em></p>",td-inner.webp|td-knit.webp,
+TD-06,simple,,Jersey Basics Set,Accessories,49.00,,40,0.3,,"Stretchy jersey basics for every day.","<p>Two jersey shawls in neutral tones.</p><p><em>Concept product for a demo store.</em></p>",td-knit.webp|td-inner.webp,
+TD-07,simple,,Raya Bundle (3 Bawal),Bundles,89.00,75.00,25,0.5,1,"Three bawal for Raya, gift-boxed.","<p>Three bawal of your choice in a gift box.</p><p><em>Concept product for a demo store.</em></p>",td-raya.webp|td-pashmina.webp,

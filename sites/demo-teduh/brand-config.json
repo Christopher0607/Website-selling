@@ -1,23 +1,86 @@
 {
   "mode": "demo",
-  "site": { "slug": "demo-teduh", "domain": "demo-teduh.kedailab.com", "name": "Teduh Studio", "tagline": "Everyday tudung in colours you'll actually wear", "language": "en" },
-  "colors": { "primary": "#D94F70", "secondary": "#FFE3EA", "accent": "#FF8A5B", "text": "#2A1E24", "background": "#FFFFFF" },
-  "fonts": { "heading": "Poppins", "body": "Poppins" },
-  "assets": { "logo": "assets/logo.png", "site_icon": "assets/icon.png" },
+  "site": {
+    "slug": "demo-teduh",
+    "domain": "demo-teduh.kedailab.com",
+    "name": "Teduh Studio",
+    "tagline": "Everyday tudung in colours you'll actually wear",
+    "language": "en"
+  },
+  "colors": {
+    "primary": "#D94F70",
+    "secondary": "#FFE3EA",
+    "accent": "#FF8A5B",
+    "text": "#2A1E24",
+    "background": "#FFFFFF"
+  },
+  "fonts": {
+    "heading": "Poppins",
+    "body": "Poppins"
+  },
+  "assets": {
+    "logo": "assets/logo.png",
+    "site_icon": "assets/icon.png"
+  },
   "whatsapp": {
     "number": "60123456789",
     "button_text": "Ask about colours 💬",
     "prefill": "Hi Teduh! Nak tanya pasal {product}: {url}",
     "general": "Hi Teduh! I'd like to ask about your tudung 😊",
-    "floating_button": true, "position": "right"
+    "floating_button": true,
+    "position": "right"
   },
   "store": {
-    "address": { "line1": "Concept project – no physical store", "city": "Shah Alam", "state": "Selangor", "postcode": "40000", "country": "MY" },
-    "currency": "MYR", "sell_to": ["MY"],
-    "shipping": { "west_malaysia_flat_rate": 6.00, "east_malaysia_flat_rate": 12.00, "free_shipping_min": 100.00, "local_pickup": false }
+    "address": {
+      "line1": "Concept project – no physical store",
+      "city": "Shah Alam",
+      "state": "Selangor",
+      "postcode": "40000",
+      "country": "MY"
+    },
+    "currency": "MYR",
+    "sell_to": [
+      "MY"
+    ],
+    "shipping": {
+      "west_malaysia_flat_rate": 6.0,
+      "east_malaysia_flat_rate": 12.0,
+      "free_shipping_min": 100.0,
+      "local_pickup": false
+    }
   },
-  "business": { "legal_name": "Teduh Studio (Concept Project)", "ssm_no": "Demo – not registered", "email": "hello@example.com", "phone": "+60 12-345 6789 (demo)", "hours": "Daily 10am–10pm" },
-  "social": { "instagram": "", "facebook": "", "tiktok": "", "shopee": "", "xiaohongshu": "", "youtube": "" },
-  "tracking": { "ga4_id": "", "meta_pixel_id": "" },
-  "email": { "from_address": "" }
+  "business": {
+    "legal_name": "Teduh Studio (Concept Project)",
+    "ssm_no": "Demo – not registered",
+    "email": "hello@example.com",
+    "phone": "+60 12-345 6789 (demo)",
+    "hours": "Daily 10am–10pm"
+  },
+  "social": {
+    "instagram": "",
+    "facebook": "",
+    "tiktok": "",
+    "shopee": "",
+    "xiaohongshu": "",
+    "youtube": ""
+  },
+  "tracking": {
+    "ga4_id": "",
+    "meta_pixel_id": ""
+  },
+  "email": {
+    "from_address": ""
+  },
+  "design": {
+    "radius": "999px",
+    "image_ratio": "4/5",
+    "announcement": "✨ Free shipping above RM100 · Ships in 1–2 working days",
+    "announcement_link": "",
+    "trust_badges": [
+      "truck|Free shipping above RM100|West & East Malaysia",
+      "return|7-day exchange|Unused, with tags",
+      "card|FPX & e-wallets|Secure checkout",
+      "chat|Real colour photos|Ask us on WhatsApp"
+    ]
+  }
 }

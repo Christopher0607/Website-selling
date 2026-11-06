@@ -1,61 +1,189 @@
-/* Agency Child — 小调整。颜色用 Kadence 全局颜色变量 --global-paletteN，不要写死。 */
+/* ==========================================================================
+   Agency Child v1.1 — 版面参考热卖网店的常见做法（大图主视觉、信任标志、分类大图、
+   商品卡片 hover 换图、图文分栏、深色行动呼吁区、深色页脚）。
+   颜色全部用 Kadence 全局颜色 --global-paletteN（apply-brand.sh 设定），不要写死。
+   --agc-radius（按钮 / 卡片圆角）、--agc-img-ratio（产品图比例）由 agency-core 设定。
+   ========================================================================== */
 
-/* 按钮圆角统一 */
-.button, button, input[type="submit"], .wp-block-button__link, .wc-block-components-button { border-radius: 8px; }
-
-/* 产品卡片 */
-.woocommerce ul.products li.product .woocommerce-loop-product__title { font-size: 1rem; line-height: 1.35; }
-.woocommerce ul.products li.product .price { color: var(--global-palette3); font-weight: 600; }
-.woocommerce ul.products li.product a img { border-radius: 10px; aspect-ratio: 1 / 1; object-fit: cover; }
-
-/* 主视觉区块 */
-.agc-hero { padding-top: clamp(48px, 8vw, 110px); padding-bottom: clamp(48px, 8vw, 110px); }
-.agc-hero h1 { font-size: clamp(2rem, 5vw, 3.4rem); line-height: 1.12; margin-bottom: .4em; }
-.agc-hero .agc-hero-sub { font-size: clamp(1.05rem, 2vw, 1.25rem); max-width: 38ch; }
-
-/* 卖点 */
-.agc-usp .wp-block-column { background: var(--global-palette8); border-radius: 12px; padding: 22px; }
-.agc-usp h3 { font-size: 1.1rem; margin: 0 0 .3em; }
-.agc-usp p { margin: 0; font-size: .95rem; }
-
-/* 区块之间的间距 */
-.agc-section { padding-top: clamp(32px, 4.5vw, 64px); padding-bottom: clamp(32px, 4.5vw, 64px); }
-.agc-hero + .agc-section:not(.agc-section-alt) { padding-top: 0; }
-.agc-section-alt { background: var(--global-palette7); }
-
-/* FAQ */
-.agc-faq details { border-bottom: 1px solid var(--global-palette7); padding: 14px 0; }
-.agc-faq summary { cursor: pointer; font-weight: 600; }
-
-/* 页脚 */
-.site-footer .agc-business, .site-footer .agc-social a { font-size: .92rem; }
-.agc-payments { font-size: .85rem; opacity: .85; }
-
-/* 法律页面草稿提示 */
-.agc-draft-note { background: #fff4e5; border-left: 4px solid #f0a020; padding: 10px 14px; font-size: .92rem; }
-
-/* 手机 */
-@media (max-width: 767px) {
-  .agc-hero .wp-block-buttons { flex-direction: column; align-items: stretch; }
-  .agc-hero .wp-block-button { width: 100%; }
-  .agc-hero .wp-block-button__link { width: 100%; text-align: center; }
+:root {
+	--agc-radius: 8px;
+	--agc-img-ratio: 1 / 1;
+	--agc-gap: clamp(16px, 2.4vw, 28px);
+	--agc-section: clamp(44px, 5.5vw, 88px);
+	--agc-edge: clamp(16px, 4vw, 48px);
 }
 
-/* 小标题（主视觉上方的一行小字） */
-.agc-eyebrow { text-transform: uppercase; letter-spacing: .14em; font-size: .78rem; color: var(--global-palette5); margin-bottom: .6em; }
+/* ---------- 基本字体 ---------- */
+body { -webkit-font-smoothing: antialiased; }
+h1, h2, h3, h4 { letter-spacing: -0.015em; }
+h2.wp-block-heading { font-size: clamp(1.6rem, 3vw, 2.4rem); line-height: 1.15; }
+.agc-eyebrow { text-transform: uppercase; letter-spacing: .16em; font-size: .75rem; font-weight: 600; color: var(--global-palette5); margin: 0 0 .8em !important; }
 
-/* 置中主视觉 + 小标签 */
+/* ---------- 按钮 ---------- */
+.button, button.button, input[type="submit"], .wp-block-button__link, .wp-element-button, .woocommerce a.button, .woocommerce button.button {
+	border-radius: var(--agc-radius) !important;
+	font-weight: 600; letter-spacing: .01em;
+}
+.wp-block-button__link { padding: .9em 1.8em; }
+.wp-block-button.is-style-outline .wp-block-button__link { border-width: 1.5px; }
+
+/* ---------- 页首 ---------- */
+.site-header .site-main-header-wrap { border-bottom: 1px solid var(--global-palette7); }
+.site-header .header-navigation .menu > li > a { font-size: .95rem; font-weight: 500; }
+.site-header .custom-logo { max-height: 44px; width: auto; }
+.header-cart-button .header-cart-total { background: var(--global-palette1) !important; color: #fff !important; }
+
+/* ---------- 全宽页面的区块（左右留白） ---------- */
+.agc-hero, .agc-section, .agc-strip { padding-left: var(--agc-edge); padding-right: var(--agc-edge); }
+.agc-section { padding-top: var(--agc-section); padding-bottom: var(--agc-section); }
+.agc-section-tight { padding-top: calc(var(--agc-section) * .55); padding-bottom: calc(var(--agc-section) * .55); }
+.agc-section-alt { background: var(--global-palette8); }
+.agc-hero { padding-top: clamp(48px, 8vw, 110px); padding-bottom: clamp(48px, 8vw, 110px); }
+.agc-hero h1 { font-size: clamp(2rem, 5vw, 3.4rem); line-height: 1.08; margin-bottom: .4em; }
+.agc-hero .agc-hero-sub { font-size: clamp(1.05rem, 2vw, 1.2rem); max-width: 40ch; }
+
+/* ---------- 大图主视觉（Cover） ---------- */
+.agc-cover.wp-block-cover { min-height: min(82vh, 760px) !important; padding: var(--agc-edge) !important; align-items: flex-end; }
+.agc-cover .wp-block-cover__inner-container { width: 100%; max-width: 1240px; margin: 0 auto; }
+.agc-cover .agc-cover-text { max-width: 640px; padding-bottom: clamp(8px, 4vw, 48px); }
+.agc-cover h1 { color: #fff; font-size: clamp(2.2rem, 5vw, 3.8rem); line-height: 1.02; margin: 0 0 .35em; }
+.agc-cover p { color: rgba(255,255,255,.92); font-size: clamp(1.02rem, 1.8vw, 1.2rem); }
+.agc-cover .agc-eyebrow { color: rgba(255,255,255,.85); }
+.agc-cover .wp-block-button__link { background: #fff; color: var(--global-palette3); }
+.agc-cover .wp-block-button.is-style-outline .wp-block-button__link { background: transparent; color: #fff; border-color: #fff; }
+.agc-cover .wp-block-cover__background { background: linear-gradient(90deg, rgba(0,0,0,.55) 0%, rgba(0,0,0,.25) 55%, rgba(0,0,0,.05) 100%) !important; opacity: 1 !important; }
+.agc-cover.agc-cover-center { align-items: center; text-align: center; }
+.agc-cover.agc-cover-center .agc-cover-text { margin: 0 auto; }
+.agc-cover.agc-cover-center .wp-block-buttons { justify-content: center; }
+.agc-cover.agc-cover-center .wp-block-cover__background { background: rgba(0,0,0,.38) !important; }
+@media (max-width: 767px) {
+	.agc-cover.wp-block-cover { min-height: 78vh !important; }
+	.agc-cover .wp-block-cover__background { background: linear-gradient(0deg, rgba(0,0,0,.65) 0%, rgba(0,0,0,.15) 70%) !important; }
+	.agc-cover .wp-block-buttons { flex-direction: column; align-items: stretch; }
+	.agc-cover .wp-block-button__link { width: 100%; text-align: center; }
+}
+
+/* ---------- 信任标志横条 ---------- */
+.agc-strip { padding-top: 22px; padding-bottom: 22px; border-bottom: 1px solid var(--global-palette7); }
+.agc-strip .agc-trust-bar { max-width: 1240px; margin: 0 auto; }
+
+/* ---------- 区块标题（左：小标题 + 标题；右：查看全部） ---------- */
+.agc-head > .wp-block-group__inner-container { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: clamp(20px, 3vw, 36px) !important; }
+.agc-head h2 { margin: 0; }
+.agc-head p { margin: 0; }
+.agc-head .agc-more { margin: 0 0 6px auto !important; flex: none; }
+.agc-head > .wp-block-group__inner-container > .wp-block-group { margin: 0 !important; }
+.agc-head .agc-more a { font-weight: 600; text-decoration: none; border-bottom: 1.5px solid currentColor; padding-bottom: 2px; white-space: nowrap; }
+.agc-center, .agc-head.agc-center > .wp-block-group__inner-container { text-align: center; justify-content: center; }
+
+/* ---------- 商品卡片 ---------- */
+.woocommerce ul.products { gap: var(--agc-gap) !important; }
+.woocommerce ul.products li.product .woocommerce-loop-image-link,
+.woocommerce ul.products li.product .product-thumbnail-wrap,
+.woocommerce ul.products li.product a img { border-radius: var(--agc-radius); overflow: hidden; }
+.woocommerce ul.products li.product a img { aspect-ratio: var(--agc-img-ratio); object-fit: cover; width: 100%; background: var(--global-palette8); }
+.woocommerce ul.products li.product .product-details { padding: 14px 2px 0 !important; }
+.woocommerce ul.products li.product .woocommerce-loop-product__title { font-family: var(--global-body-font-family); font-size: 1rem; font-weight: 500; line-height: 1.35; margin-bottom: 4px; }
+.woocommerce ul.products li.product .price { color: var(--global-palette3); font-weight: 700; font-size: 1rem; }
+.woocommerce ul.products li.product .price del { font-weight: 400; opacity: .55; margin-right: 4px; }
+.woocommerce ul.products li.product .price ins { text-decoration: none; color: var(--agc-accent, var(--global-palette1)); }
+.woocommerce ul.products.woo-archive-action-visible li.product .product-action-wrap { margin-top: 10px; }
+.woocommerce ul.products li.product .product-action-wrap .button { width: 100%; justify-content: center; background: transparent !important; color: var(--global-palette3) !important; border: 1.5px solid var(--global-palette3) !important; }
+.woocommerce ul.products li.product .product-action-wrap .button:hover { background: var(--global-palette3) !important; color: #fff !important; }
+.woocommerce span.onsale { border-radius: 999px !important; background: var(--agc-accent, var(--global-palette1)) !important; font-size: .75rem; font-weight: 700; padding: 4px 10px !important; min-height: 0 !important; line-height: 1.4 !important; top: 10px !important; left: 10px !important; right: auto !important; }
+.woocommerce ul.products li.product .entry-content-wrap, .woocommerce ul.products li.product { box-shadow: none !important; background: transparent !important; }
+@media (max-width: 767px) {
+	.woocommerce ul.products li.product .woocommerce-loop-product__title { font-size: .92rem; }
+	.woocommerce ul.products li.product .product-action-wrap .button { font-size: .85rem; padding: .6em .4em; }
+}
+
+/* ---------- 分类大图 ---------- */
+.agc-cats ul.products li.product-category { position: relative; }
+.agc-cats ul.products li.product-category a { display: block; position: relative; border-radius: var(--agc-radius); overflow: hidden; line-height: 0; aspect-ratio: var(--agc-img-ratio); background: var(--global-palette8); }
+.agc-cats ul.products li.product-category img { position: absolute; inset: 0; height: 100% !important; object-fit: cover; width: 100%; margin: 0 !important; transition: transform .5s ease; }
+.agc-cats ul.products li.product-category a:hover img { transform: scale(1.04); }
+.agc-cats ul.products li.product-category a::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(0,0,0,.55), rgba(0,0,0,0) 55%); }
+.agc-cats ul.products li.product-category h2.woocommerce-loop-category__title { position: absolute; left: 18px; right: 18px; bottom: 16px; z-index: 2; color: #fff !important; font-size: 1.3rem !important; line-height: 1.2 !important; font-weight: 600 !important; border: 0 !important; text-align: left !important; margin: 0 !important; padding: 0 !important; background: none !important; }
+.agc-cats ul.products li.product-category .woocommerce-loop-category__title .count { display: none; }
+
+/* ---------- 图文分栏 ---------- */
+.agc-split > .wp-block-columns { gap: clamp(24px, 5vw, 80px); align-items: center; }
+.agc-split figure img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: var(--agc-radius); }
+.agc-split h2 { margin-top: 0; }
+.agc-split ul { padding-left: 1.1em; }
+.agc-split li { margin: .35em 0; }
+.agc-steps { counter-reset: s; list-style: none; padding: 0 !important; }
+.agc-steps li { counter-increment: s; position: relative; padding-left: 52px !important; margin: 0 0 18px !important; }
+.agc-steps li::before { content: counter(s, decimal-leading-zero); position: absolute; left: 0; top: 0; font-weight: 700; color: var(--global-palette1); font-size: 1.1rem; }
+
+/* ---------- 深色行动呼吁 ---------- */
+.agc-band { background: var(--global-palette3); color: #fff; }
+.agc-band h2, .agc-band p, .agc-band .agc-eyebrow { color: #fff; }
+.agc-band .agc-eyebrow { opacity: .7; }
+.agc-band .wp-block-button__link { background: #fff; color: var(--global-palette3); }
+
+/* ---------- 卖点卡片（旧版区块也保留） ---------- */
+.agc-usp .wp-block-column { background: var(--global-palette8); border-radius: var(--agc-radius); padding: 24px; }
+.agc-usp h3 { font-size: 1.1rem; margin: 0 0 .35em; }
+.agc-usp p { margin: 0; font-size: .95rem; }
+
+/* ---------- FAQ ---------- */
+.agc-faq details { border-bottom: 1px solid var(--global-palette7); padding: 18px 0; }
+.agc-faq summary { cursor: pointer; font-weight: 600; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
+.agc-faq summary::after { content: "+"; font-weight: 400; font-size: 1.3em; line-height: 1; }
+.agc-faq details[open] summary::after { content: "–"; }
+.agc-faq summary::-webkit-details-marker { display: none; }
+
+/* ---------- 置中主视觉 + 小标签（旧版） ---------- */
 .agc-hero-center h1 { max-width: 18ch; margin-left: auto; margin-right: auto; }
 .agc-hero-center .agc-hero-sub { margin-left: auto; margin-right: auto; }
 .agc-pill { display: table; margin: 0 auto 1em !important; background: var(--global-palette7); color: var(--global-palette1); border-radius: 999px; padding: 6px 14px; font-size: .85rem; font-weight: 600; }
-/* 分类卡片 */
-.woocommerce ul.products li.product-category img { border-radius: 12px; aspect-ratio: 1 / 1; object-fit: cover; }
-.woocommerce ul.products li.product-category .woocommerce-loop-category__title { font-size: 1rem; text-align: center; }
 
-/* Demo 模式：不显示"没有付款方式"的提示（下面已经有 Demo 说明） */
-.agc-demo #payment .payment_methods { display: none; }
+/* ---------- 产品页 ---------- */
+.single-product div.product .product_title { font-size: clamp(1.6rem, 3vw, 2.3rem); line-height: 1.15; }
+.single-product div.product p.price { font-size: 1.35rem; font-weight: 700; color: var(--global-palette3); }
+.single-product div.product .woocommerce-product-gallery img { border-radius: var(--agc-radius); }
+.single-product div.product form.cart .single_add_to_cart_button { padding: .95em 2em; font-size: 1rem; }
+.single-product div.product form.cart { margin-bottom: 12px; }
+.single-product .woocommerce-tabs ul.tabs li { border-radius: 0 !important; }
+.single-product .related > h2, .single-product .upsells > h2 { font-size: 1.5rem; }
 
-/* 全宽页面：区块左右留白（手机上文字不贴边） */
-.agc-hero, .agc-section { padding-left: var(--global-content-edge-padding, 1.5rem); padding-right: var(--global-content-edge-padding, 1.5rem); }
-@media (max-width: 767px) { .agc-hero, .agc-section { padding-left: 16px; padding-right: 16px; } }
+/* ---------- 购物车 / 结账 ---------- */
+.woocommerce-cart .cart_totals h2, .woocommerce-checkout h3 { font-size: 1.25rem; }
+.woocommerce-checkout #payment { border-radius: var(--agc-radius); }
+
+/* ---------- 页脚（深色） ---------- */
+.site-footer .site-middle-footer-wrap, .site-footer .site-bottom-footer-wrap { background: var(--global-palette3) !important; color: rgba(255,255,255,.82); }
+.site-footer a, .site-footer .footer-navigation a, .site-footer h4, .site-footer .widget-title { color: #fff !important; }
+.site-footer .site-bottom-footer-wrap { border-top: 1px solid rgba(255,255,255,.12); }
+.site-footer .agc-business, .site-footer .agc-social a, .site-footer .agc-payments { font-size: .92rem; color: rgba(255,255,255,.82); }
+.site-footer .agc-concept-label { color: rgba(255,255,255,.8); }
+.site-footer .footer-navigation .menu { flex-direction: column; align-items: flex-start; gap: 4px; }
+.site-footer .footer-navigation .menu > li > a { padding: 4px 0 !important; }
+.agc-payments { opacity: .85; }
+
+/* ---------- 法律页面草稿提示 ---------- */
+.agc-draft-note { background: #fff4e5; border-left: 4px solid #f0a020; padding: 10px 14px; font-size: .92rem; color: #4a3a1a; }
+
+/* ---------- 价格表 ---------- */
 .agc-price-table table { font-size: .9rem; min-width: 560px; }
+
+/* ---------- 手机 ---------- */
+@media (max-width: 767px) {
+	.agc-head > .wp-block-group__inner-container { flex-direction: column; align-items: flex-start; }
+	.agc-head .agc-more { margin: 8px 0 0 !important; }
+	.agc-hero .wp-block-buttons { flex-direction: column; align-items: stretch; }
+	.agc-hero .wp-block-button { width: 100%; }
+	.agc-hero .wp-block-button__link { width: 100%; text-align: center; }
+	.agc-head { flex-direction: column; align-items: flex-start; }
+	.agc-split > .wp-block-columns { flex-direction: column; }
+}
+
+/* 分类大图：标题放在图片下方的渐层上 */
+.agc-cats ul.products li.product-category .product-details { position: absolute !important; left: 0; right: 0; bottom: 0; z-index: 2; background: transparent !important; padding: 0 18px 16px !important; line-height: 1.2; }
+.agc-cats ul.products li.product-category .product-details h2.woocommerce-loop-category__title { position: static !important; }
+
+/* 购物车：优惠码栏不重叠 */
+.woocommerce-cart table.cart td.actions .coupon { display: flex; flex-wrap: wrap; gap: 8px; }
+.woocommerce-cart table.cart td.actions .coupon .button, .woocommerce-cart table.cart td.actions > .button { white-space: nowrap; }
+@media (max-width: 767px) { .woocommerce-cart table.cart td.actions > .button { width: 100%; margin-top: 8px; } }

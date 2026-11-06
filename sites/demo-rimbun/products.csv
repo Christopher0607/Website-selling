@@ -1,15 +1,15 @@
 sku,type,parent_sku,name,category,price,sale_price,stock,weight_kg,featured,short_description,description,image,attributes
-RB-01,simple,,Calm Gel Cleanser,Cleanse,49.00,,60,0.2,1,"A soft gel cleanser that rinses clean without a tight feel.","<p>A soft gel cleanser for morning and night. Fragrance-free.</p><p><em>Concept product for a demo store.</em></p>",rb-cleanser.webp,
-RB-02,variable,,Daily Balance Toner,Prep,,,,0.25,1,"A watery toner to start your routine.","<p>A light, watery toner. Choose your size.</p><p><em>Concept product for a demo store.</em></p>",rb-toner.webp,Size:100ml|200ml
+RB-01,simple,,Calm Gel Cleanser,Cleanse,49.00,,60,0.2,1,"A soft gel cleanser that rinses clean without a tight feel.","<p>A soft gel cleanser for morning and night. Fragrance-free. 150 ml.</p><p><strong>How to use:</strong> massage onto damp skin for 30 seconds, rinse.</p><p><em>Concept product for a demo store.</em></p>",rb-cleanser.webp|rb-cleanser-2.webp,
+RB-02,variable,,Daily Balance Toner,Prep,,,,0.25,1,"A watery toner to start your routine.","<p>A light, watery toner. Choose your size.</p><p><em>Concept product for a demo store.</em></p>",rb-toner.webp|rb-face.webp,Size:100ml|200ml
 RB-02-100,variation,RB-02,Daily Balance Toner 100ml,,45.00,,40,0.18,,,,rb-toner.webp,Size:100ml
 RB-02-200,variation,RB-02,Daily Balance Toner 200ml,,79.00,,25,0.3,,,,rb-toner.webp,Size:200ml
-RB-03,variable,,Dew Serum,Treat,,,,0.12,1,"Our lightest serum, made for humid weather.","<p>Lightweight serum that layers easily under sunscreen. Choose your size.</p><p><em>Concept product for a demo store.</em></p>",rb-serum.webp,Size:15ml|30ml
+RB-03,variable,,Dew Serum,Treat,,,,0.12,1,"Our lightest serum, made for humid weather.","<p>Lightweight serum that layers easily under sunscreen. Choose your size.</p><p><em>Concept product for a demo store.</em></p>",rb-serum.webp|rb-serum-2.webp,Size:15ml|30ml
 RB-03-15,variation,RB-03,Dew Serum 15ml,,59.00,,30,0.08,,,,rb-serum.webp,Size:15ml
 RB-03-30,variation,RB-03,Dew Serum 30ml,,99.00,89.00,30,0.12,,,,rb-serum.webp,Size:30ml
-RB-04,simple,,Barrier Cream,Moisturise,69.00,,40,0.2,1,"A rich cream for air-conditioned rooms.","<p>A comforting cream for dry, air-conditioned days.</p><p><em>Concept product for a demo store.</em></p>",rb-cream.webp,
-RB-05,simple,,Water Gel Moisturiser,Moisturise,59.00,,40,0.2,,"Gel moisturiser that sinks in fast.","<p>Fast-absorbing gel moisturiser.</p><p><em>Concept product for a demo store.</em></p>",rb-gel.webp,
-RB-06,simple,,Daily Sun Fluid SPF50,Protect,55.00,,50,0.1,1,"A fluid sunscreen with no white cast.","<p>Light fluid sunscreen for every day.</p><p><em>Concept product for a demo store.</em></p>",rb-sun.webp,
-RB-07,simple,,Overnight Lip Mask,Treat,35.00,,60,0.05,,"Wake up to soft lips.","<p>An overnight lip mask.</p><p><em>Concept product for a demo store.</em></p>",rb-lip.webp,
-RB-08,simple,,Clay Reset Mask,Treat,65.00,,30,0.2,,"A weekly clay mask.","<p>A weekly clay mask for a fresh start.</p><p><em>Concept product for a demo store.</em></p>",rb-mask.webp,
-RB-09,simple,,The Three-Step Set,Sets,159.00,139.00,20,0.7,1,"Cleanser, serum and moisturiser in one box.","<p>Our three-step routine in a gift box.</p><p><em>Concept product for a demo store.</em></p>",rb-set.webp,
-RB-10,simple,,Travel Minis,Sets,79.00,,25,0.3,,"Four minis in a zip pouch.","<p>Travel sizes in a reusable pouch.</p><p><em>Concept product for a demo store.</em></p>",rb-minis.webp,
+RB-04,simple,,Barrier Cream,Moisturise,69.00,,40,0.2,1,"A rich cream for air-conditioned rooms.","<p>A comforting cream for dry, air-conditioned days. 50 ml.</p><p><em>Concept product for a demo store.</em></p>",rb-cream.webp|rb-gel.webp,
+RB-05,simple,,Water Gel Moisturiser,Moisturise,59.00,,40,0.2,,"Gel moisturiser that sinks in fast.","<p>Fast-absorbing gel moisturiser. 50 ml.</p><p><em>Concept product for a demo store.</em></p>",rb-gel.webp|rb-cream.webp,
+RB-06,simple,,Daily Sun Fluid SPF50,Protect,55.00,,50,0.1,1,"A fluid sunscreen with no white cast.","<p>Light fluid sunscreen for every day. 50 ml.</p><p><em>Concept product for a demo store.</em></p>",rb-sun.webp|rb-face.webp,
+RB-07,simple,,Night Repair Oil,Treat,85.00,,30,0.1,,"A few drops before bed.","<p>A light facial oil for night. 30 ml.</p><p><em>Concept product for a demo store.</em></p>",rb-oil.webp|rb-serum-2.webp,
+RB-08,simple,,Clay Reset Mask,Treat,65.00,,30,0.2,,"A weekly clay mask.","<p>A weekly clay mask for a fresh start. 100 g.</p><p><em>Concept product for a demo store.</em></p>",rb-mask.webp|rb-face.webp,
+RB-09,simple,,The Three-Step Set,Sets,159.00,139.00,20,0.7,1,"Cleanser, serum and moisturiser in one box.","<p>Our three-step routine in a gift box.</p><p><em>Concept product for a demo store.</em></p>",rb-set.webp|rb-serum.webp,
+RB-10,simple,,Travel Minis,Sets,79.00,,25,0.3,,"Four minis in a zip pouch.","<p>Travel sizes in a reusable pouch.</p><p><em>Concept product for a demo store.</em></p>",rb-minis.webp|rb-set.webp,

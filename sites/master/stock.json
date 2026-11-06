@@ -1,0 +1,17 @@
+{
+  "images": [
+    {"file": "hero.jpg", "pexels": 6167442, "crop": "wide", "dest": "content/images", "note": "母版首页主视觉"},
+    {"file": "lifestyle.jpg", "pexels": 6948180, "crop": "portrait", "dest": "content/images", "note": "母版首页图文区"},
+    {"file": "story.jpg", "pexels": 8142198, "crop": "portrait", "dest": "content/images", "note": "母版首页第二个图文区"},
+    {"file": "cleanser.webp", "pexels": 7814990, "note": "Daily Gentle Cleanser"},
+    {"file": "serum.webp", "pexels": 30229022, "note": "Hydrating Serum"},
+    {"file": "moisturiser.webp", "pexels": 7796160, "note": "Light Gel Moisturiser"},
+    {"file": "sunscreen.webp", "pexels": 8533216, "note": "Everyday Sunscreen"},
+    {"file": "lotion.webp", "pexels": 15369086, "note": "Body Lotion"},
+    {"file": "bodywash.webp", "pexels": 7814991, "note": "Body Wash"},
+    {"file": "handcream.webp", "pexels": 6690234, "note": "Hand Cream"},
+    {"file": "lipbalm.webp", "pexels": 7796813, "note": "Lip Balm"},
+    {"file": "giftset.webp", "pexels": 8101520, "note": "Starter Gift Set"},
+    {"file": "travelkit.webp", "pexels": 35909808, "note": "Travel Kit"}
+  ]
+}

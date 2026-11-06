@@ -317,6 +317,80 @@ if ( class_exists( 'WooCommerce' ) ) {
 	$done[] = 'store: MY:' . $state . ', shipping W/E ' . ( $ship['west_malaysia_flat_rate'] ?? '-' ) . '/' . ( $ship['east_malaysia_flat_rate'] ?? '-' ) . ', free ≥ ' . ( $ship['free_shipping_min'] ?? '-' );
 }
 
+// 8A. 版面（参考热卖网店的常见做法）：公告栏、信任标志、圆角、产品图比例、页首、商品卡片.
+$design = agc_v( $c, 'design', array() );
+$design = is_array( $design ) ? $design : array();
+if ( class_exists( 'AGC_Settings' ) ) {
+	$s = AGC_Settings::get();
+	if ( array_key_exists( 'announcement', $design ) ) {
+		$s['announcement'] = (string) $design['announcement'];
+	}
+	if ( array_key_exists( 'announcement_link', $design ) ) {
+		$s['announcement_link'] = (string) $design['announcement_link'];
+	}
+	if ( ! empty( $design['trust_badges'] ) && is_array( $design['trust_badges'] ) ) {
+		$s['trust_badges'] = implode( "\n", array_map( 'strval', $design['trust_badges'] ) );
+	}
+	if ( ! empty( $design['radius'] ) ) {
+		$s['button_radius'] = (string) $design['radius'];
+	}
+	if ( ! empty( $design['image_ratio'] ) ) {
+		$s['image_ratio'] = (string) $design['image_ratio'];
+	}
+	$fs = agc_v( $c, 'store.shipping.free_shipping_min', '' );
+	$s['free_shipping_min'] = ( '' !== $fs && (float) $fs > 0 ) ? (string) (float) $fs : '';
+	update_option( AGC_Settings::OPTION, AGC_Settings::sanitize( $s ) );
+	AGC_Settings::flush();
+}
+$has_shop = class_exists( 'WooCommerce' );
+$desktop  = get_theme_mod( 'header_desktop_items', array() );
+$desktop  = is_array( $desktop ) ? $desktop : array();
+$desktop['main'] = array(
+	'main_left'         => array( 'logo' ),
+	'main_left_center'  => array(),
+	'main_center'       => array( 'navigation' ),
+	'main_right_center' => array(),
+	'main_right'        => $has_shop ? array( 'search', 'cart' ) : array( 'button' ),
+);
+set_theme_mod( 'header_desktop_items', $desktop );
+$mobile = get_theme_mod( 'header_mobile_items', array() );
+$mobile = is_array( $mobile ) ? $mobile : array();
+$mobile['popup'] = array( 'popup_content' => array( 'mobile-navigation' ) );
+$mobile['main']  = array(
+	'main_left'   => array( 'popup-toggle' ),
+	'main_center' => array( 'mobile-logo' ),
+	'main_right'  => $has_shop ? array( 'mobile-cart' ) : array(),
+);
+set_theme_mod( 'header_mobile_items', $mobile );
+set_theme_mod( 'header_sticky', 'main' );
+set_theme_mod( 'mobile_header_sticky', 'main' );
+set_theme_mod( 'header_main_height', array( 'size' => array( 'mobile' => 64, 'tablet' => 68, 'desktop' => 76 ), 'unit' => array( 'mobile' => 'px', 'tablet' => 'px', 'desktop' => 'px' ) ) );
+set_theme_mod( 'logo_width', array( 'size' => array( 'mobile' => 130, 'tablet' => 150, 'desktop' => 180 ), 'unit' => array( 'mobile' => 'px', 'tablet' => 'px', 'desktop' => 'px' ) ) );
+if ( ! $has_shop ) {
+	set_theme_mod( 'header_button_label', 'WhatsApp us' );
+	$wa = preg_replace( '/\D+/', '', (string) agc_v( $c, 'whatsapp.number' ) );
+	set_theme_mod( 'header_button_link', $wa ? 'https://wa.me/' . $wa : home_url( '/contact/' ) );
+	set_theme_mod( 'header_button_target', true );
+}
+if ( $has_shop ) {
+	set_theme_mod( 'header_cart_style', 'slide' );
+	set_theme_mod( 'header_cart_show_total', false );
+	set_theme_mod( 'header_mobile_cart_style', 'slide' );
+	set_theme_mod( 'header_mobile_cart_show_total', false );
+	set_theme_mod( 'product_archive_style', 'action-visible' );
+	set_theme_mod( 'product_archive_button_style', 'button' );
+	set_theme_mod( 'product_archive_image_hover_switch', 'fade' );
+	set_theme_mod( 'product_archive_mobile_columns', 'twocolumn' );
+	set_theme_mod( 'product_archive_show_results_count', false );
+	set_theme_mod( 'product_archive_layout', 'normal' );
+	update_option( 'woocommerce_catalog_columns', 4 );
+	update_option( 'woocommerce_catalog_rows', 4 );
+	update_option( 'woocommerce_thumbnail_cropping', 'uncropped' );
+	update_option( 'woocommerce_single_image_width', 900 );
+	update_option( 'woocommerce_thumbnail_image_width', 600 );
+}
+$done[] = 'design: radius ' . ( $design['radius'] ?? '-' ) . ', image ' . ( $design['image_ratio'] ?? '-' ) . ', announcement ' . ( empty( $design['announcement'] ) ? 'off' : 'on' );
+
 // 8. 搜索引擎：只有 live 允许收录.
 update_option( 'blog_public', 'live' === $mode ? 1 : 0 );
 update_option( 'agc_site_mode', $mode );

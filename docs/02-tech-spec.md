@@ -400,7 +400,7 @@ agency-core/
 | 购物车 / 结账页 | 用 WooCommerce **经典短代码**（不是区块版） | agency-core 的 Demo 模式、马来西亚结账栏位调整都针对经典结账，已测试 |
 | SSL 用 certbot nginx 插件 | certbot **webroot** 方式，Nginx 设定由脚本产生 | 设定文件可以随时重新产生（开关 basic auth、noindex 不会弄坏 SSL） |
 | 密码存在 `/home/deploy/.secrets/` | `/etc/agency/secrets/<代号>.env`（只有 root 能读） | 脚本都用 sudo 执行；看密码：`sudo cat /etc/agency/secrets/<代号>.env` |
-| 产品图用 AI 生成或图库 | 样板站用程式产生的原创插图（`scripts/local/make-product-images.py`） | 不用担心版权；客户站用客户自己的照片 |
+| 产品图用 AI 生成或图库 | 样板站用 **Pexels 免费商用照片**（`scripts/local/fetch-stock-images.py`，每个站的 `stock.json` 列出照片 ID，来源写进 `image-sources.md`）；避开有真实品牌 logo 的照片 | 看起来像真店；Pexels License 可商用、不需署名，但不能暗示照片中的人代言——所以只用在概念作品，客户站用客户自己的照片 |
 
 **新增的脚本：** `setup-store.sh`（把空站变成网店母版）、`build-demo.sh`（建 / 重建样板站）、`setup-studio.sh`（工作室网站）、`install-code.sh`（安装插件和子主题）、`site-config.sh`（SSL、basic auth、noindex 开关）。完整用法见 `docs/08-deploy-guide.md` 和 `scripts/README.md`。
 

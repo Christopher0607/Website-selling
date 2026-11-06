@@ -1,20 +1,71 @@
 {
   "_comment": "KedaiLab 工作室网站。domain 按实际域名改；正式上线 mode = live。",
   "mode": "live",
-  "site": { "slug": "studio", "domain": "kedailab.com", "name": "KedaiLab", "tagline": "Online stores for Malaysian brands — built, launched and looked after", "language": "en" },
-  "colors": { "primary": "#1F3A5F", "secondary": "#E9EEF5", "accent": "#F2A541", "text": "#14202E", "background": "#FFFFFF" },
-  "fonts": { "heading": "Plus Jakarta Sans", "body": "Inter" },
-  "assets": { "logo": "assets/logo.png", "site_icon": "assets/icon.png" },
+  "site": {
+    "slug": "studio",
+    "domain": "kedailab.com",
+    "name": "KedaiLab",
+    "tagline": "Online stores for Malaysian brands — built, launched and looked after",
+    "language": "en"
+  },
+  "colors": {
+    "primary": "#1F3A5F",
+    "secondary": "#E9EEF5",
+    "accent": "#F2A541",
+    "text": "#14202E",
+    "background": "#FFFFFF"
+  },
+  "fonts": {
+    "heading": "Plus Jakarta Sans",
+    "body": "Inter"
+  },
+  "assets": {
+    "logo": "assets/logo.png",
+    "site_icon": "assets/icon.png"
+  },
   "whatsapp": {
     "number": "60123456789",
     "button_text": "WhatsApp us",
     "prefill": "Hi KedaiLab, I'd like to ask about {product}",
     "general": "Hi KedaiLab, I'd like to know more about your website packages.",
-    "floating_button": true, "position": "right"
+    "floating_button": true,
+    "position": "right"
   },
-  "store": { "address": { "line1": "", "city": "", "state": "Selangor", "postcode": "", "country": "MY" } },
-  "business": { "legal_name": "[KedaiLab – SSM registered name]", "ssm_no": "[SSM No.]", "email": "hello@kedailab.com", "phone": "[WhatsApp Business number]", "hours": "Mon–Fri 10am–6pm" },
-  "social": { "instagram": "", "facebook": "", "tiktok": "", "shopee": "", "xiaohongshu": "", "youtube": "" },
-  "tracking": { "ga4_id": "", "meta_pixel_id": "" },
-  "email": { "from_address": "" }
+  "store": {
+    "address": {
+      "line1": "",
+      "city": "",
+      "state": "Selangor",
+      "postcode": "",
+      "country": "MY"
+    }
+  },
+  "business": {
+    "legal_name": "[KedaiLab – SSM registered name]",
+    "ssm_no": "[SSM No.]",
+    "email": "hello@kedailab.com",
+    "phone": "[WhatsApp Business number]",
+    "hours": "Mon–Fri 10am–6pm"
+  },
+  "social": {
+    "instagram": "",
+    "facebook": "",
+    "tiktok": "",
+    "shopee": "",
+    "xiaohongshu": "",
+    "youtube": ""
+  },
+  "tracking": {
+    "ga4_id": "",
+    "meta_pixel_id": ""
+  },
+  "email": {
+    "from_address": ""
+  },
+  "design": {
+    "radius": "10px",
+    "image_ratio": "1/1",
+    "announcement": "Founding clients: 30% off setup + 2 months free Care · 前 3 个客户 7 折",
+    "announcement_link": "/packages/"
+  }
 }

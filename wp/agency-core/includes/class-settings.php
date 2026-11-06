@@ -63,6 +63,14 @@ class AGC_Settings {
 			'concept_label'        => '',
 			// Checkout.
 			'my_checkout'          => 1,
+			// Store UX.
+			'announcement'         => '',
+			'announcement_link'    => '',
+			'trust_badges'         => "truck|Free shipping over RM150|West & East Malaysia\ncard|FPX & e-wallets|Secure checkout\nreturn|Easy exchange|See our policy\nchat|Real people on WhatsApp|We reply within 1 working day",
+			'free_shipping_min'    => '',
+			'sticky_atc'           => 1,
+			'image_ratio'          => '1/1',
+			'button_radius'        => '8px',
 		);
 	}
 
@@ -122,6 +130,18 @@ class AGC_Settings {
 					'social_shopee'      => array( 'url', 'Shopee' ),
 					'social_xiaohongshu' => array( 'url', '小红书 Xiaohongshu' ),
 					'social_youtube'     => array( 'url', 'YouTube' ),
+				),
+			),
+			'store'    => array(
+				'title'  => __( 'Store UX', 'agency-core' ),
+				'fields' => array(
+					'announcement'      => array( 'text', __( 'Announcement bar text (empty = hidden)', 'agency-core' ) ),
+					'announcement_link' => array( 'url', __( 'Announcement link (optional)', 'agency-core' ) ),
+					'trust_badges'      => array( 'textarea', __( 'Trust badges, one per line: icon|Title|Subtitle (icons: truck, card, return, leaf, shield, chat, heart, gift, clock, star)', 'agency-core' ) ),
+					'free_shipping_min' => array( 'text', __( 'Free-shipping amount for the progress bar (RM, empty = hidden)', 'agency-core' ) ),
+					'sticky_atc'        => array( 'checkbox', __( 'Sticky add-to-cart bar on mobile product pages', 'agency-core' ) ),
+					'button_radius'     => array( 'text', __( 'Button & card corner radius (e.g. 0px, 8px, 999px)', 'agency-core' ) ),
+					'image_ratio'       => array( 'select', __( 'Product image shape', 'agency-core' ), array( '1/1' => 'Square 1:1', '4/5' => 'Portrait 4:5', '3/4' => 'Portrait 3:4' ) ),
 				),
 			),
 			'other'    => array(
@@ -219,9 +239,11 @@ class AGC_Settings {
 		$out      = self::get();
 		$defaults = self::defaults();
 		$types    = array();
+		$choices  = array();
 		foreach ( self::fields() as $section ) {
 			foreach ( $section['fields'] as $key => $field ) {
-				$types[ $key ] = $field[0];
+				$types[ $key ]   = $field[0];
+				$choices[ $key ] = $field[2] ?? array();
 			}
 		}
 		foreach ( $defaults as $key => $default ) {
@@ -243,7 +265,7 @@ class AGC_Settings {
 					$out[ $key ] = esc_url_raw( trim( $value ) );
 					break;
 				case 'select':
-					$out[ $key ] = in_array( $value, array( 'left', 'right' ), true ) ? $value : $default;
+					$out[ $key ] = array_key_exists( (string) $value, $choices[ $key ] ?? array() ) ? (string) $value : $default;
 					break;
 				default:
 					$out[ $key ] = sanitize_text_field( $value );
@@ -252,6 +274,8 @@ class AGC_Settings {
 		$out['whatsapp_number'] = preg_replace( '/\D+/', '', (string) $out['whatsapp_number'] );
 		$out['ga4_id']          = preg_match( '/^G-[A-Z0-9]+$/i', $out['ga4_id'] ) ? strtoupper( $out['ga4_id'] ) : '';
 		$out['meta_pixel_id']   = preg_replace( '/\D+/', '', (string) $out['meta_pixel_id'] );
+		$out['button_radius'] = preg_match( '/^\d{1,3}px$/', (string) $out['button_radius'] ) ? $out['button_radius'] : '8px';
+		$out['free_shipping_min'] = is_numeric( $out['free_shipping_min'] ) ? (string) (float) $out['free_shipping_min'] : '';
 		if ( $out['accent_color'] && ! preg_match( '/^#[0-9a-fA-F]{3,8}$/', $out['accent_color'] ) ) {
 			$out['accent_color'] = '';
 		}

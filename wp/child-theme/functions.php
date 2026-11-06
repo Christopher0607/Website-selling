@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'AGENCY_CHILD_VERSION', '1.0.0' );
+define( 'AGENCY_CHILD_VERSION', '1.1.0' );
 
 /**
  * Child styles (Kadence loads its own CSS; we only add small tweaks on top).

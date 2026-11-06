@@ -70,3 +70,37 @@
 .agc-calc-big { font-size: 1.05rem; margin-top: 14px; }
 .agc-calc-big strong { color: var(--global-palette1); font-size: 1.2em; }
 .agc-calc-note { font-size: .82rem; opacity: .8; }
+
+/* 公告栏 */
+.agc-announcement { background: var(--agc-accent, var(--global-palette1)); color: #fff; text-align: center; font-size: 13px; letter-spacing: .02em; padding: 9px 16px; }
+.agc-announcement a { color: inherit; text-decoration: none; }
+
+/* 信任标志 */
+.agc-icon { flex: none; }
+.agc-trust-bar { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.agc-trust-bar li { display: flex; gap: 12px; align-items: center; }
+.agc-trust-bar li .agc-icon { width: 30px; height: 30px; color: var(--global-palette1); }
+.agc-trust-bar strong { display: block; font-size: .95rem; line-height: 1.3; }
+.agc-trust-bar small { display: block; font-size: .82rem; opacity: .7; }
+@media (max-width: 900px) { .agc-trust-bar { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.agc-product-trust { list-style: none; margin: 18px 0 0; padding: 14px 0 0; border-top: 1px solid var(--global-palette7, #eee); display: grid; grid-template-columns: 1fr 1fr; gap: 10px 14px; font-size: .88rem; }
+.agc-product-trust li { display: flex; gap: 8px; align-items: center; }
+.agc-product-trust .agc-icon { width: 20px; height: 20px; color: var(--global-palette1); }
+
+/* 免运进度条 */
+.agc-fs-bar { background: var(--global-palette8, #f6f6f6); border-radius: 10px; padding: 12px 14px; margin: 0 0 16px; font-size: .9rem; }
+.agc-fs-bar.agc-fs-empty { display: none; }
+.agc-fs-bar p { margin: 0 0 8px; }
+.agc-fs-track { height: 6px; background: rgba(0,0,0,.08); border-radius: 99px; overflow: hidden; }
+.agc-fs-track span { display: block; height: 100%; background: var(--global-palette1); border-radius: 99px; transition: width .4s; }
+.agc-fs-done .agc-fs-track span { background: #1e8e4e; }
+.agc-fs-row td { padding: 0 !important; border: 0 !important; }
+
+/* 手机版固定加入购物车 */
+.agc-sticky-atc { position: fixed; left: 0; right: 0; bottom: 0; z-index: 998; display: none; align-items: center; gap: 12px; padding: 10px 14px calc(10px + env(safe-area-inset-bottom)); background: #fff; box-shadow: 0 -4px 18px rgba(0,0,0,.1); transform: translateY(110%); transition: transform .25s ease; }
+.agc-sticky-atc.is-visible { transform: translateY(0); }
+.agc-sticky-atc-info { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.agc-sticky-atc-title { font-size: .85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.agc-sticky-atc-price { font-weight: 700; font-size: .95rem; }
+.agc-sticky-atc .button { white-space: nowrap; }
+@media (max-width: 767px) { .agc-sticky-atc { display: flex; } body.single-product .agc-wa-float { bottom: 84px; } }

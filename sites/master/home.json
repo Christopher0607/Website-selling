@@ -1,0 +1,11 @@
+{
+ "cover": {"eyebrow": "{{SITE_NAME}}", "h1": "{{TAGLINE}}", "sub": "Order in a few taps, pay with FPX or e-wallet, and get it delivered anywhere in Malaysia.", "buttons": [["Shop best sellers", "{{SHOP_URL}}"], ["Ask us on WhatsApp", "/contact/"]], "hero_alt": "{{SITE_NAME}} products"},
+ "cats_head": ["Shop by category", "Find what you need"],
+ "best_head": ["Best sellers", "Customer favourites"],
+ "split": {"img": "lifestyle", "alt": "Our products in use", "eyebrow": "Why us", "title": "Made for Malaysian customers.", "text": "[Two sentences about what makes the products different. Only claims the brand can back up.]", "list": ["Free shipping over RM150 to West & East Malaysia", "FPX, cards and e-wallets", "Real people reply on WhatsApp"], "btn": ["Shop now", "{{SHOP_URL}}"]},
+ "split2": {"img": "story", "alt": "Our story", "eyebrow": "Our story", "title": "Good products, honest prices.", "text": "[Brand story in the owner's own words — who started it and why.]", "list": ["[Point 1]", "[Point 2]", "[Point 3]"], "btn": ["Read our story", "/about/"], "alt_bg": true},
+ "more_head": ["New in", "Just arrived"],
+ "band": {"eyebrow": "Need help choosing?", "title": "Message us on WhatsApp", "text": "A real person will reply within one working day.", "btn": "Chat on WhatsApp"},
+ "faq_title": "Questions",
+ "faq": [["How long does delivery take?", "Usually 2–4 working days to West Malaysia and 4–7 working days to East Malaysia after we ship."], ["How can I pay?", "Online banking (FPX), cards and e-wallets, or bank transfer / DuitNow."], ["Can I still buy from your Shopee store?", "Of course. This website is simply another way to order from us directly."]]
+}

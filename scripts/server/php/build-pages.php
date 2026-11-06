@@ -1,7 +1,7 @@
 <?php
 /**
  * 建立 / 更新页面、菜单、页脚（由 build-pages.sh 执行）
- * 占位符：{{SITE_NAME}} {{TAGLINE}} {{SHOP_URL}} {{DOMAIN}}（不含 www 的主域名） {{IMG:key}}
+ * 占位符：{{SITE_NAME}} {{TAGLINE}} {{SHOP_URL}} {{DOMAIN}}（不含 www 的主域名） {{IMG:key}} {{IMG:key:full}}（原尺寸，主视觉用）
  * 用法：wp eval-file build-pages.php <内容文件夹1> [内容文件夹2 ...] [force]
  *   后面的文件夹里同名的 .html 会覆盖前面的（例如：母版内容 + 样板站自己的内容）
  *   没有 force：页面已经存在就不覆盖（保护客户自己改过的内容）
@@ -26,7 +26,17 @@ require_once ABSPATH . 'wp-admin/includes/image.php';
  * @param array  $dirs Content dirs.
  * @return string URL or ''.
  */
-function agc_img_url( $key, $dirs ) {
+function agc_img_url( $key, $dirs, $size = 'large' ) {
+	// 找原始文件（后面的文件夹优先）.
+	$file = '';
+	foreach ( array_reverse( $dirs ) as $d ) {
+		foreach ( array( 'webp', 'jpg', 'jpeg', 'png' ) as $ext ) {
+			if ( ! $file && is_readable( "$d/images/$key.$ext" ) ) {
+				$file = "$d/images/$key.$ext";
+			}
+		}
+	}
+	$hash  = $file ? sha1_file( $file ) : '';
 	$found = get_posts(
 		array(
 			'post_type'   => 'attachment',
@@ -38,27 +48,27 @@ function agc_img_url( $key, $dirs ) {
 		)
 	);
 	if ( $found ) {
-		return (string) wp_get_attachment_image_url( $found[0], 'large' );
-	}
-	foreach ( array_reverse( $dirs ) as $d ) {
-		foreach ( array( 'webp', 'jpg', 'png' ) as $ext ) {
-			$f = "$d/images/$key.$ext";
-			if ( is_readable( $f ) ) {
-				$tmp = wp_tempnam( basename( $f ) );
-				copy( $f, $tmp );
-				$id = media_handle_sideload( array( 'name' => basename( $f ), 'tmp_name' => $tmp ), 0 );
-				if ( is_wp_error( $id ) ) {
-					WP_CLI::warning( "Image $key: " . $id->get_error_message() );
-					return '';
-				}
-				update_post_meta( $id, '_agc_key', $key );
-				update_post_meta( $id, '_wp_attachment_image_alt', get_bloginfo( 'name' ) );
-				return (string) wp_get_attachment_image_url( $id, 'large' );
-			}
+		// 文件没变就沿用；变了就换新的.
+		if ( ! $hash || get_post_meta( $found[0], '_agc_hash', true ) === $hash ) {
+			return (string) wp_get_attachment_image_url( $found[0], $size ? $size : 'large' );
 		}
+		wp_delete_attachment( $found[0], true );
 	}
-	WP_CLI::warning( "Image not found: $key" );
-	return '';
+	if ( ! $file ) {
+		WP_CLI::warning( "Image not found: $key" );
+		return '';
+	}
+	$tmp = wp_tempnam( basename( $file ) );
+	copy( $file, $tmp );
+	$id = media_handle_sideload( array( 'name' => basename( $file ), 'tmp_name' => $tmp ), 0 );
+	if ( is_wp_error( $id ) ) {
+		WP_CLI::warning( "Image $key: " . $id->get_error_message() );
+		return '';
+	}
+	update_post_meta( $id, '_agc_key', $key );
+	update_post_meta( $id, '_agc_hash', $hash );
+	update_post_meta( $id, '_wp_attachment_image_alt', get_bloginfo( 'name' ) );
+	return (string) wp_get_attachment_image_url( $id, $size ? $size : 'large' );
 }
 
 // 收集页面文件（后面的文件夹覆盖前面的）.
@@ -100,7 +110,7 @@ foreach ( $files as $f ) {
 			'{{DOMAIN}}'    => esc_html( preg_replace( '/^www\./', '', (string) wp_parse_url( home_url(), PHP_URL_HOST ) ) ),
 		)
 	);
-	$body = preg_replace_callback( '/\{\{IMG:([a-z0-9_-]+)\}\}/i', static fn( $mm ) => esc_url( agc_img_url( $mm[1], $dirs ) ), $body );
+	$body = preg_replace_callback( '/\{\{IMG:([a-z0-9_-]+)(?::(full|large|medium_large))?\}\}/i', static fn( $mm ) => esc_url( agc_img_url( $mm[1], $dirs, $mm[2] ?? 'large' ) ), $body );
 
 	$slug     = $meta['slug'] ?? sanitize_title( $meta['title'] ?? basename( $f, '.html' ) );
 	$existing = get_page_by_path( $slug, OBJECT, 'page' );

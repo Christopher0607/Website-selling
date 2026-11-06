@@ -1,0 +1,19 @@
+{
+  "images": [
+    {"file": "hero.jpg", "pexels": 7986705, "crop": "wide", "dest": "content/images", "note": "首页主视觉"},
+    {"file": "lifestyle.jpg", "pexels": 8995822, "crop": "portrait", "gravity": "north", "dest": "content/images", "note": "首页生活照"},
+    {"file": "live.jpg", "pexels": 15520551, "crop": "portrait", "gravity": "north", "dest": "content/images", "note": "首页 TikTok Live 区"},
+    {"file": "td-bawal-sand.webp", "pexels": 5125324, "crop": "portrait", "gravity": "north", "note": "Bawal Sand"},
+    {"file": "td-bawal-rose.webp", "pexels": 20139534, "crop": "portrait", "gravity": "north", "note": "Bawal Rose"},
+    {"file": "td-bawal-sage.webp", "pexels": 8068120, "crop": "portrait", "gravity": "north", "note": "Bawal Sage"},
+    {"file": "td-shawl-peach.webp", "pexels": 8995822, "crop": "portrait", "gravity": "north", "note": "Shawl Peach"},
+    {"file": "td-shawl-plum.webp", "pexels": 36211841, "crop": "portrait", "gravity": "north", "note": "Shawl Plum"},
+    {"file": "td-shawl-lavender.webp", "pexels": 34468167, "crop": "portrait", "gravity": "north", "note": "Shawl Lavender"},
+    {"file": "td-instant.webp", "pexels": 322920, "crop": "portrait", "gravity": "north", "note": "Instant Sarung Black"},
+    {"file": "td-instant-2.webp", "pexels": 34739531, "crop": "portrait", "gravity": "north", "note": "Instant Sarung 第 2 张"},
+    {"file": "td-pashmina.webp", "pexels": 4405941, "crop": "portrait", "note": "Pashmina Cotton"},
+    {"file": "td-inner.webp", "pexels": 6461401, "crop": "portrait", "note": "Inner Tube 3 pcs"},
+    {"file": "td-raya.webp", "pexels": 30243795, "crop": "portrait", "note": "Raya Bundle"},
+    {"file": "td-knit.webp", "pexels": 1937336, "crop": "portrait", "note": "Jersey Basics"}
+  ]
+}

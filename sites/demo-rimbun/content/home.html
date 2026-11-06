@@ -1,95 +1,181 @@
 <!-- page: title="Home" slug="home" menu="primary" order="0" front="1" -->
-<!-- wp:group {"className":"agc-hero","layout":{"type":"constrained","contentSize":"1200px"}} -->
-<div class="wp-block-group agc-hero"><!-- wp:columns {"verticalAlignment":"center"} -->
-<div class="wp-block-columns are-vertically-aligned-center"><!-- wp:column {"verticalAlignment":"center","width":"48%"} -->
-<div class="wp-block-column is-vertically-aligned-center" style="flex-basis:48%"><!-- wp:paragraph {"className":"agc-eyebrow"} -->
+
+<!-- wp:cover {"url":"{{IMG:hero:full}}","dimRatio":50,"minHeight":80,"minHeightUnit":"vh","align":"full","className":"agc-cover"} -->
+<div class="wp-block-cover alignfull agc-cover" style="min-height:80vh"><span aria-hidden="true" class="wp-block-cover__background has-background-dim"></span><img class="wp-block-cover__image-background" alt="Rimbun Skin bottles and jars on linen" src="{{IMG:hero:full}}" data-object-fit="cover" fetchpriority="high"/><div class="wp-block-cover__inner-container"><!-- wp:group {"className":"agc-cover-text","layout":{"type":"default"}} -->
+<div class="wp-block-group agc-cover-text"><!-- wp:paragraph {"className":"agc-eyebrow"} -->
 <p class="agc-eyebrow">Made for Malaysian weather</p>
 <!-- /wp:paragraph -->
 <!-- wp:heading {"level":1} -->
 <h1 class="wp-block-heading">Quiet skincare for humid days.</h1>
 <!-- /wp:heading -->
-<!-- wp:paragraph {"className":"agc-hero-sub"} -->
-<p class="agc-hero-sub">Three steps, light textures, no fuss. Everything you need, nothing that sits heavy on your skin.</p>
+<!-- wp:paragraph -->
+<p>Three steps, light textures, labels you can actually read.</p>
 <!-- /wp:paragraph -->
 <!-- wp:buttons -->
 <div class="wp-block-buttons"><!-- wp:button -->
-<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="{{SHOP_URL}}">Shop the routine</a></div>
+<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="{{SHOP_URL}}">Shop best sellers</a></div>
+<!-- /wp:button --><!-- wp:button {"className":"is-style-outline"} -->
+<div class="wp-block-button is-style-outline"><a class="wp-block-button__link wp-element-button" href="/product/the-three-step-set/">Build my routine</a></div>
 <!-- /wp:button --></div>
-<!-- /wp:buttons -->
-<!-- wp:shortcode -->
-[agc_whatsapp text="Not sure? Ask us on WhatsApp" style="link"]
+<!-- /wp:buttons --></div>
+<!-- /wp:group --></div></div>
+<!-- /wp:cover -->
+
+<!-- wp:group {"className":"agc-strip","layout":{"type":"constrained","contentSize":"1240px"}} -->
+<div class="wp-block-group agc-strip"><!-- wp:shortcode -->
+[agc_trust_bar]
 <!-- /wp:shortcode --></div>
-<!-- /wp:column -->
-<!-- wp:column {"verticalAlignment":"center","width":"52%"} -->
-<div class="wp-block-column is-vertically-aligned-center" style="flex-basis:52%"><!-- wp:image {"sizeSlug":"large"} -->
-<figure class="wp-block-image size-large"><img src="{{IMG:hero}}" alt="Rimbun Skin serum, cream and sunscreen" fetchpriority="high"/></figure>
+<!-- /wp:group -->
+
+<!-- wp:group {"className":"agc-section agc-cats agc-section-tight","layout":{"type":"constrained","contentSize":"1240px"}} -->
+<div class="wp-block-group agc-section agc-cats agc-section-tight"><!-- wp:group {"className":"agc-head","layout":{"type":"default"}} -->
+<div class="wp-block-group agc-head"><!-- wp:group {"layout":{"type":"default"}} -->
+<div class="wp-block-group"><!-- wp:paragraph {"className":"agc-eyebrow"} -->
+<p class="agc-eyebrow">Shop by step</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Cleanse. Treat. Protect.</h2>
+<!-- /wp:heading --></div>
+<!-- /wp:group --></div>
+<!-- /wp:group -->
+<!-- wp:shortcode -->
+[product_categories number="4" columns="4" hide_empty="1" orderby="name"]
+<!-- /wp:shortcode --></div>
+<!-- /wp:group -->
+
+<!-- wp:group {"className":"agc-section","layout":{"type":"constrained","contentSize":"1240px"}} -->
+<div class="wp-block-group agc-section"><!-- wp:group {"className":"agc-head","layout":{"type":"default"}} -->
+<div class="wp-block-group agc-head"><!-- wp:group {"layout":{"type":"default"}} -->
+<div class="wp-block-group"><!-- wp:paragraph {"className":"agc-eyebrow"} -->
+<p class="agc-eyebrow">Best sellers</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Most-loved this month</h2>
+<!-- /wp:heading --></div>
+<!-- /wp:group -->
+<!-- wp:paragraph {"className":"agc-more"} -->
+<p class="agc-more"><a href="{{SHOP_URL}}">Shop all →</a></p>
+<!-- /wp:paragraph --></div>
+<!-- /wp:group -->
+<!-- wp:shortcode -->
+[products limit="4" columns="4" visibility="featured" orderby="menu_order"]
+<!-- /wp:shortcode --></div>
+<!-- /wp:group -->
+
+<!-- wp:group {"className":"agc-section agc-split","layout":{"type":"constrained","contentSize":"1240px"}} -->
+<div class="wp-block-group agc-section agc-split"><!-- wp:columns -->
+<div class="wp-block-columns"><!-- wp:column {"width":"50%"} -->
+<div class="wp-block-column" style="flex-basis:50%"><!-- wp:image {"sizeSlug":"large"} -->
+<figure class="wp-block-image size-large"><img src="{{IMG:lifestyle}}" alt="Applying moisturiser in the morning" loading="lazy"/></figure>
+<!-- /wp:image --></div>
+<!-- /wp:column --><!-- wp:column {"width":"50%"} -->
+<div class="wp-block-column" style="flex-basis:50%"><!-- wp:paragraph {"className":"agc-eyebrow"} -->
+<p class="agc-eyebrow">The routine</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Three steps. Five minutes.</h2>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>Every product works on its own or as part of a simple routine. Light enough for humid days, gentle enough for air-conditioned offices.</p>
+<!-- /wp:paragraph -->
+<!-- wp:list {"className":"agc-steps"} -->
+<ul class="wp-block-list agc-steps"><li>Cleanse — Calm Gel Cleanser, morning and night</li><li>Treat — Dew Serum, layers in seconds</li><li>Protect — Water Gel at night, SPF50 by day</li></ul>
+<!-- /wp:list -->
+<!-- wp:buttons -->
+<div class="wp-block-buttons"><!-- wp:button -->
+<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="/product/the-three-step-set/">Get the Three-Step Set</a></div>
+<!-- /wp:button --></div>
+<!-- /wp:buttons --></div>
+<!-- /wp:column --></div>
+<!-- /wp:columns --></div>
+<!-- /wp:group -->
+
+<!-- wp:group {"className":"agc-section agc-split agc-section-alt","layout":{"type":"constrained","contentSize":"1240px"}} -->
+<div class="wp-block-group agc-section agc-split agc-section-alt"><!-- wp:columns -->
+<div class="wp-block-columns"><!-- wp:column {"width":"50%"} -->
+<div class="wp-block-column" style="flex-basis:50%"><!-- wp:paragraph {"className":"agc-eyebrow"} -->
+<p class="agc-eyebrow">Our promise</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Clear labels, honest claims.</h2>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>Full ingredient lists on every product page. No miracle promises — just products we would use ourselves.</p>
+<!-- /wp:paragraph -->
+<!-- wp:list {"className":""} -->
+<ul class="wp-block-list "><li>Full ingredients and how-to on every page</li><li>Free shipping over RM120 to West &amp; East Malaysia</li><li>Questions? A real person replies on WhatsApp</li></ul>
+<!-- /wp:list -->
+<!-- wp:buttons -->
+<div class="wp-block-buttons"><!-- wp:button -->
+<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="/about/">Read our story</a></div>
+<!-- /wp:button --></div>
+<!-- /wp:buttons --></div>
+<!-- /wp:column --><!-- wp:column {"width":"50%"} -->
+<div class="wp-block-column" style="flex-basis:50%"><!-- wp:image {"sizeSlug":"large"} -->
+<figure class="wp-block-image size-large"><img src="{{IMG:story}}" alt="Morning skincare routine" loading="lazy"/></figure>
 <!-- /wp:image --></div>
 <!-- /wp:column --></div>
 <!-- /wp:columns --></div>
 <!-- /wp:group -->
 
-<!-- wp:group {"className":"agc-section","layout":{"type":"constrained","contentSize":"1200px"}} -->
-<div class="wp-block-group agc-section"><!-- wp:heading {"textAlign":"center"} -->
-<h2 class="wp-block-heading has-text-align-center">The three-step routine</h2>
-<!-- /wp:heading -->
-<!-- wp:columns {"className":"agc-usp"} -->
-<div class="wp-block-columns agc-usp"><!-- wp:column -->
-<div class="wp-block-column"><!-- wp:heading {"level":3} -->
-<h3 class="wp-block-heading">01 · Cleanse</h3>
-<!-- /wp:heading --><!-- wp:paragraph -->
-<p>A soft gel that rinses clean. Morning and night.</p>
-<!-- /wp:paragraph --></div>
-<!-- /wp:column --><!-- wp:column -->
-<div class="wp-block-column"><!-- wp:heading {"level":3} -->
-<h3 class="wp-block-heading">02 · Treat</h3>
-<!-- /wp:heading --><!-- wp:paragraph -->
-<p>Dew Serum layers in seconds and never feels sticky.</p>
-<!-- /wp:paragraph --></div>
-<!-- /wp:column --><!-- wp:column -->
-<div class="wp-block-column"><!-- wp:heading {"level":3} -->
-<h3 class="wp-block-heading">03 · Protect</h3>
-<!-- /wp:heading --><!-- wp:paragraph -->
-<p>Gel moisturiser by night, SPF50 fluid by day.</p>
-<!-- /wp:paragraph --></div>
-<!-- /wp:column --></div>
-<!-- /wp:columns --></div>
+<!-- wp:group {"className":"agc-section","layout":{"type":"constrained","contentSize":"1240px"}} -->
+<div class="wp-block-group agc-section"><!-- wp:group {"className":"agc-head","layout":{"type":"default"}} -->
+<div class="wp-block-group agc-head"><!-- wp:group {"layout":{"type":"default"}} -->
+<div class="wp-block-group"><!-- wp:paragraph {"className":"agc-eyebrow"} -->
+<p class="agc-eyebrow">New &amp; on offer</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Worth a look</h2>
+<!-- /wp:heading --></div>
 <!-- /wp:group -->
-
-<!-- wp:group {"className":"agc-section","layout":{"type":"constrained","contentSize":"1200px"}} -->
-<div class="wp-block-group agc-section"><!-- wp:heading {"textAlign":"center"} -->
-<h2 class="wp-block-heading has-text-align-center">Most loved</h2>
-<!-- /wp:heading -->
+<!-- wp:paragraph {"className":"agc-more"} -->
+<p class="agc-more"><a href="{{SHOP_URL}}">View all →</a></p>
+<!-- /wp:paragraph --></div>
+<!-- /wp:group -->
 <!-- wp:shortcode -->
-[products limit="4" columns="4" visibility="featured"]
-<!-- /wp:shortcode -->
-<!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"}} -->
-<div class="wp-block-buttons"><!-- wp:button {"className":"is-style-outline"} -->
-<div class="wp-block-button is-style-outline"><a class="wp-block-button__link wp-element-button" href="{{SHOP_URL}}">View all 10 products</a></div>
-<!-- /wp:button --></div>
-<!-- /wp:buttons --></div>
+[products limit="4" columns="4" orderby="price" order="DESC"]
+<!-- /wp:shortcode --></div>
 <!-- /wp:group -->
 
-<!-- wp:group {"className":"agc-section agc-section-alt","layout":{"type":"constrained","contentSize":"760px"}} -->
-<div class="wp-block-group agc-section agc-section-alt"><!-- wp:heading {"textAlign":"center"} -->
-<h2 class="wp-block-heading has-text-align-center">Fewer steps. Clear labels.</h2>
+<!-- wp:group {"className":"agc-section agc-band agc-center","layout":{"type":"constrained","contentSize":"760px"}} -->
+<div class="wp-block-group agc-section agc-band agc-center"><!-- wp:paragraph {"className":"agc-eyebrow"} -->
+<p class="agc-eyebrow">Not sure where to start?</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Tell us your skin type — we'll suggest a routine.</h2>
 <!-- /wp:heading -->
-<!-- wp:paragraph {"align":"center"} -->
-<p class="has-text-align-center">Every product page lists the full ingredients, texture and how to use it. If you're unsure what suits your skin, send us a message — we'll reply within one working day.</p>
-<!-- /wp:paragraph --></div>
+<!-- wp:paragraph -->
+<p>Send us a WhatsApp message. No bots, no pressure.</p>
+<!-- /wp:paragraph -->
+<!-- wp:shortcode -->
+<p>[agc_whatsapp text="Chat with us" message="Hi Rimbun Skin, can you help me choose? My skin type: "]</p>
+<!-- /wp:shortcode --></div>
 <!-- /wp:group -->
 
 <!-- wp:group {"className":"agc-section agc-faq","layout":{"type":"constrained","contentSize":"760px"}} -->
-<div class="wp-block-group agc-section agc-faq"><!-- wp:heading {"textAlign":"center"} -->
-<h2 class="wp-block-heading has-text-align-center">Good to know</h2>
-<!-- /wp:heading -->
+<div class="wp-block-group agc-section agc-faq"><!-- wp:group {"className":"agc-head agc-center","layout":{"type":"default"}} -->
+<div class="wp-block-group agc-head agc-center"><!-- wp:group {"layout":{"type":"default"}} -->
+<div class="wp-block-group"><!-- wp:paragraph {"className":"agc-eyebrow"} -->
+<p class="agc-eyebrow">FAQ</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Good to know</h2>
+<!-- /wp:heading --></div>
+<!-- /wp:group --></div>
+<!-- /wp:group -->
 <!-- wp:details -->
-<details class="wp-block-details"><summary>Free shipping?</summary><!-- wp:paragraph -->
-<p>Yes — on orders above RM120, to West and East Malaysia.</p>
+<details class="wp-block-details"><summary>How much is shipping?</summary><!-- wp:paragraph -->
+<p>RM7 to West Malaysia and RM14 to East Malaysia. Free above RM120.</p>
 <!-- /wp:paragraph --></details>
 <!-- /wp:details -->
 <!-- wp:details -->
-<details class="wp-block-details"><summary>Which product should I start with?</summary><!-- wp:paragraph -->
-<p>Start with the Three-Step Set, or WhatsApp us your skin type and we'll suggest one.</p>
+<details class="wp-block-details"><summary>When will my order arrive?</summary><!-- wp:paragraph -->
+<p>We ship within 1–2 working days. Delivery usually takes 2–4 working days (West) or 4–7 (East).</p>
+<!-- /wp:paragraph --></details>
+<!-- /wp:details -->
+<!-- wp:details -->
+<details class="wp-block-details"><summary>How can I pay?</summary><!-- wp:paragraph -->
+<p>FPX online banking, cards and e-wallets, or bank transfer / DuitNow.</p>
 <!-- /wp:paragraph --></details>
 <!-- /wp:details -->
 <!-- wp:details -->

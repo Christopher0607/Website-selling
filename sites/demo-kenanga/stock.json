@@ -1,0 +1,18 @@
+{
+  "images": [
+    {"file": "hero.jpg", "pexels": 11912788, "crop": "wide", "dest": "content/images", "note": "首页主视觉：nasi lemak 与 sambal"},
+    {"file": "lifestyle.jpg", "pexels": 18048549, "crop": "portrait", "dest": "content/images", "note": "首页生活照：早餐桌"},
+    {"file": "corporate.jpg", "pexels": 19283496, "crop": "wide", "dest": "content/images", "note": "首页公司订单区"},
+    {"file": "dk-bilis.webp", "pexels": 33984945, "note": "Sambal Bilis Garing"},
+    {"file": "dk-sampler.webp", "pexels": 37090673, "note": "Sambal Sampler"},
+    {"file": "dk-platter.webp", "pexels": 10819659, "note": "Kuih Raya Platter"},
+    {"file": "dk-kelapa.webp", "pexels": 6783198, "note": "Biskut Kelapa Rangup"},
+    {"file": "dk-bunga.webp", "pexels": 11054320, "note": "Biskut Bunga Mentega"},
+    {"file": "dk-pandan.webp", "pexels": 3334440, "note": "Biskut Pandan Bintang"},
+    {"file": "dk-kerepek.webp", "pexels": 9191924, "note": "Kerepek Pisang"},
+    {"file": "dk-kerepek-2.webp", "pexels": 7262702, "note": "Kerepek Pisang 第 2 张"},
+    {"file": "dk-hamper.webp", "pexels": 8014845, "note": "Hamper Raya"},
+    {"file": "dk-hamper-2.webp", "pexels": 19283496, "note": "Hamper Raya 第 2 张"},
+    {"file": "dk-chili.webp", "pexels": 4985531, "note": "第 2 张：辣椒"}
+  ]
+}

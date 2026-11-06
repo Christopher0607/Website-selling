@@ -1,0 +1,6 @@
+{
+  "images": [
+    {"file": "hero.jpg", "pexels": 7857532, "crop": "wide", "dest": "../../wp/content/studio/images", "note": "工作室首页主视觉：网店卖家在打包订单"},
+    {"file": "seller.jpg", "pexels": 7289727, "crop": "portrait", "dest": "../../wp/content/studio/images", "note": "工作室首页：卖家在打包"}
+  ]
+}

@@ -15,8 +15,14 @@
     "text": "#1F1F1F",
     "background": "#FFFFFF"
   },
-  "fonts": { "heading": "Playfair Display", "body": "Inter" },
-  "assets": { "logo": "", "site_icon": "" },
+  "fonts": {
+    "heading": "Playfair Display",
+    "body": "Inter"
+  },
+  "assets": {
+    "logo": "",
+    "site_icon": ""
+  },
   "whatsapp": {
     "number": "60123456789",
     "button_text": "Ask on WhatsApp",
@@ -26,10 +32,23 @@
     "position": "right"
   },
   "store": {
-    "address": { "line1": "[Address]", "city": "Petaling Jaya", "state": "Selangor", "postcode": "47300", "country": "MY" },
+    "address": {
+      "line1": "[Address]",
+      "city": "Petaling Jaya",
+      "state": "Selangor",
+      "postcode": "47300",
+      "country": "MY"
+    },
     "currency": "MYR",
-    "sell_to": ["MY"],
-    "shipping": { "west_malaysia_flat_rate": 8.00, "east_malaysia_flat_rate": 15.00, "free_shipping_min": 150.00, "local_pickup": false }
+    "sell_to": [
+      "MY"
+    ],
+    "shipping": {
+      "west_malaysia_flat_rate": 8.0,
+      "east_malaysia_flat_rate": 15.0,
+      "free_shipping_min": 150.0,
+      "local_pickup": false
+    }
   },
   "business": {
     "legal_name": "[Company name] (Demo)",
@@ -38,7 +57,30 @@
     "phone": "[Phone]",
     "hours": "Mon–Fri 9am–6pm"
   },
-  "social": { "instagram": "", "facebook": "", "tiktok": "", "shopee": "", "xiaohongshu": "", "youtube": "" },
-  "tracking": { "ga4_id": "", "meta_pixel_id": "" },
-  "email": { "from_address": "" }
+  "social": {
+    "instagram": "",
+    "facebook": "",
+    "tiktok": "",
+    "shopee": "",
+    "xiaohongshu": "",
+    "youtube": ""
+  },
+  "tracking": {
+    "ga4_id": "",
+    "meta_pixel_id": ""
+  },
+  "email": {
+    "from_address": ""
+  },
+  "design": {
+    "radius": "8px",
+    "image_ratio": "1/1",
+    "announcement": "Free shipping over RM150 · West & East Malaysia",
+    "trust_badges": [
+      "truck|Free shipping over RM150|West & East Malaysia",
+      "card|FPX, cards & e-wallets|Secure checkout",
+      "return|Easy exchange|See our policy",
+      "chat|Ask us on WhatsApp|We reply within 1 working day"
+    ]
+  }
 }

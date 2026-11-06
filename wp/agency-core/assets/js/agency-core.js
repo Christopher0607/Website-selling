@@ -23,4 +23,22 @@
   if (window.jQuery) {
     window.jQuery(document).on('fluentform_submission_success', function () { send('generate_lead', { form: 'fluentform' }); });
   }
+
+  // 手机版产品页：原本的「加入购物车」看不到时，底部出现固定按钮
+  var bar = document.querySelector('[data-agc-sticky-atc]');
+  var form = document.querySelector('form.cart');
+  if (bar && form && 'IntersectionObserver' in window) {
+    var btn = form.querySelector('.single_add_to_cart_button');
+    new IntersectionObserver(function (entries) {
+      var hidden = !entries[0].isIntersecting && entries[0].boundingClientRect.top < 0;
+      bar.classList.toggle('is-visible', hidden);
+      bar.setAttribute('aria-hidden', hidden ? 'false' : 'true');
+    }).observe(btn || form);
+    bar.querySelector('button').addEventListener('click', function () {
+      var variable = this.getAttribute('data-variable') === '1';
+      var ready = btn && !btn.classList.contains('disabled');
+      if (!variable || ready) { if (btn) { btn.click(); } return; }
+      form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  }
 })();

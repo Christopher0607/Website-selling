@@ -1,0 +1,12 @@
+{
+ "cover": {"eyebrow": "New colours just dropped ✨", "h1": "Everyday tudung in colours you'll actually wear.", "sub": "Soft, breathable, easy to style — for class, work and Raya.", "buttons": [["Shop new arrivals", "{{SHOP_URL}}"], ["Raya bundles", "/product-category/bundles/"]], "hero_alt": "Woman wearing a lavender tudung", "center": false},
+ "cats_head": ["Shop by style", "Find your fit"],
+ "best_head": ["Trending this week 🔥", "Best sellers"],
+ "split": {"img": "lifestyle", "alt": "Friends in peach tudung at a picnic", "eyebrow": "Why Teduh", "title": "Made for hot days and long days.", "text": "Breathable fabrics that hold their shape — from your 8am class to dinner with friends.", "list": ["Cotton voile & soft chiffon — light, not see-through", "Real colour photos — ask us for more on WhatsApp", "Ships in 1–2 working days, free above RM100"], "btn": ["Shop all tudung", "{{SHOP_URL}}"]},
+ "split2": {"img": "live", "alt": "Smiling woman in a pink tudung", "eyebrow": "Saw us on TikTok Live?", "title": "Same tudung, same price — any time.", "text": "Missed the live? Order here anytime, even when we're not live. Your order details come straight to us — no screenshots needed.", "list": ["Pay with FPX or e-wallet", "Track your order by email", "Exchange sizes within 7 days"], "btn": ["Shop now", "{{SHOP_URL}}"], "alt_bg": true},
+ "more_head": ["Bundles & basics", "Complete the look"],
+ "more_sc": "[products limit=\"4\" columns=\"4\" orderby=\"price\" order=\"ASC\"]",
+ "band": {"eyebrow": "Not sure about a colour?", "title": "Ask us for a real photo 📸", "text": "Screens show colours differently. WhatsApp us and we'll send a photo in daylight.", "btn": "WhatsApp Teduh", "msg": "Hi Teduh! Boleh hantar gambar warna sebenar untuk: "},
+ "faq_title": "Soalan lazim",
+ "faq": [["How much is shipping?", "RM6 to West Malaysia, RM12 to East Malaysia. Free above RM100."], ["Can I exchange?", "Yes — unused items with tags within 7 days. WhatsApp us your order number."], ["Do you do bulk orders for events?", "Yes, for 20 pieces and above. WhatsApp us the quantity and date."]]
+}

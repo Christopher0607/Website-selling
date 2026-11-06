@@ -1,0 +1,12 @@
+{
+ "cover": {"eyebrow": "Dari dapur kami · From our kitchen in Ipoh", "h1": "Homemade sambal & kuih, the way mak makes it.", "sub": "Small batches, cooked fresh every week and delivered across Malaysia.", "buttons": [["Order now", "{{SHOP_URL}}"], ["Raya hampers", "/product-category/gift-boxes/"]], "hero_alt": "Nasi lemak with sambal on banana leaf"},
+ "cats_head": ["Kategori", "What are you craving?"],
+ "best_head": ["Kegemaran pelanggan", "Customer favourites"],
+ "split": {"img": "lifestyle", "alt": "Malaysian breakfast table", "eyebrow": "Cerita kami", "title": "Cooked every week, in small batches.", "text": "Our sambal is slow-cooked the same way it has been in our family for years. No shortcuts, no long warehouse storage.", "list": ["Weight, storage, shelf life and allergens on every product", "Self-pickup in Ipoh, or delivery to West & East Malaysia", "Free shipping above RM150"], "btn": ["Shop sambal", "/product-category/sambal/"]},
+ "split2": {"img": "corporate", "alt": "Gift box with ribbon", "eyebrow": "Corporate & bulk orders", "title": "Hampers for your team and clients.", "text": "Tell us the quantity and delivery date — we'll send a quotation on WhatsApp within one working day.", "list": ["From 10 hampers", "Custom card message", "Delivery to multiple addresses"], "btn": ["Request a quotation", "/contact/"], "alt_bg": true},
+ "more_head": ["Kuih Raya", "For your open house"],
+ "more_sc": "[products limit=\"4\" columns=\"4\" category=\"kuih-raya\"]",
+ "band": {"eyebrow": "Tanya dulu?", "title": "Questions about spice level or allergens?", "text": "WhatsApp us — we'll reply within one working day.", "btn": "WhatsApp kami", "msg": "Salam Dapur Seri Kenanga, saya nak tanya: "},
+ "faq_title": "Soalan lazim · FAQ",
+ "faq": [["How long does sambal keep?", "Unopened: 3 months in a cool, dry place. After opening: refrigerate and finish within 1 month."], ["Last order date for Raya?", "We announce the cut-off date on this page and on WhatsApp two weeks before Raya."], ["Can I self-pickup?", "Yes — choose \"Self pickup\" at checkout and we'll WhatsApp you when it's ready."]]
+}

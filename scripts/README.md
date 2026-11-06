@@ -37,7 +37,9 @@
 | `deploy-code.sh <ssh主机> <代号\|all>` | 服务器 `git pull` + 安装插件和子主题 + smoke test |
 | `migrate-site.sh <来源主机> <代号> <目标主机> <代号> <域名>` | 跨服务器搬站（staging → 生产）。**第一次用前先演练** |
 | `screenshot.js <网址> <文件夹> [--auth u:p]` | 作品集截图（桌面 1440 + 手机 390） |
-| `make-product-images.py <images.json> <文件夹>` | 样板站产品插图（原创、可商用） |
+| `fetch-stock-images.py <stock.json> <站点文件夹>` | 下载 Pexels 免费商用照片（裁切、转 WebP、写 image-sources.md） |
+| `make-home-page.py <home.json> <home.html>` | 用 JSON 产生网店首页（大图、信任标志、分类、商品、图文、FAQ） |
+| `make-product-images.py <images.json> <文件夹>` | （旧）程式画的产品插图，已不用 |
 
 ## 测试记录（2026-11-06，Ubuntu 24.04 + PHP 8.3 + MariaDB 10.11 + Nginx 1.24）
 

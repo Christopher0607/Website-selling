@@ -1,85 +1,171 @@
 <!-- page: title="Home" slug="home" menu="primary" order="0" front="1" -->
-<!-- wp:group {"className":"agc-hero","layout":{"type":"constrained","contentSize":"1200px"}} -->
-<div class="wp-block-group agc-hero"><!-- wp:columns {"verticalAlignment":"center"} -->
-<div class="wp-block-columns are-vertically-aligned-center"><!-- wp:column {"verticalAlignment":"center","width":"50%"} -->
-<div class="wp-block-column is-vertically-aligned-center" style="flex-basis:50%"><!-- wp:image {"sizeSlug":"large"} -->
-<figure class="wp-block-image size-large"><img src="{{IMG:hero}}" alt="Dapur Seri Kenanga hamper, sambal and pineapple tarts" fetchpriority="high"/></figure>
-<!-- /wp:image --></div>
-<!-- /wp:column -->
-<!-- wp:column {"verticalAlignment":"center","width":"50%"} -->
-<div class="wp-block-column is-vertically-aligned-center" style="flex-basis:50%"><!-- wp:paragraph {"className":"agc-eyebrow"} -->
+
+<!-- wp:cover {"url":"{{IMG:hero:full}}","dimRatio":50,"minHeight":80,"minHeightUnit":"vh","align":"full","className":"agc-cover"} -->
+<div class="wp-block-cover alignfull agc-cover" style="min-height:80vh"><span aria-hidden="true" class="wp-block-cover__background has-background-dim"></span><img class="wp-block-cover__image-background" alt="Nasi lemak with sambal on banana leaf" src="{{IMG:hero:full}}" data-object-fit="cover" fetchpriority="high"/><div class="wp-block-cover__inner-container"><!-- wp:group {"className":"agc-cover-text","layout":{"type":"default"}} -->
+<div class="wp-block-group agc-cover-text"><!-- wp:paragraph {"className":"agc-eyebrow"} -->
 <p class="agc-eyebrow">Dari dapur kami · From our kitchen in Ipoh</p>
 <!-- /wp:paragraph -->
 <!-- wp:heading {"level":1} -->
 <h1 class="wp-block-heading">Homemade sambal &amp; kuih, the way mak makes it.</h1>
 <!-- /wp:heading -->
-<!-- wp:paragraph {"className":"agc-hero-sub"} -->
-<p class="agc-hero-sub">Small batches, cooked fresh every week and delivered across Malaysia. Self-pickup available in Ipoh.</p>
+<!-- wp:paragraph -->
+<p>Small batches, cooked fresh every week and delivered across Malaysia.</p>
 <!-- /wp:paragraph -->
 <!-- wp:buttons -->
 <div class="wp-block-buttons"><!-- wp:button -->
 <div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="{{SHOP_URL}}">Order now</a></div>
-<!-- /wp:button -->
-<!-- wp:button {"className":"is-style-outline"} -->
+<!-- /wp:button --><!-- wp:button {"className":"is-style-outline"} -->
 <div class="wp-block-button is-style-outline"><a class="wp-block-button__link wp-element-button" href="/product-category/gift-boxes/">Raya hampers</a></div>
+<!-- /wp:button --></div>
+<!-- /wp:buttons --></div>
+<!-- /wp:group --></div></div>
+<!-- /wp:cover -->
+
+<!-- wp:group {"className":"agc-strip","layout":{"type":"constrained","contentSize":"1240px"}} -->
+<div class="wp-block-group agc-strip"><!-- wp:shortcode -->
+[agc_trust_bar]
+<!-- /wp:shortcode --></div>
+<!-- /wp:group -->
+
+<!-- wp:group {"className":"agc-section agc-cats agc-section-tight","layout":{"type":"constrained","contentSize":"1240px"}} -->
+<div class="wp-block-group agc-section agc-cats agc-section-tight"><!-- wp:group {"className":"agc-head","layout":{"type":"default"}} -->
+<div class="wp-block-group agc-head"><!-- wp:group {"layout":{"type":"default"}} -->
+<div class="wp-block-group"><!-- wp:paragraph {"className":"agc-eyebrow"} -->
+<p class="agc-eyebrow">Kategori</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">What are you craving?</h2>
+<!-- /wp:heading --></div>
+<!-- /wp:group --></div>
+<!-- /wp:group -->
+<!-- wp:shortcode -->
+[product_categories number="4" columns="4" hide_empty="1" orderby="name"]
+<!-- /wp:shortcode --></div>
+<!-- /wp:group -->
+
+<!-- wp:group {"className":"agc-section","layout":{"type":"constrained","contentSize":"1240px"}} -->
+<div class="wp-block-group agc-section"><!-- wp:group {"className":"agc-head","layout":{"type":"default"}} -->
+<div class="wp-block-group agc-head"><!-- wp:group {"layout":{"type":"default"}} -->
+<div class="wp-block-group"><!-- wp:paragraph {"className":"agc-eyebrow"} -->
+<p class="agc-eyebrow">Kegemaran pelanggan</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Customer favourites</h2>
+<!-- /wp:heading --></div>
+<!-- /wp:group -->
+<!-- wp:paragraph {"className":"agc-more"} -->
+<p class="agc-more"><a href="{{SHOP_URL}}">Shop all →</a></p>
+<!-- /wp:paragraph --></div>
+<!-- /wp:group -->
+<!-- wp:shortcode -->
+[products limit="4" columns="4" visibility="featured" orderby="menu_order"]
+<!-- /wp:shortcode --></div>
+<!-- /wp:group -->
+
+<!-- wp:group {"className":"agc-section agc-split","layout":{"type":"constrained","contentSize":"1240px"}} -->
+<div class="wp-block-group agc-section agc-split"><!-- wp:columns -->
+<div class="wp-block-columns"><!-- wp:column {"width":"50%"} -->
+<div class="wp-block-column" style="flex-basis:50%"><!-- wp:image {"sizeSlug":"large"} -->
+<figure class="wp-block-image size-large"><img src="{{IMG:lifestyle}}" alt="Malaysian breakfast table" loading="lazy"/></figure>
+<!-- /wp:image --></div>
+<!-- /wp:column --><!-- wp:column {"width":"50%"} -->
+<div class="wp-block-column" style="flex-basis:50%"><!-- wp:paragraph {"className":"agc-eyebrow"} -->
+<p class="agc-eyebrow">Cerita kami</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Cooked every week, in small batches.</h2>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>Our sambal is slow-cooked the same way it has been in our family for years. No shortcuts, no long warehouse storage.</p>
+<!-- /wp:paragraph -->
+<!-- wp:list {"className":""} -->
+<ul class="wp-block-list "><li>Weight, storage, shelf life and allergens on every product</li><li>Self-pickup in Ipoh, or delivery to West &amp; East Malaysia</li><li>Free shipping above RM150</li></ul>
+<!-- /wp:list -->
+<!-- wp:buttons -->
+<div class="wp-block-buttons"><!-- wp:button -->
+<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="/product-category/sambal/">Shop sambal</a></div>
 <!-- /wp:button --></div>
 <!-- /wp:buttons --></div>
 <!-- /wp:column --></div>
 <!-- /wp:columns --></div>
 <!-- /wp:group -->
 
-<!-- wp:group {"className":"agc-section agc-section-alt","layout":{"type":"constrained","contentSize":"1200px"}} -->
-<div class="wp-block-group agc-section agc-section-alt"><!-- wp:heading {"textAlign":"center"} -->
-<h2 class="wp-block-heading has-text-align-center">Kegemaran pelanggan · Customer favourites</h2>
+<!-- wp:group {"className":"agc-section agc-split agc-section-alt","layout":{"type":"constrained","contentSize":"1240px"}} -->
+<div class="wp-block-group agc-section agc-split agc-section-alt"><!-- wp:columns -->
+<div class="wp-block-columns"><!-- wp:column {"width":"50%"} -->
+<div class="wp-block-column" style="flex-basis:50%"><!-- wp:paragraph {"className":"agc-eyebrow"} -->
+<p class="agc-eyebrow">Corporate &amp; bulk orders</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Hampers for your team and clients.</h2>
 <!-- /wp:heading -->
-<!-- wp:shortcode -->
-[products limit="4" columns="4" visibility="featured"]
-<!-- /wp:shortcode --></div>
-<!-- /wp:group -->
-
-<!-- wp:group {"className":"agc-section","layout":{"type":"constrained","contentSize":"1200px"}} -->
-<div class="wp-block-group agc-section"><!-- wp:columns {"className":"agc-usp"} -->
-<div class="wp-block-columns agc-usp"><!-- wp:column -->
-<div class="wp-block-column"><!-- wp:heading {"level":3} -->
-<h3 class="wp-block-heading">Masak setiap minggu</h3>
-<!-- /wp:heading --><!-- wp:paragraph -->
-<p>Cooked in small batches every week — no long warehouse storage.</p>
-<!-- /wp:paragraph --></div>
-<!-- /wp:column --><!-- wp:column -->
-<div class="wp-block-column"><!-- wp:heading {"level":3} -->
-<h3 class="wp-block-heading">Clear labels</h3>
-<!-- /wp:heading --><!-- wp:paragraph -->
-<p>Every product lists weight, storage, shelf life and allergens.</p>
-<!-- /wp:paragraph --></div>
-<!-- /wp:column --><!-- wp:column -->
-<div class="wp-block-column"><!-- wp:heading {"level":3} -->
-<h3 class="wp-block-heading">Pickup or delivery</h3>
-<!-- /wp:heading --><!-- wp:paragraph -->
-<p>Self-pickup in Ipoh, or delivery to West &amp; East Malaysia.</p>
-<!-- /wp:paragraph --></div>
+<!-- wp:paragraph -->
+<p>Tell us the quantity and delivery date — we'll send a quotation on WhatsApp within one working day.</p>
+<!-- /wp:paragraph -->
+<!-- wp:list {"className":""} -->
+<ul class="wp-block-list "><li>From 10 hampers</li><li>Custom card message</li><li>Delivery to multiple addresses</li></ul>
+<!-- /wp:list -->
+<!-- wp:buttons -->
+<div class="wp-block-buttons"><!-- wp:button -->
+<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="/contact/">Request a quotation</a></div>
+<!-- /wp:button --></div>
+<!-- /wp:buttons --></div>
+<!-- /wp:column --><!-- wp:column {"width":"50%"} -->
+<div class="wp-block-column" style="flex-basis:50%"><!-- wp:image {"sizeSlug":"large"} -->
+<figure class="wp-block-image size-large"><img src="{{IMG:corporate}}" alt="Gift box with ribbon" loading="lazy"/></figure>
+<!-- /wp:image --></div>
 <!-- /wp:column --></div>
 <!-- /wp:columns --></div>
 <!-- /wp:group -->
 
-<!-- wp:group {"className":"agc-section agc-section-alt","layout":{"type":"constrained","contentSize":"760px"}} -->
-<div class="wp-block-group agc-section agc-section-alt"><!-- wp:heading {"textAlign":"center"} -->
-<h2 class="wp-block-heading has-text-align-center">Corporate &amp; bulk orders</h2>
+<!-- wp:group {"className":"agc-section","layout":{"type":"constrained","contentSize":"1240px"}} -->
+<div class="wp-block-group agc-section"><!-- wp:group {"className":"agc-head","layout":{"type":"default"}} -->
+<div class="wp-block-group agc-head"><!-- wp:group {"layout":{"type":"default"}} -->
+<div class="wp-block-group"><!-- wp:paragraph {"className":"agc-eyebrow"} -->
+<p class="agc-eyebrow">Kuih Raya</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">For your open house</h2>
+<!-- /wp:heading --></div>
+<!-- /wp:group -->
+<!-- wp:paragraph {"className":"agc-more"} -->
+<p class="agc-more"><a href="{{SHOP_URL}}">View all →</a></p>
+<!-- /wp:paragraph --></div>
+<!-- /wp:group -->
+<!-- wp:shortcode -->
+[products limit="4" columns="4" category="kuih-raya"]
+<!-- /wp:shortcode --></div>
+<!-- /wp:group -->
+
+<!-- wp:group {"className":"agc-section agc-band agc-center","layout":{"type":"constrained","contentSize":"760px"}} -->
+<div class="wp-block-group agc-section agc-band agc-center"><!-- wp:paragraph {"className":"agc-eyebrow"} -->
+<p class="agc-eyebrow">Tanya dulu?</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Questions about spice level or allergens?</h2>
 <!-- /wp:heading -->
-<!-- wp:paragraph {"align":"center"} -->
-<p class="has-text-align-center">Hampers for your team or clients? Tell us the quantity and date — we'll send a quotation on WhatsApp.</p>
+<!-- wp:paragraph -->
+<p>WhatsApp us — we'll reply within one working day.</p>
 <!-- /wp:paragraph -->
 <!-- wp:shortcode -->
-<p style="text-align:center">[agc_whatsapp text="Request a quotation" message="Salam Dapur Seri Kenanga, saya nak quotation untuk corporate order. Kuantiti: ___ Tarikh: ___"]</p>
+<p>[agc_whatsapp text="WhatsApp kami" message="Salam Dapur Seri Kenanga, saya nak tanya: "]</p>
 <!-- /wp:shortcode --></div>
 <!-- /wp:group -->
 
 <!-- wp:group {"className":"agc-section agc-faq","layout":{"type":"constrained","contentSize":"760px"}} -->
-<div class="wp-block-group agc-section agc-faq"><!-- wp:heading {"textAlign":"center"} -->
-<h2 class="wp-block-heading has-text-align-center">Soalan lazim · FAQ</h2>
-<!-- /wp:heading -->
+<div class="wp-block-group agc-section agc-faq"><!-- wp:group {"className":"agc-head agc-center","layout":{"type":"default"}} -->
+<div class="wp-block-group agc-head agc-center"><!-- wp:group {"layout":{"type":"default"}} -->
+<div class="wp-block-group"><!-- wp:paragraph {"className":"agc-eyebrow"} -->
+<p class="agc-eyebrow">FAQ</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Soalan lazim · FAQ</h2>
+<!-- /wp:heading --></div>
+<!-- /wp:group --></div>
+<!-- /wp:group -->
 <!-- wp:details -->
 <details class="wp-block-details"><summary>How long does sambal keep?</summary><!-- wp:paragraph -->
-<p>Unopened: 3 months in a cool, dry place. After opening: keep refrigerated and finish within 1 month.</p>
+<p>Unopened: 3 months in a cool, dry place. After opening: refrigerate and finish within 1 month.</p>
 <!-- /wp:paragraph --></details>
 <!-- /wp:details -->
 <!-- wp:details -->

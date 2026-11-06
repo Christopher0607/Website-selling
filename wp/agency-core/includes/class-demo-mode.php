@@ -19,7 +19,7 @@ class AGC_Demo_Mode {
 		if ( ! agc_get( 'demo_mode' ) ) {
 			return;
 		}
-		add_action( 'wp_body_open', array( __CLASS__, 'banner' ), 1 );
+		add_action( 'kadence' === get_template() ? 'kadence_before_header' : 'wp_body_open', array( __CLASS__, 'banner' ), 1 );
 		add_filter( 'body_class', array( __CLASS__, 'body_class' ) );
 		add_filter( 'wp_robots', 'wp_robots_no_robots' );
 

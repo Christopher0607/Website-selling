@@ -1,77 +1,181 @@
 <!-- page: title="Home" slug="home" menu="primary" order="0" front="1" -->
-<!-- wp:group {"className":"agc-hero agc-hero-center","layout":{"type":"constrained","contentSize":"900px"}} -->
-<div class="wp-block-group agc-hero agc-hero-center"><!-- wp:paragraph {"align":"center","className":"agc-pill"} -->
-<p class="has-text-align-center agc-pill">✨ New: Sage &amp; Sand colours are here</p>
+
+<!-- wp:cover {"url":"{{IMG:hero:full}}","dimRatio":50,"minHeight":80,"minHeightUnit":"vh","align":"full","className":"agc-cover"} -->
+<div class="wp-block-cover alignfull agc-cover" style="min-height:80vh"><span aria-hidden="true" class="wp-block-cover__background has-background-dim"></span><img class="wp-block-cover__image-background" alt="Woman wearing a lavender tudung" src="{{IMG:hero:full}}" data-object-fit="cover" fetchpriority="high"/><div class="wp-block-cover__inner-container"><!-- wp:group {"className":"agc-cover-text","layout":{"type":"default"}} -->
+<div class="wp-block-group agc-cover-text"><!-- wp:paragraph {"className":"agc-eyebrow"} -->
+<p class="agc-eyebrow">New colours just dropped ✨</p>
 <!-- /wp:paragraph -->
-<!-- wp:heading {"textAlign":"center","level":1} -->
-<h1 class="wp-block-heading has-text-align-center">Everyday tudung in colours you'll actually wear.</h1>
+<!-- wp:heading {"level":1} -->
+<h1 class="wp-block-heading">Everyday tudung in colours you'll actually wear.</h1>
 <!-- /wp:heading -->
-<!-- wp:paragraph {"align":"center","className":"agc-hero-sub"} -->
-<p class="has-text-align-center agc-hero-sub">Soft, breathable, easy to style — for class, work and Raya. Free shipping above RM100 🚚</p>
+<!-- wp:paragraph -->
+<p>Soft, breathable, easy to style — for class, work and Raya.</p>
 <!-- /wp:paragraph -->
-<!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"}} -->
+<!-- wp:buttons -->
 <div class="wp-block-buttons"><!-- wp:button -->
-<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="{{SHOP_URL}}">Shop all colours</a></div>
-<!-- /wp:button -->
-<!-- wp:button {"className":"is-style-outline"} -->
+<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="{{SHOP_URL}}">Shop new arrivals</a></div>
+<!-- /wp:button --><!-- wp:button {"className":"is-style-outline"} -->
 <div class="wp-block-button is-style-outline"><a class="wp-block-button__link wp-element-button" href="/product-category/bundles/">Raya bundles</a></div>
 <!-- /wp:button --></div>
-<!-- /wp:buttons -->
-<!-- wp:image {"sizeSlug":"large","align":"center"} -->
-<figure class="wp-block-image aligncenter size-large"><img src="{{IMG:hero}}" alt="Teduh Studio tudung in rose, coral and sage" fetchpriority="high"/></figure>
-<!-- /wp:image --></div>
+<!-- /wp:buttons --></div>
+<!-- /wp:group --></div></div>
+<!-- /wp:cover -->
+
+<!-- wp:group {"className":"agc-strip","layout":{"type":"constrained","contentSize":"1240px"}} -->
+<div class="wp-block-group agc-strip"><!-- wp:shortcode -->
+[agc_trust_bar]
+<!-- /wp:shortcode --></div>
 <!-- /wp:group -->
 
-<!-- wp:group {"className":"agc-section","layout":{"type":"constrained","contentSize":"1200px"}} -->
-<div class="wp-block-group agc-section"><!-- wp:heading {"textAlign":"center"} -->
-<h2 class="wp-block-heading has-text-align-center">Shop by style</h2>
-<!-- /wp:heading -->
+<!-- wp:group {"className":"agc-section agc-cats agc-section-tight","layout":{"type":"constrained","contentSize":"1240px"}} -->
+<div class="wp-block-group agc-section agc-cats agc-section-tight"><!-- wp:group {"className":"agc-head","layout":{"type":"default"}} -->
+<div class="wp-block-group agc-head"><!-- wp:group {"layout":{"type":"default"}} -->
+<div class="wp-block-group"><!-- wp:paragraph {"className":"agc-eyebrow"} -->
+<p class="agc-eyebrow">Shop by style</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Find your fit</h2>
+<!-- /wp:heading --></div>
+<!-- /wp:group --></div>
+<!-- /wp:group -->
 <!-- wp:shortcode -->
 [product_categories number="4" columns="4" hide_empty="1" orderby="name"]
 <!-- /wp:shortcode --></div>
 <!-- /wp:group -->
 
-<!-- wp:group {"className":"agc-section agc-section-alt","layout":{"type":"constrained","contentSize":"1200px"}} -->
-<div class="wp-block-group agc-section agc-section-alt"><!-- wp:heading {"textAlign":"center"} -->
-<h2 class="wp-block-heading has-text-align-center">Trending this week 🔥</h2>
-<!-- /wp:heading -->
+<!-- wp:group {"className":"agc-section","layout":{"type":"constrained","contentSize":"1240px"}} -->
+<div class="wp-block-group agc-section"><!-- wp:group {"className":"agc-head","layout":{"type":"default"}} -->
+<div class="wp-block-group agc-head"><!-- wp:group {"layout":{"type":"default"}} -->
+<div class="wp-block-group"><!-- wp:paragraph {"className":"agc-eyebrow"} -->
+<p class="agc-eyebrow">Trending this week 🔥</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Best sellers</h2>
+<!-- /wp:heading --></div>
+<!-- /wp:group -->
+<!-- wp:paragraph {"className":"agc-more"} -->
+<p class="agc-more"><a href="{{SHOP_URL}}">Shop all →</a></p>
+<!-- /wp:paragraph --></div>
+<!-- /wp:group -->
 <!-- wp:shortcode -->
-[products limit="4" columns="4" visibility="featured"]
+[products limit="4" columns="4" visibility="featured" orderby="menu_order"]
 <!-- /wp:shortcode --></div>
 <!-- /wp:group -->
 
-<!-- wp:group {"className":"agc-section","layout":{"type":"constrained","contentSize":"1200px"}} -->
-<div class="wp-block-group agc-section"><!-- wp:columns {"className":"agc-usp"} -->
-<div class="wp-block-columns agc-usp"><!-- wp:column -->
-<div class="wp-block-column"><!-- wp:heading {"level":3} -->
-<h3 class="wp-block-heading">🌬️ Breathable</h3>
-<!-- /wp:heading --><!-- wp:paragraph -->
-<p>Cotton voile and soft chiffon for hot days.</p>
-<!-- /wp:paragraph --></div>
-<!-- /wp:column --><!-- wp:column -->
-<div class="wp-block-column"><!-- wp:heading {"level":3} -->
-<h3 class="wp-block-heading">🎨 Real colours</h3>
-<!-- /wp:heading --><!-- wp:paragraph -->
-<p>Not sure about a shade? WhatsApp us for a real photo.</p>
-<!-- /wp:paragraph --></div>
-<!-- /wp:column --><!-- wp:column -->
-<div class="wp-block-column"><!-- wp:heading {"level":3} -->
-<h3 class="wp-block-heading">📦 Ships in 1–2 days</h3>
-<!-- /wp:heading --><!-- wp:paragraph -->
-<p>West and East Malaysia. Free above RM100.</p>
-<!-- /wp:paragraph --></div>
+<!-- wp:group {"className":"agc-section agc-split","layout":{"type":"constrained","contentSize":"1240px"}} -->
+<div class="wp-block-group agc-section agc-split"><!-- wp:columns -->
+<div class="wp-block-columns"><!-- wp:column {"width":"50%"} -->
+<div class="wp-block-column" style="flex-basis:50%"><!-- wp:image {"sizeSlug":"large"} -->
+<figure class="wp-block-image size-large"><img src="{{IMG:lifestyle}}" alt="Friends in peach tudung at a picnic" loading="lazy"/></figure>
+<!-- /wp:image --></div>
+<!-- /wp:column --><!-- wp:column {"width":"50%"} -->
+<div class="wp-block-column" style="flex-basis:50%"><!-- wp:paragraph {"className":"agc-eyebrow"} -->
+<p class="agc-eyebrow">Why Teduh</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Made for hot days and long days.</h2>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>Breathable fabrics that hold their shape — from your 8am class to dinner with friends.</p>
+<!-- /wp:paragraph -->
+<!-- wp:list {"className":""} -->
+<ul class="wp-block-list "><li>Cotton voile &amp; soft chiffon — light, not see-through</li><li>Real colour photos — ask us for more on WhatsApp</li><li>Ships in 1–2 working days, free above RM100</li></ul>
+<!-- /wp:list -->
+<!-- wp:buttons -->
+<div class="wp-block-buttons"><!-- wp:button -->
+<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="{{SHOP_URL}}">Shop all tudung</a></div>
+<!-- /wp:button --></div>
+<!-- /wp:buttons --></div>
 <!-- /wp:column --></div>
 <!-- /wp:columns --></div>
 <!-- /wp:group -->
 
-<!-- wp:group {"className":"agc-section agc-section-alt","layout":{"type":"constrained","contentSize":"760px"}} -->
-<div class="wp-block-group agc-section agc-section-alt"><!-- wp:heading {"textAlign":"center"} -->
-<h2 class="wp-block-heading has-text-align-center">Saw us on TikTok Live?</h2>
+<!-- wp:group {"className":"agc-section agc-split agc-section-alt","layout":{"type":"constrained","contentSize":"1240px"}} -->
+<div class="wp-block-group agc-section agc-split agc-section-alt"><!-- wp:columns -->
+<div class="wp-block-columns"><!-- wp:column {"width":"50%"} -->
+<div class="wp-block-column" style="flex-basis:50%"><!-- wp:paragraph {"className":"agc-eyebrow"} -->
+<p class="agc-eyebrow">Saw us on TikTok Live?</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Same tudung, same price — any time.</h2>
 <!-- /wp:heading -->
-<!-- wp:paragraph {"align":"center"} -->
-<p class="has-text-align-center">Same tudung, same prices — order here anytime, even when we're not live. Questions? Chat with us 👇</p>
+<!-- wp:paragraph -->
+<p>Missed the live? Order here anytime, even when we're not live. Your order details come straight to us — no screenshots needed.</p>
+<!-- /wp:paragraph -->
+<!-- wp:list {"className":""} -->
+<ul class="wp-block-list "><li>Pay with FPX or e-wallet</li><li>Track your order by email</li><li>Exchange sizes within 7 days</li></ul>
+<!-- /wp:list -->
+<!-- wp:buttons -->
+<div class="wp-block-buttons"><!-- wp:button -->
+<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="{{SHOP_URL}}">Shop now</a></div>
+<!-- /wp:button --></div>
+<!-- /wp:buttons --></div>
+<!-- /wp:column --><!-- wp:column {"width":"50%"} -->
+<div class="wp-block-column" style="flex-basis:50%"><!-- wp:image {"sizeSlug":"large"} -->
+<figure class="wp-block-image size-large"><img src="{{IMG:live}}" alt="Smiling woman in a pink tudung" loading="lazy"/></figure>
+<!-- /wp:image --></div>
+<!-- /wp:column --></div>
+<!-- /wp:columns --></div>
+<!-- /wp:group -->
+
+<!-- wp:group {"className":"agc-section","layout":{"type":"constrained","contentSize":"1240px"}} -->
+<div class="wp-block-group agc-section"><!-- wp:group {"className":"agc-head","layout":{"type":"default"}} -->
+<div class="wp-block-group agc-head"><!-- wp:group {"layout":{"type":"default"}} -->
+<div class="wp-block-group"><!-- wp:paragraph {"className":"agc-eyebrow"} -->
+<p class="agc-eyebrow">Bundles &amp; basics</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Complete the look</h2>
+<!-- /wp:heading --></div>
+<!-- /wp:group -->
+<!-- wp:paragraph {"className":"agc-more"} -->
+<p class="agc-more"><a href="{{SHOP_URL}}">View all →</a></p>
+<!-- /wp:paragraph --></div>
+<!-- /wp:group -->
+<!-- wp:shortcode -->
+[products limit="4" columns="4" orderby="price" order="ASC"]
+<!-- /wp:shortcode --></div>
+<!-- /wp:group -->
+
+<!-- wp:group {"className":"agc-section agc-band agc-center","layout":{"type":"constrained","contentSize":"760px"}} -->
+<div class="wp-block-group agc-section agc-band agc-center"><!-- wp:paragraph {"className":"agc-eyebrow"} -->
+<p class="agc-eyebrow">Not sure about a colour?</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Ask us for a real photo 📸</h2>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>Screens show colours differently. WhatsApp us and we'll send a photo in daylight.</p>
 <!-- /wp:paragraph -->
 <!-- wp:shortcode -->
-<p style="text-align:center">[agc_whatsapp text="Chat on WhatsApp"]</p>
+<p>[agc_whatsapp text="WhatsApp Teduh" message="Hi Teduh! Boleh hantar gambar warna sebenar untuk: "]</p>
 <!-- /wp:shortcode --></div>
+<!-- /wp:group -->
+
+<!-- wp:group {"className":"agc-section agc-faq","layout":{"type":"constrained","contentSize":"760px"}} -->
+<div class="wp-block-group agc-section agc-faq"><!-- wp:group {"className":"agc-head agc-center","layout":{"type":"default"}} -->
+<div class="wp-block-group agc-head agc-center"><!-- wp:group {"layout":{"type":"default"}} -->
+<div class="wp-block-group"><!-- wp:paragraph {"className":"agc-eyebrow"} -->
+<p class="agc-eyebrow">FAQ</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Soalan lazim</h2>
+<!-- /wp:heading --></div>
+<!-- /wp:group --></div>
+<!-- /wp:group -->
+<!-- wp:details -->
+<details class="wp-block-details"><summary>How much is shipping?</summary><!-- wp:paragraph -->
+<p>RM6 to West Malaysia, RM12 to East Malaysia. Free above RM100.</p>
+<!-- /wp:paragraph --></details>
+<!-- /wp:details -->
+<!-- wp:details -->
+<details class="wp-block-details"><summary>Can I exchange?</summary><!-- wp:paragraph -->
+<p>Yes — unused items with tags within 7 days. WhatsApp us your order number.</p>
+<!-- /wp:paragraph --></details>
+<!-- /wp:details -->
+<!-- wp:details -->
+<details class="wp-block-details"><summary>Do you do bulk orders for events?</summary><!-- wp:paragraph -->
+<p>Yes, for 20 pieces and above. WhatsApp us the quantity and date.</p>
+<!-- /wp:paragraph --></details>
+<!-- /wp:details --></div>
 <!-- /wp:group -->
