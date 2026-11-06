@@ -1,6 +1,7 @@
 <?php
 /**
  * 建立 / 更新页面、菜单、页脚（由 build-pages.sh 执行）
+ * 占位符：{{SITE_NAME}} {{TAGLINE}} {{SHOP_URL}} {{DOMAIN}}（不含 www 的主域名） {{IMG:key}}
  * 用法：wp eval-file build-pages.php <内容文件夹1> [内容文件夹2 ...] [force]
  *   后面的文件夹里同名的 .html 会覆盖前面的（例如：母版内容 + 样板站自己的内容）
  *   没有 force：页面已经存在就不覆盖（保护客户自己改过的内容）
@@ -96,6 +97,7 @@ foreach ( $files as $f ) {
 			'{{SITE_NAME}}' => esc_html( get_bloginfo( 'name' ) ),
 			'{{TAGLINE}}'   => esc_html( get_bloginfo( 'description' ) ? get_bloginfo( 'description' ) : get_bloginfo( 'name' ) ),
 			'{{SHOP_URL}}'  => esc_url( $shop_url ),
+			'{{DOMAIN}}'    => esc_html( preg_replace( '/^www\./', '', (string) wp_parse_url( home_url(), PHP_URL_HOST ) ) ),
 		)
 	);
 	$body = preg_replace_callback( '/\{\{IMG:([a-z0-9_-]+)\}\}/i', static fn( $mm ) => esc_url( agc_img_url( $mm[1], $dirs ) ), $body );
@@ -229,7 +231,7 @@ if ( 'kadence' === get_template() ) {
 
 	$widgets = array(
 		'footer1' => '<!-- wp:heading {"level":4} --><h4 class="wp-block-heading">' . esc_html( get_bloginfo( 'name' ) ) . '</h4><!-- /wp:heading --><!-- wp:shortcode -->[agc_business]<!-- /wp:shortcode -->',
-		'footer2' => '<!-- wp:heading {"level":4} --><h4 class="wp-block-heading">Follow us</h4><!-- /wp:heading --><!-- wp:shortcode -->[agc_social]<!-- /wp:shortcode --><!-- wp:paragraph {"className":"agc-payments"} --><p class="agc-payments">We accept: FPX online banking · Cards · E-wallets · Bank transfer / DuitNow</p><!-- /wp:paragraph -->',
+		'footer2' => '<!-- wp:heading {"level":4} --><h4 class="wp-block-heading">Follow us</h4><!-- /wp:heading --><!-- wp:shortcode -->[agc_social]<!-- /wp:shortcode -->' . ( class_exists( 'WooCommerce' ) ? '<!-- wp:paragraph {"className":"agc-payments"} --><p class="agc-payments">We accept: FPX online banking · Cards · E-wallets · Bank transfer / DuitNow</p><!-- /wp:paragraph -->' : '' ),
 	);
 	$sidebars = get_option( 'sidebars_widgets', array() );
 	$blocks   = get_option( 'widget_block', array() );

@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Agency Core
  * Description:       WhatsApp buttons, demo mode, tracking codes, business details and Malaysian checkout tweaks for studio-built stores.
- * Version:           1.0.0
+ * Version:           1.1.0
  * Requires at least: 6.4
  * Requires PHP:      8.1
  * Author:            KedaiLab
@@ -15,7 +15,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'AGC_VERSION', '1.0.0' );
+define( 'AGC_VERSION', '1.1.0' );
 define( 'AGC_FILE', __FILE__ );
 define( 'AGC_DIR', plugin_dir_path( __FILE__ ) );
 define( 'AGC_URL', plugin_dir_url( __FILE__ ) );
@@ -26,6 +26,8 @@ require_once AGC_DIR . 'includes/class-demo-mode.php';
 require_once AGC_DIR . 'includes/class-tracking.php';
 require_once AGC_DIR . 'includes/class-business.php';
 require_once AGC_DIR . 'includes/class-checkout.php';
+require_once AGC_DIR . 'includes/class-lead-form.php';
+require_once AGC_DIR . 'includes/class-fee-calculator.php';
 
 if ( defined( 'WP_CLI' ) && WP_CLI ) {
 	require_once AGC_DIR . 'includes/class-cli.php';
@@ -51,6 +53,8 @@ add_action(
 		AGC_Tracking::init();
 		AGC_Business::init();
 		AGC_Checkout::init();
+		AGC_Lead_Form::init();
+		AGC_Fee_Calculator::init();
 	}
 );
 

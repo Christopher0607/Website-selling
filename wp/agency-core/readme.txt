@@ -1,7 +1,7 @@
 === Agency Core ===
 Requires at least: 6.4
 Requires PHP: 8.1
-Stable tag: 1.0.0
+Stable tag: 1.1.0
 License: GPLv2 or later
 
 Studio toolkit for WooCommerce stores in Malaysia.
@@ -12,6 +12,7 @@ Studio toolkit for WooCommerce stores in Malaysia.
 * GA4 and Meta Pixel (only printed when IDs are set; not printed for logged-in staff). Events: whatsapp_click, generate_lead
 * Business details & social shortcodes: [agc_business], [agc_business field="ssm_no"], [agc_social], [agc_concept_label], [agc_year]
 * Malaysian checkout tweaks: phone required, company and address line 2 hidden
+* Lead form [agc_lead_form]: saves enquiries as private "Leads", emails the admin, nonce + honeypot + rate limit, fires generate_lead
 * WP-CLI: wp agc get | set <key> <value> | import <file.json> | demo on|off
 
 No external connections except the tracking scripts you configure. No data collection.

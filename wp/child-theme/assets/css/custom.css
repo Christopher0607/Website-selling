@@ -54,3 +54,8 @@
 
 /* Demo 模式：不显示"没有付款方式"的提示（下面已经有 Demo 说明） */
 .agc-demo #payment .payment_methods { display: none; }
+
+/* 全宽页面：区块左右留白（手机上文字不贴边） */
+.agc-hero, .agc-section { padding-left: var(--global-content-edge-padding, 1.5rem); padding-right: var(--global-content-edge-padding, 1.5rem); }
+@media (max-width: 767px) { .agc-hero, .agc-section { padding-left: 16px; padding-right: 16px; } }
+.agc-price-table table { font-size: .9rem; min-width: 560px; }

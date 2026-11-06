@@ -25,6 +25,15 @@ const scale = Number(opt('--scale', '2'));
 const custom = opt('--pages', '');
 fs.mkdirSync(out, { recursive: true });
 
+// 慢慢卷到底，让 lazy-load 的图片都载入
+async function autoScroll(page) {
+  await page.evaluate(async () => {
+    for (let y = 0; y < document.body.scrollHeight; y += 400) { window.scrollTo(0, y); await new Promise((r) => setTimeout(r, 80)); }
+    window.scrollTo(0, 0);
+  });
+  await page.waitForTimeout(500);
+}
+
 (async () => {
   const browser = await chromium.launch();
   const viewports = [
@@ -48,6 +57,7 @@ fs.mkdirSync(out, { recursive: true });
     }
     for (const p of pages) {
       await page.goto(base + p, { waitUntil: 'networkidle' });
+      await autoScroll(page);
       const name = (p === '/' ? 'home' : p.replace(/^\/|\/$/g, '').replace(/\//g, '-')) || 'home';
       await page.screenshot({ path: path.join(out, `${vp.name}-${name}.png`), fullPage: true });
       console.log(`  ${vp.name}-${name}.png`);

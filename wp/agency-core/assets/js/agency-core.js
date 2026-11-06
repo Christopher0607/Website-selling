@@ -16,6 +16,8 @@
     if (!el) { return; }
     send(el.getAttribute('data-agc-event'), { location: el.getAttribute('data-agc-location') || '' });
   });
+  // 自建询价表单提交成功 → generate_lead
+  if (document.querySelector('[data-agc-lead-sent]')) { window.addEventListener('load', function () { send('generate_lead', { form: 'agc_lead_form' }); }); }
   // Fluent Forms 成功提交 → generate_lead
   document.addEventListener('fluentform_submission_success', function () { send('generate_lead', { form: 'fluentform' }); });
   if (window.jQuery) {

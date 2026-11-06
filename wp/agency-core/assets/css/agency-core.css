@@ -43,3 +43,30 @@
 .agc-business p { margin: 0 0 .5em; }
 .agc-social { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 14px; }
 .agc-concept-label { display: inline-block; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; border: 1px solid currentColor; border-radius: 3px; padding: 1px 6px; }
+
+/* 询价表单 [agc_lead_form] */
+.agc-lead-form { max-width: 560px; }
+.agc-lead-form .agc-field label { display: block; font-weight: 600; font-size: .92rem; margin-bottom: 4px; }
+.agc-lead-form input[type=text], .agc-lead-form input[type=url], .agc-lead-form input[type=tel], .agc-lead-form select, .agc-lead-form textarea { width: 100%; }
+.agc-lead-form .agc-consent { font-size: .88rem; }
+.agc-hp { position: absolute !important; left: -9999px !important; width: 1px; height: 1px; overflow: hidden; }
+.agc-lead-ok { background: #e9f7ef; border-left: 4px solid #1e8e4e; padding: 14px 16px; }
+.agc-lead-error { background: #fdecea; border-left: 4px solid #c0392b; padding: 10px 14px; margin-bottom: 12px; }
+
+/* Shopee 费用计算器 [agc_fee_calculator] */
+.agc-calc { display: grid; gap: 24px; grid-template-columns: 1fr; }
+@media (min-width: 900px) { .agc-calc { grid-template-columns: 1.1fr .9fr; } .agc-calc-note { grid-column: 1 / -1; } }
+.agc-calc fieldset { border: 1px solid var(--global-palette7, #e5e5e5); border-radius: 12px; padding: 14px 16px; margin: 0 0 16px; }
+.agc-calc legend { font-weight: 700; padding: 0 6px; }
+.agc-calc legend small { font-weight: 400; opacity: .7; }
+.agc-calc-field { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin: 8px 0; }
+.agc-calc-field label { font-size: .9rem; flex: 1; }
+.agc-calc-input { display: flex; align-items: center; gap: 4px; }
+.agc-calc-input input { width: 110px; text-align: right; }
+.agc-calc-result { position: sticky; top: 20px; align-self: start; background: var(--global-palette8, #f7f7f7); border-radius: 12px; padding: 18px; }
+.agc-calc-result table { width: 100%; border-collapse: collapse; font-size: .95rem; }
+.agc-calc-result th, .agc-calc-result td { padding: 8px 6px; border-bottom: 1px solid var(--global-palette7, #e5e5e5); text-align: right; }
+.agc-calc-result tbody th { text-align: left; font-weight: 500; }
+.agc-calc-big { font-size: 1.05rem; margin-top: 14px; }
+.agc-calc-big strong { color: var(--global-palette1); font-size: 1.2em; }
+.agc-calc-note { font-size: .82rem; opacity: .8; }
