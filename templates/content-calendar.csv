@@ -1,0 +1,2 @@
+date,day,platforms,pillar,topic_no,title,hook,format,script_file,status,post_url,views,watch_through_rate,likes,comments,dms,leads,notes
+2026-11-15,1,"TikTok; IG Reels; FB Reels; YT Shorts",A,1,"Shopee 卖 RM100，你真的拿到 RM100 吗？","卖 RM100，你猜 Shopee 扣你多少？",phone-screen,content/scripts/01-shopee-rm100.md,planned,,,,,,,,"示例行：日期按实际开始日调整 / example row"

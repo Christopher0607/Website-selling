@@ -1,0 +1,42 @@
+/* Agency Child — 小调整。颜色用 Kadence 全局颜色变量 --global-paletteN，不要写死。 */
+
+/* 按钮圆角统一 */
+.button, button, input[type="submit"], .wp-block-button__link, .wc-block-components-button { border-radius: 8px; }
+
+/* 产品卡片 */
+.woocommerce ul.products li.product .woocommerce-loop-product__title { font-size: 1rem; line-height: 1.35; }
+.woocommerce ul.products li.product .price { color: var(--global-palette3); font-weight: 600; }
+.woocommerce ul.products li.product a img { border-radius: 10px; aspect-ratio: 1 / 1; object-fit: cover; }
+
+/* 主视觉区块 */
+.agc-hero { padding-top: clamp(48px, 8vw, 110px); padding-bottom: clamp(48px, 8vw, 110px); }
+.agc-hero h1 { font-size: clamp(2rem, 5vw, 3.4rem); line-height: 1.12; margin-bottom: .4em; }
+.agc-hero .agc-hero-sub { font-size: clamp(1.05rem, 2vw, 1.25rem); max-width: 38ch; }
+
+/* 卖点 */
+.agc-usp .wp-block-column { background: var(--global-palette8); border-radius: 12px; padding: 22px; }
+.agc-usp h3 { font-size: 1.1rem; margin: 0 0 .3em; }
+.agc-usp p { margin: 0; font-size: .95rem; }
+
+/* 区块之间的间距 */
+.agc-section { padding-top: clamp(32px, 4.5vw, 64px); padding-bottom: clamp(32px, 4.5vw, 64px); }
+.agc-hero + .agc-section { padding-top: 0; }
+.agc-section-alt { background: var(--global-palette7); }
+
+/* FAQ */
+.agc-faq details { border-bottom: 1px solid var(--global-palette7); padding: 14px 0; }
+.agc-faq summary { cursor: pointer; font-weight: 600; }
+
+/* 页脚 */
+.site-footer .agc-business, .site-footer .agc-social a { font-size: .92rem; }
+.agc-payments { font-size: .85rem; opacity: .85; }
+
+/* 法律页面草稿提示 */
+.agc-draft-note { background: #fff4e5; border-left: 4px solid #f0a020; padding: 10px 14px; font-size: .92rem; }
+
+/* 手机 */
+@media (max-width: 767px) {
+  .agc-hero .wp-block-buttons { flex-direction: column; align-items: stretch; }
+  .agc-hero .wp-block-button { width: 100%; }
+  .agc-hero .wp-block-button__link { width: 100%; text-align: center; }
+}

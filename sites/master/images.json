@@ -1,0 +1,17 @@
+{
+  "background": "#F1ECE4",
+  "font": "Inter",
+  "images": [
+    {"file": "cleanser.webp", "shape": "pump", "body": "#2F5D50", "title": "CLEANSE", "sub": "Gentle cleanser"},
+    {"file": "serum.webp", "shape": "dropper", "body": "#C8553D", "cap": "#1F1F1F", "title": "SERUM", "sub": "Hydrating"},
+    {"file": "moisturiser.webp", "shape": "jar", "body": "#E8DCCB", "cap": "#2F5D50", "label": "#2F5D50", "title": "GEL", "sub": "Moisturiser", "bg": "#DCE6E1"},
+    {"file": "sunscreen.webp", "shape": "tube", "body": "#F2B544", "cap": "#1F1F1F", "label": "#1F1F1F", "title": "SPF50", "sub": "Sunscreen"},
+    {"file": "lotion.webp", "shape": "bottle", "body": "#7A9E7E", "title": "BODY", "sub": "Lotion"},
+    {"file": "bodywash.webp", "shape": "pump", "body": "#5B7F6B", "title": "WASH", "sub": "Pandan · Lemongrass"},
+    {"file": "handcream.webp", "shape": "tube", "body": "#2F5D50", "title": "HAND", "sub": "Cream"},
+    {"file": "lipbalm.webp", "shape": "tin", "body": "#C8553D", "cap": "#8E3B2A", "title": "LIP", "sub": "Balm"},
+    {"file": "giftset.webp", "shape": "box", "body": "#2F5D50", "cap": "#C8553D", "title": "GIFT", "sub": "Starter set"},
+    {"file": "travelkit.webp", "shape": "pouch", "body": "#E8DCCB", "cap": "#2F5D50", "label": "#2F5D50", "title": "TRAVEL", "sub": "Kit", "bg": "#DCE6E1"},
+    {"file": "hero.webp", "kind": "hero", "items": ["serum.webp", "moisturiser.webp", "sunscreen.webp"], "bg": "#E8DCCB"}
+  ]
+}

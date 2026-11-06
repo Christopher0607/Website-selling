@@ -1,0 +1,67 @@
+{
+  "_comment": "复制到 sites/<代号>/ 或 clients/<代号>/ 再填写。颜色用 HEX。WhatsApp 号码用国际格式、不加 + 号。运费是示范值。mode 可选 demo / preview / staging / live。",
+  "mode": "demo",
+  "site": {
+    "slug": "demo-example",
+    "domain": "demo-example.yourbrand.com",
+    "name": "Example Brand",
+    "tagline": "Gentle skincare for everyday Malaysian weather",
+    "language": "en"
+  },
+  "colors": {
+    "primary": "#2F5D50",
+    "secondary": "#E8DCCB",
+    "accent": "#C8553D",
+    "text": "#1F1F1F",
+    "background": "#FFFFFF"
+  },
+  "fonts": {
+    "heading": "Playfair Display",
+    "body": "Inter"
+  },
+  "assets": {
+    "logo": "assets/logo.png",
+    "site_icon": "assets/icon-512.png"
+  },
+  "whatsapp": {
+    "number": "60123456789",
+    "button_text": "Ask on WhatsApp",
+    "prefill": "Hi, I'd like to ask about {product}: {url}",
+    "floating_button": true,
+    "position": "right"
+  },
+  "store": {
+    "address": {
+      "line1": "[地址 Address]",
+      "city": "[城市 City]",
+      "state": "[州属 State]",
+      "postcode": "[邮编 Postcode]",
+      "country": "MY"
+    },
+    "currency": "MYR",
+    "sell_to": ["MY"],
+    "shipping": {
+      "west_malaysia_flat_rate": 8.00,
+      "east_malaysia_flat_rate": 15.00,
+      "free_shipping_min": 150.00,
+      "local_pickup": false
+    }
+  },
+  "business": {
+    "legal_name": "[公司名称 Legal name]",
+    "ssm_no": "[SSM 号码]",
+    "email": "hello@example.com",
+    "phone": "[电话 Phone]"
+  },
+  "social": {
+    "instagram": "",
+    "facebook": "",
+    "tiktok": "",
+    "shopee": "",
+    "xiaohongshu": ""
+  },
+  "tracking": {
+    "ga4_id": "",
+    "meta_pixel_id": ""
+  }
+}

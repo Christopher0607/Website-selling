@@ -1,0 +1,45 @@
+/* Agency Core — 前台样式 */
+:root { --agc-wa: #25d366; --agc-accent: var(--global-palette1, #2f5d50); }
+
+/* Demo 横幅 */
+.agc-demo-banner {
+  background: #1f1f1f; color: #fff; text-align: center;
+  font-size: 13px; line-height: 1.4; padding: 8px 16px; position: relative; z-index: 100;
+}
+
+/* 浮动 WhatsApp 按钮 */
+.agc-wa-float {
+  position: fixed; bottom: 20px; z-index: 999;
+  width: 56px; height: 56px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--agc-wa); color: #fff; box-shadow: 0 4px 14px rgba(0,0,0,.2);
+  transition: transform .15s ease;
+}
+.agc-wa-float:hover, .agc-wa-float:focus { transform: scale(1.06); color: #fff; }
+.agc-wa-float svg { width: 30px; height: 30px; }
+.agc-wa-right { right: 20px; }
+.agc-wa-left { left: 20px; }
+@media (max-width: 767px) {
+  .agc-wa-float { bottom: 16px; width: 52px; height: 52px; }
+  .agc-wa-right { right: 16px; }
+  .agc-wa-left { left: 16px; }
+  .agc-wa-float.agc-wa-hide-mobile { display: none; }
+}
+
+/* 产品页 / 行动呼吁 WhatsApp 按钮 */
+.agc-wa-product-wrap { margin: 12px 0 0; }
+.agc-wa-product, .agc-wa-cta-button {
+  display: inline-flex !important; align-items: center; gap: 8px;
+  background: var(--agc-wa) !important; color: #fff !important; border: 0 !important;
+}
+.agc-wa-product svg, .agc-wa-cta svg { width: 20px; height: 20px; flex: none; }
+.agc-wa-cta:not(.button) svg { vertical-align: -4px; margin-right: 4px; }
+
+/* Demo 结账 */
+.agc-demo-checkout-notice { background: #fff4e5; border-left: 4px solid #f0a020; padding: 10px 12px; font-size: 14px; }
+.agc-demo-order { opacity: .7; cursor: not-allowed; white-space: normal; }
+
+/* 页脚公司资料 */
+.agc-business p { margin: 0 0 .5em; }
+.agc-social { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 14px; }
+.agc-concept-label { display: inline-block; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; border: 1px solid currentColor; border-radius: 3px; padding: 1px 6px; }

@@ -1,0 +1,44 @@
+{
+  "_comment": "母版站的中性示范值。复制母版之后，每个站用自己的 brand-config.json 覆盖。",
+  "mode": "demo",
+  "site": {
+    "slug": "master",
+    "domain": "master.kedailab.com",
+    "name": "Master Store",
+    "tagline": "Everyday essentials, delivered across Malaysia",
+    "language": "en"
+  },
+  "colors": {
+    "primary": "#2F5D50",
+    "secondary": "#E8DCCB",
+    "accent": "#C8553D",
+    "text": "#1F1F1F",
+    "background": "#FFFFFF"
+  },
+  "fonts": { "heading": "Playfair Display", "body": "Inter" },
+  "assets": { "logo": "", "site_icon": "" },
+  "whatsapp": {
+    "number": "60123456789",
+    "button_text": "Ask on WhatsApp",
+    "prefill": "Hi, I'd like to ask about {product}: {url}",
+    "general": "Hi {site}, I'd like to ask about your products.",
+    "floating_button": true,
+    "position": "right"
+  },
+  "store": {
+    "address": { "line1": "[Address]", "city": "Petaling Jaya", "state": "Selangor", "postcode": "47300", "country": "MY" },
+    "currency": "MYR",
+    "sell_to": ["MY"],
+    "shipping": { "west_malaysia_flat_rate": 8.00, "east_malaysia_flat_rate": 15.00, "free_shipping_min": 150.00, "local_pickup": false }
+  },
+  "business": {
+    "legal_name": "[Company name] (Demo)",
+    "ssm_no": "[SSM No.]",
+    "email": "hello@example.com",
+    "phone": "[Phone]",
+    "hours": "Mon–Fri 9am–6pm"
+  },
+  "social": { "instagram": "", "facebook": "", "tiktok": "", "shopee": "", "xiaohongshu": "", "youtube": "" },
+  "tracking": { "ga4_id": "", "meta_pixel_id": "" },
+  "email": { "from_address": "" }
+}

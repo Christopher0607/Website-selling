@@ -1,0 +1,15 @@
+sku,type,parent_sku,name,category,price,sale_price,stock,weight_kg,featured,short_description,description,image,attributes
+MS-001,simple,,Daily Gentle Cleanser,Face,39.00,,50,0.2,1,"Low-foam cleanser for daily use.","<p>A gentle, low-foam cleanser for morning and night. Demo product.</p>",cleanser.webp,
+MS-002,variable,,Hydrating Serum,Face,,,,0.15,1,"Lightweight serum for humid weather.","<p>Lightweight, fast-absorbing serum. Choose your size. Demo product.</p>",serum.webp,Size:30ml|50ml
+MS-002-30,variation,MS-002,Hydrating Serum 30ml,,59.00,,30,0.12,,,,serum.webp,Size:30ml
+MS-002-50,variation,MS-002,Hydrating Serum 50ml,,89.00,79.00,20,0.18,,,,serum.webp,Size:50ml
+MS-003,simple,,Light Gel Moisturiser,Face,49.00,,40,0.2,1,"Oil-free gel moisturiser.","<p>Oil-free gel texture. Demo product.</p>",moisturiser.webp,
+MS-004,simple,,Everyday Sunscreen SPF50,Face,45.00,,60,0.1,1,"Non-greasy daily sunscreen.","<p>Daily sunscreen with a light finish. Demo product.</p>",sunscreen.webp,
+MS-005,simple,,Body Lotion,Body,35.00,,45,0.35,,"Fast-absorbing body lotion.","<p>Fast-absorbing body lotion. Demo product.</p>",lotion.webp,
+MS-006,variable,,Body Wash,Body,,,,0.5,,"Gentle body wash in two scents.","<p>Gentle body wash. Choose a scent. Demo product.</p>",bodywash.webp,Scent:Pandan|Lemongrass
+MS-006-P,variation,MS-006,Body Wash Pandan,,29.00,,30,0.5,,,,bodywash.webp,Scent:Pandan
+MS-006-L,variation,MS-006,Body Wash Lemongrass,,29.00,,30,0.5,,,,bodywash.webp,Scent:Lemongrass
+MS-007,simple,,Hand Cream,Body,19.00,,80,0.08,,"Pocket-size hand cream.","<p>Pocket-size hand cream. Demo product.</p>",handcream.webp,
+MS-008,simple,,Lip Balm,Body,12.00,,100,0.03,,"Everyday lip balm.","<p>Everyday lip balm. Demo product.</p>",lipbalm.webp,
+MS-009,simple,,Starter Gift Set,Gift Sets,129.00,109.00,15,0.8,1,"Cleanser, serum and moisturiser.","<p>Our three basics in one box. Demo product.</p>",giftset.webp,
+MS-010,simple,,Travel Kit,Gift Sets,59.00,,25,0.3,,"Travel sizes in a pouch.","<p>Travel sizes in a reusable pouch. Demo product.</p>",travelkit.webp,
