@@ -13,6 +13,7 @@ usage() {
   --content      额外的页面内容文件夹（同名文件覆盖母版 wp/content/store）
   --products     导入产品 CSV（图片放在 CSV 同一层的 images/ 文件夹）
   --force-pages  页面已存在也用文件内容覆盖
+  --replace-products  导入前先删除所有现有产品（样板站 / preview 换品牌时用）
   --no-plugins   不安装 / 更新插件（只更新内容）
 
 例子:
@@ -21,7 +22,7 @@ EOF
 }
 [[ $# -lt 1 || "$1" == -h || "$1" == --help ]] && { usage; exit 0; }
 SLUG_ARG="$1"; shift
-BRAND="$AGENCY_ROOT/sites/master/brand-config.json"; CONTENT_DIRS=("$AGENCY_ROOT/wp/content/store"); PRODUCTS=""; FORCE=""; PLUGINS=1
+BRAND="$AGENCY_ROOT/sites/master/brand-config.json"; CONTENT_DIRS=("$AGENCY_ROOT/wp/content/store"); PRODUCTS=""; FORCE=""; PLUGINS=1; REPLACE=0
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --brand) BRAND="$(readlink -f "$2")"; shift 2;;
@@ -29,6 +30,7 @@ while [[ $# -gt 0 ]]; do
     --products) PRODUCTS="$(readlink -f "$2")"; shift 2;;
     --force-pages) FORCE="force"; shift;;
     --no-plugins) PLUGINS=0; shift;;
+    --replace-products) REPLACE=1; shift;;
     *) usage; die "不认识的参数 $1";;
   esac
 done
@@ -88,6 +90,7 @@ info "4/6 套用品牌"
 
 if [[ -n "$PRODUCTS" ]]; then
   info "5/6 导入产品"
+  if [[ $REPLACE == 1 ]]; then wpx "$SLUG_ARG" eval-file "$WORK/clear-products.php" || die "删除旧产品失败"; fi
   wpx "$SLUG_ARG" eval-file "$WORK/import-products.php" "$WORK/products/products.csv" "$WORK/products/images" || die "产品导入失败"
 else
   info "5/6 没有 --products，跳过产品导入"

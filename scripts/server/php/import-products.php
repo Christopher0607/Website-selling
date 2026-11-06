@@ -191,6 +191,17 @@ foreach ( $rows as $row ) {
 	}
 }
 
+// 没有图片的分类：用分类里第一件产品的图片.
+foreach ( get_terms( array( 'taxonomy' => 'product_cat', 'hide_empty' => true ) ) as $term ) {
+	if ( get_term_meta( $term->term_id, 'thumbnail_id', true ) ) {
+		continue;
+	}
+	$first = wc_get_products( array( 'category' => array( $term->slug ), 'limit' => 1, 'orderby' => 'date', 'order' => 'ASC', 'return' => 'objects' ) );
+	if ( $first && $first[0]->get_image_id() ) {
+		update_term_meta( $term->term_id, 'thumbnail_id', $first[0]->get_image_id() );
+	}
+}
+
 // 删掉 WooCommerce 默认的 "Uncategorized" 以外没有产品的空分类不处理；只确保默认分类名称好看.
 $uncat = get_term_by( 'slug', 'uncategorized', 'product_cat' );
 if ( $uncat ) {

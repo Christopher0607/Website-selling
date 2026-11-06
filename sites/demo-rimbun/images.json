@@ -1,0 +1,16 @@
+{
+  "background": "#EFE8DC", "font": "Inter",
+  "images": [
+    {"file": "rb-cleanser.webp", "shape": "pump", "body": "#234236", "cap": "#B8935A", "title": "CALM", "sub": "Gel cleanser"},
+    {"file": "rb-toner.webp", "shape": "bottle", "body": "#DCE5DE", "cap": "#234236", "label": "#234236", "title": "BALANCE", "sub": "Toner"},
+    {"file": "rb-serum.webp", "shape": "dropper", "body": "#B8935A", "cap": "#234236", "title": "DEW", "sub": "Serum", "bg": "#E3EAE4"},
+    {"file": "rb-cream.webp", "shape": "jar", "body": "#FBFAF7", "cap": "#234236", "label": "#234236", "title": "BARRIER", "sub": "Cream"},
+    {"file": "rb-gel.webp", "shape": "jar", "body": "#234236", "cap": "#B8935A", "title": "WATER", "sub": "Gel", "bg": "#E3EAE4"},
+    {"file": "rb-sun.webp", "shape": "tube", "body": "#FBFAF7", "cap": "#B8935A", "label": "#234236", "title": "SPF50", "sub": "Sun fluid"},
+    {"file": "rb-lip.webp", "shape": "tin", "body": "#B8935A", "cap": "#234236", "title": "LIP", "sub": "Overnight"},
+    {"file": "rb-mask.webp", "shape": "jar", "body": "#8A9A8C", "cap": "#234236", "title": "CLAY", "sub": "Reset mask"},
+    {"file": "rb-set.webp", "shape": "box", "body": "#234236", "cap": "#B8935A", "title": "RIMBUN", "sub": "Three-step set"},
+    {"file": "rb-minis.webp", "shape": "pouch", "body": "#DCE5DE", "cap": "#234236", "label": "#234236", "title": "MINIS", "sub": "Travel"},
+    {"file": "hero.webp", "kind": "hero", "items": ["rb-serum.webp", "rb-cream.webp", "rb-sun.webp"], "bg": "#E3EAE4"}
+  ]
+}

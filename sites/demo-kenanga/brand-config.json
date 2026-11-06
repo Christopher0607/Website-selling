@@ -1,0 +1,23 @@
+{
+  "mode": "demo",
+  "site": { "slug": "demo-kenanga", "domain": "demo-kenanga.kedailab.com", "name": "Dapur Seri Kenanga", "tagline": "Homemade sambal & kuih, the way mak makes it", "language": "en" },
+  "colors": { "primary": "#8C4A2F", "secondary": "#F6E7D2", "accent": "#E0A030", "text": "#2B1D16", "background": "#FFFDF8" },
+  "fonts": { "heading": "Fraunces", "body": "Nunito" },
+  "assets": { "logo": "assets/logo.png", "site_icon": "assets/icon.png" },
+  "whatsapp": {
+    "number": "60123456789",
+    "button_text": "Tanya / Ask on WhatsApp",
+    "prefill": "Salam Dapur Seri Kenanga, saya nak tanya pasal {product}: {url}",
+    "general": "Salam Dapur Seri Kenanga, saya nak order / tanya.",
+    "floating_button": true, "position": "right"
+  },
+  "store": {
+    "address": { "line1": "Concept project – no physical store", "city": "Ipoh", "state": "Perak", "postcode": "30000", "country": "MY" },
+    "currency": "MYR", "sell_to": ["MY"],
+    "shipping": { "west_malaysia_flat_rate": 9.00, "east_malaysia_flat_rate": 18.00, "free_shipping_min": 150.00, "local_pickup": true }
+  },
+  "business": { "legal_name": "Dapur Seri Kenanga (Concept Project)", "ssm_no": "Demo – not registered", "email": "hello@example.com", "phone": "+60 12-345 6789 (demo)", "hours": "Tue–Sun 9am–7pm" },
+  "social": { "instagram": "", "facebook": "", "tiktok": "", "shopee": "", "xiaohongshu": "", "youtube": "" },
+  "tracking": { "ga4_id": "", "meta_pixel_id": "" },
+  "email": { "from_address": "" }
+}

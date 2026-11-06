@@ -20,7 +20,7 @@
 
 /* 区块之间的间距 */
 .agc-section { padding-top: clamp(32px, 4.5vw, 64px); padding-bottom: clamp(32px, 4.5vw, 64px); }
-.agc-hero + .agc-section { padding-top: 0; }
+.agc-hero + .agc-section:not(.agc-section-alt) { padding-top: 0; }
 .agc-section-alt { background: var(--global-palette7); }
 
 /* FAQ */
@@ -40,3 +40,17 @@
   .agc-hero .wp-block-button { width: 100%; }
   .agc-hero .wp-block-button__link { width: 100%; text-align: center; }
 }
+
+/* 小标题（主视觉上方的一行小字） */
+.agc-eyebrow { text-transform: uppercase; letter-spacing: .14em; font-size: .78rem; color: var(--global-palette5); margin-bottom: .6em; }
+
+/* 置中主视觉 + 小标签 */
+.agc-hero-center h1 { max-width: 18ch; margin-left: auto; margin-right: auto; }
+.agc-hero-center .agc-hero-sub { margin-left: auto; margin-right: auto; }
+.agc-pill { display: table; margin: 0 auto 1em !important; background: var(--global-palette7); color: var(--global-palette1); border-radius: 999px; padding: 6px 14px; font-size: .85rem; font-weight: 600; }
+/* 分类卡片 */
+.woocommerce ul.products li.product-category img { border-radius: 12px; aspect-ratio: 1 / 1; object-fit: cover; }
+.woocommerce ul.products li.product-category .woocommerce-loop-category__title { font-size: 1rem; text-align: center; }
+
+/* Demo 模式：不显示"没有付款方式"的提示（下面已经有 Demo 说明） */
+.agc-demo #payment .payment_methods { display: none; }

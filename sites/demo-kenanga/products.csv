@@ -1,0 +1,12 @@
+sku,type,parent_sku,name,category,price,sale_price,stock,weight_kg,featured,short_description,description,image,attributes
+DK-01,variable,,Sambal Bilis Garing,Sambal,,,,0.3,1,"Crispy anchovy sambal. Choose your spice level.","<p>Crispy anchovies in slow-cooked sambal. 250 g jar. Keep refrigerated after opening; best within 1 month.</p><p>Contains: fish. <em>Concept product for a demo store.</em></p>",dk-bilis.webp,Spice:Mild|Pedas|Extra Pedas
+DK-01-M,variation,DK-01,Sambal Bilis Garing Mild,,18.00,,40,0.3,,,,dk-bilis.webp,Spice:Mild
+DK-01-P,variation,DK-01,Sambal Bilis Garing Pedas,,18.00,,40,0.3,,,,dk-bilis.webp,Spice:Pedas
+DK-01-E,variation,DK-01,Sambal Bilis Garing Extra Pedas,,19.00,,30,0.3,,,,dk-bilis.webp,Spice:Extra Pedas
+DK-02,simple,,Sambal Udang Kering,Sambal,24.00,,30,0.3,1,"Dried shrimp sambal for rice and roti.","<p>250 g jar. Contains: shellfish. <em>Concept product for a demo store.</em></p>",dk-udang.webp,
+DK-03,simple,,Serunding Daging,Sambal,28.00,,25,0.25,,"Spiced beef floss.","<p>200 g pack. <em>Concept product for a demo store.</em></p>",dk-serunding.webp,
+DK-04,simple,,Kuih Bangkit Santan (Tin),Cookies,32.00,,40,0.5,1,"Melt-in-the-mouth coconut cookies.","<p>About 80 pcs per tin. Keep airtight. Contains: coconut. <em>Concept product for a demo store.</em></p>",dk-bangkit.webp,
+DK-05,simple,,Tart Nenas Gulung (Tin),Cookies,38.00,,40,0.5,1,"Rolled pineapple tarts with homemade jam.","<p>About 50 pcs per tin. Contains: wheat, egg, dairy. <em>Concept product for a demo store.</em></p>",dk-tart.webp,
+DK-06,simple,,Kerepek Pisang Pedas,Snacks,12.00,,60,0.2,,"Spicy banana chips.","<p>200 g pack. <em>Concept product for a demo store.</em></p>",dk-kerepek.webp,
+DK-07,simple,,Rempeyek Kacang,Snacks,14.00,,50,0.2,,"Crispy peanut crackers.","<p>200 g pack. Contains: peanuts. <em>Concept product for a demo store.</em></p>",dk-rempeyek.webp,
+DK-08,simple,,Hamper Raya Kenanga,Gift Boxes,128.00,115.00,15,2.0,1,"Two cookie tins, one sambal and a card.","<p>Gift box with a handwritten card. Corporate orders: WhatsApp us. <em>Concept product for a demo store.</em></p>",dk-hamper.webp,

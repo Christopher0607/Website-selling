@@ -1,0 +1,23 @@
+{
+  "mode": "demo",
+  "site": { "slug": "demo-rimbun", "domain": "demo-rimbun.kedailab.com", "name": "Rimbun Skin", "tagline": "Quiet skincare for humid days", "language": "en" },
+  "colors": { "primary": "#234236", "secondary": "#EFE8DC", "accent": "#B8935A", "text": "#1C2420", "background": "#FBFAF7" },
+  "fonts": { "heading": "Cormorant Garamond", "body": "Inter" },
+  "assets": { "logo": "assets/logo.png", "site_icon": "assets/icon.png" },
+  "whatsapp": {
+    "number": "60123456789",
+    "button_text": "Ask about this product",
+    "prefill": "Hi Rimbun Skin, I'd like to ask about {product}: {url}",
+    "general": "Hi Rimbun Skin, I'd like some help choosing a product.",
+    "floating_button": true, "position": "right"
+  },
+  "store": {
+    "address": { "line1": "Concept project – no physical store", "city": "Kuala Lumpur", "state": "Kuala Lumpur", "postcode": "50450", "country": "MY" },
+    "currency": "MYR", "sell_to": ["MY"],
+    "shipping": { "west_malaysia_flat_rate": 7.00, "east_malaysia_flat_rate": 14.00, "free_shipping_min": 120.00, "local_pickup": false }
+  },
+  "business": { "legal_name": "Rimbun Skin (Concept Project)", "ssm_no": "Demo – not registered", "email": "hello@example.com", "phone": "+60 12-345 6789 (demo)", "hours": "Mon–Fri 10am–6pm" },
+  "social": { "instagram": "", "facebook": "", "tiktok": "", "shopee": "", "xiaohongshu": "", "youtube": "" },
+  "tracking": { "ga4_id": "", "meta_pixel_id": "" },
+  "email": { "from_address": "" }
+}

@@ -16,7 +16,7 @@ images.json 格式:
   ]
 }
 
-shape 可选: bottle, dropper, jar, tube, pump, box, pouch, bag, tin, cup, sachet, tag
+shape 可选: bottle, dropper, jar, tube, pump, box, pouch, bag, tin, cup, sachet, tag, fabric
 需要: rsvg-convert（librsvg2-bin）和 cwebp（webp）。
 产生的图片写进输出文件夹的 image-sources.md（来源：程式产生的原创插图）。
 """
@@ -117,6 +117,19 @@ def product(spec, font, cx=600, base=1010, k=1.0):
         g.append(f'<path d="M{cx - S(110)} {y} Q{cx} {y - S(220)} {cx + S(110)} {y}" stroke="{cap}" stroke-width="{S(22)}" fill="none"/>')
         g.append(f'<rect x="{x}" y="{y}" width="{bw}" height="{bh}" rx="{S(18)}" fill="{body}"/>')
         g.append(label_text(cx, y + S(250), title, sub, lab, font, k))
+    elif shape == "fabric":
+        # 叠好的布（头巾 / 衣服）：三层，带花纹
+        alt = spec.get("pattern", lab)
+        for i, (w_, h_) in enumerate([(S(440), S(150)), (S(425), S(150)), (S(410), S(150))]):
+            yy = base - S(150) * (i + 1) - S(6) * i
+            col = body if i != 1 else shade(body, 0.12)
+            g.append(f'<rect x="{cx - w_/2}" y="{yy}" width="{w_}" height="{h_}" rx="{S(26)}" fill="{col}"/>')
+            for j in range(7):
+                g.append(f'<circle cx="{cx - w_/2 + S(50) + j*S(70)}" cy="{yy + h_/2}" r="{S(9)}" fill="{alt}" fill-opacity="0.35"/>')
+        top = base - S(462)
+        g.append(f'<path d="M{cx - S(200)} {top + S(20)} Q{cx} {top - S(70)} {cx + S(200)} {top + S(20)}" fill="{shade(body, -0.1)}"/>')
+        g.append(f'<rect x="{cx - S(150)}" y="{base - S(250)}" width="{S(300)}" height="{S(110)}" rx="{S(10)}" fill="{cap}"/>')
+        g.append(label_text(cx, base - S(198), title, sub, lab, font, k * 0.75))
     elif shape == "cup":
         bw, bh = S(360), S(420)
         x, y = cx - bw / 2, base - bh
@@ -161,7 +174,7 @@ def main():
             items = [by_file[f] for f in img.get("items", []) if f in by_file][:3]
             w, h = 1600, 1200
             parts = []
-            pos = [(520, 1080, 1.0), (940, 1100, 0.78), (1260, 1100, 0.62)]
+            pos = [(480, 1080, 1.0), (930, 1100, 0.78), (1290, 1100, 0.62)]
             for spec_i, (cx, base, k) in reversed(list(zip(items, pos))):
                 parts.append(product(spec_i, font, cx, base, k))
             render(svg_wrap(w, h, bg, "".join(parts)), path, w)

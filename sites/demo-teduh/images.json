@@ -1,0 +1,16 @@
+{
+  "background": "#FFE3EA", "font": "Poppins",
+  "images": [
+    {"file": "td-bawal-rose.webp", "shape": "fabric", "body": "#D94F70", "cap": "#FFFFFF", "label": "#D94F70", "pattern": "#FFFFFF", "title": "BAWAL", "sub": "Rose"},
+    {"file": "td-bawal-sage.webp", "shape": "fabric", "body": "#8DAA91", "cap": "#FFFFFF", "label": "#5C7A60", "pattern": "#FFFFFF", "title": "BAWAL", "sub": "Sage", "bg": "#E6F0E7"},
+    {"file": "td-bawal-sand.webp", "shape": "fabric", "body": "#D8C3A5", "cap": "#FFFFFF", "label": "#8A6E4B", "pattern": "#FFFFFF", "title": "BAWAL", "sub": "Sand", "bg": "#F6EEE3"},
+    {"file": "td-shawl-coral.webp", "shape": "fabric", "body": "#FF8A5B", "cap": "#FFFFFF", "label": "#D9603A", "pattern": "#FFFFFF", "title": "SHAWL", "sub": "Coral", "bg": "#FFE8DE"},
+    {"file": "td-shawl-mocha.webp", "shape": "fabric", "body": "#8B6B5C", "cap": "#FFFFFF", "label": "#8B6B5C", "pattern": "#FFFFFF", "title": "SHAWL", "sub": "Mocha", "bg": "#F1E7E2"},
+    {"file": "td-instant.webp", "shape": "fabric", "body": "#2A1E24", "cap": "#FFFFFF", "label": "#2A1E24", "pattern": "#FFFFFF", "title": "INSTANT", "sub": "M · L"},
+    {"file": "td-inner.webp", "shape": "box", "body": "#2A1E24", "cap": "#D94F70", "title": "INNER", "sub": "3 pcs"},
+    {"file": "td-brooch.webp", "shape": "tin", "body": "#FF8A5B", "cap": "#D94F70", "title": "BROOCH", "sub": "Magnetic"},
+    {"file": "td-raya.webp", "shape": "box", "body": "#D94F70", "cap": "#FF8A5B", "title": "RAYA", "sub": "Bundle of 3"},
+    {"file": "td-pouch.webp", "shape": "pouch", "body": "#FFFFFF", "cap": "#D94F70", "label": "#D94F70", "title": "POUCH", "sub": "Travel"},
+    {"file": "hero.webp", "kind": "hero", "items": ["td-bawal-rose.webp", "td-shawl-coral.webp", "td-bawal-sage.webp"], "bg": "#FFE3EA"}
+  ]
+}
