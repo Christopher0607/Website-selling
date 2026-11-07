@@ -818,7 +818,7 @@ class Studio:
 {robots}
 <meta property="og:title" content="{e(title)}">
 <meta property="og:description" content="{e(desc)}">
-<meta property="og:image" content="{root}assets/img/og.jpg">
+<meta property="og:image" content="{e(d.get("site_url", "").rstrip("/"))}/assets/img/og.jpg">
 <meta name="theme-color" content="#14171c">
 <link rel="icon" href="{root}assets/img/icon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
