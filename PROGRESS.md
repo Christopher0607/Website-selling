@@ -100,6 +100,7 @@
 - 工作室网站做一个中文版首页（/zh/），给只看中文的卖家（现在是英文为主 + 中文副标题）
 - Netlify 免费方案没有真正的密码保护：样板用「随机网址 + 密码页 + noindex」。如果以后很多样板，考虑 Netlify Pro（约 USD 20/月，先问）或服务器版 make-preview.sh
 - 6 个模板做 WordPress / WooCommerce 版（子主题 + 各自的 brand-config），第一个客户选了哪个就先做哪个
+- 交付彩排（俊宇 2026-11-08 决定：第一个商家对样板有兴趣时马上做）：开 DigitalOcean、上线母版店、接 Billplz 测试模式、下测试订单、录 2 分钟后台影片
 - 网站加 Google Analytics / Meta Pixel（要先有隐私通知更新 + cookie 说明）
 - Shopee 产品导出表 → WooCommerce CSV 的转换脚本（第一个客户时写，按实际导出格式）
 - Ubuntu 26.04 LTS 稳定后（26.04.1），在测试站试 PHP 8.5 再升级
@@ -109,6 +110,7 @@
 
 | 日期 | 任务 | 结果 | 网址 / 文件 | 未解决的问题 |
 |---|---|---|---|---|
+| 2026-11-08 | 后台导览（俊宇要看后台） | 俊宇确认：交付彩排（真服务器 + Billplz 测试模式）等第一个有兴趣的商家再做；从本地测试店截了 8 张 WooCommerce 后台（订单、订单详情、产品、编辑产品、运费、付款、我们的设定、手机版），加中英说明、标示示范资料 | `content/backend-tour/`、`scripts/local/make-backend-tour.js` | 真服务器和付款网关测试模式还没做（等有兴趣的商家） |
 | 2026-11-08 | 4.1 候选商家第 1 批（俊宇要求 Claude Code 上网找） | 用搜索引擎的公开资料找了 17 个马来西亚本地中小品牌（头巾 5、sambal 7、咖啡 4、护肤 3，按 A/B/C 排优先），每个附链接、看到的信号、建议模板、贴进工作台的资料格（观察要俊宇亲眼核实补上）；没有登录、没有用程式刷 IG / Shopee | `sales/research/2026-11-08-batch-1.md` | 粉丝 / 评价数来自搜索结果，要逐个核实 |
 | 2026-11-08 | 4.1b 销售工作台 + IG 自动回复指南（俊宇要求「自动找、自动联络、自动接洽」） | 查证：Instagram 条款不允许自动收集资料；官方私信接口只能回复主动私信的人（24 小时内）→ 不做自动抓 / 自动群发。改做合规版：手机工作台（DeepSeek 打分 + 写开场白 / 跟进 / 回信、今日清单、每日上限、跟进提醒、不再联系、数字、导出 CSV），信息由俊宇手动发送；Meta Business Suite 自动回复（即时回复、5 个常见问题、关键字）的步骤和文字 | https://cartsmith.netlify.app/desk/、`docs/10-instagram-auto-replies.md`、`docs/11-sales-desk.md` | 等俊宇设定 `SALES_DESK_KEY`；IG 官方 AI 私信等有客户 + SSM 后再申请 |
 | 2026-11-08 | IG 上线 + 品牌 | 俊宇把 IG 改成 `cartsmith.studio`、头像用 2 号标志、发了 9 张贴文；网站全部改回 `cartsmith.studio`；网站换上 2 号标志（页首、页尾、浏览器小图标、分享图）；表单加后备：发送失败时显示资料 + 「复制并打开 Instagram 私信」；重做 01、09 两张贴文（新 IG 名字） | `content/brand/`、`content/ig-launch/01.jpg`、`09.jpg` | 表单侦测还没开启（线上检查）；01、09 旧图上写的是旧 IG 名字，要换 |
