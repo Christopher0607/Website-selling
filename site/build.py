@@ -683,7 +683,7 @@ class Studio:
     <header class="chat__head"><div><strong>Cartsmith assistant</strong><small>AI · answers from our price list · Junyu takes over anytime</small></div><button class="chat__x" type="button" data-chat-close aria-label="Close">{icon('x')}</button></header>
     <div class="chat__log" data-chat-log aria-live="polite"></div>
     <div class="chat__quick" data-chat-quick><button type="button">How much is a website?</button><button type="button">Do I need to leave Shopee?</button><button type="button">网站要多少钱？</button></div>
-    <form class="chat__form" data-chat-form><label class="sr" for="chat-in">Message</label><textarea id="chat-in" rows="1" maxlength="800" placeholder="Type your question… (EN / 中文 / BM)" required></textarea><button class="s-btn s-btn--sm" type="submit">Send</button></form>
+    <form class="chat__form" data-chat-form><label class="sr" for="chat-in">Message</label><textarea id="chat-in" rows="1" maxlength="800" placeholder="Type your question…" required></textarea><button class="s-btn s-btn--sm" type="submit">Send</button></form>
     <p class="chat__fine">AI can make mistakes — prices and terms are confirmed by Junyu in writing. Don't share passwords or card details. <a href="{root}privacy.html#ai">Privacy</a></p>
   </section>
 </div>

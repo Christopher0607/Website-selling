@@ -3,7 +3,7 @@
  * AI chat assistant (inbound only — the visitor starts the chat).
  *
  * The browser talks to WordPress (admin-ajax); WordPress forwards the conversation to the
- * KedaiLab sales-agent service on the same server (sales/agent/kedailab_sales.py serve),
+ * sales-agent service on the same server (sales/agent/sales_agent.py serve, DeepSeek),
  * which calls Claude. The Anthropic API key never touches WordPress.
  *
  * Turned on only when wp-config.php defines:
@@ -136,7 +136,7 @@ class AGC_AI_Chat {
 		// Save the lead once per chat session.
 		$session = isset( $_POST['session'] ) ? sanitize_key( wp_unslash( $_POST['session'] ) ) : '';
 		if ( ! empty( $data['lead_ready'] ) && is_array( $data['lead'] ?? null ) && $session && ! get_transient( 'agc_ai_lead_' . $session ) ) {
-			$lead = array_intersect_key( $data['lead'], array_flip( array( 'name', 'brand', 'shop_url', 'whatsapp', 'language', 'interest' ) ) );
+			$lead = array_intersect_key( $data['lead'], array_flip( array( 'name', 'brand', 'shop_url', 'instagram', 'contact', 'whatsapp', 'language', 'interest' ) ) );
 			$lead['conversation'] = implode(
 				"\n",
 				array_map( static fn( $m ) => ( 'assistant' === $m['role'] ? 'AI: ' : 'Visitor: ' ) . $m['content'], array_merge( $messages, array( array( 'role' => 'assistant', 'content' => (string) $data['reply'] ) ) ) )
