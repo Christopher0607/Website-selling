@@ -21,13 +21,14 @@
 | 6 | 首批客户优惠 | 前 3 个客户 7 折，换真实评价和案例授权 | 前 3 个客户：建站 7 折 **+ 维护免费 2 个月**（代替 1 个月），换真实评价、案例授权、介绍朋友 |
 | 7 | 每月启动预算 | RM300 以内（服务器、域名、工具）；前 30 天广告 RM0 | 用默认 |
 | 8 | 每周投入时间 | 15–20 小时 | 用默认 |
-| 9 ★ | 联系方式 | WhatsApp Business 号码 | **Instagram `@xiao.ming0607`**（2026-11-07 俊宇决定；暂时不开 WhatsApp）。网站上：Instagram 私信按钮 + 免费样板申请表（Netlify Forms）+ AI 客服。以后改成品牌名的话，只要改 `site/studio.json` 的 instagram 再重新 build |
+| 9 ★ | 联系方式 | WhatsApp Business 号码 | **Instagram `@cartsmith.studio`**（2026-11-08 俊宇改好；暂时不开 WhatsApp）。网站上：Instagram 私信按钮 + 免费样板申请表（Netlify Forms）+ AI 客服。以后改成品牌名的话，只要改 `site/studio.json` 的 instagram 再重新 build |
 | 10 | SSM 注册 | 先做样板和找客户，收第一笔订金之前完成 SSM 注册（独资 Enterprise）+ 开商业户口 | **暂时不注册**（2026-11-07）——找客户、做免费样板可以先做；但**收第一笔订金之前一定要注册**（见下面第 10 节）。网站上不显示 SSM 号码 |
 | 11 | 服务器 | DigitalOcean，新加坡机房，2GB 内存起步 | DigitalOcean 新加坡，**Ubuntu 24.04 LTS**、2 GB（脚本已在 24.04 完整测试；26.04 默认 PHP 8.5，等插件兼容稳定后再升级） |
 | 12 | 视频要不要露脸 | 不露脸：录屏 + 自己的声音 | 用默认 |
 | 13 | 工作室网站放哪里 | 服务器（WordPress） | **Netlify**（静态网站 + 免费表单 + 一个聊天函数），程式在 `site/`。DigitalOcean 服务器等第一个客户签约再开，用来放客户的 WooCommerce 网店 |
 | 14 | 给客户选的模板 | 3 个样板站 | **6 个模板**（全部虚构品牌、Pexels 照片）：Dewlane 护肤（简约）、Plainfold 服装（大胆杂志风）、Little Chili Pantry 食品（温暖手作）、Lowlight Roasters 咖啡（深色高级）、Tailmate 宠物（活泼彩色）、Voltnest 3C 配件（科技规格）。2026-11-07 网上搜过都没有同名品牌 |
 | 15 | AI | Claude | **DeepSeek API**（`deepseek-flash`，预付制）：网站 AI 客服 + 销售助理 |
+| 17 | 标志 | — | **2 号：几何 C + 橙色小方块**（2026-11-08 俊宇选，已用在 IG 头像和网站）。档案在 `content/brand/` |
 | 16 | 免费样板怎么做 | 服务器 `make-preview.sh` | `python site/build.py --preview` 产生 → 拖进 Netlify Drop（随机网址 + 密码页 + noindex，14 天内删除） |
 
 ---

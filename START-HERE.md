@@ -79,7 +79,7 @@
 - [ ] GitHub 账号（已经有：`Christopher0607`）
 - [ ] Netlify 账号（用 GitHub 登录，免费）
 - [ ] DeepSeek 账号 + 小额充值（例如 USD 2–5，预付制）
-- [ ] 一个新的 Instagram 账号给工作室（`@xiao.ming0607`）
+- [ ] 一个新的 Instagram 账号给工作室（`@cartsmith.studio`）
 - [ ] DigitalOcean 账号（第一个客户签约后才用）
 - [ ] 每周 15–20 小时
 

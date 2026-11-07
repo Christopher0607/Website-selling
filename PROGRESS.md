@@ -21,7 +21,7 @@
 - [x] N.6 免费样板产生器：`python site/build.py --preview ...` → Netlify Drop（密码页 + noindex + 14 天删除）
 - [ ] N.7 俊宇：开 Netlify 网站 ✅（https://cartsmith.netlify.app，2026-11-07 上线）+ 开表单 + 电邮通知 ⏳（新版后台在左边菜单 Forms）
 - [x] N.8 DeepSeek Key 已放进 Netlify，AI 客服线上能回答；修好多轮对话失败的问题、限制只谈工作室的事（线上测过）
-- [ ] N.9 Instagram 用 `xiao.ming0607`（俊宇决定，全部链接已改）；简介和快速回复照 C 部分设定
+- [ ] N.9 Instagram 用 `cartsmith.studio`（俊宇决定，全部链接已改）；简介和快速回复照 C 部分设定
 - [ ] N.10 用手机把 6 个模板各走一次（加入购物车 → 结账），有不顺的地方告诉 Claude Code
 
 ## Phase 0 准备
@@ -53,7 +53,7 @@
 - [x] 3.1 网站文案 —— 新版在 `site/pages/` + `site/studio.json`（旧的 WordPress 版 `wp/content/studio/` 留着备用）
 - [x] 3.2 建站 + 表单 + 联系方式 —— Netlify 版：Netlify Forms + Instagram + AI 客服（等俊宇上线，N.7–N.9）
 - [x] 3.3 Shopee 费用计算器（同一个计算程式，3 组手算例子测试通过）
-- [ ] 3.4 社交账号 —— Instagram `xiao.ming0607`；简介 + 9 张开场贴文和文案已做好（`content/ig-launch/`），等俊宇发
+- [x] 3.4 社交账号 —— Instagram `cartsmith.studio` 已改名、换头像、发了 9 张贴文（01、09 要换成新 IG 名字的版本）
 
 ## Phase 4 销售准备
 - [ ] 4.1 客户名单（前 100 个）⏳ 进行中 —— 俊宇每天找 10–20 个（只找有 Instagram 的），贴给 Claude Code（格式见 `sales/find-customers.md`）→ 打分 + 开场白 → `sales/prospects.csv`
@@ -107,8 +107,9 @@
 
 | 日期 | 任务 | 结果 | 网址 / 文件 | 未解决的问题 |
 |---|---|---|---|---|
+| 2026-11-08 | IG 上线 + 品牌 | 俊宇把 IG 改成 `cartsmith.studio`、头像用 2 号标志、发了 9 张贴文；网站全部改回 `cartsmith.studio`；网站换上 2 号标志（页首、页尾、浏览器小图标、分享图）；表单加后备：发送失败时显示资料 + 「复制并打开 Instagram 私信」；重做 01、09 两张贴文（新 IG 名字） | `content/brand/`、`content/ig-launch/01.jpg`、`09.jpg` | 表单侦测还没开启（线上检查）；01、09 旧图上写的是旧 IG 名字，要换 |
 | 2026-11-07 | 4.1 开始找客户 | 删掉两个旧预览链接（俊宇要求）；做了 9 张 IG 开场贴文（九宫格：介绍、6 个模板、价格、免费样板）+ 文案 + 发文顺序；找客户速查表（关键词、判断标准、贴给 Claude Code 的格式、跟进节奏） | `content/ig-launch/`、`sales/find-customers.md`、`scripts/local/make-ig-posts.py` | Netlify 表单还没开启（从外面检查过）；名单 0/100 |
-| 2026-11-07 | N.7–N.9 上线后修正 | 网站上线；AI 客服「多轮对话失败」原因：之前的回答以纯文字送回 DeepSeek，它跟着用纯文字回答，JSON 模式就变成空白 → 改成把之前的回答也包成 JSON + 第 3 次改用纯文字备援；加「只谈工作室的事」规则；Instagram 改 `xiao.ming0607`；部署指南按 Netlify 新版后台改（Site → Project、Forms 在左边菜单） | https://cartsmith.netlify.app、`site/netlify/functions/chat/index.mjs`、`docs/09-netlify-guide.md` | 表单要俊宇在左边菜单 Forms 开启后重新部署 |
+| 2026-11-07 | N.7–N.9 上线后修正 | 网站上线；AI 客服「多轮对话失败」原因：之前的回答以纯文字送回 DeepSeek，它跟着用纯文字回答，JSON 模式就变成空白 → 改成把之前的回答也包成 JSON + 第 3 次改用纯文字备援；加「只谈工作室的事」规则；Instagram 改 `cartsmith.studio`；部署指南按 Netlify 新版后台改（Site → Project、Forms 在左边菜单） | https://cartsmith.netlify.app、`site/netlify/functions/chat/index.mjs`、`docs/09-netlify-guide.md` | 表单要俊宇在左边菜单 Forms 开启后重新部署 |
 | 2026-11-07 | Phase N（俊宇要求：改名、换掉头巾、Netlify、6 个模板、比同业、DeepSeek、Instagram、暂不 SSM） | 改名 Cartsmith Studio；6 个模板（Pexels 照片约 90 张、全部虚构品牌，网上查过没有同名）；工作室网站 11 页；DeepSeek AI 客服（Netlify Function）；销售助理改 DeepSeek；话术改 Instagram；免费样板产生器；旧马来文样板移到 `sites/_archive/`。测试：6 个模板购物流程自动测试全通过、聊天和表单端对端（模拟 DeepSeek）通过、样板密码页通过 | 预览链接已删除（俊宇要求，改用真网站）；`site/`、`netlify.toml`、`docs/09-netlify-guide.md`、`sales/agent/` | 要真的 DeepSeek Key 才能测回答品质；隐私通知、条款要请律师看；SSM 收订金前要注册 |
 | 2026-11-06 | 0.1 决定清单 | 俊宇确认：一次性建站费 + 月费 + 上线后首月免费试用；只做 Shopee/TikTok 中小型自有品牌卖家；其余由 Claude Code 决定（Cartsmith、yourdomain.com、Ubuntu 24.04） | docs/00-decisions.md、docs/01-business-plan.md | WhatsApp 号码待提供 |
 | 2026-11-06 | 0.2 项目结构 | repo 建好，.gitignore、.env.example | — | — |

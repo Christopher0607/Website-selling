@@ -53,8 +53,9 @@ h1 .zh, h2 .zh { font-size: .42em; font-weight: 600; margin-top: .6em; color: in
 .s-hdr { position: sticky; top: 0; z-index: 50; background: rgba(247,244,238,.88); backdrop-filter: saturate(1.5) blur(12px); border-bottom: 1px solid transparent; transition: border-color .2s; }
 .s-hdr.is-scrolled { border-color: var(--line); }
 .s-hdr__in { display: flex; align-items: center; gap: 28px; min-height: 70px; }
-.s-logo { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font: 800 1.3rem/1 var(--head); letter-spacing: -.03em; }
-.s-logo em { font-style: normal; font-weight: 500; color: var(--muted); margin-left: 4px; }
+.s-logo { display: inline-flex; align-items: center; gap: 9px; text-decoration: none; font: 700 1.4rem/1 var(--head); letter-spacing: -.045em; color: var(--ink); }
+.s-mark { width: 28px; height: 28px; flex: none; }
+.s-logo em { font-style: normal; font-weight: 500; color: var(--muted); margin-left: 5px; letter-spacing: -.02em; }
 .s-logo--light em { color: #9aa1ac; }
 .s-nav { display: flex; gap: 26px; margin-left: auto; }
 .s-nav a { text-decoration: none; font-weight: 500; font-size: .95rem; color: #3a3f47; padding: 6px 0; border-bottom: 2px solid transparent; }
@@ -217,6 +218,7 @@ h1 .zh, h2 .zh { font-size: .42em; font-weight: 600; margin-top: .6em; color: in
 .s-f2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; }
 .s-form__msg { font-weight: 600; margin: 12px 0 0; }
 .s-form__msg--bad { color: #c2410c; }
+.s-form__copy { min-height: 130px !important; margin: 12px 0; font-size: .9rem !important; color: var(--ink); background: #fffaf6 !important; }
 .s-hp { position: absolute; left: -9999px; }
 .s-contact { display: grid; grid-template-columns: .9fr 1.1fr; gap: clamp(24px, 4vw, 56px); align-items: start; }
 .s-ig-card { background: linear-gradient(135deg, #feda75, #fa7e1e 30%, #d62976 60%, #962fbf 85%); color: #fff; border-radius: var(--r); padding: 28px; }

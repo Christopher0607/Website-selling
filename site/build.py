@@ -830,7 +830,7 @@ class Studio:
 {sprite()}
 <a class="skip" href="#main">Skip to content</a>
 <header class="s-hdr"><div class="s-wrap s-hdr__in">
-  <a class="s-logo" href="{root}index.html"><img src="{root}assets/img/icon.svg" alt="" width="30" height="30"><span>Cartsmith<em>Studio</em></span></a>
+  <a class="s-logo" href="{root}index.html" aria-label="Cartsmith Studio home"><svg class="s-mark" viewBox="0 0 100 100" width="30" height="30" aria-hidden="true"><path d="M72.98 30.72A30 30 0 1 0 72.98 69.28" fill="none" stroke="currentColor" stroke-width="14"/><rect x="66" y="43" width="14" height="14" fill="#ff5a2c"/></svg><span>cartsmith<em>studio</em></span></a>
   <nav class="s-nav" aria-label="Main">{nav}</nav>
   <a class="s-btn s-btn--sm s-hdr__cta" href="{root}start.html">Free mockup</a>
   <button class="s-menu" type="button" aria-label="Menu" aria-expanded="false" data-s-menu>{icon('menu')}</button>
@@ -839,7 +839,7 @@ class Studio:
 {body}
 </main>
 <footer class="s-ftr"><div class="s-wrap s-ftr__grid">
-  <div><a class="s-logo s-logo--light" href="{root}index.html"><img src="{root}assets/img/icon.svg" alt="" width="30" height="30"><span>Cartsmith<em>Studio</em></span></a>
+  <div><a class="s-logo s-logo--light" href="{root}index.html" aria-label="Cartsmith Studio home"><svg class="s-mark" viewBox="0 0 100 100" width="30" height="30" aria-hidden="true"><path d="M72.98 30.72A30 30 0 1 0 72.98 69.28" fill="none" stroke="currentColor" stroke-width="14"/><rect x="66" y="43" width="14" height="14" fill="#ff5a2c"/></svg><span>cartsmith<em>studio</em></span></a>
     <p>Online stores for Malaysian brands that sell on Shopee, TikTok Shop and Instagram. Built, launched and looked after by one person you can actually reach.</p>
     <p><a class="s-ig" href="{e(ig['profile'])}" rel="noopener">{icon('ig')} @{e(ig['handle'])}</a></p></div>
   <div><h4>Studio</h4><ul><li><a href="{root}templates.html">6 templates</a></li><li><a href="{root}pricing.html">Pricing</a></li><li><a href="{root}why-us.html">Why Cartsmith</a></li><li><a href="{root}process.html">How it works</a></li></ul></div>

@@ -72,7 +72,7 @@
 
 ## 第 C 部分：Instagram（工作室的联系方式，15 分钟）
 
-1. 工作室用的 Instagram 账号：**`xiao.ming0607`**（2026-11-07 俊宇决定）。网站、AI 客服、话术里的 Instagram 链接都已经指向这个账号。
+1. 工作室用的 Instagram 账号：**`cartsmith.studio`**（2026-11-08 俊宇改好，头像用 2 号标志）。网站、AI 客服、话术里的 Instagram 链接都已经指向这个账号。
    - 以后想换成品牌名（例如 `cartsmith.studio`）：Instagram 可以直接改用户名；改了之后告诉 Claude Code，它会改 `site/studio.json` 并重新部署。
 2. 设定 → **Account type and tools → Switch to professional account → Business**，类别选和网站设计有关的（例如 Website / Web designer）。
 3. **Bio（简介）**，可以直接用：
@@ -83,7 +83,7 @@
    ```
    **Link：** `https://cartsmith.netlify.app`
 4. **Saved replies（快速回复）：** 设定 → Business tools and controls → **Saved replies** → 按 `sales/scripts.md` 第 6 节加 5 个。
-5. 测试：用另一个账号打开 `https://ig.me/m/xiao.ming0607`，应该直接打开对话。
+5. 测试：用另一个账号打开 `https://ig.me/m/cartsmith.studio`，应该直接打开对话。
 
 ---
 

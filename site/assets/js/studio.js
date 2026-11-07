@@ -47,9 +47,19 @@
       netlifySubmit(data)
         .then(() => { location.href = form.getAttribute('action') || 'thanks.html'; })
         .catch(() => {
+          // Fallback so the request is never lost: show the details, copy them, open the Instagram DM.
           btn.disabled = false;
+          const label = { name: 'Name', brand: 'Brand', instagram: 'Instagram', email: 'Email', shop_url: 'Shop', template: 'Template', package: 'Package', products: 'Products', message: 'Note' };
+          const summary = 'Hi Cartsmith! Free mockup request:\n' + Object.keys(label).filter((k) => data[k]).map((k) => label[k] + ': ' + data[k]).join('\n');
+          const dm = form.getAttribute('data-dm');
           msg.className = 's-form__msg s-form__msg--bad';
-          msg.innerHTML = 'Sorry — the form couldn’t be sent from here. Please DM us on Instagram instead: <a href="' + esc(form.getAttribute('data-dm')) + '">@' + esc(form.getAttribute('data-handle')) + '</a>';
+          msg.innerHTML = 'Sorry \u2014 our form couldn\u2019t send this time. Tap the button to copy your details and send them to us on Instagram (@' + esc(form.getAttribute('data-handle')) + '):' +
+            '<textarea class="s-form__copy" readonly rows="6"></textarea><a class="s-btn s-btn--block" href="' + esc(dm) + '" target="_blank" rel="noopener" data-copy-dm>Copy &amp; open Instagram DM</a>';
+          const ta = msg.querySelector('textarea');
+          ta.value = summary;
+          msg.querySelector('[data-copy-dm]').addEventListener('click', () => {
+            try { navigator.clipboard.writeText(summary); } catch (e) { ta.select(); try { document.execCommand('copy'); } catch (e2) { /* manual copy */ } }
+          });
         });
     });
   }
