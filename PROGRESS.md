@@ -45,7 +45,8 @@
 
 ## Phase 4 销售准备
 - [ ] 4.1 客户名单（前 100 个）—— 俊宇每天找 20 个，`sales/prospects.csv`
-- [x] 4.2 话术定稿（`sales/scripts.md`，中 / 英 / 马来文 + WhatsApp 快速回复）
+- [x] 4.2 话术定稿（`sales/scripts.md`，中 / 英 / 马来文 + WhatsApp 快速回复）+ 完整销售手册 `sales/playbook.md`
+- [x] 4.2b 销售 AI 助理（`sales/agent/`；部署后填 API Key：`setup-sales-agent.sh`）
 - [x] 4.3 套餐单、报价单、合同清单（`sales/packages.html`、`proposal-template.md`、`contract-checklist.md`）
 - [ ] 4.4 免费样板首页流程（preview）🧪（`make-preview.sh` 50 秒、`cleanup-previews.sh` 测过）
 
@@ -99,5 +100,6 @@
 | 2026-11-06 | 2.1–2.2 样板站 | 3 个虚构品牌（网上查过没有同名）+ 程式产生的原创产品图 | sites/demo-*/ | 部署后测 PageSpeed |
 | 2026-11-06 | 3.1–3.3 工作室网站 | 文案、套餐页、流程、关于、FAQ、费用计算器、询价表单 | wp/content/studio/、sites/studio/ | SSM 资料、WhatsApp 号码待填 |
 | 2026-11-06 | 4.2–4.3、5.1–5.2 | 话术、套餐单（中英 A4）、报价单、合同要点、30 天日历、30 个脚本 | sales/、content/ | 合同要请律师看 |
+| 2026-11-07 | 成品展示 + 销售手册 + 销售 AI 助理（俊宇要求） | 4 个网站做成静态预览发布成展示页；`sales/playbook.md` 完整销售流程（找客户→成交→首月免费转月费）；`sales/agent/` 销售 AI 助理（Claude Opus 5.5）：网站 AI 客服（agency-core 1.3.0 聊天视窗 + 本机服务）、开场白、每日清单、回信、报价单、周报；用模拟 API 测通全部流程 | https://claude.ai/artifact/UMUpzoNwKbN2d7uBN7aDbH、sales/playbook.md、sales/agent/、scripts/server/setup-sales-agent.sh | 要真的 API Key 才能测回答品质；隐私通知已加 AI 客服说明，要请律师看 |
 | 2026-11-07 | 版面重做（俊宇要求） | 样板站和工作室网站改用 Pexels 真实照片（约 40 张，避开有品牌 logo 的）；版面参考热卖网店：公告栏、全宽大图主视觉、信任标志、分类大图、商品卡片 hover 换图 + 整排按钮、图文分栏、深色行动区和页脚、产品页信任标志、手机版底部固定加入购物车、购物车免运进度条；修正黏住的页首在手机上往下偏移 | sites/*/stock.json、sites/*/home.json、wp/child-theme（1.1.0）、wp/agency-core（1.2.0） | 照片只用在概念作品 |
 | 2026-11-06 | 部署准备 | build-all.sh 从零建全部站点（本地测试）+ 部署指南 | docs/08-deploy-guide.md | 等俊宇开服务器 |

@@ -71,6 +71,10 @@ class AGC_Settings {
 			'sticky_atc'           => 1,
 			'image_ratio'          => '1/1',
 			'button_radius'        => '8px',
+			// AI chat (needs AGC_AI_CHAT_URL + AGC_AI_CHAT_TOKEN in wp-config.php).
+			'ai_chat'              => 0,
+			'ai_chat_title'        => 'Ask us anything',
+			'ai_chat_greeting'     => "Hi! I'm KedaiLab's AI assistant 👋 Ask me about packages, prices or how it works. 有问题可以用中文问我。",
 		);
 	}
 
@@ -142,6 +146,14 @@ class AGC_Settings {
 					'sticky_atc'        => array( 'checkbox', __( 'Sticky add-to-cart bar on mobile product pages', 'agency-core' ) ),
 					'button_radius'     => array( 'text', __( 'Button & card corner radius (e.g. 0px, 8px, 999px)', 'agency-core' ) ),
 					'image_ratio'       => array( 'select', __( 'Product image shape', 'agency-core' ), array( '1/1' => 'Square 1:1', '4/5' => 'Portrait 4:5', '3/4' => 'Portrait 3:4' ) ),
+				),
+			),
+			'aichat'   => array(
+				'title'  => __( 'AI chat assistant', 'agency-core' ),
+				'fields' => array(
+					'ai_chat'          => array( 'checkbox', __( 'Show the AI chat (also needs AGC_AI_CHAT_URL and AGC_AI_CHAT_TOKEN in wp-config.php and the sales-agent service running)', 'agency-core' ) ),
+					'ai_chat_title'    => array( 'text', __( 'Chat window title', 'agency-core' ) ),
+					'ai_chat_greeting' => array( 'textarea', __( 'First message shown to visitors', 'agency-core' ) ),
 				),
 			),
 			'other'    => array(

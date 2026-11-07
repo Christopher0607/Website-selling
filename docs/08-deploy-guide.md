@@ -162,7 +162,8 @@ sudo cat /etc/agency/secrets/studio.env
 3. **监控**：注册 UptimeRobot（免费）→ 为 `https://kedailab.com` 和三个样板站各加一个 HTTP 监控
 4. **Google**：Search Console 用 DNS TXT 验证 `kedailab.com`，提交 `https://kedailab.com/sitemap_index.xml`
 5. **备份到 Google Drive**（可选）：后台 UpdraftPlus → Settings → Google Drive → 授权
-6. **测速**：用 PageSpeed Insights 测 `https://kedailab.com` 和一个样板站的手机版分数，记在 `sites/<代号>/README.md`
+6. **（可选）销售 AI 助理 / 网站 AI 客服**：照 `sales/agent/README.md` 的「安装」三步（要一个 Anthropic API Key，先设每月花费上限）
+7. **测速**：用 PageSpeed Insights 测 `https://kedailab.com` 和一个样板站的手机版分数，记在 `sites/<代号>/README.md`
 
 ---
 

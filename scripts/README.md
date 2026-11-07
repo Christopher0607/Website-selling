@@ -27,6 +27,7 @@
 | `install-code.sh <代号\|all> [plugin\|theme\|both]` | 安装 / 更新 agency-core 插件和子主题 |
 | `delete-site.sh <代号> [--no-backup]` | 删除站点（要输入代号确认），并检查没有残留 |
 | `optimize-images.sh <输入> <输出> [--max 1600]` | 照片转 WebP、缩小、去 EXIF |
+| `setup-sales-agent.sh` | 安装销售 AI 助理（Python + anthropic SDK + systemd 服务）并开启工作室网站的 AI 客服（要先填 API Key） |
 
 `server/php/` 是给 `wp eval-file` 用的 PHP（WooCommerce 设定、套用品牌、建页面、导入产品）。
 

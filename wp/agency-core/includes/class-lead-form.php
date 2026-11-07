@@ -170,27 +170,44 @@ class AGC_Lead_Form {
 		}
 		set_transient( $key, $count + 1, 10 * MINUTE_IN_SECONDS );
 
-		$lines = array();
-		foreach ( self::fields() as $k => $f ) {
-			$lines[] = $f[0] . ': ' . $data[ $k ];
+		self::save( $data, 'contact form' );
+		$back( 'sent' );
+	}
+
+	/**
+	 * Save a lead (also used by the AI chat) and email the admin.
+	 *
+	 * @param array  $data   Field => value (keys from fields(); unknown keys are added as extra lines).
+	 * @param string $source Where it came from.
+	 * @return int Post ID or 0.
+	 */
+	public static function save( array $data, $source = 'contact form' ) {
+		$lines = array( 'Source: ' . $source );
+		foreach ( $data as $k => $v ) {
+			$label   = self::fields()[ $k ][0] ?? ucfirst( str_replace( '_', ' ', (string) $k ) );
+			$lines[] = $label . ': ' . sanitize_textarea_field( (string) $v );
 		}
+		$data    = array_map( static fn( $v ) => sanitize_text_field( (string) $v ), $data );
 		$body    = implode( "\n", $lines );
+		$title   = trim( ( $data['brand'] ?? '' ) . ' — ' . ( $data['name'] ?? '' ), ' —' );
 		$post_id = wp_insert_post(
 			array(
 				'post_type'    => self::CPT,
 				'post_status'  => 'private',
-				'post_title'   => $data['brand'] . ' — ' . $data['name'],
+				'post_title'   => $title ? $title : 'Enquiry',
 				'post_content' => $body,
 			)
 		);
-		if ( $post_id && ! is_wp_error( $post_id ) ) {
-			foreach ( $data as $k => $v ) {
-				update_post_meta( $post_id, '_agc_' . $k, $v );
-			}
+		if ( ! $post_id || is_wp_error( $post_id ) ) {
+			return 0;
 		}
+		foreach ( $data as $k => $v ) {
+			update_post_meta( $post_id, '_agc_' . sanitize_key( $k ), $v );
+		}
+		update_post_meta( $post_id, '_agc_source', $source );
 		$to = agc_get( 'business_email' ) ? agc_get( 'business_email' ) : get_option( 'admin_email' );
-		wp_mail( $to, '[' . wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) . '] New enquiry: ' . $data['brand'], $body . "\n\n" . admin_url( 'edit.php?post_type=' . self::CPT ) );
-		$back( 'sent' );
+		wp_mail( $to, '[' . wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) . '] New enquiry (' . $source . '): ' . $title, $body . "\n\n" . admin_url( 'edit.php?post_type=' . self::CPT ) );
+		return (int) $post_id;
 	}
 
 	/**
