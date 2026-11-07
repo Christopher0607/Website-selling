@@ -6,8 +6,8 @@
 
 ## 当前状态
 
-- 当前阶段：**Phase N — Netlify 展示站**（2026-11-07 俊宇决定：先不买域名、不开服务器，用 Netlify 做临时网站给客户看）
-- 下一个任务：**俊宇开启 Netlify 表单**（`docs/09-netlify-guide.md` 第 A 部分第 9–12 步，已按新版后台改写），然后开始找客户（Phase 4.1）
+- 当前阶段：**Phase 4.1 找客户**（网站 https://cartsmith.netlify.app 已上线；俊宇 2026-11-07 说开始找客户）
+- 下一个任务：**俊宇：① 发 9 张 IG 开场贴文 + 改简介（`content/ig-launch/README.md`）② 开启 Netlify 表单（`docs/09-netlify-guide.md` A 部分第 9–12 步）③ 每天找 10–20 个店，照 `sales/find-customers.md` 的格式贴给 Claude Code** → Claude Code 打分、写开场白、记进 `sales/prospects.csv`
 - 卡住的事：没有（DigitalOcean 服务器、域名、SSM 都等第一个客户说「好」再做；SSM 一定要在收订金前完成）
 
 ---
@@ -53,10 +53,10 @@
 - [x] 3.1 网站文案 —— 新版在 `site/pages/` + `site/studio.json`（旧的 WordPress 版 `wp/content/studio/` 留着备用）
 - [x] 3.2 建站 + 表单 + 联系方式 —— Netlify 版：Netlify Forms + Instagram + AI 客服（等俊宇上线，N.7–N.9）
 - [x] 3.3 Shopee 费用计算器（同一个计算程式，3 组手算例子测试通过）
-- [ ] 3.4 社交账号 —— Instagram 简介文案已写好（`docs/09-netlify-guide.md` C 部分）；俊宇开账号
+- [ ] 3.4 社交账号 —— Instagram `xiao.ming0607`；简介 + 9 张开场贴文和文案已做好（`content/ig-launch/`），等俊宇发
 
 ## Phase 4 销售准备
-- [ ] 4.1 客户名单（前 100 个）—— 俊宇每天找 10–20 个（只找有 Instagram 的），`sales/prospects.csv`
+- [ ] 4.1 客户名单（前 100 个）⏳ 进行中 —— 俊宇每天找 10–20 个（只找有 Instagram 的），贴给 Claude Code（格式见 `sales/find-customers.md`）→ 打分 + 开场白 → `sales/prospects.csv`
 - [x] 4.2 话术定稿（`sales/scripts.md`，中 / 英 / 马来文 + Instagram 快速回复）+ 完整销售手册 `sales/playbook.md`
 - [x] 4.2b 销售 AI 助理（`sales/agent/sales_agent.py`，DeepSeek；在自己电脑跑，见 `sales/agent/README.md`）
 - [x] 4.3 套餐单、报价单、合同清单（`sales/packages.html`、`proposal-template.md`、`contract-checklist.md`）
@@ -107,8 +107,9 @@
 
 | 日期 | 任务 | 结果 | 网址 / 文件 | 未解决的问题 |
 |---|---|---|---|---|
+| 2026-11-07 | 4.1 开始找客户 | 删掉两个旧预览链接（俊宇要求）；做了 9 张 IG 开场贴文（九宫格：介绍、6 个模板、价格、免费样板）+ 文案 + 发文顺序；找客户速查表（关键词、判断标准、贴给 Claude Code 的格式、跟进节奏） | `content/ig-launch/`、`sales/find-customers.md`、`scripts/local/make-ig-posts.py` | Netlify 表单还没开启（从外面检查过）；名单 0/100 |
 | 2026-11-07 | N.7–N.9 上线后修正 | 网站上线；AI 客服「多轮对话失败」原因：之前的回答以纯文字送回 DeepSeek，它跟着用纯文字回答，JSON 模式就变成空白 → 改成把之前的回答也包成 JSON + 第 3 次改用纯文字备援；加「只谈工作室的事」规则；Instagram 改 `xiao.ming0607`；部署指南按 Netlify 新版后台改（Site → Project、Forms 在左边菜单） | https://cartsmith.netlify.app、`site/netlify/functions/chat/index.mjs`、`docs/09-netlify-guide.md` | 表单要俊宇在左边菜单 Forms 开启后重新部署 |
-| 2026-11-07 | Phase N（俊宇要求：改名、换掉头巾、Netlify、6 个模板、比同业、DeepSeek、Instagram、暂不 SSM） | 改名 Cartsmith Studio；6 个模板（Pexels 照片约 90 张、全部虚构品牌，网上查过没有同名）；工作室网站 11 页；DeepSeek AI 客服（Netlify Function）；销售助理改 DeepSeek；话术改 Instagram；免费样板产生器；旧马来文样板移到 `sites/_archive/`。测试：6 个模板购物流程自动测试全通过、聊天和表单端对端（模拟 DeepSeek）通过、样板密码页通过 | 预览：https://claude.ai/artifact/3Sbq1paEA2mB63FbkR9JbV（AI 客服和表单要部署到 Netlify 才能用）；`site/`、`netlify.toml`、`docs/09-netlify-guide.md`、`sales/agent/` | 要真的 DeepSeek Key 才能测回答品质；隐私通知、条款要请律师看；SSM 收订金前要注册 |
+| 2026-11-07 | Phase N（俊宇要求：改名、换掉头巾、Netlify、6 个模板、比同业、DeepSeek、Instagram、暂不 SSM） | 改名 Cartsmith Studio；6 个模板（Pexels 照片约 90 张、全部虚构品牌，网上查过没有同名）；工作室网站 11 页；DeepSeek AI 客服（Netlify Function）；销售助理改 DeepSeek；话术改 Instagram；免费样板产生器；旧马来文样板移到 `sites/_archive/`。测试：6 个模板购物流程自动测试全通过、聊天和表单端对端（模拟 DeepSeek）通过、样板密码页通过 | 预览链接已删除（俊宇要求，改用真网站）；`site/`、`netlify.toml`、`docs/09-netlify-guide.md`、`sales/agent/` | 要真的 DeepSeek Key 才能测回答品质；隐私通知、条款要请律师看；SSM 收订金前要注册 |
 | 2026-11-06 | 0.1 决定清单 | 俊宇确认：一次性建站费 + 月费 + 上线后首月免费试用；只做 Shopee/TikTok 中小型自有品牌卖家；其余由 Claude Code 决定（Cartsmith、yourdomain.com、Ubuntu 24.04） | docs/00-decisions.md、docs/01-business-plan.md | WhatsApp 号码待提供 |
 | 2026-11-06 | 0.2 项目结构 | repo 建好，.gitignore、.env.example | — | — |
 | 2026-11-06 | 0.6 查证 | Billplz（默认）/ ToyyibPay、EasyParcel、Brevo、UpdraftPlus、Shopee 费率 | docs/02-tech-spec.md §10 | 付款网关费率开户前看官方价格页 |
