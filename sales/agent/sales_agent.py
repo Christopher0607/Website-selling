@@ -500,11 +500,17 @@ CHAT_RULES = (
 
 def chat_once(history: list[dict]) -> dict:
     msgs = []
+    empty_lead = {k: "" for k in CHAT_SCHEMA["properties"]["lead"]["properties"]}
     for m in history[-20:]:
         role = "assistant" if m.get("role") == "assistant" else "user"
         text = str(m.get("content", ""))[:1500]
-        if text.strip():
-            msgs.append({"role": role, "content": text})
+        if not text.strip():
+            continue
+        if role == "assistant":
+            # send earlier replies back in the json shape the model must answer in; plain-text history
+            # makes DeepSeek's JSON mode return blank content (found on the live site 2026-11-07)
+            text = json.dumps({"reply": text, "lead_ready": False, "lead": empty_lead, "handoff_to_human": False}, ensure_ascii=False)
+        msgs.append({"role": role, "content": text})
     while msgs and msgs[0]["role"] != "user":
         msgs.pop(0)
     if not msgs or msgs[-1]["role"] != "user":
