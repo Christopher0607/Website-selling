@@ -6,7 +6,7 @@
 - **日期 Date：**
 - **有效期至 Valid until：**（报价日期后 14 天）
 - **给 For：** [客户公司名称]，[联系人]
-- **来自 From：** KedaiLab（SSM：[号码]）· [你的名字] · WhatsApp [号码] · hello@kedailab.com
+- **来自 From：** Cartsmith Studio（SSM：[注册号码 —— 收订金前一定要有]）· [你的名字] · Instagram @cartsmith.studio · [电邮]
 
 ---
 
@@ -56,4 +56,4 @@ The first month after launch is free (2 months for founding clients); then minim
 3. 付 50% 订金：[银行] · [户口名称] · [户口号码] / DuitNow [号码]
 4. 填客户资料表（我们会发给你）Fill in the client brief
 
-有任何问题，随时 WhatsApp：[号码]
+有任何问题，随时在 Instagram 私信我们：@cartsmith.studio

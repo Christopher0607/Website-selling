@@ -1,7 +1,8 @@
-# KedaiLab 销售手册：从找客户到成交、到收月费
+# Cartsmith 销售手册：从找客户到成交、到收月费
 
 > 这份是「照着做就可以」的完整流程。话术原文在 `sales/scripts.md`，价格在 `sales/packages.html`，AI 助理用法在 `sales/agent/README.md`。
-> 最重要的三件事：**每天联系 20 个、24 小时内回复、成交后把第 1 个月做好让他继续付月费。**
+> 最重要的三件事：**每天联系 10–20 个（Instagram 私信）、24 小时内回复、成交后把第 1 个月做好让他继续付月费。**
+> 2026-11-07 更新：工作室联系方式只用 **Instagram @cartsmith.studio**（暂时不用 WhatsApp）；网站在 Netlify（`cartsmith.netlify.app`）；免费样板用 `site/build.py --preview` 做、放 Netlify Drop。
 
 ---
 
@@ -10,7 +11,7 @@
 ```
 找客户 → 第一次私信 → 跟进（第 3 天）→ 有兴趣：免费样板（1–2 天）→ 15 分钟通话 → 24 小时内报价
 → 50% 订金 + 签约 → 收资料 → 建站（测试站）→ 修改 → 50% 余款 → 上线 → 第 1 个月免费维护 → 转月费
-                  └ 没回：第 10 天最后一条，然后停                └ 客人自己找来（网站 AI 客服 / WhatsApp / 视频）直接跳到「样板」
+                  └ 没回：第 10 天最后一条，然后停                └ 客人自己找来（网站 AI 客服 / 表单 / IG / 视频）直接跳到「样板」
 ```
 
 | 阶段 | 目标数字（每 100 个联系，参考） | 你要做的 | AI 助理帮你 |
@@ -18,7 +19,7 @@
 | 找客户 | 每天 20 个 | 在 Shopee / TikTok / IG 找、填名单 | 打分、写个人化开场白 |
 | 第一次私信 | 20 条/天 | 看过、改口气、**自己按发送** | `today` 产生清单和一键打开对话的链接 |
 | 回复 | 15–25 个 | 1 小时内回（工作时间） | `reply` 分析意图、起草回信 |
-| 免费样板 | 8–12 个 | 服务器一个指令做好、录 1 分钟视频 | — |
+| 免费样板 | 8–12 个 | 填 preview.json、一个指令做好、拖进 Netlify Drop、录 1 分钟视频 | — |
 | 通话 | 4–8 个 | 15 分钟，多听少讲 | — |
 | 报价 | 3–6 个 | 24 小时内发 | `proposal` 把笔记变报价单 |
 | 成交 | 1–3 个 | 收订金、签约 | — |
@@ -29,7 +30,7 @@
 
 | 时间 | 做什么 | 指令 / 文件 |
 |---|---|---|
-| 09:30（10 分钟） | 看网站询价（后台 Leads）、WhatsApp 新信息，**先回客人** | 后台 → Leads |
+| 09:30（10 分钟） | 看网站询价（Netlify → Forms，也会寄电邮）、Instagram 新私信，**先回客人** | Netlify Forms、IG |
 | 09:40（40 分钟） | 找 20 个新的潜在客户，每个记 1 个「具体观察」 | `sales/prospects.csv` |
 | 10:20（5 分钟） | AI 写开场白 + 产生今天清单 | `draft-openers` → `today` |
 | 10:25（30 分钟） | 一条一条看过、改、**自己发送**，每发一条记录 | `mark <id> sent` |
@@ -46,7 +47,7 @@
 **去哪里找：**
 1. Shopee：搜「行业关键词 + malaysia」（例：serum malaysia、tudung bawal、sambal bilis），筛选「Local」卖家
 2. TikTok Shop：搜同样的词，挑**常开直播**、有自己品牌的
-3. Instagram：#localbrandmalaysia #skincaremalaysia #tudungmurah #kuihraya，挑简介只有 WhatsApp / Linktree、没有网站的
+3. Instagram：#localbrandmalaysia #skincaremalaysia #tudungmurah #kuihraya，挑简介只有 WhatsApp / Linktree、没有网站的（我们用 IG 私信联系他们）
 4. Facebook 卖家群组（先帮忙回答问题，不要一进去就发广告）
 
 **值得联系的（打分，每项 1 分，4–5 分先联系）：**
@@ -64,7 +65,7 @@
 |---|---|
 | business_name | Glow Lab MY |
 | niche / platform | skincare / shopee |
-| contact_channel / contact_handle | whatsapp / 012-3456789（只记录公开的商业联系方式） |
+| contact_channel / contact_handle | instagram / @theirbrand（只记录公开的商业联系方式） |
 | language | bm / en / zh |
 | 5 个打分栏 | 1 或 0 |
 | **observation** | 「Vitamin C serum 1,200 条评价，很多人说回购第 3 瓶」 |
@@ -75,14 +76,14 @@
 
 ## 3. 第一次私信
 
-1. `python3 sales/agent/kedailab_sales.py draft-openers` → AI 按「具体观察」写开场白（对方的语言）
-2. `python3 sales/agent/kedailab_sales.py today` → 产生 `sales/today/<日期>.md`，每个人一段信息 + 一键打开对话的链接
+1. `python3 sales/agent/sales_agent.py draft-openers` → AI 按「具体观察」写开场白（对方的语言）
+2. `python3 sales/agent/sales_agent.py today` → 产生 `sales/today/<日期>.md`，每个人一段信息 + 一键打开对话的链接
 3. **看过、改成你的口气**（AI 写的只是草稿）→ 点链接 → 自己按发送
-4. `python3 sales/agent/kedailab_sales.py mark p012 sent` → 自动排 3 天后跟进
+4. `python3 sales/agent/sales_agent.py mark p012 sent` → 自动排 3 天后跟进
 
 **一条好的开场白 = 你是谁 + 具体观察 + 一个问题 + 免费、没压力的下一步。** 范例见 `sales/scripts.md` §1。
 
-**用哪个渠道：** 对方简介有 WhatsApp → WhatsApp；只有 IG → IG 私信；**不要用 Shopee 聊天推销。**
+**用哪个渠道：** 暂时只用 **Instagram 私信**（用 @cartsmith.studio 发）。没有 IG 的品牌先跳过。**不要用 Shopee 聊天推销。** IG 不能预先填好文字：先复制 `today` 清单里的信息，再点链接打开对话贴上。
 
 ---
 
@@ -102,7 +103,7 @@
 ## 5. 对方回复了
 
 1. **1 小时内回**（工作时间）。回得快是小工作室最大的优势。
-2. `python3 sales/agent/kedailab_sales.py reply p012 "对方的原话"` → AI 判断意图（有兴趣 / 问问题 / 异议 / 不要）+ 起草回信
+2. `python3 sales/agent/sales_agent.py reply p012 "对方的原话"` → AI 判断意图（有兴趣 / 问问题 / 异议 / 不要）+ 起草回信
 3. 目标只有一个：**让他同意你做免费样板**，或直接约 15 分钟通话。
 
 | 对方说 | 你的下一步 |
@@ -119,14 +120,16 @@
 
 **跟对方要（都用公开资料就可以）：** 店铺链接、logo（可以从 IG 头像）、3–5 款主打产品（名称、价格、照片——可以用他店里公开的照片，**样板只给他本人看**）。
 
-**做法：**
-1. 本地复制一份 `templates/brand-config.json` 到 `clients/p012-preview/brand-config.json`，填：名字、颜色（从 logo 取）、WhatsApp、运费
-2. 产品放 `clients/p012-preview/products.csv` + `images/`（照片先跑 `optimize-images.sh`）
-3. commit + push → 服务器 `cd /opt/agency && sudo git pull`
-4. `sudo /opt/agency/scripts/server/make-preview.sh p012 /opt/agency/clients/p012-preview/brand-config.json --products /opt/agency/clients/p012-preview/products.csv`
-5. 手机打开样板，录 1 分钟屏幕（边滑边讲：首页 → 产品 → 下单 → WhatsApp 按钮）
-6. 发出（scripts.md §3）：网址 + 密码 + 视频 + 删除日期
+**做法（详细步骤：`docs/09-netlify-guide.md` 第 D 部分）：**
+1. 复制 `templates/preview.example.json` 到 `clients/p012/preview/preview.json`，填：模板、名字、颜色（从 logo 取）、4–8 个产品、删除日期（≤14 天）、密码
+2. 照片放 `clients/p012/preview/img/`（这个文件夹不进 git）
+3. `python site/build.py --preview clients/p012/preview/preview.json` → 产生 `site/` 文件夹
+4. 拖进 https://app.netlify.com/drop → 改成不好猜的网址名
+5. 手机打开样板，录 1 分钟屏幕（边滑边讲：首页 → 产品 → 选规格 → 加入购物车 → 结账）
+6. 在 Instagram 发出（scripts.md §3）：网址 + 密码 + 视频 + 删除日期
 7. `mark p012 preview_sent --url <网址>`
+
+（以后有服务器的话，也可以用服务器版 `make-preview.sh`，有真正的密码保护。）
 
 > 样板有密码、不被搜索引擎收录、14 天没成交就删除（`cleanup-previews.sh`）。
 
@@ -143,7 +146,7 @@
 4. 你希望网站帮你解决什么？3 个月后怎样算成功？
 5. 产品有多少款？有颜色 / 尺寸吗？
 6. 有送东马吗？用哪家物流？
-7. 有 SSM 和公司户口吗？
+7. 有 SSM 和公司户口吗？（付款网关通常要用对方的商业注册开）
 8. 谁负责上产品、处理订单？
 9. 预算大概多少？希望什么时候上线？
 10. 除了你，还有谁要一起决定？
@@ -169,9 +172,9 @@
 ## 8. 报价单（通话后 24 小时内）
 
 1. 把通话笔记存成 `notes.txt`
-2. `python3 sales/agent/kedailab_sales.py proposal p012 --notes notes.txt` → `clients/proposals/p012-<日期>.md`
+2. `python3 sales/agent/sales_agent.py proposal p012 --notes notes.txt` → `clients/proposals/p012-<日期>.md`
 3. 检查 AI 列出的「发出前要确认」，补上银行资料
-4. 转成 PDF（或直接贴在 WhatsApp）发出
+4. 转成 PDF，用 Instagram 或电邮发出
 5. `mark p012 proposal_sent` → 3 天后提醒你跟进
 
 ---
@@ -190,6 +193,8 @@
 | 「好，开始吧」 | 马上发付款资料（下面） |
 
 **收订金的流程：**
+> ⚠ 收第一笔订金之前，**我们自己一定要先完成 SSM 注册**（独资，ezBiz 网上办理，用商号每年约 RM60）。没注册就做生意是违法的（Registration of Businesses Act 1956），也开不了商业户口。见 `docs/00-decisions.md` #10。
+
 1. 发 50% 订金资料：银行名称、户口名称（SSM 注册名）、户口号码 / DuitNow
 2. 发合同（律师审过的模板，见 `sales/contract-checklist.md`）→ 双方签名（电子签也可以）
 3. 收到钱 → 开收据（用 SSM 名称）
@@ -233,7 +238,7 @@
 |---|---|
 | 太贵了 | 先从 Starter；订金 + 余款分开；用计算器算多少张回头客的单就回本 |
 | Shopee 已经够了 | 不用离开 Shopee；网站是给回头客、批发客、广告用的，客户资料是你的 |
-| 网站又没人来 | 对，网站本身不会带客人；客人来自你的粉丝、WhatsApp、包裹 QR 卡、广告——这些入口我帮你设好 |
+| 网站又没人来 | 对，网站本身不会带客人；客人来自你的粉丝、直播、包裹 QR 卡、广告——这些入口我帮你设好 |
 | 没时间管 | 所以有月费维护：上新品、改价格、备份更新我来 |
 | 朋友会做 | 很好！以后需要有人长期维护、处理付款和物流设定，随时找我 |
 | 能保证有订单吗 | 不能，谁保证都要小心；我保证网站好用、付款运费正确、速度快、有人管 |
@@ -252,7 +257,7 @@
 
 ## 13. 每周复盘（星期日 15 分钟）
 
-1. `python3 sales/agent/kedailab_sales.py report --days 7`
+1. `python3 sales/agent/sales_agent.py report --days 7`
 2. 看「最弱的一步」：
    - 回复率低 → 「具体观察」不够具体？渠道不对？
    - 有回复但不要样板 → 先算费用给他看

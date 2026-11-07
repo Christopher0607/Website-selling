@@ -1,8 +1,8 @@
 # master — 母版网店
 
-- 网址：https://master.kedailab.com（basic auth：帐号 view，密码在 `sudo cat /etc/agency/secrets/master.env`）
+- 网址：https://master.yourdomain.com（basic auth：帐号 view，密码在 `sudo cat /etc/agency/secrets/master.env`）
 - 用途：母版。所有样板站、preview、客户测试站都从这里复制（`clone-site.sh master ...`）
-- 建立：`sudo scripts/server/new-site.sh master master.kedailab.com --basic-auth --noindex` → `sudo scripts/server/setup-store.sh master --content sites/master/content --products sites/master/products.csv`（`build-all.sh` 会自动做）
+- 建立：`sudo scripts/server/new-site.sh master master.yourdomain.com --basic-auth --noindex` → `sudo scripts/server/setup-store.sh master --content sites/master/content --products sites/master/products.csv`（`build-all.sh` 会自动做）
 - 管理员：studio_admin（密码在 secrets 文件 → 存进密码管理器）
 - 模式：demo（Demo 模式开、noindex、不能真的下单）
 

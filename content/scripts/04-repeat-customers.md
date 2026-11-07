@@ -12,7 +12,7 @@
 | 15–23 秒 | 包裹里的 QR 小卡（自己做一张示范） | 算一笔：每月 50 张回头客单 × 每单省 RM[X] = 一年 RM[Y] |
 | 23–31 秒 | 计算器输入每月 50 单 | 怎么带过去：包裹放 QR 卡、WhatsApp 客户名单、IG 简介放网站 |
 | 31–39 秒 | IG 简介链接 | 新客人继续从平台来，回头客到网站 |
-| 结尾（行动呼吁） | 字幕 + KedaiLab logo | 留言「算」，我把 Shopee 费用计算器发给你（kedailab.com/shopee-fee-calculator） |
+| 结尾（行动呼吁） | 字幕 + Cartsmith logo | 留言「算」，我把 Shopee 费用计算器发给你（cartsmith.netlify.app/shopee-fee-calculator） |
 
 ## 重点内容
 - 算一笔：每月 50 张回头客单 × 每单省 RM[X] = 一年 RM[Y]
@@ -30,13 +30,13 @@
 ✅ 算一笔：每月 50 张回头客单 × 每单省 RM[X] = 一年 RM[Y]
 ✅ 怎么带过去：包裹放 QR 卡、WhatsApp 客户名单、IG 简介放网站
 ✅ 新客人继续从平台来，回头客到网站
-👉 留言「算」，我把 Shopee 费用计算器发给你（kedailab.com/shopee-fee-calculator）
+👉 留言「算」，我把 Shopee 费用计算器发给你（cartsmith.netlify.app/shopee-fee-calculator）
 
 ## Hashtag
 #shopeemalaysia #shopeeseller #onlinebusinessmalaysia #peniagaonline
 
 ## 置顶留言
-留言「算」，我把 Shopee 费用计算器发给你（kedailab.com/shopee-fee-calculator）
+留言「算」，我把 Shopee 费用计算器发给你（cartsmith.netlify.app/shopee-fee-calculator）
 
 ## 备注
 - 数字用计算器真算，写「大约」

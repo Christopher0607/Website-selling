@@ -143,7 +143,13 @@ h2.wp-block-heading { font-size: clamp(1.6rem, 3vw, 2.4rem); line-height: 1.15; 
 .single-product div.product .product_title { font-size: clamp(1.6rem, 3vw, 2.3rem); line-height: 1.15; }
 .single-product div.product p.price { font-size: 1.35rem; font-weight: 700; color: var(--global-palette3); }
 .single-product div.product .woocommerce-product-gallery img { border-radius: var(--agc-radius); }
-.single-product div.product form.cart .single_add_to_cart_button { padding: .95em 2em; font-size: 1rem; }
+/* 1.1.1: 修正手机上「Add to cart」文字没有置中（俊宇 2026-11-07 截图）——用 flex 置中，固定高度，跟数量框对齐 */
+.single-product div.product form.cart { display: flex; flex-wrap: wrap; align-items: stretch; gap: 10px; }
+.single-product div.product form.cart .quantity { margin: 0; display: flex; }
+.single-product div.product form.cart .quantity .qty { height: 52px; }
+.single-product div.product form.cart .single_add_to_cart_button { display: inline-flex; align-items: center; justify-content: center; min-height: 52px; padding: 0 2em; font-size: 1rem; line-height: 1.2; text-align: center; white-space: normal; flex: 1 1 auto; margin: 0; }
+.single-product div.product form.variations_form .single_variation_wrap { width: 100%; }
+.single-product div.product form.cart .woocommerce-variation-add-to-cart { display: flex; flex-wrap: wrap; gap: 10px; width: 100%; }
 .single-product div.product form.cart { margin-bottom: 12px; }
 .single-product .woocommerce-tabs ul.tabs li { border-radius: 0 !important; }
 .single-product .related > h2, .single-product .upsells > h2 { font-size: 1.5rem; }

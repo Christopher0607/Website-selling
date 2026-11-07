@@ -1,8 +1,8 @@
 import os, re, sys, shutil, posixpath, urllib.parse
 SC = sys.argv[1]
-SITES = {"studio": r"(?:www\.)?kedailab\.test", "rimbun": r"demo-rimbun\.kedailab\.test", "teduh": r"demo-teduh\.kedailab\.test", "kenanga": r"demo-kenanga\.kedailab\.test"}
+SITES = {"studio": r"(?:www\.)?cartsmith\.test", "rimbun": r"demo-rimbun\.cartsmith\.test", "teduh": r"demo-teduh\.cartsmith\.test", "kenanga": r"demo-kenanga\.cartsmith\.test"}
 STORES = {"rimbun", "teduh", "kenanga"}
-NAMES = {"studio": "KedaiLab 工作室网站", "rimbun": "Rimbun Skin", "teduh": "Teduh Studio", "kenanga": "Dapur Seri Kenanga"}
+NAMES = {"studio": "Cartsmith 工作室网站", "rimbun": "Rimbun Skin", "teduh": "Teduh Studio", "kenanga": "Dapur Seri Kenanga"}
 
 def rel(from_file, target):  # both relative to SC
     return posixpath.relpath(target, posixpath.dirname(from_file)) if posixpath.dirname(from_file) else target
@@ -46,7 +46,7 @@ def fix_html(path):
                         tgt = f"{name}/index.html"
                 return rel(relpath, tgt) + (("#" + p.fragment) if p.fragment else "")
         return m.group(0)
-    s = re.sub(r"https?://([a-z0-9.-]+\.kedailab\.test|kedailab\.test|www\.kedailab\.test)(/[^\"'\s<>]*)?", absrep, s)
+    s = re.sub(r"https?://([a-z0-9.-]+\.cartsmith\.test|cartsmith\.test|www\.cartsmith\.test)(/[^\"'\s<>]*)?", absrep, s)
     # relative add-to-cart / query links left by wget conversion
     if site in STORES:
         s = re.sub(r'href="[^"]*\?add-to-cart=[^"]*"', 'href="' + rel(relpath, f"{site}/cart/index.html") + '"', s)

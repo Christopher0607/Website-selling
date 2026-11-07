@@ -8,7 +8,7 @@
  *
  * Turned on only when wp-config.php defines:
  *   define( 'AGC_AI_CHAT_URL', 'http://127.0.0.1:8787/chat' );
- *   define( 'AGC_AI_CHAT_TOKEN', '...' );   // same as KEDAILAB_CHAT_TOKEN
+ *   define( 'AGC_AI_CHAT_TOKEN', '...' );   // same as AGENCY_CHAT_TOKEN
  * and Settings → Agency → "AI chat" is ticked.
  *
  * @package AgencyCore

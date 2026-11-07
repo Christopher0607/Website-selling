@@ -2,7 +2,7 @@
   "mode": "demo",
   "site": {
     "slug": "demo-rimbun",
-    "domain": "demo-rimbun.kedailab.com",
+    "domain": "demo-rimbun.yourdomain.com",
     "name": "Rimbun Skin",
     "tagline": "Quiet skincare for humid days",
     "language": "en"

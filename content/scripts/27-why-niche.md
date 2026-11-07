@@ -12,7 +12,7 @@
 | 15–23 秒 | 自己的桌面 / 手（不露脸） | 品牌卖家有回头客，网站最有用 |
 | 23–31 秒 | 样板店 | 我懂平台费用、东西马运费、WhatsApp 接单 |
 | 31–39 秒 | 样板店 | 不接：没有产品的 dropshipper、要写夸大功效的 |
-| 结尾（行动呼吁） | 字幕 + KedaiLab logo | 想要一个这样的网店？私信我「网站」，先免费帮你做首页样板。 |
+| 结尾（行动呼吁） | 字幕 + Cartsmith logo | 想要一个这样的网店？私信我「网站」，先免费帮你做首页样板。 |
 
 ## 重点内容
 - 品牌卖家有回头客，网站最有用
@@ -32,7 +32,7 @@
 👉 想要一个这样的网店？私信我「网站」，先免费帮你做首页样板。
 
 ## Hashtag
-#kedailab #smallbusinessmalaysia #websitemalaysia
+#cartsmithstudio #smallbusinessmalaysia #websitemalaysia
 
 ## 置顶留言
 想要一个这样的网店？私信我「网站」，先免费帮你做首页样板。

@@ -1,0 +1,30 @@
+{
+  "_说明": "免费样板首页的设定。复制到 clients/<代号>/preview/preview.json（这个文件夹不进 git），把对方店里公开的产品照片放进同一个文件夹的 img/，然后执行：python3 site/build.py --preview clients/<代号>/preview/preview.json",
+  "code": "p012",
+  "template": "dewlane",
+  "delete_by": "2026-11-21",
+  "password": "改成一个简单的密码，例如 glow2026",
+  "brand": {
+    "name": "Glow Lab",
+    "logo_text": "glowlab",
+    "tagline": "Simple skincare for Malaysian weather",
+    "blurb": "Local skincare made in small batches.",
+    "story": "Glow Lab started in 2023 with one serum and a lot of patience.",
+    "colors": { "accent": "#6b8f71", "bg": "#f7f5f0", "soft": "#ece8df" },
+    "announcement": ["Free shipping over RM120", "New: Vitamin C serum restocked"]
+  },
+  "shipping": { "west": 8, "east": 15, "free_min": 120 },
+  "hero": {
+    "eyebrow": "Over 2,000 reviews on Shopee",
+    "title": "Simple skincare for Malaysian weather",
+    "text": "Gentle formulas, honest ingredients, delivered to your door.",
+    "image": "hero.jpg"
+  },
+  "products": [
+    { "name": "Vitamin C Serum", "price": 59, "category": "Serums", "image": "serum.jpg", "short": "Brightening serum, 30 ml." },
+    { "name": "Gentle Cleanser", "price": 39, "category": "Cleansers", "image": "cleanser.jpg", "short": "Low-foam gel cleanser." },
+    { "name": "Daily Sunscreen SPF50", "price": 49, "sale": 42, "category": "Sun care", "image": "sun.jpg" },
+    { "name": "Barrier Cream", "price": 55, "category": "Moisturisers", "images": ["cream.jpg", "cream-2.jpg"],
+      "options": [{ "name": "Size", "values": ["50 ml", { "v": "100 ml", "add": 30 }] }] }
+  ]
+}

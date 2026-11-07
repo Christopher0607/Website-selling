@@ -3,7 +3,9 @@
 > 俊宇：每一项都有默认建议。不想想太多，就跟 Claude Code 说"全部用默认"，以后随时可以改。
 > Claude Code：把俊宇的回答写进「已决定」一栏。标 ★ 的是必填，没填好不要开始 Phase 1。
 >
-> **2026-11-06：俊宇说「全部你自己决定」**，以下是 Claude Code 定的版本。俊宇随时可以改，改了告诉 Claude Code 同步所有文件。唯一还缺的是 #9 WhatsApp Business 号码。
+> **2026-11-06：俊宇说「全部你自己决定」**，以下是 Claude Code 定的版本。俊宇随时可以改，改了告诉 Claude Code 同步所有文件。
+>
+> **2026-11-07 俊宇的修改：** 不用马来文名字（改名 Cartsmith Studio）；头巾样板换成别的产品；暂时不买域名，先用 Netlify 免费网址；要 6 个不同模板给客户选；要说明为什么比同行好；AI 聊天用 DeepSeek；暂时不开 WhatsApp，用 Instagram 联系商家；暂时不注册 SSM。
 
 ---
 
@@ -11,18 +13,22 @@
 
 | # | 决定 | 默认建议 | 已决定 |
 |---|---|---|---|
-| 1 ★ | 主攻行业（只选一个） | 本地护肤 / 美妆品牌 | **Shopee / TikTok Shop 上有自己品牌的中小型卖家**；话术以护肤美妆为主，样板站同时覆盖护肤、头巾、食品三类，30 天后看哪一类回复率最高再收窄 |
-| 2 ★ | 工作室名字 | Claude Code 提 10 个名字，查域名和社交账号是否可用 | **KedaiLab**（kedai = 马来文"店"；中英马都好念）。2026-11-06 查：kedailab.com 未注册、网上没有同名品牌。俊宇还要去 SSM ezBiz 查名字、MyIPO 查商标 |
-| 3 ★ | 工作室域名 | `.com`（有 SSM 注册后可以再加 `.com.my`） | **kedailab.com**（俊宇购买；所有脚本只要改 `/etc/agency/agency.conf` 的 STUDIO_DOMAIN 就能换） |
+| 1 ★ | 主攻行业（只选一个） | 本地护肤 / 美妆品牌 | **Shopee / TikTok Shop 上有自己品牌的中小型卖家**；6 个模板覆盖护肤、服装、食品、咖啡、宠物、3C 配件，30 天后看哪一类回复率最高再收窄 |
+| 2 ★ | 工作室名字 | Claude Code 提 10 个名字，查域名和社交账号是否可用 | **Cartsmith Studio**（2026-11-07 改；cart = 购物车，smith = 工匠，"做网店的工匠"；英文名，中英马都好念）。2026-11-07 网上搜过，马来西亚没有同名的网站设计公司。注册 SSM 时再到 ezBiz 查名字、MyIPO 查商标 |
+| 3 ★ | 工作室域名 | `.com`（有 SSM 注册后可以再加 `.com.my`） | **暂时不买**（2026-11-07）。工作室网站先放 Netlify 免费网址 `cartsmith.netlify.app`（`docs/09-netlify-guide.md`）。以后买了域名，服务器文件里的 `yourdomain.com` 都换成新域名 |
 | 4 | 服务语言 | 中文 + 英文；马来文用话术模板 | 用默认 |
 | 5 | 套餐价格 | 用 `01-business-plan.md` 的价格 | **一次性建站费 + 月费**（Starter RM2,800 / Growth RM4,800 / Catalog RM3,500；Care RM150 / RM300）。**试用：上线后第 1 个月维护免费** |
 | 6 | 首批客户优惠 | 前 3 个客户 7 折，换真实评价和案例授权 | 前 3 个客户：建站 7 折 **+ 维护免费 2 个月**（代替 1 个月），换真实评价、案例授权、介绍朋友 |
 | 7 | 每月启动预算 | RM300 以内（服务器、域名、工具）；前 30 天广告 RM0 | 用默认 |
 | 8 | 每周投入时间 | 15–20 小时 | 用默认 |
-| 9 ★ | WhatsApp Business 号码 | 用一个专门做生意的号码 | **待俊宇提供**（填进 `sites/studio/brand-config.json` 的 whatsapp.number 和 business.phone） |
-| 10 | SSM 注册 | 先做样板和找客户，收第一笔订金之前完成 SSM 注册（独资 Enterprise）+ 开商业户口 | 用默认 |
+| 9 ★ | 联系方式 | WhatsApp Business 号码 | **Instagram `@cartsmith.studio`**（2026-11-07：暂时不开 WhatsApp）。网站上：Instagram 私信按钮 + 免费样板申请表（Netlify Forms）+ AI 客服。俊宇要开这个 IG 账号（被用了就换名字，告诉 Claude Code） |
+| 10 | SSM 注册 | 先做样板和找客户，收第一笔订金之前完成 SSM 注册（独资 Enterprise）+ 开商业户口 | **暂时不注册**（2026-11-07）——找客户、做免费样板可以先做；但**收第一笔订金之前一定要注册**（见下面第 10 节）。网站上不显示 SSM 号码 |
 | 11 | 服务器 | DigitalOcean，新加坡机房，2GB 内存起步 | DigitalOcean 新加坡，**Ubuntu 24.04 LTS**、2 GB（脚本已在 24.04 完整测试；26.04 默认 PHP 8.5，等插件兼容稳定后再升级） |
 | 12 | 视频要不要露脸 | 不露脸：录屏 + 自己的声音 | 用默认 |
+| 13 | 工作室网站放哪里 | 服务器（WordPress） | **Netlify**（静态网站 + 免费表单 + 一个聊天函数），程式在 `site/`。DigitalOcean 服务器等第一个客户签约再开，用来放客户的 WooCommerce 网店 |
+| 14 | 给客户选的模板 | 3 个样板站 | **6 个模板**（全部虚构品牌、Pexels 照片）：Dewlane 护肤（简约）、Plainfold 服装（大胆杂志风）、Little Chili Pantry 食品（温暖手作）、Lowlight Roasters 咖啡（深色高级）、Tailmate 宠物（活泼彩色）、Voltnest 3C 配件（科技规格）。2026-11-07 网上搜过都没有同名品牌 |
+| 15 | AI | Claude | **DeepSeek API**（`deepseek-flash`，预付制）：网站 AI 客服 + 销售助理 |
+| 16 | 免费样板怎么做 | 服务器 `make-preview.sh` | `python site/build.py --preview` 产生 → 拖进 Netlify Drop（随机网址 + 密码页 + noindex，14 天内删除） |
 
 ---
 
@@ -65,13 +71,21 @@ Claude Code 会：
 
 以上是写包时的估计，Claude Code 会在付款前查最新价格。
 
-### 9. WhatsApp Business 号码
+### 9. 联系方式（2026-11-07 改成 Instagram）
+
+现在只用 Instagram 私信（找客户和客户找你都是）。以前写的 WhatsApp 说明留着，以后想加 WhatsApp 时参考：
 
 马来西亚商家主要用 WhatsApp 沟通，这个号码会出现在你的网站、名片、视频里。建议另外准备一个号码装 WhatsApp Business，不要用私人号码。
 
 ### 10. SSM 注册
 
 开发票、开商业银行户口、申请 `.com.my` 域名、让客户信任你，都需要 SSM 注册。可以在 SSM 的 ezBiz 网站上线申请。报税和以后的 e-Invoice 要求，问会计最清楚。
+
+**2026-11-07 决定：暂时不注册。** 这阶段（做网站、开 IG、找客户、做免费样板）可以先不注册。但要知道（2026-11-07 查）：
+- 在马来西亚**做生意**（收客户的钱）要先向 SSM 注册，没注册就营业是违法的（Registration of Businesses Act 1956，罚款最高可达 RM50,000）。
+- 独资用商号（例如 Cartsmith Studio）每年 **RM60**，用自己 IC 名字 RM30；在 ezBiz 网上办，通常 1 个工作天内批。
+- 所以：**有客户说「好，开始吧」时，先花一天注册，再发订金资料。** 合同、收据、商业户口都要用注册的名字。
+- 来源：[SSM ezBiz 新商业注册指南（PDF）](https://www.ssm.com.my/Documents/Ezbiz%20Online%20User%20Guideline/GUIDELINE-FOR-REGISTRATION-OF-NEW-BUSINESS.pdf)、[3E Accounting：独资 / 合伙注册指南](https://www.3ecpa.com.my/resources/guide-to-setup-malaysia-business/guide-to-registration-of-a-sole-proprietorship-or-partnership-in-malaysia/)。法律细节以 SSM 官方和会计 / 律师意见为准。
 
 ### 11. 服务器
 

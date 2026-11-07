@@ -13,7 +13,7 @@
 | 23–31 秒 | 客户资料表 | 2 产品资料（Shopee 可以导出） |
 | 31–39 秒 | 客户资料表 | 3 产品照片 |
 | 39–47 秒 | 客户资料表 | 4 公司资料（SSM） |
-| 结尾（行动呼吁） | 字幕 + KedaiLab logo | 留言「清单」，我把完整清单发给你。 |
+| 结尾（行动呼吁） | 字幕 + Cartsmith logo | 留言「清单」，我把完整清单发给你。 |
 
 ## 重点内容
 - 1 Logo
@@ -36,7 +36,7 @@
 👉 留言「清单」，我把完整清单发给你。
 
 ## Hashtag
-#kedailab #smallbusinessmalaysia #websitemalaysia
+#cartsmithstudio #smallbusinessmalaysia #websitemalaysia
 
 ## 置顶留言
 留言「清单」，我把完整清单发给你。

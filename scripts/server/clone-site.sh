@@ -8,7 +8,7 @@ usage() {
 
 会做：建空站 → 备份来源 → 还原到目标（自动换网址、新 salts）→ 清掉会"串站"的设定
       （UpdraftPlus 远端储存、追踪 ID、邮件发件设定）→ 清缓存 → smoke test
-例子:  sudo $0 master demo-glow demo-glow.kedailab.com --noindex
+例子:  sudo $0 master demo-glow demo-glow.yourdomain.com --noindex
 EOF
 }
 [[ $# -lt 3 || "$1" == -h || "$1" == --help ]] && { usage; exit 0; }

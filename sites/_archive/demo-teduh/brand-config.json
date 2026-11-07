@@ -2,7 +2,7 @@
   "mode": "demo",
   "site": {
     "slug": "demo-teduh",
-    "domain": "demo-teduh.kedailab.com",
+    "domain": "demo-teduh.yourdomain.com",
     "name": "Teduh Studio",
     "tagline": "Everyday tudung in colours you'll actually wear",
     "language": "en"

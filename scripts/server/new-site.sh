@@ -17,8 +17,8 @@ usage() {
   --source <代号> 记录这个站是从哪个站复制的（clone-site.sh 用）
 
 例子:
-  sudo $0 master master.kedailab.com --basic-auth --noindex
-  sudo $0 studio kedailab.com --www
+  sudo $0 master master.yourdomain.com --basic-auth --noindex
+  sudo $0 studio yourdomain.com --www
 EOF
 }
 

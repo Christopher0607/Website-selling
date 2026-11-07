@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # setup-studio.sh — 建立 / 更新工作室网站（不装 WooCommerce）
-#   第一次：sudo scripts/server/setup-studio.sh kedailab.com
-#   之后改了文案：sudo scripts/server/setup-studio.sh kedailab.com --force-pages
+#   第一次：sudo scripts/server/setup-studio.sh yourdomain.com
+#   之后改了文案：sudo scripts/server/setup-studio.sh yourdomain.com --force-pages
 source "$(dirname "$0")/../lib/common.sh"
 usage() { echo "用法: sudo $0 <工作室域名> [--force-pages] [--no-ssl]"; }
 [[ $# -lt 1 || "$1" == -h || "$1" == --help ]] && { usage; exit 0; }
@@ -14,7 +14,7 @@ start_log "$DOM"
 D="$AGENCY_ROOT/scripts/server"
 SLUG=studio
 if ! site_exists "$SLUG"; then
-  "$D/new-site.sh" "$SLUG" "$DOM" --www --title "KedaiLab" "${NEW[@]}"
+  "$D/new-site.sh" "$SLUG" "$DOM" --www --title "Cartsmith" "${NEW[@]}"
 fi
 load_site "$SLUG"
 "$D/install-code.sh" "$SLUG" both

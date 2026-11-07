@@ -1,10 +1,10 @@
 {
-  "_comment": "KedaiLab 工作室网站。domain 按实际域名改；正式上线 mode = live。",
+  "_comment": "Cartsmith 工作室网站。domain 按实际域名改；正式上线 mode = live。",
   "mode": "live",
   "site": {
     "slug": "studio",
-    "domain": "kedailab.com",
-    "name": "KedaiLab",
+    "domain": "yourdomain.com",
+    "name": "Cartsmith",
     "tagline": "Online stores for Malaysian brands — built, launched and looked after",
     "language": "en"
   },
@@ -26,8 +26,8 @@
   "whatsapp": {
     "number": "60123456789",
     "button_text": "WhatsApp us",
-    "prefill": "Hi KedaiLab, I'd like to ask about {product}",
-    "general": "Hi KedaiLab, I'd like to know more about your website packages.",
+    "prefill": "Hi Cartsmith, I'd like to ask about {product}",
+    "general": "Hi Cartsmith, I'd like to know more about your website packages.",
     "floating_button": true,
     "position": "right"
   },
@@ -41,9 +41,9 @@
     }
   },
   "business": {
-    "legal_name": "[KedaiLab – SSM registered name]",
+    "legal_name": "[Cartsmith – SSM registered name]",
     "ssm_no": "[SSM No.]",
-    "email": "hello@kedailab.com",
+    "email": "hello@yourdomain.com",
     "phone": "[WhatsApp Business number]",
     "hours": "Mon–Fri 10am–6pm"
   },

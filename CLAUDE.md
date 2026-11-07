@@ -101,6 +101,8 @@
 - **能用 WP-CLI 做的就用 WP-CLI**，并写进脚本，方便下次重复。
 - **定制只放两个地方：** 子主题 `wp/child-theme/`（样式、模板）和自建插件 `wp/agency-core/`（功能）。不改 WordPress 核心，不改父主题。
 - **git：** 本地文件夹用 git 管理，每完成一个任务 commit 一次。`.env`、数据库备份、客户原始素材不进 git。
+- **工作室网站（2026-11-07）：** 放在 Netlify，程式在 `site/`（`python3 site/build.py` 产生 `site/dist/`，Python 标准库即可；`netlify.toml` 在 repo 根目录）。6 个模板在 `site/templates/<代号>/`（template.json + theme.css + img/）；工作室页面在 `site/pages/`；价格等资料在 `site/studio.json`；AI 客服是 `site/netlify/functions/chat/`（DeepSeek，Key 只放 Netlify 环境变量）。改价格要同时改 `site/studio.json` 和 `sales/agent/knowledge.md`。改完跑 `node site/tools/check-flow.js` 测 6 个模板的购物流程。免费样板：`python3 site/build.py --preview clients/<代号>/preview/preview.json`（`clients/*/preview/` 不进 git）。
+- **联系方式：** 工作室只用 Instagram `@cartsmith.studio`（暂时没有 WhatsApp）。AI 用 DeepSeek（不是 Claude）。
 - **运行位置（2026-11-06 更新）：** 整个 repo `git clone` 在服务器 `/opt/agency`，脚本直接 `sudo /opt/agency/scripts/server/<脚本>.sh` 执行；改了程式 → commit + push → 服务器 `cd /opt/agency && sudo git pull`。远程操作用 `ssh deploy@<IP>`（或 host 别名 `agency-dev`）。部署步骤见 `docs/08-deploy-guide.md`，脚本一览见 `scripts/README.md`。
 - **站点资料：** 登记 `/etc/agency/sites/<代号>.conf`、密码 `/etc/agency/secrets/<代号>.env`（只有 root 能读，聊天里不要显示完整密码）、日志 `/var/log/agency/`、备份 `/var/backups/agency/<代号>/`。
 - **网页版 Claude Code（云端）不能直接 SSH 到服务器**：在网页版就只改 repo、commit、push，再请俊宇在服务器 `git pull` 和执行指令，把输出贴回来。

@@ -16,3 +16,5 @@ Thumbs.db
 # Python / 网站产生的文件
 __pycache__/
 site/dist/
+# 给潜在客户做的免费样板（含对方的照片和密码），不进 git
+clients/*/preview/

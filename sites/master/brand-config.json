@@ -3,7 +3,7 @@
   "mode": "demo",
   "site": {
     "slug": "master",
-    "domain": "master.kedailab.com",
+    "domain": "master.yourdomain.com",
     "name": "Master Store",
     "tagline": "Everyday essentials, delivered across Malaysia",
     "language": "en"

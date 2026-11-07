@@ -13,7 +13,7 @@
 | 23–31 秒 | FAQ 页录屏 | 网站会自己带客人吗？一开始不会 |
 | 31–39 秒 | FAQ 页录屏 | 要 SSM 吗？付款网关通常要 |
 | 39–47 秒 | FAQ 页录屏 | 网站归谁？付清后归你 |
-| 结尾（行动呼吁） | 字幕 + KedaiLab logo | 还有问题？留言问我。 |
+| 结尾（行动呼吁） | 字幕 + Cartsmith logo | 还有问题？留言问我。 |
 
 ## 重点内容
 - 要放弃 Shopee 吗？不用
@@ -35,7 +35,7 @@
 👉 还有问题？留言问我。
 
 ## Hashtag
-#kedailab #smallbusinessmalaysia #websitemalaysia
+#cartsmithstudio #smallbusinessmalaysia #websitemalaysia
 
 ## 置顶留言
 还有问题？留言问我。

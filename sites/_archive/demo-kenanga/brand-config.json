@@ -2,7 +2,7 @@
   "mode": "demo",
   "site": {
     "slug": "demo-kenanga",
-    "domain": "demo-kenanga.kedailab.com",
+    "domain": "demo-kenanga.yourdomain.com",
     "name": "Dapur Seri Kenanga",
     "tagline": "Homemade sambal & kuih, the way mak makes it",
     "language": "en"

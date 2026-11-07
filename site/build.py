@@ -36,8 +36,8 @@ def load_json(path):
         return json.load(fh)
 
 
-def write(rel, content):
-    path = os.path.join(DIST, rel)
+def write(rel, content, dist=None):
+    path = os.path.join(dist or DIST, rel)
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w", encoding="utf-8") as fh:
         fh.write(content)
@@ -111,11 +111,16 @@ STATES = ["Johor", "Kedah", "Kelantan", "Kuala Lumpur", "Labuan", "Melaka", "Neg
 
 
 class Store:
-    def __init__(self, slug, studio):
+    def __init__(self, slug, studio, preview=None):
         self.slug = slug
         self.dir = os.path.join(HERE, "templates", slug)
         self.t = load_json(os.path.join(self.dir, "template.json"))
         self.studio = studio
+        self.pv = preview
+        self.base = "" if preview else f"demo/{slug}"
+        self.out = preview["_out"] if preview else DIST
+        if preview:
+            apply_preview(self.t, preview)
         t = self.t
         self.ship = t.get("shipping", {"west": 8, "east": 15, "free_min": 150})
         self.cats = {c["id"]: c for c in t["categories"]}
@@ -129,6 +134,9 @@ class Store:
         self.by_id = {p["id"]: p for p in self.products}
 
     # ---- helpers -------------------------------------------------------
+    def studio_link(self, root, path):
+        return (self.studio.get("site_url", "").rstrip("/") + "/" + path) if self.pv else root + path
+
     def price_html(self, p):
         base = p["price"]
         sale = p.get("sale")
@@ -220,8 +228,20 @@ class Store:
 <body class="store t-{self.slug} page-{kind}" data-sroot="{sp}" data-root="{root}">
 {sprite()}
 <a class="skip" href="#main">Skip to content</a>
-<div class="demo-bar"><div class="wrap demo-bar__in"><span class="demo-bar__txt"><b>Concept demo</b> · fictional brand by Cartsmith Studio · no real orders or payments</span><span class="demo-bar__links"><a href="{root}templates.html">All templates</a><a class="demo-bar__cta" href="{root}start.html?template={self.slug}">Use this template {icon('arrow')}</a></span></div></div>
+{self.demo_bar(root)}
 """
+
+    def demo_bar(self, root):
+        if self.pv:
+            pv = self.pv
+            gate = ""
+            if pv.get("_hash"):
+                gate = ("<script>(function(){var H='" + pv["_hash"] + "';try{if(localStorage.getItem('pv_'+H)==='1')return;}catch(e){}"
+                        "document.documentElement.classList.add('pv-locked');window.__pvHash=H;})();</script>")
+            return (f'{gate}<div class="demo-bar"><div class="wrap demo-bar__in"><span class="demo-bar__txt"><b>Private mockup</b> for {e(pv["brand"]["name"])} · made by Cartsmith Studio · '
+                    f'not a live store · will be deleted by {e(pv["delete_by"])}</span><span class="demo-bar__links"><a class="demo-bar__cta" href="{e(self.studio_link(root, "index.html"))}">Cartsmith Studio {icon("arrow")}</a></span></div></div>')
+        return (f'<div class="demo-bar"><div class="wrap demo-bar__in"><span class="demo-bar__txt"><b>Concept demo</b> · fictional brand by Cartsmith Studio · no real orders or payments</span>'
+                f'<span class="demo-bar__links"><a href="{root}templates.html">All templates</a><a class="demo-bar__cta" href="{root}start.html?template={self.slug}">Use this template {icon("arrow")}</a></span></div></div>')
 
     def header(self, root, sp):
         t = self.t
@@ -274,7 +294,7 @@ class Store:
     <div><h4>{e(t.get('newsletter_title', 'Get first dibs'))}</h4><p>{e(t.get('newsletter_text', 'New drops and restocks, once or twice a month.'))}</p>
       <form class="nl" data-demo-form><label class="sr" for="nl-email">Email</label><input id="nl-email" type="email" placeholder="Email address" required><button class="btn btn--sm" type="submit">Sign up</button></form></div>
   </div>
-  <div class="wrap ftr__bottom"><span>© {YEAR} {e(t['name'])} — a fictional brand. Concept store designed by <a href="{root}index.html">Cartsmith Studio</a>. Photos: Pexels.</span>
+  <div class="wrap ftr__bottom"><span>{self.footer_note(root)}</span>
   <span class="ftr__pay">{icon('card')} FPX · Cards · E-wallets</span></div>
 </footer>
 <div class="drawer" id="cart" aria-hidden="true"><div class="drawer__scrim" data-close></div>
@@ -291,16 +311,35 @@ class Store:
   </aside></div>
 <button class="chat-fab" type="button" data-demo="In your store this button opens a chat with you on WhatsApp or Instagram — with the product name already filled in.">{icon('chat')}<span>Chat</span></button>
 <div class="toast" role="status" aria-live="polite" data-toast></div>
+{self.gate_html()}
 </body>
 </html>
 """
 
+    def footer_note(self, root):
+        if self.pv:
+            return (f"© {YEAR} {e(self.t['name'])}. Private homepage mockup prepared by "
+                    f'<a href="{e(self.studio_link(root, "index.html"))}">Cartsmith Studio</a> from public shop information — not a live store.')
+        return (f"© {YEAR} {e(self.t['name'])} — a fictional brand. Concept store designed by "
+                f'<a href="{root}index.html">Cartsmith Studio</a>. Photos: Pexels.')
+
+    def gate_html(self):
+        if not (self.pv and self.pv.get("_hash")):
+            return ""
+        return """<div class="pv-gate" id="pv-gate"><form><p class="pv-gate__t">Private mockup</p><p>Enter the password Cartsmith sent you.</p>
+<input type="password" autocomplete="off" aria-label="Password" required><button class="btn btn--block" type="submit">Open</button><p class="pv-gate__err" hidden>Wrong password.</p></form></div>
+<script>(function(){var g=document.getElementById('pv-gate');if(!document.documentElement.classList.contains('pv-locked')){g.remove();return;}
+var f=g.querySelector('form');f.addEventListener('submit',function(ev){ev.preventDefault();var v=f.querySelector('input').value;
+crypto.subtle.digest('SHA-256',new TextEncoder().encode(v)).then(function(b){var h=Array.from(new Uint8Array(b)).map(function(x){return x.toString(16).padStart(2,'0');}).join('');
+if(h===window.__pvHash){try{localStorage.setItem('pv_'+h,'1');}catch(e){}document.documentElement.classList.remove('pv-locked');g.remove();}else{f.querySelector('.pv-gate__err').hidden=false;}});});})();</script>"""
+
     def page(self, rel, title, body, kind, desc=""):
-        depth = rel.count("/")  # demo/<slug>/x.html → 2 ; demo/<slug>/p/x.html → 3
+        depth = rel.count("/")  # demo/<slug>/x.html → 2 ; demo/<slug>/p/x.html → 3 ; preview: x.html → 0
+        base_depth = self.base.count("/") + 1 if self.base else 0
         root = "../" * depth
-        sp = "../" * (depth - 2)
+        sp = "../" * (depth - base_depth)
         html_ = self.head(title, root, sp, kind, desc) + self.header(root, sp) + body(root, sp) + self.footer(root, sp)
-        write(rel, html_)
+        write(rel, html_, self.out)
 
     # ---- home sections -------------------------------------------------
     def sec_head(self, s, sp, link=None):
@@ -364,7 +403,7 @@ class Store:
                 c = self.cats[cid]
                 n = len([p for p in self.products if p["cat"] == cid])
                 items += (f'<a class="cat" href="{sp}shop.html?cat={cid}"><span class="cat__img"><img src="{sp}img/{c["img"]}" alt="" loading="lazy" width="600" height="600"></span>'
-                          f'<span class="cat__txt"><strong>{e(c["name"])}</strong><small>{e(c.get("blurb", str(n) + " products"))}</small></span></a>')
+                          f'<span class="cat__txt"><strong>{e(c["name"])}</strong><small>{e(c.get("blurb", f"{n} product" + ("" if n == 1 else "s")))}</small></span></a>')
             return f'<section class="{cls}"><div class="wrap">{self.sec_head(s, sp)}<div class="cats cats--{layout} cats--n{len(ids)}">{items}</div></div></section>'
         if typ == "products":
             items = self.pick(s.get("pick", {}))
@@ -418,11 +457,16 @@ class Store:
     # ---- pages ---------------------------------------------------------
     def build(self):
         t = self.t
-        base = f"demo/{self.slug}"
+        base = self.base
+        pre = base + "/" if base else ""
         # images + theme
-        dst_img = os.path.join(DIST, base, "img")
+        dst_img = os.path.join(self.out, base, "img")
         shutil.copytree(os.path.join(self.dir, "img"), dst_img, dirs_exist_ok=True)
-        shutil.copy(os.path.join(self.dir, "theme.css"), os.path.join(DIST, base, "theme.css"))
+        theme = open(os.path.join(self.dir, "theme.css"), encoding="utf-8").read()
+        if self.pv:
+            shutil.copytree(self.pv["_img"], dst_img, dirs_exist_ok=True)
+            theme += preview_css(self.pv)
+        write(f"{pre}theme.css", theme, self.out)
         # data.js
         data = {
             "slug": self.slug, "name": t["name"], "prefix": t.get("order_prefix", t["name"][:2].upper()),
@@ -431,18 +475,18 @@ class Store:
                                    "o": [{"n": o["name"], "v": [[v["v"], v.get("add", 0), v.get("img", "")] for v in o["values"]]} for o in p["options"]]}
                          for p in self.products},
         }
-        write(f"{base}/data.js", "window.STORE=" + json.dumps(data, ensure_ascii=False, separators=(",", ":")) + ";\n")
+        write(f"{pre}data.js", "window.STORE=" + json.dumps(data, ensure_ascii=False, separators=(",", ":")) + ";\n", self.out)
 
         name = t["name"]
-        self.page(f"{base}/index.html", f'{name} — {t["tagline"]}', lambda r, sp: "\n".join(self.section(s, sp) for s in t["home"]), "home")
-        self.page(f"{base}/shop.html", f"Shop all — {name}", self.shop_body, "shop")
+        self.page(f"{pre}index.html", f'{name} — {t["tagline"]}', lambda r, sp: "\n".join(self.section(s, sp) for s in t["home"]), "home")
+        self.page(f"{pre}shop.html", f"Shop all — {name}", self.shop_body, "shop")
         for p in self.products:
-            self.page(f"{base}/p/{p['id']}.html", f"{p['name']} — {name}", lambda r, sp, p=p: self.pdp_body(p, sp), "product", p.get("short", ""))
-        self.page(f"{base}/cart.html", f"Cart — {name}", self.cart_body, "cart")
-        self.page(f"{base}/checkout.html", f"Checkout — {name}", self.checkout_body, "checkout")
-        self.page(f"{base}/order.html", f"Order received — {name}", self.order_body, "order")
-        self.page(f"{base}/about.html", f"{t.get('about_nav', 'Our story')} — {name}", self.about_body, "about")
-        self.page(f"{base}/help.html", f"Help — {name}", self.help_body, "help")
+            self.page(f"{pre}p/{p['id']}.html", f"{p['name']} — {name}", lambda r, sp, p=p: self.pdp_body(p, sp), "product", p.get("short", ""))
+        self.page(f"{pre}cart.html", f"Cart — {name}", self.cart_body, "cart")
+        self.page(f"{pre}checkout.html", f"Checkout — {name}", self.checkout_body, "checkout")
+        self.page(f"{pre}order.html", f"Order received — {name}", self.order_body, "order")
+        self.page(f"{pre}about.html", f"{t.get('about_nav', 'Our story')} — {name}", self.about_body, "about")
+        self.page(f"{pre}help.html", f"Help — {name}", self.help_body, "help")
         return len(self.products) + 7
 
     def shop_body(self, root, sp):
@@ -583,7 +627,7 @@ class Store:
   <div class="order-box" data-order-box><p class="muted">No recent demo order found. <a href="shop.html">Go shopping</a>.</p></div>
   <div class="next"><h2>In a real store, the customer would now get:</h2>
     <ul class="ticks"><li>{icon('check')}An order confirmation email with the receipt</li><li>{icon('check')}A WhatsApp or Instagram update when it ships, with the tracking number</li><li>{icon('check')}The order in the seller's dashboard, ready to pack</li></ul></div>
-  <div class="btns center"><a class="btn btn--lg" href="index.html">Back to the store</a><a class="btn btn--lg btn--ghost" href="{root}start.html?template={self.slug}">I want a store like this</a></div>
+  <div class="btns center"><a class="btn btn--lg" href="index.html">Back to the store</a><a class="btn btn--lg btn--ghost" href="{e(self.studio_link(root, "start.html?template=" + self.slug))}">I want a store like this</a></div>
 </div>"""
 
     def about_body(self, root, sp):
@@ -592,7 +636,7 @@ class Store:
         vals = "".join(f'<li class="feat">{icon(v[0])}<h3>{e(v[1])}</h3><p>{e(v[2])}</p></li>' for v in a.get("values", []))
         return f"""<section class="about-hero"><img src="{sp}img/{a['img']}" alt="" width="1920" height="1080"><div class="wrap"><h1>{e(a['title'])}</h1></div></section>
 <div class="wrap wrap--narrow about"><p class="lead">{e(a['lead'])}</p>{paras}
-<p class="demo-inline">Demo note: {e(self.t['name'])} is a fictional brand created to show this template. Your real story, photos and team go here.</p></div>
+<p class="demo-inline">{"Mockup note: we'll write this page with you — your real story, photos and team go here." if self.pv else "Demo note: " + e(self.t["name"]) + " is a fictional brand created to show this template. Your real story, photos and team go here."}</p></div>
 {f'<section class="sec"><div class="wrap"><ul class="feats feats--n{len(a.get("values", []))}">{vals}</ul></div></section>' if vals else ''}"""
 
     def help_body(self, root, sp):
@@ -611,6 +655,139 @@ class Store:
   <h2 id="contact">Contact</h2><p>Chat with us using the button at the bottom of the page, or message us on Instagram. We reply within one working day.</p>
   <p class="demo-inline">Demo note: these policies are examples. Your store gets your own policies — and we draft them with you.</p>
 </div>"""
+
+
+# --------------------------------------------------------------------------
+# Private mockups (free homepage previews for one prospect)
+# --------------------------------------------------------------------------
+def slugify(s):
+    return re.sub(r"[^a-z0-9]+", "-", s.lower()).strip("-") or "item"
+
+
+GENERIC_FAQ = [
+    ["How long does delivery take?", "West Malaysia 2–4 working days, East Malaysia 4–7 working days. Orders before 2pm ship the same working day."],
+    ["Which payment methods do you accept?", "FPX online banking, credit/debit cards and e-wallets — all through a secure Malaysian payment gateway."],
+    ["Do you offer free shipping?", "Yes, for orders above the free-shipping amount shown at the top of the site."],
+    ["Can I still buy on Shopee / TikTok?", "Of course. This website is another way to order — with member perks and direct support from us."],
+]
+
+
+def apply_preview(t, pv):
+    """Replace a template's fictional brand with the prospect's public brand info (in place)."""
+    b = pv["brand"]
+    t["name"] = b["name"]
+    t["tagline"] = b.get("tagline", t["tagline"])
+    t["logo"] = {"text": b.get("logo_text", b["name"])}
+    t["favicon"] = b["name"][:1].upper()
+    t["fav_bg"] = b.get("colors", {}).get("accent", t["fav_bg"])
+    t["fav_fg"] = "#ffffff"
+    t["order_prefix"] = re.sub(r"[^A-Z]", "", b["name"].upper())[:2] or "PV"
+    t["footer_blurb"] = b.get("blurb", b.get("tagline", ""))
+    if pv.get("shipping"):
+        t["shipping"] = pv["shipping"]
+    ship = t.get("shipping", {"west": 8, "east": 15, "free_min": 150})
+    t["announcement"] = b.get("announcement") or [f"Free shipping in Malaysia over RM{ship['free_min']}", "Pay with FPX online banking, cards or e-wallets"]
+    cats, products = [], []
+    for i, item in enumerate(pv["products"]):
+        cname = item.get("category", "Shop")
+        cid = slugify(cname)
+        imgs = item["images"] if isinstance(item.get("images"), list) else [item["image"]]
+        if cid not in [c["id"] for c in cats]:
+            cats.append({"id": cid, "name": cname, "img": imgs[0], "blurb": ""})
+        products.append({
+            "id": slugify(item["name"])[:50], "name": item["name"], "cat": cid, "price": item["price"], "sale": item.get("sale"),
+            "imgs": imgs, "short": item.get("short", ""), "desc": item.get("desc", [item.get("short", "")] if item.get("short") else []),
+            "details": item.get("details", []), "options": item.get("options", []), "tags": ["featured"] if i < 4 else [],
+            "badge": item.get("badge"),
+        })
+    for c in cats:
+        n = len([p for p in products if p["cat"] == c["id"]])
+        c["blurb"] = f"{n} product" + ("" if n == 1 else "s")
+    t["categories"], t["products"] = cats, products
+    hero_tpl = next((s for s in t["home"] if s["type"] == "hero"), {"type": "hero", "layout": "split"})
+    hero = dict(hero_tpl)
+    h = pv.get("hero", {})
+    hero.update({"eyebrow": h.get("eyebrow", ""), "title": e(h.get("title", b["name"])), "text": h.get("text", b.get("tagline", "")),
+                 "img": h.get("image", hero_tpl.get("img", "hero.jpg")), "alt": b["name"], "pos": h.get("pos", ""),
+                 "buttons": [{"label": "Shop now", "href": "shop.html"}, {"label": "Our story", "href": "about.html"}],
+                 "chips": [["truck", f"Free shipping RM{ship['free_min']}+"], ["shield", "Secure checkout"]]})
+    if hero.get("sticker"):
+        hero["sticker"] = f"Free<br>shipping<br><b>RM{ship['free_min']}+</b>"
+    cat_tpl = next((s for s in t["home"] if s["type"] == "categories"), {"layout": "cards"})
+    layout = cat_tpl.get("layout", "cards") if len(cats) <= 5 else "cards"
+    home = [hero,
+            {"type": "trust", "items": [["truck", f"Free shipping RM{ship['free_min']}+", "West & East Malaysia"], ["shield", "Secure checkout", "FPX, cards, e-wallets"],
+                                        ["box", "Ships in 1–2 days", "Tracking number by message"], ["chat", "Questions?", "Chat with us anytime"]]}]
+    if len(cats) > 1:
+        home.append({"type": "categories", "layout": layout, "title": "Shop by category", "class": cat_tpl.get("class", ""), "ids": [c["id"] for c in cats]})
+    home.append({"type": "products", "eyebrow": h.get("featured_eyebrow", "Start here"), "title": h.get("featured_title", "Our favourites"), "pick": {"tag": "featured", "limit": 4}})
+    if len(products) > 4:
+        home.append({"type": "products", "title": "More to love", "pick": {"ids": [p["id"] for p in products[4:12]]}})
+    home += [{"type": "newsletter", "title": f"Join the {b['name']} list", "text": "New launches, restocks and member-only vouchers.", "button": "Sign up"}]
+    t["home"] = home
+    t["faq"] = pv.get("faq", GENERIC_FAQ)
+    t["about_nav"] = "About"
+    t["about"] = {"img": h.get("image", "hero.jpg"), "title": f"About {b['name']}", "lead": b.get("story", b.get("tagline", "")), "paras": [], "values": []}
+    t["returns_short"] = "Returns and exchanges follow your own policy — we'll set it up with you."
+    t["returns"] = "Your own returns and exchange policy goes here. We'll draft it together during setup."
+
+
+def preview_css(pv):
+    c = pv["brand"].get("colors", {})
+    m = {"accent": "--accent", "accent_fg": "--accent-fg", "bg": "--bg", "fg": "--fg", "soft": "--soft"}
+    vars_ = "".join(f"{m[k]}:{v};" for k, v in c.items() if k in m and re.match(r"^#[0-9a-fA-F]{3,8}$", v))
+    return ("\n/* preview overrides */\n:root{" + vars_ + "}\n"
+            "html.pv-locked body > *:not(.pv-gate){visibility:hidden}\n.pv-gate{display:none}\n"
+            "html.pv-locked .pv-gate{display:grid;position:fixed;inset:0;z-index:999;place-items:center;background:var(--bg);visibility:visible}\n"
+            ".pv-gate form{width:min(340px,90vw);text-align:center}.pv-gate input{width:100%;height:48px;margin:10px 0;border:1.5px solid var(--line);border-radius:10px;padding:0 14px}"
+            ".pv-gate__t{font:700 1.4rem var(--font-head)}.pv-gate__err{color:#c0392b;margin-top:10px}\n")
+
+
+def build_preview(cfg_path, out=None):
+    import datetime
+    import hashlib
+    cfg_path = os.path.abspath(cfg_path)
+    folder = os.path.dirname(cfg_path)
+    pv = load_json(cfg_path)
+    for k in ("code", "template", "delete_by", "brand", "products"):
+        if k not in pv:
+            sys.exit(f"preview.json 缺少 {k}（参考 templates/preview.example.json）")
+    if pv["template"] not in ORDER:
+        sys.exit(f"template 只能是：{', '.join(ORDER)}")
+    try:
+        delete_by = datetime.date.fromisoformat(pv["delete_by"])
+    except ValueError:
+        sys.exit("delete_by 要写成 YYYY-MM-DD")
+    today = datetime.date.today()
+    if delete_by < today:
+        sys.exit(f"这个样板已经过期（{delete_by}）。不要再发出；请到 Netlify 删除它的网站，然后删掉这个文件夹。")
+    if (delete_by - today).days > 14:
+        sys.exit("delete_by 最多 14 天后（诚信守则：没成交 14 天内删除）")
+    pv["_img"] = os.path.join(folder, "img")
+    missing = [i for p in pv["products"] for i in (p["images"] if isinstance(p.get("images"), list) else [p.get("image", "")]) if not os.path.exists(os.path.join(pv["_img"], i))]
+    hero_img = pv.get("hero", {}).get("image")
+    if hero_img and not os.path.exists(os.path.join(pv["_img"], hero_img)):
+        missing.append(hero_img)
+    if missing:
+        sys.exit("img/ 里找不到这些照片：" + ", ".join(missing))
+    pw = pv.get("password", "")
+    if pw:
+        pv["_hash"] = hashlib.sha256(pw.encode("utf-8")).hexdigest()
+    out = os.path.abspath(out or os.path.join(folder, "site"))
+    if os.path.exists(out):
+        shutil.rmtree(out)
+    pv["_out"] = out
+    os.makedirs(os.path.join(out, "assets", "css"))
+    os.makedirs(os.path.join(out, "assets", "js"))
+    shutil.copy(os.path.join(HERE, "assets", "css", "store.css"), os.path.join(out, "assets", "css"))
+    shutil.copy(os.path.join(HERE, "assets", "js", "store.js"), os.path.join(out, "assets", "js"))
+    studio = load_json(os.path.join(HERE, "studio.json"))
+    n = Store(pv["template"], studio, pv).build()
+    write("robots.txt", "User-agent: *\nDisallow: /\n", out)
+    write("_headers", "/*\n  X-Robots-Tag: noindex, nofollow\n", out)
+    print(f"样板 {pv['code']}（{pv['brand']['name']}，模板 {pv['template']}）：{n} 页 → {out}")
+    print(f"删除日期：{delete_by}。" + ("已设密码。" if pw else "⚠ 没有设密码（preview.json 加 \"password\"）。"))
+    print("下一步：打开 https://app.netlify.com/drop ，把上面的 site 文件夹拖进去（详细见 docs/09-netlify-guide.md）。")
 
 
 # --------------------------------------------------------------------------
@@ -891,4 +1068,7 @@ def main():
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    if len(sys.argv) >= 3 and sys.argv[1] == "--preview":
+        build_preview(sys.argv[2], sys.argv[3] if len(sys.argv) > 3 else None)
+    else:
+        sys.exit(main())

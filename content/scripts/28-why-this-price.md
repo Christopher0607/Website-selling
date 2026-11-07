@@ -13,7 +13,7 @@
 | 23–31 秒 | 套餐页录屏 | 月费 RM150 起：备份、更新、监控、小修改 |
 | 31–39 秒 | 套餐页录屏 | 上线后第 1 个月维护免费，先试 |
 | 39–47 秒 | 套餐页录屏 | 前 3 个客户 7 折 |
-| 结尾（行动呼吁） | 字幕 + KedaiLab logo | 完整套餐：kedailab.com/packages |
+| 结尾（行动呼吁） | 字幕 + Cartsmith logo | 完整套餐：cartsmith.netlify.app/packages |
 
 ## 重点内容
 - 建站 RM2,800 起：大约 12–18 小时，包含付款、运费、邮件全部设好
@@ -30,13 +30,13 @@
 ✅ 建站 RM2,800 起：大约 12–18 小时，包含付款、运费、邮件全部设好
 ✅ 月费 RM150 起：备份、更新、监控、小修改
 ✅ 上线后第 1 个月维护免费，先试
-👉 完整套餐：kedailab.com/packages
+👉 完整套餐：cartsmith.netlify.app/packages
 
 ## Hashtag
-#kedailab #smallbusinessmalaysia #websitemalaysia
+#cartsmithstudio #smallbusinessmalaysia #websitemalaysia
 
 ## 置顶留言
-完整套餐：kedailab.com/packages
+完整套餐：cartsmith.netlify.app/packages
 
 ## 备注
 - 价格跟 sales/packages.html 一致

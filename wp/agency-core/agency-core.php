@@ -5,7 +5,7 @@
  * Version:           1.3.0
  * Requires at least: 6.4
  * Requires PHP:      8.1
- * Author:            KedaiLab
+ * Author:            Cartsmith
  * License:           GPL-2.0-or-later
  * Text Domain:       agency-core
  * Domain Path:       /languages

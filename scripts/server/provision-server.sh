@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # provision-server.sh — 新服务器初始化（以 root 执行一次）
-# 用法：sudo bash scripts/server/provision-server.sh --studio-domain kedailab.com --email you@gmail.com
+# 用法：sudo bash scripts/server/provision-server.sh --studio-domain yourdomain.com --email you@gmail.com
 #
 # 会做：系统更新、时区、deploy 用户、swap、防火墙、fail2ban、自动安全更新、
 #       Nginx / PHP-FPM / MariaDB / WP-CLI / Certbot / 工具，套用 PHP 和 Nginx 设定，
@@ -12,7 +12,7 @@ usage() {
   cat <<EOF
 用法: sudo $0 --studio-domain <域名> --email <电邮> [--deploy-user deploy] [--no-ufw] [--skip-upgrade]
 
-  --studio-domain   工作室域名，例如 kedailab.com（写进 /etc/agency/agency.conf）
+  --studio-domain   工作室域名，例如 yourdomain.com（写进 /etc/agency/agency.conf）
   --email           接收 SSL 到期通知、WordPress 管理员电邮
   --deploy-user     日常登录用的非 root 用户（默认 deploy）
   --no-ufw          不设定防火墙（只在容器测试时用）

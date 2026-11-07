@@ -1,6 +1,6 @@
-# 销售话术（定稿 v1 · 2026-11-06）
+# 销售话术（定稿 v2 · 2026-11-07：改用 Instagram 联系，名字改为 Cartsmith Studio）
 
-> 基于 `docs/04-sales-kit.md`，按 KedaiLab 的决定修改：目标是 **Shopee / TikTok Shop 上有自己品牌的中小型卖家**；收费是**一次性建站费 + 月费**，**上线后第 1 个月维护免费**；前 3 个客户 7 折 + 维护免费 2 个月。
+> 基于 `docs/04-sales-kit.md`，按 Cartsmith 的决定修改：目标是 **Shopee / TikTok Shop 上有自己品牌的中小型卖家**；收费是**一次性建站费 + 月费**，**上线后第 1 个月维护免费**；前 3 个客户 7 折 + 维护免费 2 个月。
 > `[方括号]` 一定要换成真的内容。最重要的是「具体观察」——没有它，对方不会回。
 > 数字（Shopee 费用）先用工作室网站的计算器算，**不确定就说"大约"**。
 
@@ -22,7 +22,9 @@
 
 按 `docs/04-sales-kit.md` §2.3 打分（1–5），4–5 分先联系，2 分以下跳过。
 
-**去哪里找：** Shopee / TikTok Shop 搜行业关键词 → 点进店 → 从简介找 IG / FB / WhatsApp 联系。**不要用 Shopee 聊天推销**（可能违反平台规定），不要用程式自动抓资料或群发。
+**去哪里找：** Shopee / TikTok Shop 搜行业关键词 → 点进店 → 从简介找他们的 **Instagram**（我们暂时只用 Instagram 私信联系）。没有 IG 的先跳过。**不要用 Shopee 聊天推销**（可能违反平台规定），不要用程式自动抓资料或群发。
+
+**Instagram 规矩：** 用 `@cartsmith.studio` 发，一条一条手动发；新账号前两周每天 10 个以内，之后最多 20 个；不要复制贴上一模一样的信息给很多人（每条都有「具体观察」）；对方说不要 → 礼貌道谢，名单标 `do-not-contact`。
 
 ---
 
@@ -31,19 +33,19 @@
 ### 1A. Shopee / TikTok Shop 品牌（通用）
 
 **中文**
-> 你好 [名字 / 店名] 👋 我是 KedaiLab 的 [你的名字]，专门帮本地品牌做自己的网店。
+> 你好 [名字 / 店名] 👋 我是 Cartsmith 的 [你的名字]，专门帮本地品牌做自己的网店。
 > 刚看了你们在 [Shopee / TikTok] 的店，[具体观察：例如 XX 有 2,000 多条好评，回头客应该不少]。
 > 想问一下，你们有考虑过让回头客直接在自己的网站下单吗？那些单不用被平台抽成，客户资料也是你们自己的。
 > 如果有兴趣，我可以免费帮你们做一个首页样板，只给你看，不满意完全没关系 🙂
 
 **English**
-> Hi [Name] 👋 I'm [Your name] from KedaiLab — I build online stores for local brands.
+> Hi [Name] 👋 I'm [Your name] from Cartsmith — I build online stores for local brands.
 > I just came across your [Shopee / TikTok] shop — [specific observation, e.g. your XX has 2,000+ reviews, so you must have plenty of repeat customers].
 > Have you thought about letting repeat customers order directly on your own website? Those orders wouldn't be subject to platform fees, and the customer data would be yours.
 > If you're open to it, I can make a free homepage mockup for you to look at — no obligation at all 🙂
 
 **Bahasa Malaysia**
-> Hai [Nama] 👋 Saya [Nama anda] dari KedaiLab — saya bina kedai online untuk jenama tempatan.
+> Hai [Nama] 👋 Saya [Nama anda] dari Cartsmith — saya bina kedai online untuk jenama tempatan.
 > Saya baru tengok kedai [Shopee / TikTok] anda — [pemerhatian spesifik, contohnya: XX anda ada lebih 2,000 ulasan, mesti ramai pelanggan tetap].
 > Pernah terfikir untuk benarkan pelanggan tetap order terus dari website sendiri? Order itu tak kena yuran platform, dan data pelanggan jadi milik anda.
 > Kalau berminat, saya boleh buatkan contoh homepage secara percuma — tiada sebarang komitmen 🙂
@@ -57,15 +59,23 @@
 | 食品 / 饼干 | "你们的 sambal 留言区很多人问东马能不能寄" | "你们的食物看起来很好吃" |
 | 宠物 / 家居 | "你们的猫砂有订阅回购的老顾客在留言" | "你们的店很棒" |
 
-### 1C. 靠 WhatsApp / IG 接单的品牌
+### 1C. 只在 Instagram 接单（没有 Shopee）的品牌
 
-用 `docs/04-sales-kit.md` §4.2 的版本，开头加 "我是 KedaiLab 的 [名字]"。
+**中文**
+> 你好 [名字] 👋 我是 Cartsmith 的 [你的名字]。看到你们都是在 IG 私信接单，[具体观察：例如 每个帖子下面都有人问价钱和尺寸]。
+> 有没有想过放一个简单的网店？客人可以自己看价格、选尺寸、付款，你们就不用一个一个回私信。
+> 我可以免费做一个首页样板给你看，不满意没关系 🙂
+
+**English**
+> Hi [Name] 👋 I'm [Your name] from Cartsmith. I noticed you take orders through IG DMs — [specific observation, e.g. lots of "price?" and "size?" comments on every post].
+> Have you thought about a simple online store, so customers can check prices, pick sizes and pay on their own instead of waiting for a DM reply?
+> I can make a free homepage mockup for you to look at — no obligation 🙂
 
 ---
 
 ## 2. 跟进：给一个有用的资讯（第 2–3 天）
 
-先用 https://kedailab.com/shopee-fee-calculator/ 按对方的售价算好。
+先用 https://cartsmith.netlify.app/shopee-fee-calculator.html 按对方的售价算好。
 
 **中文**
 > 嗨 [名字]，不打扰太久～ 我用 Shopee 最新公布的费率大概算了一下：一张 RM[售价] 的 [品类] 订单，平台各种费用加起来大约 RM[金额]。如果每个月有 [X] 张回头客的单改在官网下，一年大约可以多留 RM[金额]（官网的付款手续费已经算进去了）。计算器在这里，你可以自己改数字：[链接]
@@ -83,10 +93,21 @@
 
 ## 3. 送出免费样板首页 · 约通话 · 最后一条
 
-用 `docs/04-sales-kit.md` §4.4、§4.6、§4.5 的版本（中 / 英 / 马来文都有）。送样板时提醒：
-- 样板网址 + 密码（密码在服务器 `sudo cat /etc/agency/secrets/preview-<代号>.env`）
-- 1 分钟录屏介绍（用手机录，边滑边讲）
-- 删除日期（`make-preview.sh` 会显示）
+做样板：`docs/09-netlify-guide.md` 第 D 部分（`python site/build.py --preview ...` → 拖进 Netlify Drop）。
+信息用 `docs/04-sales-kit.md` §4.4、§4.6、§4.5 的版本（中 / 英 / 马来文都有）。在 Instagram 发样板时一起给：
+- 样板网址 + 密码（密码在 `clients/<代号>/preview/preview.json`）
+- 1 分钟录屏介绍（用手机录，边滑边讲：首页 → 产品 → 加入购物车 → 结账）
+- 删除日期（程式会显示；最多 14 天）
+
+**送样板（中文）**
+> [名字] 你好！样板做好了 🙌 这是用你们的产品放在我们的 [模板名] 模板上：[网址]（密码：[密码]）
+> 用手机打开最准。我也录了 1 分钟介绍 👆 这个样板只给你看，[日期] 会删除。
+> 看完有什么想法都可以跟我说，要不要约 15 分钟通话聊聊？
+
+**Send the mockup (English)**
+> Hi [Name]! Your mockup is ready 🙌 It's your products on our [template] template: [link] (password: [password])
+> Best viewed on your phone. Here's a 1-minute walkthrough 👆 It's private to you and will be deleted on [date].
+> Let me know what you think — happy to jump on a 15-minute call?
 
 ---
 
@@ -119,19 +140,19 @@
 
 ---
 
-## 6. WhatsApp Business 快速回复设定（5 分钟）
+## 6. Instagram 快速回复（Saved replies）设定（5 分钟）
 
-手机打开 WhatsApp Business → **设置 → 商业工具 → 快速回复 → +**。建议设这几个（打 `/` 就会跳出来）：
+Instagram（专业账号）→ **设定 → Business tools and controls → Saved replies → +**。快捷键不用加 `/`，在对话框打快捷字就会跳出来。建议设这几个：
 
 | 快捷键 | 内容 |
 |---|---|
-| `/hi` | 你好！我是 KedaiLab 的 [名字] 😊 我们帮本地品牌做自己的网店，上线后每个月帮你维护。想先看我们的样板店吗？👉 kedailab.com |
-| `/price` | 套餐：Starter RM2,800（20 款产品）、Growth RM4,800（80 款 + 广告追踪）。上线后第 1 个月维护免费，之后 RM150/月起。详细：kedailab.com/packages |
-| `/mockup` | 可以免费帮你做首页样板，只给你看、不满意没关系。请给我：店铺链接 + logo（有的话）+ 3–5 款主打产品 🙏 |
-| `/calc` | 这是 Shopee 费用计算器，可以算你的单在 Shopee 和自己网站各留多少：kedailab.com/shopee-fee-calculator |
-| `/thanks` | 谢谢你的时间 🙏 有任何问题随时 WhatsApp 我，祝生意越来越好！ |
+| `hi` | 你好！我是 Cartsmith 的 [名字] 😊 我们帮本地品牌做自己的网店，上线后每个月帮你维护。想先看我们的 6 个样板店吗？👉 cartsmith.netlify.app/templates.html |
+| `price` | 套餐：Starter RM2,800（20 款产品）、Growth RM4,800（80 款 + 广告追踪）。上线后第 1 个月维护免费，之后 RM150/月起。详细：cartsmith.netlify.app/pricing.html |
+| `mockup` | 可以免费帮你做首页样板，只给你看、不满意没关系。请给我：店铺链接 + 喜欢的模板（cartsmith.netlify.app/templates.html）+ 3–5 款主打产品 🙏 |
+| `calc` | 这是 Shopee 费用计算器，可以算你的单在 Shopee 和自己网站各留多少：cartsmith.netlify.app/shopee-fee-calculator.html |
+| `thanks` | 谢谢你的时间 🙏 有任何问题随时 DM 我，祝生意越来越好！ |
 
-**也要设：** 问候信息（第一次联系自动回）、离开信息（下班时间）、商业资料（地址可以隐藏、营业时间、网站 kedailab.com）。
+**也要设：** 简介（Bio）和链接按 `docs/09-netlify-guide.md` 第 C 部分；Instagram 的「常见问题（FAQ）」可以放 3 个问题：多少钱？要多久？可以先看样板吗？
 
 ---
 

@@ -6,7 +6,7 @@ body = markdown.markdown(md, extensions=["tables", "fenced_code", "toc"])
 body = body.replace("<table>", '<div class="tw"><table>').replace("</table>", "</table></div>")
 html = """<!doctype html>
 <html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>KedaiLab 销售手册</title>
+<title>Cartsmith 销售手册</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Plus+Jakarta+Sans:wght@600;800&display=swap">
 <style>
 :root{--bg:#f5f3ee;--paper:#fffdf9;--ink:#1b2430;--muted:#5f6b78;--line:#e3ddd2;--accent:#1f3a5f;--gold:#b7791f;--code:#efe9de;

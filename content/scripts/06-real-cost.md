@@ -8,12 +8,12 @@
 | 时间 | 画面 | 旁白 / 字幕 |
 |---|---|---|
 | 0–3 秒（钩子） | 白板列表 | "做一个网站到底要花多少钱？我全部列出来。" |
-| 3–15 秒（问题） | 套餐页 kedailab.com/packages 录屏 | 很多人只听过「几百块」或「几万块」，不知道钱花在哪。 |
+| 3–15 秒（问题） | 套餐页 cartsmith.netlify.app/packages 录屏 | 很多人只听过「几百块」或「几万块」，不知道钱花在哪。 |
 | 15–23 秒 | 白板列表 | 一次性：建站费（我们 RM2,800 起） |
-| 23–31 秒 | 套餐页 kedailab.com/packages 录屏 | 每年：域名约 RM50–120 |
-| 31–39 秒 | 套餐页 kedailab.com/packages 录屏 | 每月：主机 + 维护（我们 RM150 起，上线后第 1 个月免费） |
-| 39–47 秒 | 套餐页 kedailab.com/packages 录屏 | 每单：付款网关手续费（大约每笔 RM1 多，或按 %） |
-| 结尾（行动呼吁） | 字幕 + KedaiLab logo | 想要一个这样的网店？私信我「网站」，先免费帮你做首页样板。 |
+| 23–31 秒 | 套餐页 cartsmith.netlify.app/packages 录屏 | 每年：域名约 RM50–120 |
+| 31–39 秒 | 套餐页 cartsmith.netlify.app/packages 录屏 | 每月：主机 + 维护（我们 RM150 起，上线后第 1 个月免费） |
+| 39–47 秒 | 套餐页 cartsmith.netlify.app/packages 录屏 | 每单：付款网关手续费（大约每笔 RM1 多，或按 %） |
+| 结尾（行动呼吁） | 字幕 + Cartsmith logo | 想要一个这样的网店？私信我「网站」，先免费帮你做首页样板。 |
 
 ## 重点内容
 - 一次性：建站费（我们 RM2,800 起）
@@ -24,7 +24,7 @@
 
 ## 画面清单
 - 白板列表
-- 套餐页 kedailab.com/packages 录屏
+- 套餐页 cartsmith.netlify.app/packages 录屏
 
 ## 发布文案
 做一个网站到底要花多少钱？我全部列出来。

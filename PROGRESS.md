@@ -6,11 +6,23 @@
 
 ## 当前状态
 
-- 当前阶段：等俊宇开 DigitalOcean 服务器（Phase 0.3）
-- 下一个任务：**俊宇照 `docs/08-deploy-guide.md` 第 0–8 步部署**（买域名、开服务器、跑 provision-server.sh、harden-ssh.sh、build-all.sh）
-- 卡住的事：需要俊宇提供 WhatsApp Business 号码、SSM 资料（写进 `sites/studio/brand-config.json`）
+- 当前阶段：**Phase N — Netlify 展示站**（2026-11-07 俊宇决定：先不买域名、不开服务器，用 Netlify 做临时网站给客户看）
+- 下一个任务：**俊宇照 `docs/09-netlify-guide.md` 做 A–C 部分**（开 Netlify 网站、开表单、放 DeepSeek Key、开 Instagram `@cartsmith.studio`），然后开始找客户（Phase 4.1）
+- 卡住的事：没有（DigitalOcean 服务器、域名、SSM 都等第一个客户说「好」再做；SSM 一定要在收订金前完成）
 
 ---
+
+## Phase N Netlify 展示站（2026-11-07 新增）
+- [x] N.1 改名 Cartsmith Studio（不用马来文名字），全部文件同步
+- [x] N.2 6 个模板（网店样板）：Dewlane 护肤 / Plainfold 服装 / Little Chili Pantry 食品 / Lowlight Roasters 咖啡 / Tailmate 宠物 / Voltnest 3C 配件（`site/templates/`；购物车、规格、东西马运费、优惠码、示范结账都能用；自动测试 6 个全通过）
+- [x] N.3 工作室网站（`site/pages/`）：首页、6 个模板、价格、为什么选我们（和同业比较 + 资料来源）、流程、FAQ、免费样板申请表、Shopee 费用计算器、隐私通知
+- [x] N.4 AI 客服改用 DeepSeek（`site/netlify/functions/chat/`）+ 名单存进 Netlify Forms；销售助理 `sales/agent/sales_agent.py` 改用 DeepSeek、不用装套件
+- [x] N.5 联系方式改成 Instagram（话术、手册、套餐单、报价单、AI 知识库）
+- [x] N.6 免费样板产生器：`python site/build.py --preview ...` → Netlify Drop（密码页 + noindex + 14 天删除）
+- [ ] N.7 俊宇：开 Netlify 网站 + 开表单 + 电邮通知（`docs/09-netlify-guide.md` A 部分）
+- [ ] N.8 俊宇：DeepSeek 充值 + API Key 放进 Netlify（B 部分），用 10 个常见问题测 AI 回答
+- [ ] N.9 俊宇：开 Instagram `@cartsmith.studio`、简介、快速回复（C 部分）
+- [ ] N.10 用手机把 6 个模板各走一次（加入购物车 → 结账），有不顺的地方告诉 Claude Code
 
 ## Phase 0 准备
 - [x] 0.1 填好决定清单（俊宇说"全部你决定"，Claude Code 已填；只缺 WhatsApp 号码）
@@ -32,23 +44,23 @@
 - [ ] 1.9 备份、更新、监控（含还原测试）🧪（备份、还原、更新失败自动还原都测过；UpdraftPlus Google Drive 和 UptimeRobot 要在真服务器设）
 - [ ] 1.10 复制脚本测试 + 母版 v1.0 🧪（复制 38 秒、没有残留）
 
-## Phase 2 样板站
-- [x] 2.1 三个虚构品牌方案（Claude Code 决定：Rimbun Skin / Teduh Studio / Dapur Seri Kenanga，见 `sites/demo-*/brief.md`）
-- [ ] 2.2 建好 3 个样板站 🧪（`build-demo.sh`；部署后测 PageSpeed）
-- [ ] 2.3 作品集截图 + 介绍视频 —— 部署后跑 `scripts/local/screenshot.js`；视频俊宇录
+## Phase 2 样板站（2026-11-07 改由 Phase N 的 6 个 Netlify 模板代替）
+- [x] 2.1 虚构品牌方案 —— 旧的 3 个（马来文名字）已移到 `sites/_archive/`；新的 6 个在 `site/templates/`
+- [x] 2.2 样板站 —— 改成 Netlify 静态版（`site/`）；服务器版以后需要再做
+- [ ] 2.3 作品集截图 + 介绍视频 —— 模板截图已自动产生（`site/assets/shots/`）；介绍视频俊宇录（用手机录 6 个模板）
 
-## Phase 3 工作室网站
-- [x] 3.1 网站文案（中英，`wp/content/studio/`；俊宇可以再改）
-- [ ] 3.2 建站 + 表单 + WhatsApp + 追踪 🧪（`setup-studio.sh`；表单用 agency-core 自带的 `[agc_lead_form]`）
-- [x] 3.3 Shopee 费用计算器（`[agc_fee_calculator]`，3 组手算例子测试通过）
-- [ ] 3.4 社交账号 + Google 商家资料（俊宇开账号；简介文案待写）
+## Phase 3 工作室网站（2026-11-07 改放 Netlify，见 Phase N）
+- [x] 3.1 网站文案 —— 新版在 `site/pages/` + `site/studio.json`（旧的 WordPress 版 `wp/content/studio/` 留着备用）
+- [x] 3.2 建站 + 表单 + 联系方式 —— Netlify 版：Netlify Forms + Instagram + AI 客服（等俊宇上线，N.7–N.9）
+- [x] 3.3 Shopee 费用计算器（同一个计算程式，3 组手算例子测试通过）
+- [ ] 3.4 社交账号 —— Instagram 简介文案已写好（`docs/09-netlify-guide.md` C 部分）；俊宇开账号
 
 ## Phase 4 销售准备
-- [ ] 4.1 客户名单（前 100 个）—— 俊宇每天找 20 个，`sales/prospects.csv`
-- [x] 4.2 话术定稿（`sales/scripts.md`，中 / 英 / 马来文 + WhatsApp 快速回复）+ 完整销售手册 `sales/playbook.md`
-- [x] 4.2b 销售 AI 助理（`sales/agent/`；部署后填 API Key：`setup-sales-agent.sh`）
+- [ ] 4.1 客户名单（前 100 个）—— 俊宇每天找 10–20 个（只找有 Instagram 的），`sales/prospects.csv`
+- [x] 4.2 话术定稿（`sales/scripts.md`，中 / 英 / 马来文 + Instagram 快速回复）+ 完整销售手册 `sales/playbook.md`
+- [x] 4.2b 销售 AI 助理（`sales/agent/sales_agent.py`，DeepSeek；在自己电脑跑，见 `sales/agent/README.md`）
 - [x] 4.3 套餐单、报价单、合同清单（`sales/packages.html`、`proposal-template.md`、`contract-checklist.md`）
-- [ ] 4.4 免费样板首页流程（preview）🧪（`make-preview.sh` 50 秒、`cleanup-previews.sh` 测过）
+- [x] 4.4 免费样板首页流程 —— Netlify 版：`site/build.py --preview`（密码页、noindex、14 天期限都测过）；服务器版 `make-preview.sh` 以后用
 
 ## Phase 5 内容（持续进行）
 - [x] 5.1 30 天内容日历（`content/calendar.csv`，从 2026-11-16 开始）
@@ -76,15 +88,17 @@
 
 | 站点代号 | 网址 | 用途 | 状态 |
 |---|---|---|---|
-| master | https://master.kedailab.com | 母版网店（密码保护） | 🧪 本地测试通过，待部署 |
-| demo-rimbun | https://demo-rimbun.kedailab.com | 样板：护肤，简约高级 | 🧪 待部署 |
-| demo-teduh | https://demo-teduh.kedailab.com | 样板：头巾，活泼年轻 | 🧪 待部署 |
-| demo-kenanga | https://demo-kenanga.kedailab.com | 样板：食品，温暖自然 | 🧪 待部署 |
-| studio | https://kedailab.com | 工作室网站 | 🧪 待部署 |
+| studio（Netlify） | https://cartsmith.netlify.app（网址名以俊宇开的为准） | 工作室网站 + AI 客服 + 表单 | ✅ 做好、自动测试通过，等俊宇上线 |
+| 6 个模板 | https://cartsmith.netlify.app/demo/<模板>/ | Dewlane、Plainfold、Little Chili Pantry、Lowlight Roasters、Tailmate、Voltnest | ✅ 同上 |
+| master | https://master.yourdomain.com | 母版网店（WordPress，密码保护） | 🧪 本地测试通过，等第一个客户再开服务器 |
+| （旧）demo-rimbun / teduh / kenanga | — | 马来文名字的旧样板 | 已停用，移到 `sites/_archive/` |
 
 ## 建议区（Claude Code 想到但还没做的改进）
 
-- 工作室网站做一个中文版首页（/zh/），给只看中文的卖家（现在是中英混排）
+- 工作室网站做一个中文版首页（/zh/），给只看中文的卖家（现在是英文为主 + 中文副标题）
+- Netlify 免费方案没有真正的密码保护：样板用「随机网址 + 密码页 + noindex」。如果以后很多样板，考虑 Netlify Pro（约 USD 20/月，先问）或服务器版 make-preview.sh
+- 6 个模板做 WordPress / WooCommerce 版（子主题 + 各自的 brand-config），第一个客户选了哪个就先做哪个
+- 网站加 Google Analytics / Meta Pixel（要先有隐私通知更新 + cookie 说明）
 - Shopee 产品导出表 → WooCommerce CSV 的转换脚本（第一个客户时写，按实际导出格式）
 - Ubuntu 26.04 LTS 稳定后（26.04.1），在测试站试 PHP 8.5 再升级
 - 工作室网站加 Organization 结构化资料以外，再加 FAQ 结构化资料（Rank Math 可以做）
@@ -93,7 +107,8 @@
 
 | 日期 | 任务 | 结果 | 网址 / 文件 | 未解决的问题 |
 |---|---|---|---|---|
-| 2026-11-06 | 0.1 决定清单 | 俊宇确认：一次性建站费 + 月费 + 上线后首月免费试用；只做 Shopee/TikTok 中小型自有品牌卖家；其余由 Claude Code 决定（KedaiLab、kedailab.com、Ubuntu 24.04） | docs/00-decisions.md、docs/01-business-plan.md | WhatsApp 号码待提供 |
+| 2026-11-07 | Phase N（俊宇要求：改名、换掉头巾、Netlify、6 个模板、比同业、DeepSeek、Instagram、暂不 SSM） | 改名 Cartsmith Studio；6 个模板（Pexels 照片约 90 张、全部虚构品牌，网上查过没有同名）；工作室网站 11 页；DeepSeek AI 客服（Netlify Function）；销售助理改 DeepSeek；话术改 Instagram；免费样板产生器；旧马来文样板移到 `sites/_archive/`。测试：6 个模板购物流程自动测试全通过、聊天和表单端对端（模拟 DeepSeek）通过、样板密码页通过 | `site/`、`netlify.toml`、`docs/09-netlify-guide.md`、`sales/agent/` | 要真的 DeepSeek Key 才能测回答品质；隐私通知、条款要请律师看；SSM 收订金前要注册 |
+| 2026-11-06 | 0.1 决定清单 | 俊宇确认：一次性建站费 + 月费 + 上线后首月免费试用；只做 Shopee/TikTok 中小型自有品牌卖家；其余由 Claude Code 决定（Cartsmith、yourdomain.com、Ubuntu 24.04） | docs/00-decisions.md、docs/01-business-plan.md | WhatsApp 号码待提供 |
 | 2026-11-06 | 0.2 项目结构 | repo 建好，.gitignore、.env.example | — | — |
 | 2026-11-06 | 0.6 查证 | Billplz（默认）/ ToyyibPay、EasyParcel、Brevo、UpdraftPlus、Shopee 费率 | docs/02-tech-spec.md §10 | 付款网关费率开户前看官方价格页 |
 | 2026-11-06 | 0.4、1.1–1.10 脚本 | 17 个服务器脚本 + agency-core 1.1.0 + 子主题，在本地 Ubuntu 24.04 完整测试 | scripts/、wp/、scripts/README.md（测试记录） | SSL、ufw、fail2ban、跨服务器搬站要在真服务器测 |

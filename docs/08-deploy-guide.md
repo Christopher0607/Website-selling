@@ -1,5 +1,8 @@
 # 08 — 部署到 DigitalOcean（一步一步）
 
+> ⏸ **2026-11-07：暂缓。** 工作室网站和 6 个模板现在放 Netlify（`docs/09-netlify-guide.md`）。这份指南等**第一个客户签约**、要做客户的 WooCommerce 网店时再用。
+> 到时先买域名，然后把下面所有 `yourdomain.com` 换成你的域名。旧的 3 个样板站已经停用，`build-all.sh` 默认只建母版站。
+
 > 给俊宇：照顺序做。每一步做完再做下一步。看不懂的地方，把那一步贴给 Claude Code 问。
 > 全部做完大约 1–2 小时（其中等 DNS 生效可能要 10 分钟到几小时）。
 > 所有东西都已经在本地完整测试过（2026-11-06）：建站、复制、套品牌、备份、还原、更新失败自动还原、删除站点。
@@ -10,11 +13,8 @@
 
 | 网址 | 用途 | 谁能看 |
 |---|---|---|
-| `https://kedailab.com` | 工作室网站（套餐、样板、费用计算器、询价表单） | 公开 |
-| `https://master.kedailab.com` | 母版网店（所有网站的起点） | 要密码 |
-| `https://demo-rimbun.kedailab.com` | 样板：护肤 Rimbun Skin | 公开（不被搜索引擎收录） |
-| `https://demo-teduh.kedailab.com` | 样板：头巾 Teduh Studio | 公开（不被搜索引擎收录） |
-| `https://demo-kenanga.kedailab.com` | 样板：食品 Dapur Seri Kenanga | 公开（不被搜索引擎收录） |
+| `https://yourdomain.com` | 工作室网站（套餐、样板、费用计算器、询价表单） | 公开 |
+| `https://master.yourdomain.com` | 母版网店（所有网站的起点） | 要密码 |
 
 ---
 
@@ -26,10 +26,10 @@
 
 ## 第 1 步：买域名（10 分钟）
 
-1. 到域名商买 `kedailab.com`（Namecheap、Cloudflare Registrar、Porkbun 都可以；**看续费价格**，不要只看第一年）。
+1. 到域名商买 `yourdomain.com`（Namecheap、Cloudflare Registrar、Porkbun 都可以；**看续费价格**，不要只看第一年）。
 2. 先不要设定任何东西，等第 3 步拿到服务器 IP。
 
-> 想换名字也可以：只要在第 5 步把 `kedailab.com` 换成你的域名就好，其他全部自动跟着改。
+> 想换名字也可以：只要在第 5 步把 `yourdomain.com` 换成你的域名就好，其他全部自动跟着改。
 
 ## 第 2 步：在你的电脑做 SSH 密钥（5 分钟，Windows）
 
@@ -38,13 +38,13 @@ SSH 密钥 = 登录服务器的"钥匙"，比密码安全。
 1. 开 **PowerShell**。
 2. 输入（一直按 Enter 就好；问 passphrase 可以设一个，记在 Bitwarden）：
    ```
-   ssh-keygen -t ed25519 -C "kedailab"
+   ssh-keygen -t ed25519 -C "cartsmith"
    ```
 3. 显示公钥（等下要贴进 DigitalOcean）：
    ```
    Get-Content $env:USERPROFILE\.ssh\id_ed25519.pub
    ```
-   复制整行（`ssh-ed25519 AAAA... kedailab`）。
+   复制整行（`ssh-ed25519 AAAA... cartsmith`）。
 
 ## 第 3 步：开服务器（Droplet）（5 分钟）
 
@@ -54,7 +54,7 @@ SSH 密钥 = 登录服务器的"钥匙"，比密码安全。
 2. **Region：Singapore**
 3. **Image：Ubuntu 24.04 (LTS) x64**
 4. **Size：Basic → Regular → 2 GB / 1 CPU**（每月约 USD 12，开前看清楚价格）
-5. **Authentication：SSH Key → New SSH Key**，贴上第 2 步复制的那一行，名字填 `kedailab-pc`
+5. **Authentication：SSH Key → New SSH Key**，贴上第 2 步复制的那一行，名字填 `cartsmith-pc`
 6. 勾选 **Enable automated backups**（另外收费，约 +20%）和 **Monitoring**（免费）
 7. **Hostname：** `agency-dev`
 8. **Create Droplet**，等 1 分钟，复制它的 **IP 地址**（例如 `128.199.xx.xx`）
@@ -71,11 +71,11 @@ SSH 密钥 = 登录服务器的"钥匙"，比密码安全。
 | A | `www` | 服务器 IP |
 | A | `*` | 服务器 IP |
 
-（`*` 是通配符：以后开 `preview-p012.kedailab.com` 这种新网址，不用再改 DNS。）
+（`*` 是通配符：以后开 `preview-p012.yourdomain.com` 这种新网址，不用再改 DNS。）
 
 检查有没有生效（PowerShell）：
 ```
-nslookup master.kedailab.com
+nslookup master.yourdomain.com
 ```
 看到你的 IP 就是生效了。
 
@@ -104,7 +104,7 @@ nslookup master.kedailab.com
 
 4. 初始化服务器（装 Nginx、PHP、数据库、防火墙等，大约 5–10 分钟）：
    ```
-   bash /opt/agency/scripts/server/provision-server.sh --studio-domain kedailab.com --email 你的电邮
+   bash /opt/agency/scripts/server/provision-server.sh --studio-domain yourdomain.com --email 你的电邮
    ```
    最后会显示「版本摘要」和「完成」。
 
@@ -136,7 +136,7 @@ Host agency-dev
 
 ## 第 7 步：一次建好所有网站（15 分钟）
 
-确认第 4 步的 DNS 已经生效（`nslookup demo-rimbun.kedailab.com` 看到 IP），然后：
+确认第 4 步的 DNS 已经生效（`nslookup master.yourdomain.com` 看到 IP），然后：
 ```
 sudo /opt/agency/scripts/server/build-all.sh
 ```
@@ -153,17 +153,17 @@ sudo cat /etc/agency/secrets/studio.env
 ```
 把 `WP_ADMIN_USER` / `WP_ADMIN_PASS`（后台登录）、`BASIC_AUTH_USER` / `BASIC_AUTH_PASS`（母版的访问密码）存进 Bitwarden。**不要贴到聊天或 WhatsApp。**
 
-后台网址：`https://kedailab.com/wp-admin`、`https://master.kedailab.com/wp-admin` …
+后台网址：`https://yourdomain.com/wp-admin`、`https://master.yourdomain.com/wp-admin` …
 
 ## 第 9 步：上线前要补的资料（跟 Claude Code 一起做）
 
-1. **工作室资料**：WhatsApp 号码、电邮、SSM 名称和号码 → 改 `sites/studio/brand-config.json` → commit → 服务器 `cd /opt/agency && sudo git pull && sudo scripts/server/setup-studio.sh kedailab.com`
+1. **工作室资料**：WhatsApp 号码、电邮、SSM 名称和号码 → 改 `sites/studio/brand-config.json` → commit → 服务器 `cd /opt/agency && sudo git pull && sudo scripts/server/setup-studio.sh yourdomain.com`
 2. **寄信**：注册 Brevo（免费）→ 后台 FluentSMTP 选 Brevo、贴 API Key → 按 FluentSMTP 显示的记录在 DNS 加 SPF / DKIM → 发测试邮件到 Gmail，确认在收件箱
-3. **监控**：注册 UptimeRobot（免费）→ 为 `https://kedailab.com` 和三个样板站各加一个 HTTP 监控
-4. **Google**：Search Console 用 DNS TXT 验证 `kedailab.com`，提交 `https://kedailab.com/sitemap_index.xml`
+3. **监控**：注册 UptimeRobot（免费）→ 为 `https://yourdomain.com` 和三个样板站各加一个 HTTP 监控
+4. **Google**：Search Console 用 DNS TXT 验证 `yourdomain.com`，提交 `https://yourdomain.com/sitemap_index.xml`
 5. **备份到 Google Drive**（可选）：后台 UpdraftPlus → Settings → Google Drive → 授权
 6. **（可选）销售 AI 助理 / 网站 AI 客服**：照 `sales/agent/README.md` 的「安装」三步（要一个 Anthropic API Key，先设每月花费上限）
-7. **测速**：用 PageSpeed Insights 测 `https://kedailab.com` 和一个样板站的手机版分数，记在 `sites/<代号>/README.md`
+7. **测速**：用 PageSpeed Insights 测 `https://yourdomain.com` 和一个样板站的手机版分数，记在 `sites/<代号>/README.md`
 
 ---
 

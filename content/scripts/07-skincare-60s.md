@@ -7,26 +7,26 @@
 ## 脚本
 | 时间 | 画面 | 旁白 / 字幕 |
 |---|---|---|
-| 0–3 秒（钩子） | 手机录屏 demo-rimbun 全流程 | "这个网店，从首页到下单只要 4 步。" |
+| 0–3 秒（钩子） | 手机录屏 Dewlane 模板全流程 | "这个网店，从首页到下单只要 4 步。" |
 | 3–15 秒（问题） | 角落标注 Concept Project | 客人在手机上找不到「下单」按钮，就走了。 |
-| 15–23 秒 | 手机录屏 demo-rimbun 全流程 | 首页 → 产品 → 选容量 → 结账，用 Rimbun Skin 样板店示范 |
+| 15–23 秒 | 手机录屏 Dewlane 模板全流程 | 首页 → 产品 → 选容量 → 结账，用 Dewlane 模板（cartsmith.netlify.app/demo/dewlane/）示范 |
 | 23–31 秒 | 角落标注 Concept Project | 东马地址运费自动变 |
 | 31–39 秒 | 角落标注 Concept Project | WhatsApp 问成分按钮 |
-| 结尾（行动呼吁） | 字幕 + KedaiLab logo | 想要一个这样的网店？私信我「网站」，先免费帮你做首页样板。 |
+| 结尾（行动呼吁） | 字幕 + Cartsmith logo | 想要一个这样的网店？私信我「网站」，先免费帮你做首页样板。 |
 
 ## 重点内容
-- 首页 → 产品 → 选容量 → 结账，用 Rimbun Skin 样板店示范
+- 首页 → 产品 → 选容量 → 结账，用 Dewlane 模板（cartsmith.netlify.app/demo/dewlane/）示范
 - 东马地址运费自动变
 - WhatsApp 问成分按钮
 
 ## 画面清单
-- 手机录屏 demo-rimbun 全流程
+- 手机录屏 Dewlane 模板全流程
 - 角落标注 Concept Project
 
 ## 发布文案
 这个网店，从首页到下单只要 4 步。
 客人在手机上找不到「下单」按钮，就走了。
-✅ 首页 → 产品 → 选容量 → 结账，用 Rimbun Skin 样板店示范
+✅ 首页 → 产品 → 选容量 → 结账，用 Dewlane 模板（cartsmith.netlify.app/demo/dewlane/）示范
 ✅ 东马地址运费自动变
 ✅ WhatsApp 问成分按钮
 👉 想要一个这样的网店？私信我「网站」，先免费帮你做首页样板。

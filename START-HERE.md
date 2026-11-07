@@ -1,16 +1,15 @@
 # 从这里开始
 
-> **2026-11-06 更新：** Claude Code 已经把 Phase 0–5 里不需要服务器的部分全部做好并在本地测试过（脚本、母版网店、3 个样板站、工作室网站、费用计算器、销售话术、套餐单、30 个视频脚本）。
-> **你现在要做的：照 `docs/08-deploy-guide.md` 开 DigitalOcean 服务器，跑几个指令就全部上线。** 进度见 `PROGRESS.md`。
+> **2026-11-07 更新（最新）：** 工作室改名 **Cartsmith Studio**。先不买域名、不开服务器：工作室网站 + **6 个可以真的点的网店模板** + DeepSeek AI 客服，全部放 **Netlify**（免费网址）。联系客户只用 **Instagram**。
+> **你现在要做的：照 `docs/09-netlify-guide.md` 的 A–C 部分做（约 45 分钟）**，然后开始找客户。DigitalOcean（`docs/08-deploy-guide.md`）等第一个客户签约再开。进度见 `PROGRESS.md`。
 
 这是你的「一人建站工作室」执行包。把整个文件夹交给 Claude Code，它会按顺序带你完成：
 
-1. 搭好服务器
-2. 做一个可以重复使用的「母版网店」
-3. 做 3 个样板站当作品集
-4. 做你自己的工作室网站
-5. 准备销售材料、话术和视频内容
-6. 找客户、成交、交付、收月费
+1. 做你自己的工作室网站 + 6 个模板（Netlify，已做好）
+2. 准备销售材料、话术和视频内容（已做好）
+3. 找客户（Instagram）、做免费样板、成交
+4. 第一个客户签约后：搭服务器、用「母版网店」做客户的 WooCommerce 网店
+5. 交付、收月费
 
 ---
 
@@ -29,8 +28,10 @@
 | `docs/05-content-video.md` | 你 + Claude Code | 30 个视频选题、脚本模板、不露脸的 AI 视频流程、广告 |
 | `docs/06-delivery-sop.md` | 你 + Claude Code | 签约 → 上线 → 月费维护的完整流程和检查清单 |
 | `docs/07-30-day-plan.md` | 你 | 30 天每天做什么、要看哪些数字 |
-| `docs/08-deploy-guide.md` | 你 | **部署到 DigitalOcean 的一步一步说明（从这里开始）** |
-| `scripts/` `wp/` `sites/` | Claude Code | 脚本、自建插件和子主题、每个站点的资料 |
+| `docs/08-deploy-guide.md` | 你 | 部署到 DigitalOcean 的一步一步说明（第一个客户签约后才做） |
+| `docs/09-netlify-guide.md` | 你 | **工作室网站放上 Netlify、开 AI 客服、开 Instagram、做免费样板（从这里开始）** |
+| `site/` | Claude Code | Netlify 网站的程式：工作室页面、6 个模板、AI 客服函数、样板产生器 |
+| `scripts/` `wp/` `sites/` | Claude Code | 服务器脚本、WordPress 插件和子主题、每个站点的资料（给客户网店用） |
 | `sales/` `content/` | 你 | 定稿话术、套餐单、报价单、合同要点；30 天内容日历和 30 个脚本 |
 | `templates/` | 两边 | 客户需求表、报价单、客户追踪表、品牌参数、内容日历、月报 |
 
@@ -75,9 +76,11 @@
 ## 开始前要准备
 
 - [ ] Claude Code 能正常启动和登录
-- [ ] DigitalOcean 账号（已经有就直接用）
-- [ ] 一个专门做生意的 WhatsApp Business 号码（跟私人号码分开）
-- [ ] 服务器和域名的预算（第一个月大约 RM100–300，Claude Code 会帮你比价）
+- [ ] GitHub 账号（已经有：`Christopher0607`）
+- [ ] Netlify 账号（用 GitHub 登录，免费）
+- [ ] DeepSeek 账号 + 小额充值（例如 USD 2–5，预付制）
+- [ ] 一个新的 Instagram 账号给工作室（`@cartsmith.studio`）
+- [ ] DigitalOcean 账号（第一个客户签约后才用）
 - [ ] 每周 15–20 小时
 
 ---

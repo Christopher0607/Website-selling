@@ -12,7 +12,7 @@
 | 15–23 秒 | PageSpeed 录屏（测样板站） | 用 PageSpeed Insights 测（手机版） |
 | 23–31 秒 | PageSpeed 录屏（测样板站） | 3 个常见原因：图片太大、插件太多、主机太慢 |
 | 31–39 秒 | PageSpeed 录屏（测样板站） | 产品图转 WebP，每张 200 KB 以内 |
-| 结尾（行动呼吁） | 字幕 + KedaiLab logo | 想测你的网站？留言网址，我帮你看。 |
+| 结尾（行动呼吁） | 字幕 + Cartsmith logo | 想测你的网站？留言网址，我帮你看。 |
 
 ## 重点内容
 - 用 PageSpeed Insights 测（手机版）

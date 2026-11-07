@@ -74,7 +74,7 @@ class AGC_Settings {
 			// AI chat (needs AGC_AI_CHAT_URL + AGC_AI_CHAT_TOKEN in wp-config.php).
 			'ai_chat'              => 0,
 			'ai_chat_title'        => 'Ask us anything',
-			'ai_chat_greeting'     => "Hi! I'm KedaiLab's AI assistant 👋 Ask me about packages, prices or how it works. 有问题可以用中文问我。",
+			'ai_chat_greeting'     => "Hi! I'm Cartsmith's AI assistant 👋 Ask me about packages, prices or how it works. 有问题可以用中文问我。",
 		);
 	}
 
