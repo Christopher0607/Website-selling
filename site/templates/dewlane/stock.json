@@ -1,0 +1,18 @@
+{"images": [
+ {"file": "hero.jpg", "pexels": 8101520, "crop": "wide", "dest": "img", "note": "Home hero: bottles"},
+ {"file": "routine.jpg", "pexels": 8989964, "crop": "portrait", "gravity": "north", "dest": "img", "note": "Home routine section"},
+ {"file": "story.jpg", "pexels": 6948180, "crop": "portrait", "dest": "img", "note": "Brand story"},
+ {"file": "cleanser.webp", "pexels": 7814991, "dest": "img", "note": "Calm Gel Cleanser"},
+ {"file": "cleanser-2.webp", "pexels": 7814990, "dest": "img", "note": "Calm Gel Cleanser 2"},
+ {"file": "toner.webp", "pexels": 15369086, "dest": "img", "note": "Balance Toner"},
+ {"file": "serum.webp", "pexels": 35909808, "dest": "img", "note": "Dew Serum"},
+ {"file": "serum-2.webp", "pexels": 8140898, "dest": "img", "note": "Dew Serum 2"},
+ {"file": "cream.webp", "pexels": 6690234, "dest": "img", "note": "Barrier Cream"},
+ {"file": "gel.webp", "pexels": 7796160, "dest": "img", "note": "Water Gel"},
+ {"file": "sun.webp", "pexels": 8533216, "dest": "img", "note": "Daily Sun Fluid"},
+ {"file": "oil.webp", "pexels": 7796813, "dest": "img", "note": "Night Oil"},
+ {"file": "mask.webp", "pexels": 6167443, "dest": "img", "note": "Clay Mask"},
+ {"file": "set.webp", "pexels": 6167442, "dest": "img", "note": "Three-Step Set"},
+ {"file": "minis.webp", "pexels": 30229022, "dest": "img", "note": "Travel Minis"},
+ {"file": "face.webp", "pexels": 4672662, "dest": "img", "note": "Category tile"}
+]}

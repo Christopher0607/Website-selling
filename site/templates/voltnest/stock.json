@@ -1,0 +1,14 @@
+{"images": [
+ {"file": "hero.jpg", "pexels": 7952558, "crop": "wide", "dest": "img", "note": "Home hero: wireless pad"},
+ {"file": "desk.jpg", "pexels": 30047570, "crop": "portrait", "dest": "img", "note": "Desk setup"},
+ {"file": "band.jpg", "pexels": 10567179, "crop": "wide", "dest": "img", "note": "Band"},
+ {"file": "pb20.webp", "pexels": 14706040, "dest": "img", "note": "20K Power Bank"},
+ {"file": "pb20-2.webp", "pexels": 37475677, "dest": "img", "note": "20K Power Bank 2"},
+ {"file": "pb10.webp", "pexels": 4072683, "dest": "img", "note": "Slim 10K Power Bank"},
+ {"file": "cable.webp", "pexels": 3921711, "dest": "img", "note": "Braided USB-C Cable"},
+ {"file": "aurora.webp", "pexels": 1643753, "dest": "img", "note": "Aurora Cable"},
+ {"file": "pad.webp", "pexels": 7742585, "dest": "img", "note": "15W Wireless Pad"},
+ {"file": "stand.webp", "pexels": 4526428, "dest": "img", "note": "Desk Phone Stand"},
+ {"file": "buds.webp", "pexels": 33298188, "dest": "img", "note": "Pocket Earbuds"},
+ {"file": "charger.webp", "pexels": 10567179, "dest": "img", "note": "65W 3-Port Charger"}
+]}

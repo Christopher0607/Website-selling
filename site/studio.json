@@ -1,0 +1,75 @@
+{
+  "name": "Cartsmith Studio",
+  "owner": "Junyu",
+  "instagram": {
+    "handle": "cartsmith.studio",
+    "profile": "https://www.instagram.com/cartsmith.studio/",
+    "dm": "https://ig.me/m/cartsmith.studio"
+  },
+  "packages": [
+    {"id": "starter", "name": "Starter", "price": 2800, "for": "Your first own website", "meta": "Up to 20 products · ~10 working days",
+     "features": ["Home, Shop, About, Contact, FAQ, Shipping & Returns", "1 payment gateway: FPX, cards & e-wallets", "West / East Malaysia shipping rates", "WhatsApp / Instagram chat buttons", "Privacy & terms drafts (EN + BM)", "Mobile-first design, basic SEO, SSL", "Training video + 30-min handover", "First month of Care free"]},
+    {"id": "growth", "name": "Growth", "price": 4800, "for": "Bigger range, ready for ads", "meta": "Up to 80 products · ~15 working days", "highlight": true, "tag": "Most complete",
+     "features": ["Everything in Starter", "Bulk product import + variations (size, colour…)", "2 payment methods", "Campaign / sale landing page", "Free-shipping threshold & vouchers", "GA4 + Meta Pixel ad tracking", "Homepage copy written for you (EN or 中文) + 3 SEO articles", "2 training sessions", "First month of Care free"]},
+    {"id": "catalog", "name": "Catalog (B2B)", "price": 3500, "for": "Wholesalers & manufacturers", "meta": "Up to 50 products · ~12 working days",
+     "features": ["Product catalogue with enquiry, not checkout", "Pre-filled quotation requests", "Certificates / partners page", "GA4 tracking", "Mobile-first design, basic SEO, SSL", "First month of Care free"]}
+  ],
+  "care": {
+    "plans": [{"name": "Basic Care", "price": 150}, {"name": "Standard Care", "price": 300}],
+    "rows": [
+      ["Hosting, SSL, daily backups", "✓", "✓"],
+      ["Uptime monitoring + quarterly restore test", "✓", "✓"],
+      ["Plugin & security updates", "Monthly", "Checked weekly"],
+      ["Small changes (photos, prices, new products, campaign pages)", "30 min / month", "2 hours / month"],
+      ["Monthly report", "Short", "Detailed + suggestions"],
+      ["Reply time", "Within 2 working days", "Within 1 working day"]
+    ]
+  },
+  "addons": [
+    ["Extra products (above your package)", "RM8 each"],
+    ["Product copywriting", "RM15 each"],
+    ["Extra language (e.g. add a 中文 version)", "from RM900"],
+    ["Simple text logo", "from RM300"],
+    ["Meta ads account + Pixel setup", "RM500"],
+    ["Move an existing website to us", "from RM500"],
+    ["Rush delivery (within 7 working days)", "+30%"]
+  ],
+  "compare": {
+    "cols": ["Build it yourself on a store platform", "Cheap template website", "Freelancer or agency", "Cartsmith"],
+    "rows": [
+      ["Typical setup price", "Your own time + monthly plan", "about RM800–1,500 ¹", "WooCommerce stores often RM2,000–10,000+ ² · agencies RM2,500–50,000 ³", "RM2,800 / RM3,500 / RM4,800 — fixed and written down"],
+      ["See it before you pay", "Free trial — but you build it", "Template screenshots", "Sometimes a mockup", "Free homepage mockup with your own products + 6 live demos"],
+      ["Malaysian payments & shipping set up", "You set it up", "Often basic only", "Depends on the quote", "Done for you: FPX, cards, e-wallets, West/East rates, policy drafts"],
+      ["After launch", "You maintain it", "Usually on your own", "Varies, often per job", "Care plan: updates, backups, monitoring, small edits"],
+      ["Monthly cost", "Platform plan + apps + fees (varies)", "Usually none — and no help", "Varies", "RM150 or RM300 — first month free"],
+      ["Who owns it", "Your account on their platform", "You", "Check the contract", "You — domain and payment account in your name, full backup anytime"],
+      ["Made for Shopee / TikTok sellers", "General", "General", "Varies", "Yes — repeat-customer flow, parcel QR card, live-selling links"]
+    ],
+    "sources": [
+      ["Malaysia Web Design Pricing 2026 – Anchor Sprint", "https://anchor-sprint-website.pages.dev/blog/malaysia-web-design-pricing-2026-wordpress-vs-code/"],
+      ["WooCommerce Website Design Malaysia – Kang Xiang", "https://kangxiang.info/?p=21893"],
+      ["Website Design Malaysia Price 2026 – Keepdesign", "https://keepdesign.com.my/?p=4728"]
+    ],
+    "checked": "2026-11-06"
+  },
+  "calculator": {
+    "commission": 14, "transaction": 3.5, "support": 0.5, "sst": 8, "gateway": 2, "gateway_fixed": 0,
+    "checked": "2026-11-06",
+    "sources": ["https://jumixdesign.com/shopee-seller-fees-malaysia-2026/", "https://www.zetpy.com/?p=10621", "https://www.worldfirst.com/my/blog/e-commerce-online-sellers/shopee-seller-fees-malaysia/"]
+  },
+  "faq": [
+    ["How much does a website cost?", "<p>One-time setup: <b>Starter RM2,800</b>, <b>Catalog (B2B) RM3,500</b> or <b>Growth RM4,800</b>. Then an optional monthly Care plan (RM150 or RM300). <a href=\"pricing.html\">See everything that's included</a>.</p>"],
+    ["Is there a free trial?", "<p>Two things are free: a <b>homepage mockup</b> before you decide (with your own products), and the <b>first month of Care</b> after your site goes live. A whole website can't be built for free because each one takes many hours of work.</p>"],
+    ["Do I have to leave Shopee or TikTok Shop?", "<p>No. Keep them for new customers. Your own website is for <b>repeat customers</b>, wholesale buyers and ad traffic — with no marketplace commission, and the customer list is yours.</p>"],
+    ["Will the website bring customers by itself?", "<p>Not at first, and we won't pretend otherwise. Customers come from your existing followers, a QR card in every parcel, your live sessions and ads. We set up those entry points for you.</p>"],
+    ["Can you guarantee sales or Google page one?", "<p>No — and be careful of anyone who does. We guarantee a website that works well on phones, takes payments correctly, has the right shipping rates, loads fast and is looked after.</p>"],
+    ["How long does it take?", "<p>About 10 working days for Starter, 12 for Catalog and 15 for Growth — counted from the day we have your deposit <b>and</b> all your content (logo, products, photos, policies).</p>"],
+    ["Who owns the website?", "<p><b>You do</b>, once it's fully paid. Your domain and payment gateway are always opened in your own name. If you ever leave, you get a full backup.</p>"],
+    ["Which payment methods can my customers use?", "<p>FPX online banking, cards and e-wallets, through a Malaysian payment gateway (for example Billplz or ToyyibPay) opened in your company's name. Gateways usually need your business registration — we help with the application. Gateway fees are charged per transaction by the gateway.</p>"],
+    ["What platform do you build on?", "<p>WordPress + WooCommerce — open source, used by millions of stores, and not locked to us. Any developer can take it over later.</p>"],
+    ["Can I change the template's colours, fonts and layout?", "<p>Yes. The 6 templates are starting points. We use your logo, colours, photos and wording, and adjust sections to fit how you sell.</p>"],
+    ["What do I need to prepare?", "<p>Your logo, product list (a Shopee export works), product photos, prices, shipping and return policies, and company details. We send a simple checklist after the deposit.</p>"],
+    ["You're a new studio — why should I trust you?", "<p>Fair question. That's why you can click through 6 live demos, get a free mockup before paying anything, see all prices written down, and pay 50% deposit / 50% before launch. Our first 3 clients also get a founding offer: 30% off setup + 2 free months of Care, in exchange for an honest review.</p>"],
+    ["Is the chat on this website a real person?", "<p>It's an AI assistant (powered by DeepSeek) that answers from our price list. Junyu reads every lead and takes over for quotes, contracts and anything unusual. <a href=\"privacy.html#ai\">How chat data is handled</a>.</p>"]
+  ]
+}

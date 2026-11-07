@@ -1,0 +1,16 @@
+{"images": [
+ {"file": "hero.jpg", "pexels": 11912788, "crop": "wide", "dest": "img", "note": "Home hero: rice with sambal"},
+ {"file": "kitchen.jpg", "pexels": 18048549, "crop": "portrait", "dest": "img", "note": "Breakfast table"},
+ {"file": "corporate.jpg", "pexels": 19283496, "crop": "wide", "dest": "img", "note": "Corporate orders band"},
+ {"file": "anchovy.webp", "pexels": 33984945, "dest": "img", "note": "Crispy Anchovy Sambal"},
+ {"file": "chili.webp", "pexels": 4985531, "dest": "img", "note": "Chili (2nd image)"},
+ {"file": "trio.webp", "pexels": 37090673, "dest": "img", "note": "Sambal Trio"},
+ {"file": "platter.webp", "pexels": 10819659, "dest": "img", "note": "Festive Cookie Platter"},
+ {"file": "coconut.webp", "pexels": 6783198, "dest": "img", "note": "Coconut Crunch Cookies"},
+ {"file": "butter.webp", "pexels": 11054320, "dest": "img", "note": "Butter Flower Cookies"},
+ {"file": "pandan.webp", "pexels": 3334440, "dest": "img", "note": "Pandan Star Cookies"},
+ {"file": "banana.webp", "pexels": 9191924, "dest": "img", "note": "Banana Chips"},
+ {"file": "banana-2.webp", "pexels": 7262702, "dest": "img", "note": "Banana Chips 2"},
+ {"file": "hamper.webp", "pexels": 8014845, "dest": "img", "note": "Festive Hamper"},
+ {"file": "hamper-2.webp", "pexels": 19283496, "dest": "img", "note": "Festive Hamper 2"}
+]}

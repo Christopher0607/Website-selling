@@ -1,0 +1,21 @@
+{"images": [
+ {"file": "hero.jpg", "pexels": 4445461, "crop": "wide", "dest": "img", "note": "Home hero: dog with toys"},
+ {"file": "play.jpg", "pexels": 27636744, "crop": "wide", "dest": "img", "note": "Band: two dogs playing"},
+ {"file": "cat.jpg", "pexels": 4790610, "crop": "portrait", "gravity": "west", "dest": "img", "note": "Cat section"},
+ {"file": "dogs.webp", "pexels": 31703669, "dest": "img", "note": "Category: dogs"},
+ {"file": "cats.webp", "pexels": 18188786, "dest": "img", "note": "Category: cats"},
+ {"file": "rope.webp", "pexels": 18478445, "dest": "img", "note": "Rope Tug Toy"},
+ {"file": "rope-2.webp", "pexels": 14534162, "dest": "img", "note": "Rope Tug Toy 2"},
+ {"file": "bone.webp", "pexels": 31703669, "dest": "img", "note": "Squeaky Plush Bone"},
+ {"file": "treats.webp", "pexels": 13419673, "dest": "img", "note": "Training Treats"},
+ {"file": "bowl.webp", "pexels": 8434670, "dest": "img", "note": "Non-slip Steel Bowl"},
+ {"file": "bowl-2.webp", "pexels": 8434725, "dest": "img", "note": "Steel Bowl 2"},
+ {"file": "harness.webp", "pexels": 5098984, "dest": "img", "note": "Everyday Harness"},
+ {"file": "harness-2.webp", "pexels": 10535548, "dest": "img", "note": "Harness 2"},
+ {"file": "leash.webp", "pexels": 8499440, "dest": "img", "note": "Rain-or-shine Leash"},
+ {"file": "collar.webp", "pexels": 7210639, "dest": "img", "note": "Name Tag Collar"},
+ {"file": "wand.webp", "pexels": 18188786, "dest": "img", "note": "Feather Wand"},
+ {"file": "wand-2.webp", "pexels": 19237486, "dest": "img", "note": "Feather Wand 2"},
+ {"file": "condo.webp", "pexels": 11533580, "dest": "img", "note": "Cat Condo"},
+ {"file": "condo-2.webp", "pexels": 4790610, "gravity": "west", "dest": "img", "note": "Cat Condo 2"}
+]}

@@ -12,3 +12,7 @@ node_modules/
 Thumbs.db
 .DS_Store
 .preview-config.json
+
+# Python / 网站产生的文件
+__pycache__/
+site/dist/

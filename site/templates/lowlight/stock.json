@@ -1,0 +1,14 @@
+{"images": [
+ {"file": "hero.jpg", "pexels": 39719509, "crop": "wide", "dest": "img", "note": "Home hero: beans in roaster"},
+ {"file": "brew.jpg", "pexels": 15672170, "crop": "portrait", "dest": "img", "note": "Brew guide"},
+ {"file": "beans.jpg", "pexels": 13737042, "crop": "wide", "dest": "img", "note": "Band"},
+ {"file": "house.webp", "pexels": 29795391, "dest": "img", "note": "House Blend"},
+ {"file": "midnight.webp", "pexels": 10319208, "dest": "img", "note": "Midnight Dark Roast"},
+ {"file": "highland.webp", "pexels": 15223891, "dest": "img", "note": "Highland Single Origin"},
+ {"file": "espresso.webp", "pexels": 38412662, "dest": "img", "note": "Espresso Blend"},
+ {"file": "kit.webp", "pexels": 8004598, "dest": "img", "note": "Pour-over Starter Kit"},
+ {"file": "kit-2.webp", "pexels": 15672170, "dest": "img", "note": "Starter Kit 2"},
+ {"file": "kettle.webp", "pexels": 7623609, "dest": "img", "note": "Gooseneck Kettle"},
+ {"file": "dripper.webp", "pexels": 2616166, "dest": "img", "note": "Ceramic Dripper"},
+ {"file": "brewer.webp", "pexels": 6660543, "dest": "img", "note": "Glass Brewer"}
+]}

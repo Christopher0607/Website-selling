@@ -1,0 +1,30 @@
+# Netlify 设定：工作室网站 + 6 个网店模板（静态网页）+ AI 聊天函数（DeepSeek）
+# 部署步骤见 docs/09-netlify-guide.md
+[build]
+  base = "site"
+  command = "python3 build.py"
+  publish = "dist"
+  functions = "netlify/functions"
+
+# 样板店不给搜索引擎收录
+[[headers]]
+  for = "/demo/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    X-Frame-Options = "SAMEORIGIN"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+[[headers]]
+  for = "/demo/*/img/*"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000, immutable"

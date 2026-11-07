@@ -1,0 +1,42 @@
+<!--
+title: Get a free homepage mockup — Cartsmith Studio
+description: Send your shop link and favourite template. We'll put your brand and products on it in 1–2 working days — free, private and no obligation.
+-->
+<section class="page-hero"><div class="s-wrap">
+  <p class="kicker">{{ICON:spark}} Free mockup</p>
+  <h1>See your brand on it — free.<span class="zh">免费首页样板：1–2 个工作天</span></h1>
+  <p class="lead">Tell us where you sell and which template you like. We'll build a private homepage mockup with your own products, then send it to you on Instagram.</p>
+</div></section>
+
+<section class="s-sec s-sec--tight"><div class="s-wrap s-contact">
+  <div>
+    <div class="s-ig-card"><h3>{{ICON:ig}} Prefer Instagram?</h3><p>DM us your shop link and the template name. That's all we need to start.</p><a class="s-btn" href="{{IG_DM}}" rel="noopener">Message @{{IG_HANDLE}}</a></div>
+    <div class="s-card" style="margin-top:18px"><h3>What happens next</h3><ul class="s-ticks" style="margin-top:12px">
+      <li>{{ICON:check}}We reply on Instagram within 1 working day</li>
+      <li>{{ICON:check}}Your mockup is ready in 1–2 working days</li>
+      <li>{{ICON:check}}It's private and password-protected</li>
+      <li>{{ICON:check}}Not going ahead? We delete it within 14 days</li></ul></div>
+  </div>
+  <form class="s-form" name="mockup-request" method="POST" action="thanks.html" data-netlify="true" netlify-honeypot="bot-field" data-dm="{{IG_DM}}" data-handle="{{IG_HANDLE}}">
+    <input type="hidden" name="form-name" value="mockup-request">
+    <p class="s-hp"><label>Leave this empty <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
+    <div class="s-f2">
+      <label>Your name<input name="name" autocomplete="name" required maxlength="80"></label>
+      <label>Brand name<input name="brand" required maxlength="80"></label>
+    </div>
+    <div class="s-f2">
+      <label>Instagram handle <small>(so we can send your mockup)</small><input name="instagram" placeholder="@yourbrand" required maxlength="60"></label>
+      <label>Email <small>(optional)</small><input name="email" type="email" autocomplete="email" maxlength="120"></label>
+    </div>
+    <label>Shop link <small>Shopee, TikTok Shop, Instagram or website</small><input name="shop_url" type="url" placeholder="https://shopee.com.my/yourshop" required maxlength="300"></label>
+    <div class="s-f2">
+      <label>Template you like<select name="template"><option value="not-sure">Not sure yet — recommend one</option>{{TEMPLATE_OPTIONS}}</select></label>
+      <label>Package<select name="package"><option value="not-sure">Not sure yet</option><option value="starter">Starter — RM2,800</option><option value="growth">Growth — RM4,800</option><option value="catalog">Catalog (B2B) — RM3,500</option></select></label>
+    </div>
+    <label>How many products do you sell?<select name="products"><option>Under 20</option><option>20–80</option><option>More than 80</option></select></label>
+    <label>Anything we should know? <small>(optional)</small><textarea name="message" maxlength="1500" placeholder="e.g. We do TikTok live every Friday and want a page for live-only bundles."></textarea></label>
+    <label class="s-check"><input type="checkbox" name="consent" value="yes" required><span>I agree that Cartsmith Studio may use these details to prepare my mockup and contact me about it. See the <a href="privacy.html">privacy notice</a>.</span></label>
+    <button class="s-btn s-btn--ember s-btn--block" type="submit">Send — get my free mockup</button>
+    <p class="s-form__msg" data-form-msg aria-live="polite"></p>
+  </form>
+</div></section>

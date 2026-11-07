@@ -32,7 +32,7 @@ SIZES = {"square": (1200, 1200), "portrait": (1200, 1500), "wide": (1920, 1080),
 
 def download(pid, width, dst):
     url = f"https://images.pexels.com/photos/{pid}/pexels-photo-{pid}.jpeg?auto=compress&cs=tinysrgb&w={width}"
-    req = urllib.request.Request(url, headers={"User-Agent": "kedailab-stock-fetch/1.0"})
+    req = urllib.request.Request(url, headers={"User-Agent": "cartsmith-stock-fetch/1.0"})
     with urllib.request.urlopen(req, timeout=60) as r, open(dst, "wb") as fh:
         fh.write(r.read())
 

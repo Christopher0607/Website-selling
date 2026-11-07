@@ -1,0 +1,19 @@
+{"images": [
+ {"file": "hero.jpg", "pexels": 9775884, "crop": "wide", "dest": "img", "note": "Home hero: group in white tees"},
+ {"file": "lookbook.jpg", "pexels": 8217365, "crop": "portrait", "gravity": "north", "dest": "img", "note": "Lookbook"},
+ {"file": "rack.jpg", "pexels": 26601197, "crop": "portrait", "dest": "img", "note": "Colour range"},
+ {"file": "store.jpg", "pexels": 1884584, "crop": "wide", "dest": "img", "note": "Band"},
+ {"file": "everyday.webp", "pexels": 11671964, "crop": "portrait", "dest": "img", "note": "Everyday Tee"},
+ {"file": "everyday-2.webp", "pexels": 24779116, "crop": "portrait", "gravity": "north", "dest": "img", "note": "Everyday Tee 2"},
+ {"file": "heavy.webp", "pexels": 12039633, "crop": "portrait", "dest": "img", "note": "Heavyweight Tee"},
+ {"file": "heavy-2.webp", "pexels": 17858295, "crop": "portrait", "gravity": "north", "dest": "img", "note": "Heavyweight Tee 2"},
+ {"file": "boxy.webp", "pexels": 9558761, "crop": "portrait", "dest": "img", "note": "Boxy Tee"},
+ {"file": "boxy-2.webp", "pexels": 9558711, "crop": "portrait", "dest": "img", "note": "Boxy Tee 2"},
+ {"file": "hoodie.webp", "pexels": 10877553, "crop": "portrait", "gravity": "north", "dest": "img", "note": "Oversized Hoodie"},
+ {"file": "pack.webp", "pexels": 4440566, "crop": "portrait", "dest": "img", "note": "Tee 3-Pack"},
+ {"file": "overshirt.webp", "pexels": 10558182, "crop": "portrait", "dest": "img", "note": "Utility Overshirt"},
+ {"file": "relaxed.webp", "pexels": 9558709, "crop": "portrait", "gravity": "north", "dest": "img", "note": "Relaxed Tee"},
+ {"file": "relaxed-2.webp", "pexels": 8217536, "crop": "portrait", "gravity": "north", "dest": "img", "note": "Relaxed Tee 2"},
+ {"file": "weekend.webp", "pexels": 8408556, "crop": "portrait", "dest": "img", "note": "Weekend Set"},
+ {"file": "hangers.webp", "pexels": 23105762, "crop": "portrait", "dest": "img", "note": "Category tile"}
+]}
