@@ -7,7 +7,7 @@
 ## 当前状态
 
 - 当前阶段：**Phase 4.1 找客户**（网站 https://cartsmith.netlify.app 已上线；俊宇 2026-11-07 说开始找客户）
-- 下一个任务：**俊宇：① 发 9 张 IG 开场贴文 + 改简介（`content/ig-launch/README.md`）② 开启 Netlify 表单（`docs/09-netlify-guide.md` A 部分第 9–12 步）③ 每天找 10–20 个店，照 `sales/find-customers.md` 的格式贴给 Claude Code** → Claude Code 打分、写开场白、记进 `sales/prospects.csv`
+- 下一个任务：**俊宇：① 设定工作台密码 `SALES_DESK_KEY` 并重新部署（`docs/11-sales-desk.md`）② 设定 IG 自动回复（`docs/10-instagram-auto-replies.md`）③ 每天在工作台加 10 个商家、发出开场白**
 - 卡住的事：没有（DigitalOcean 服务器、域名、SSM 都等第一个客户说「好」再做；SSM 一定要在收订金前完成）
 
 ---
@@ -56,7 +56,9 @@
 - [x] 3.4 社交账号 —— Instagram `cartsmith.studio` 已改名、换头像、发了 9 张贴文（01、09 要换成新 IG 名字的版本）
 
 ## Phase 4 销售准备
-- [ ] 4.1 客户名单（前 100 个）⏳ 进行中 —— 俊宇每天找 10–20 个（只找有 Instagram 的），贴给 Claude Code（格式见 `sales/find-customers.md`）→ 打分 + 开场白 → `sales/prospects.csv`
+- [ ] 4.1 客户名单（前 100 个）⏳ 进行中 —— 俊宇每天在**销售工作台**（https://cartsmith.netlify.app/desk/）加 10 个商家 → AI 打分 + 开场白 → 俊宇手动发送；每周导出 CSV 备份
+- [x] 4.1b 销售工作台（`site/desk/` + `site/netlify/functions/desk/`，资料存 Netlify Blobs；本地完整测试通过）
+- [ ] 4.1c IG 私信自动回复（Meta Business Suite：即时回复、常见问题、关键字 MOCKUP / PRICE，`docs/10-instagram-auto-replies.md`）—— 俊宇设定
 - [x] 4.2 话术定稿（`sales/scripts.md`，中 / 英 / 马来文 + Instagram 快速回复）+ 完整销售手册 `sales/playbook.md`
 - [x] 4.2b 销售 AI 助理（`sales/agent/sales_agent.py`，DeepSeek；在自己电脑跑，见 `sales/agent/README.md`）
 - [x] 4.3 套餐单、报价单、合同清单（`sales/packages.html`、`proposal-template.md`、`contract-checklist.md`）
@@ -107,6 +109,7 @@
 
 | 日期 | 任务 | 结果 | 网址 / 文件 | 未解决的问题 |
 |---|---|---|---|---|
+| 2026-11-08 | 4.1b 销售工作台 + IG 自动回复指南（俊宇要求「自动找、自动联络、自动接洽」） | 查证：Instagram 条款不允许自动收集资料；官方私信接口只能回复主动私信的人（24 小时内）→ 不做自动抓 / 自动群发。改做合规版：手机工作台（DeepSeek 打分 + 写开场白 / 跟进 / 回信、今日清单、每日上限、跟进提醒、不再联系、数字、导出 CSV），信息由俊宇手动发送；Meta Business Suite 自动回复（即时回复、5 个常见问题、关键字）的步骤和文字 | https://cartsmith.netlify.app/desk/、`docs/10-instagram-auto-replies.md`、`docs/11-sales-desk.md` | 等俊宇设定 `SALES_DESK_KEY`；IG 官方 AI 私信等有客户 + SSM 后再申请 |
 | 2026-11-08 | IG 上线 + 品牌 | 俊宇把 IG 改成 `cartsmith.studio`、头像用 2 号标志、发了 9 张贴文；网站全部改回 `cartsmith.studio`；网站换上 2 号标志（页首、页尾、浏览器小图标、分享图）；表单加后备：发送失败时显示资料 + 「复制并打开 Instagram 私信」；重做 01、09 两张贴文（新 IG 名字） | `content/brand/`、`content/ig-launch/01.jpg`、`09.jpg` | 表单侦测还没开启（线上检查）；01、09 旧图上写的是旧 IG 名字，要换 |
 | 2026-11-07 | 4.1 开始找客户 | 删掉两个旧预览链接（俊宇要求）；做了 9 张 IG 开场贴文（九宫格：介绍、6 个模板、价格、免费样板）+ 文案 + 发文顺序；找客户速查表（关键词、判断标准、贴给 Claude Code 的格式、跟进节奏） | `content/ig-launch/`、`sales/find-customers.md`、`scripts/local/make-ig-posts.py` | Netlify 表单还没开启（从外面检查过）；名单 0/100 |
 | 2026-11-07 | N.7–N.9 上线后修正 | 网站上线；AI 客服「多轮对话失败」原因：之前的回答以纯文字送回 DeepSeek，它跟着用纯文字回答，JSON 模式就变成空白 → 改成把之前的回答也包成 JSON + 第 3 次改用纯文字备援；加「只谈工作室的事」规则；Instagram 改 `cartsmith.studio`；部署指南按 Netlify 新版后台改（Site → Project、Forms 在左边菜单） | https://cartsmith.netlify.app、`site/netlify/functions/chat/index.mjs`、`docs/09-netlify-guide.md` | 表单要俊宇在左边菜单 Forms 开启后重新部署 |

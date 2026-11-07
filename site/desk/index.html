@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>销售工作台 · Cartsmith</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#14171c">
+<link rel="icon" href="../assets/img/icon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="desk.css">
+<script src="desk.js" defer></script>
+</head>
+<body>
+<div id="login" class="login" hidden>
+  <form class="login__box" data-login>
+    <svg viewBox="0 0 100 100" width="44" height="44" aria-hidden="true"><path d="M72.98 30.72A30 30 0 1 0 72.98 69.28" fill="none" stroke="#14171c" stroke-width="14"/><rect x="66" y="43" width="14" height="14" fill="#ff5a2c"/></svg>
+    <h1>销售工作台</h1>
+    <p>只有你可以用。输入你在 Netlify 设定的工作台密码。</p>
+    <label class="sr" for="pw">密码</label>
+    <input id="pw" type="password" autocomplete="current-password" placeholder="工作台密码" required>
+    <button class="btn btn--block" type="submit">进入</button>
+    <p class="login__err" data-login-err hidden></p>
+  </form>
+</div>
+
+<div id="app" class="app" hidden>
+  <header class="top">
+    <div class="top__brand"><svg viewBox="0 0 100 100" width="24" height="24" aria-hidden="true"><path d="M72.98 30.72A30 30 0 1 0 72.98 69.28" fill="none" stroke="currentColor" stroke-width="14"/><rect x="66" y="43" width="14" height="14" fill="#ff5a2c"/></svg><span>销售工作台</span></div>
+    <div class="top__meta"><span data-today></span><span class="pill" data-sent-count></span></div>
+  </header>
+
+  <main>
+    <section class="view" data-view="today">
+      <div data-today-list></div>
+    </section>
+
+    <section class="view" data-view="add" hidden>
+      <h2>加一个商家</h2>
+      <p class="hint">在 Shopee / TikTok / IG 看到合适的店，把你看到的贴进来。AI 会打分、写好开场白，自动加进名单。<b>「具体观察」最重要。</b></p>
+      <form class="addform" data-add>
+        <label class="sr" for="add-in">商家资料</label>
+        <textarea id="add-in" rows="8" maxlength="3000" required placeholder="例子：
+Glow Lab · https://shopee.com.my/glowlab
+IG @glowlab.my，粉丝 8,000，每天发
+卖护肤，Vitamin C serum 有 1,200 条评价
+没有网站，IG 简介只放 Shopee 链接
+观察：很多留言说回购第 3 瓶"></textarea>
+        <div class="addform__row">
+          <label>开场白语言
+            <select data-add-lang><option value="">自动判断</option><option value="zh">中文</option><option value="en">English</option><option value="ms">Bahasa Malaysia</option></select>
+          </label>
+          <button class="btn" type="submit">AI 分析并加入名单</button>
+        </div>
+      </form>
+      <div data-add-result></div>
+    </section>
+
+    <section class="view" data-view="list" hidden>
+      <div class="listbar">
+        <input type="search" placeholder="搜店名 / IG" data-search>
+        <div class="chips" data-filters></div>
+      </div>
+      <div data-all-list></div>
+    </section>
+
+    <section class="view" data-view="stats" hidden>
+      <div data-stats></div>
+      <div class="settings">
+        <h3>设定</h3>
+        <label>每天最多新联系几个<input type="number" min="1" max="40" data-limit></label>
+        <p class="hint">新账号前两周建议 10 个以内，之后最多 20 个（太多会被 Instagram 限制）。</p>
+        <div class="btnrow"><button class="btn btn--ghost" type="button" data-save-limit>保存</button><button class="btn btn--ghost" type="button" data-export>下载名单（CSV）</button><button class="btn btn--ghost" type="button" data-logout>登出</button></div>
+      </div>
+    </section>
+  </main>
+
+  <nav class="tabs" aria-label="分页">
+    <button type="button" data-tab="today" class="is-on"><span>📋</span>今天</button>
+    <button type="button" data-tab="add"><span>➕</span>加商家</button>
+    <button type="button" data-tab="list"><span>🗂️</span>名单</button>
+    <button type="button" data-tab="stats"><span>📊</span>数字</button>
+  </nav>
+</div>
+
+<div class="sheet" data-sheet hidden><div class="sheet__scrim" data-sheet-close></div><div class="sheet__panel" data-sheet-panel></div></div>
+<div class="toast" data-toast hidden></div>
+</body>
+</html>

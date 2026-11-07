@@ -1041,12 +1041,20 @@ def build_knowledge():
     content = ("// 自动产生 —— 不要手动改。改 sales/agent/knowledge.md 或 site/studio.json，然后跑 python3 site/build.py\n"
                "export const KNOWLEDGE = " + json.dumps(text, ensure_ascii=False) + ";\n"
                "export const IG_HANDLE = " + json.dumps(ig) + ";\n")
-    old = open(dst, encoding="utf-8").read() if os.path.exists(dst) else ""
-    if old != content:
-        os.makedirs(os.path.dirname(dst), exist_ok=True)
-        with open(dst, "w", encoding="utf-8") as fh:
-            fh.write(content)
-        print("  knowledge.mjs updated")
+    scripts_src = os.path.join(HERE, "..", "sales", "scripts.md")
+    scripts = open(scripts_src, encoding="utf-8").read() if os.path.exists(scripts_src) else ""
+    outputs = {
+        dst: content,
+        os.path.join(HERE, "netlify", "functions", "desk", "scripts.mjs"):
+            "// 自动产生 —— 不要手动改。改 sales/scripts.md，然后跑 python3 site/build.py\nexport const SCRIPTS = " + json.dumps(scripts, ensure_ascii=False) + ";\n",
+    }
+    for path, text_ in outputs.items():
+        old = open(path, encoding="utf-8").read() if os.path.exists(path) else ""
+        if old != text_:
+            os.makedirs(os.path.dirname(path), exist_ok=True)
+            with open(path, "w", encoding="utf-8") as fh:
+                fh.write(text_)
+            print("  " + os.path.relpath(path, HERE) + " updated")
 
 
 def main():
@@ -1064,8 +1072,10 @@ def main():
         n += st.build()
     n += Studio(studio_data, stores).build()
     build_knowledge()
-    # robots + sitemap (studio pages only; demos are noindex)
-    write("robots.txt", "User-agent: *\nDisallow: /demo/\n")
+    # sales desk (private tool, password-protected by the /api/desk function)
+    shutil.copytree(os.path.join(HERE, "desk"), os.path.join(DIST, "desk"))
+    # robots (studio pages only; demos and the desk are noindex)
+    write("robots.txt", "User-agent: *\nDisallow: /demo/\nDisallow: /desk/\n")
     files = sum(len(f) for _, _, f in os.walk(DIST))
     print(f"built {n} pages, {files} files → {DIST}")
 
