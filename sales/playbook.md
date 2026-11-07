@@ -2,7 +2,7 @@
 
 > 这份是「照着做就可以」的完整流程。话术原文在 `sales/scripts.md`，价格在 `sales/packages.html`，AI 助理用法在 `sales/agent/README.md`。
 > 最重要的三件事：**每天联系 10–20 个（Instagram 私信）、24 小时内回复、成交后把第 1 个月做好让他继续付月费。**
-> 2026-11-07 更新：工作室联系方式只用 **Instagram @cartsmith.studio**（暂时不用 WhatsApp）；网站在 Netlify（`cartsmith.netlify.app`）；免费样板用 `site/build.py --preview` 做、放 Netlify Drop。
+> 2026-11-07 更新：工作室联系方式只用 **Instagram @xiao.ming0607**（暂时不用 WhatsApp）；网站在 Netlify（`cartsmith.netlify.app`）；免费样板用 `site/build.py --preview` 做、放 Netlify Drop。
 
 ---
 
@@ -83,7 +83,7 @@
 
 **一条好的开场白 = 你是谁 + 具体观察 + 一个问题 + 免费、没压力的下一步。** 范例见 `sales/scripts.md` §1。
 
-**用哪个渠道：** 暂时只用 **Instagram 私信**（用 @cartsmith.studio 发）。没有 IG 的品牌先跳过。**不要用 Shopee 聊天推销。** IG 不能预先填好文字：先复制 `today` 清单里的信息，再点链接打开对话贴上。
+**用哪个渠道：** 暂时只用 **Instagram 私信**（用 @xiao.ming0607 发）。没有 IG 的品牌先跳过。**不要用 Shopee 聊天推销。** IG 不能预先填好文字：先复制 `today` 清单里的信息，再点链接打开对话贴上。
 
 ---
 

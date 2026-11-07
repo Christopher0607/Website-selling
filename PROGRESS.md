@@ -7,7 +7,7 @@
 ## 当前状态
 
 - 当前阶段：**Phase N — Netlify 展示站**（2026-11-07 俊宇决定：先不买域名、不开服务器，用 Netlify 做临时网站给客户看）
-- 下一个任务：**俊宇照 `docs/09-netlify-guide.md` 做 A–C 部分**（开 Netlify 网站、开表单、放 DeepSeek Key、开 Instagram `@cartsmith.studio`），然后开始找客户（Phase 4.1）
+- 下一个任务：**俊宇开启 Netlify 表单**（`docs/09-netlify-guide.md` 第 A 部分第 9–12 步，已按新版后台改写），然后开始找客户（Phase 4.1）
 - 卡住的事：没有（DigitalOcean 服务器、域名、SSM 都等第一个客户说「好」再做；SSM 一定要在收订金前完成）
 
 ---
@@ -19,9 +19,9 @@
 - [x] N.4 AI 客服改用 DeepSeek（`site/netlify/functions/chat/`）+ 名单存进 Netlify Forms；销售助理 `sales/agent/sales_agent.py` 改用 DeepSeek、不用装套件
 - [x] N.5 联系方式改成 Instagram（话术、手册、套餐单、报价单、AI 知识库）
 - [x] N.6 免费样板产生器：`python site/build.py --preview ...` → Netlify Drop（密码页 + noindex + 14 天删除）
-- [ ] N.7 俊宇：开 Netlify 网站 + 开表单 + 电邮通知（`docs/09-netlify-guide.md` A 部分）
-- [ ] N.8 俊宇：DeepSeek 充值 + API Key 放进 Netlify（B 部分），用 10 个常见问题测 AI 回答
-- [ ] N.9 俊宇：开 Instagram `@cartsmith.studio`、简介、快速回复（C 部分）
+- [ ] N.7 俊宇：开 Netlify 网站 ✅（https://cartsmith.netlify.app，2026-11-07 上线）+ 开表单 + 电邮通知 ⏳（新版后台在左边菜单 Forms）
+- [x] N.8 DeepSeek Key 已放进 Netlify，AI 客服线上能回答；修好多轮对话失败的问题、限制只谈工作室的事（线上测过）
+- [ ] N.9 Instagram 用 `xiao.ming0607`（俊宇决定，全部链接已改）；简介和快速回复照 C 部分设定
 - [ ] N.10 用手机把 6 个模板各走一次（加入购物车 → 结账），有不顺的地方告诉 Claude Code
 
 ## Phase 0 准备
@@ -107,6 +107,7 @@
 
 | 日期 | 任务 | 结果 | 网址 / 文件 | 未解决的问题 |
 |---|---|---|---|---|
+| 2026-11-07 | N.7–N.9 上线后修正 | 网站上线；AI 客服「多轮对话失败」原因：之前的回答以纯文字送回 DeepSeek，它跟着用纯文字回答，JSON 模式就变成空白 → 改成把之前的回答也包成 JSON + 第 3 次改用纯文字备援；加「只谈工作室的事」规则；Instagram 改 `xiao.ming0607`；部署指南按 Netlify 新版后台改（Site → Project、Forms 在左边菜单） | https://cartsmith.netlify.app、`site/netlify/functions/chat/index.mjs`、`docs/09-netlify-guide.md` | 表单要俊宇在左边菜单 Forms 开启后重新部署 |
 | 2026-11-07 | Phase N（俊宇要求：改名、换掉头巾、Netlify、6 个模板、比同业、DeepSeek、Instagram、暂不 SSM） | 改名 Cartsmith Studio；6 个模板（Pexels 照片约 90 张、全部虚构品牌，网上查过没有同名）；工作室网站 11 页；DeepSeek AI 客服（Netlify Function）；销售助理改 DeepSeek；话术改 Instagram；免费样板产生器；旧马来文样板移到 `sites/_archive/`。测试：6 个模板购物流程自动测试全通过、聊天和表单端对端（模拟 DeepSeek）通过、样板密码页通过 | 预览：https://claude.ai/artifact/3Sbq1paEA2mB63FbkR9JbV（AI 客服和表单要部署到 Netlify 才能用）；`site/`、`netlify.toml`、`docs/09-netlify-guide.md`、`sales/agent/` | 要真的 DeepSeek Key 才能测回答品质；隐私通知、条款要请律师看；SSM 收订金前要注册 |
 | 2026-11-06 | 0.1 决定清单 | 俊宇确认：一次性建站费 + 月费 + 上线后首月免费试用；只做 Shopee/TikTok 中小型自有品牌卖家；其余由 Claude Code 决定（Cartsmith、yourdomain.com、Ubuntu 24.04） | docs/00-decisions.md、docs/01-business-plan.md | WhatsApp 号码待提供 |
 | 2026-11-06 | 0.2 项目结构 | repo 建好，.gitignore、.env.example | — | — |

@@ -494,7 +494,7 @@ CHAT_RULES = (
     "When the visitor seems to be a fit and is interested, ask (naturally, not all at once) for their name, brand or shop link, and Instagram handle "
     "so Junyu can prepare a free homepage mockup. Always fill `lead` with what you know so far (empty strings for unknown fields; `contact` = any other contact they offered); "
     "set lead_ready=true only when you have a name AND at least one of instagram / shop_url / contact. "
-    "Set handoff_to_human=true for contracts, payments, custom pricing, complaints, or when unsure, and tell them Junyu will message them on Instagram (@cartsmith.studio)."
+    "Set handoff_to_human=true for contracts, payments, custom pricing, complaints, or when unsure, and tell them Junyu will message them on Instagram (@xiao.ming0607)."
 )
 
 

@@ -1037,7 +1037,10 @@ def build_knowledge():
         print("  ! knowledge.md not found, chat knowledge not updated")
         return
     text = open(src, encoding="utf-8").read()
-    content = "// 自动产生 —— 不要手动改。改 sales/agent/knowledge.md，然后跑 python3 site/build.py\nexport const KNOWLEDGE = " + json.dumps(text, ensure_ascii=False) + ";\n"
+    ig = load_json(os.path.join(HERE, "studio.json"))["instagram"]["handle"]
+    content = ("// 自动产生 —— 不要手动改。改 sales/agent/knowledge.md 或 site/studio.json，然后跑 python3 site/build.py\n"
+               "export const KNOWLEDGE = " + json.dumps(text, ensure_ascii=False) + ";\n"
+               "export const IG_HANDLE = " + json.dumps(ig) + ";\n")
     old = open(dst, encoding="utf-8").read() if os.path.exists(dst) else ""
     if old != content:
         os.makedirs(os.path.dirname(dst), exist_ok=True)
