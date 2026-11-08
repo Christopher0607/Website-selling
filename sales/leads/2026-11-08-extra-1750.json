@@ -451,6 +451,66 @@
       "why": "Bukit Damansara 的日式海鲜居酒屋（银座 10 款寿司、开瓶费 RM50），只用 TableCheck 订位，没有自己的网站。",
       "verify": "开场白讲礼券 / 外带刺身拼盘 / 包场，不要讲订位系统（他们已经有 TableCheck）。",
       "input": "What they sell / Location: Japanese seafood izakaya, 54-1F Jalan Medan Setia 2, Bukit Damansara, KL. Ginza 10-kind sushi, tempura sets; pork-free.\nSignals: TheSmartLocal new restaurants (Apr 2025).\nBudget signal: Premium Japanese; corkage RM50, 10% service charge.\nWebsite check: (a) check-domains.sh kappakaisen, kappakaisenizakaya → NONE. (b) Searched 'Kappa Kaisen Izakaya website reservation': only a TableCheck booking page (not a website/shop). (c) No other brand found.\nContacts: 012-504 9143 (TableCheck 订位页写明当天订位用 WhatsApp +60125049143；TheSmartLocal 2025 年 4 月也列同一号码)\nObservation: TableCheck page: same-day bookings, changes and cancellations by WhatsApp.\nAngle: Gift vouchers, takeaway sashimi / sushi platters for festive gatherings, a simple site that links TableCheck + menu.\nSources: https://www.tablecheck.com/kappa-kaisen-izakaya-my/reserve ; https://thesmartlocal.my/cafes-restaurants-kl-2025/"
+    },
+    {
+      "id": "x202611081750-kins-penang",
+      "name": "KINS",
+      "instagram": "kins.penang",
+      "whatsapp": "012-386 2656",
+      "email": "",
+      "contact_source": "TheSmartLocal 2026 年槟城新店清单（4 月）写的电话",
+      "store_url": "",
+      "language": "en",
+      "template": "chili-pantry",
+      "priority": "A",
+      "why": "槟城 Lorong Prangin 的新西餐扒房（和牛肋眼 RM250、T 骨 RM300），2026 年 4 月开，用 umai 订位，没有自己的网站。",
+      "verify": "号码报道写成电话，发 WhatsApp 前确认；开场白讲礼券 / 节日套餐 / 包场。",
+      "input": "What they sell / Location: Western steak and bistro restaurant, Lorong Prangin, George Town, Penang. Onion soup RM36, duck confit RM78, Wagyu ribeye MB6/7 RM250, Black Angus T-bone RM300, KINS tiramisu RM38.\nSignals: TheSmartLocal Penang new cafés & restaurants (Apr 2026 section, article May 2026).\nBudget signal: Mains RM78–300.\nWebsite check: (a) check-domains.sh kinspenang → NONE; kins.com is an unrelated physiotherapy clinic. (b) Searched 'KINS Penang Lorong Prangin steak restaurant': only a umai reservation widget (booking tool, not a website or shop). (c) No other brand found.\nContacts: 012-386 2656 (TheSmartLocal 2026 年槟城新店清单（4 月）写的电话)\nObservation: TheSmartLocal (2026): reservations through a umai widget; menu prices listed above.\nAngle: Gift vouchers, Christmas / CNY set menus with deposit, private-dining enquiries on one simple site.\nSources: https://thesmartlocal.my/new-cafes-restaurants-penang/"
+    },
+    {
+      "id": "x202611081750-lazy-ember",
+      "name": "Lazy Ember",
+      "instagram": "lazy_ember",
+      "whatsapp": "019-987 8164",
+      "email": "",
+      "contact_source": "TheSmartLocal 2026 年槟城新店清单（4 月）和 2026-05 的食评部落格写同一电话",
+      "store_url": "",
+      "language": "en",
+      "template": "chili-pantry",
+      "priority": "A",
+      "why": "槟城 Lorong Toh Aka 的明火烧烤餐厅（XO 排骨煲仔饭 RM48、猪扒 RM92），2026 年开、要订位；lazyember.com 还是「Coming Soon」。",
+      "verify": "lazyember.com 停在 Coming Soon，可能已经在找人做网站，先问一句；号码发前确认。",
+      "input": "What they sell / Location: Open-fire grill restaurant, 6 Lorong Toh Aka, George Town, Penang. Ikan bakar RM78, pork chop RM92, XO pork ribs claypot rice RM48, kampung fish rice RM42; reservations required.\nSignals: TheSmartLocal Penang new restaurants (Apr 2026 section); food blog review (May 2026).\nBudget signal: Mains RM42–92.\nWebsite check: (a) check-domains.sh lazyember → lazyember.com is a Squarespace 'Coming Soon' page (EXPIRED); lazyemberpenang → NONE. (b) Searched 'Lazy Ember Lorong Toh Aka Penang restaurant': no booking site or shop. (c) No other brand found.\nContacts: 019-987 8164 (TheSmartLocal 2026 年槟城新店清单（4 月）和 2026-05 的食评部落格写同一电话)\nObservation: Blog (May 2026): about three months old, open kitchen over fire, reservations required.\nAngle: Booking + deposit page and set menus for groups; finish the 'Coming Soon' domain with a real menu/booking site.\nSources: https://thesmartlocal.my/new-cafes-restaurants-penang/ ; https://mylovemyfood.blogspot.com/2026/05/"
+    },
+    {
+      "id": "x202611081750-dough-by-meg",
+      "name": "Dough by Meg",
+      "instagram": "doughbymeg",
+      "whatsapp": "012-528 7249",
+      "email": "",
+      "contact_source": "TheSmartLocal 2026 年 2 月新店清单写的电话",
+      "store_url": "",
+      "language": "en",
+      "template": "chili-pantry",
+      "priority": "A",
+      "why": "疫情时在家做 bomboloni 起家，现在 Bukit Ceylon 有店，2026 年再开 Mont Kiara 分店；没有网站。",
+      "verify": "号码报道写成电话，发前确认；问 bomboloni 整盒 / 派对订单怎么订。",
+      "input": "What they sell / Location: Bombolini bakery-café: 9C Jalan Ceylon, Bukit Ceylon, KL, and a new outlet at B5-02/03, 4 Jalan Kiara 1, Mont Kiara (2026). Classic pistachio and London Fog bomboloni, brunch dishes.\nSignals: Started as a home business during lockdown; SAYS artisanal doughnut list; TheSmartLocal new openings (Feb 2026).\nBudget signal: Two physical outlets plus coverage.\nWebsite check: (a) check-domains.sh doughbymeg → NONE. (b) Searched 'Dough by Meg' bakery: no web shop found. (c) No other brand found.\nContacts: 012-528 7249 (TheSmartLocal 2026 年 2 月新店清单写的电话)\nObservation: Wanderlog/press: began as a home operation during COVID lockdowns and evolved into a physical store; pistachio is the best seller.\nAngle: Bomboloni box pre-orders (parties, offices, festive flavours) with pick-up at either outlet.\nSources: https://thesmartlocal.my/cafes-restaurants-kl-2026/ ; https://says.com/my/seismik/makan/places-to-get-doughnuts-in-klang-valley"
+    },
+    {
+      "id": "x202611081750-slow-coffee-ss2",
+      "name": "Slow Coffee",
+      "instagram": "coffee.slow",
+      "whatsapp": "012-225 0307",
+      "email": "",
+      "contact_source": "TheSmartLocal PJ 甜点咖啡馆清单（2023-02）写的电话",
+      "store_url": "",
+      "language": "en",
+      "template": "lowlight",
+      "priority": "B",
+      "why": "PJ The Hub SS2 的咖啡馆（舒芙蕾松饼配普洱 gelato、抹茶芝士蛋糕），由 Neighbour's Coffee Bar 的团队开；B 级：报道是 2019–2023 年。",
+      "verify": "看 IG 最近还有营业；问有没有整个芝士蛋糕 / gelato 外带。",
+      "input": "What they sell / Location: Café, B-G-03 The Hub SS2, 19 Sentral, Jalan Harapan, Section 19, PJ. Soufflé pancakes with pu'er tea gelato (RM18–24), matcha layer burnt cheesecake, gelato.\nSignals: Eat Drink KL (Dec 2019), The Yum List (2020), Time Out, TheSmartLocal PJ dessert cafés (Feb 2023). Missing: coverage in the last 2 years (B).\nBudget signal: Physical café plus coverage.\nWebsite check: (a) check-domains.sh slowcoffeecafe, coffeeslow → NONE. (b) Searched 'Slow Coffee Cafe The Hub SS2': no website or web shop. (c) Sister café Neighbour's Coffee Bar: no website found in coverage.\nContacts: 012-225 0307 (TheSmartLocal PJ 甜点咖啡馆清单（2023-02）写的电话)\nObservation: Eat Drink KL: soufflé pancakes 'spearheaded by the folks who run Happy Garden's Neighbour's Coffee Bar'.\nAngle: Whole cheesecake / gelato tub pre-orders and office coffee orders.\nSources: https://thesmartlocal.my/pj-dessert-cafes/ ; https://www.eatdrinkkl.com/posts/snapshot/slow-coffee-the-hub-ss2"
     }
   ]
 }
