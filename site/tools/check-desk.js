@@ -1,5 +1,6 @@
 // 测试销售工作台：登录 → 加商家（AI 分析）→ 复制并打开 IG → 已发送 → 跟进 → 对方回复 → 样板 → 不再联系 → 名单 / 数字 / 导出
-// → Claude Code 新商家收件箱（跳过 / 全部加入）→ 复制并打开后的「已发送」提示条
+// → Claude Code 新商家收件箱（跳过 / 全部加入，只放有 IG 的）→ WhatsApp（wa.me 预先填好）/ Email（mailto）/ IG 发送 + 「已发送」提示条
+// → 介面没有表情符号；AI 提示词不署个人名字、不用表情符号
 // 需要：一个跑着 dist + /api/desk 的服务（本地用模拟的 DeepSeek），密码在环境变量 DESK_TEST_KEY
 // 用法：node tools/check-desk.js http://localhost:8769 /path/to/desk-store.json [截图资料夹]
 const { chromium } = require('playwright');
@@ -39,7 +40,7 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
   const res = await p.textContent('[data-add-result]');
   ok(/p001/.test(res) && /4\/5/.test(res), 'AI analysis saved as p001 with score 4/5');
   ok((await p.$$('[data-add-result] .crit li.on')).length === 4, 'criteria checklist shows 4 ✓');
-  ok(/Junyu/.test(await p.inputValue('[data-add-result] textarea[data-field="message"]')), 'opening message drafted');
+  ok((await p.inputValue('[data-add-result] textarea[data-field="message"]')).length > 20, 'opening message drafted');
   await shot('add');
 
   // today: copy & open IG, then sent
@@ -74,7 +75,7 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
   // their reply → AI draft → back to waiting
   await p.click('[data-tab="list"]');
   await p.click('[data-expand="p001"]');
-  await p.click('#c-p001 [data-act="reply"]');
+  await p.click('#l-p001 [data-act="reply"]');
   await p.fill('[data-reply-text]', '多少钱？可以先看看吗');
   await p.click('[data-act="reply-go"]');
   await p.click('[data-tab="today"]');
@@ -143,8 +144,62 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
   await p.waitForSelector('[data-sentbar]', { state: 'hidden' });
   await p.waitForFunction(() => document.querySelector('[data-sent-count]').textContent.includes('新联系 2/'));
   ok(JSON.parse(fs.readFileSync(STORE, 'utf8')).items.find((x) => x.id === gb.id).status === 'contacted', 'bar ✓ marks the lead as contacted');
-  const ilham = imported.find((x) => x.lead_id === 'b3-ilham-ceramics');
-  ok(ilham && !ilham.instagram, 'lead without IG imported with empty handle');
+  ok(imported.every((x) => x.instagram), 'every lead from the inbox has an Instagram handle');
+
+  // WhatsApp: a lead with a public number gets a wa.me link with the message pre-filled
+  const gbm = imported.find((x) => x.lead_id === 'r20261108-good-blue-men');
+  ok(gbm && gbm.whatsapp === '60122385212', 'lead WhatsApp number normalised to 60122385212');
+  if (gbm) {
+    await p.click('[data-tab="list"]');
+    await p.fill('[data-search]', 'Good Blue Men');
+    await p.click(`[data-expand="${gbm.id}"]`);
+    await p.waitForSelector(`#l-${gbm.id} [data-act="wa"]`);
+    const msgText = await p.inputValue(`#l-${gbm.id} textarea[data-field="message"]`);
+    const [waPop] = await Promise.all([p.waitForEvent('popup'), p.click(`#l-${gbm.id} [data-act="wa"]`)]);
+    const waUrl = waPop.url();
+    await waPop.close();
+    ok(waUrl.startsWith('https://wa.me/60122385212') || waUrl.includes('whatsapp.com'), 'WhatsApp button opens wa.me for the right number');
+    ok(decodeURIComponent(waUrl).includes(msgText.slice(0, 30)) || waUrl.includes('whatsapp.com'), 'WhatsApp message is pre-filled');
+    await p.waitForSelector('[data-sentbar]:not([hidden])');
+    ok(/WhatsApp/.test(await p.textContent('[data-sentbar]')), 'sent bar names the channel');
+    await p.click('[data-sentbar-yes]');
+    await p.waitForSelector('[data-sentbar]', { state: 'hidden' });
+    const g2 = JSON.parse(fs.readFileSync(STORE, 'utf8')).items.find((x) => x.id === gbm.id);
+    ok(g2.status === 'contacted' && (g2.channels || []).includes('wa') && g2.last_channel === 'wa', 'WhatsApp send recorded with channel');
+    await p.fill('[data-search]', '');
+  }
+
+  // Email + WhatsApp added by hand in the edit sheet (Glow Lab p001 is past "new", so use a fresh lead)
+  const em = imported.find((x) => x.status === 'new' && x.lead_id && !x.whatsapp && x.lead_id !== 'b3-ginger-batiks');
+  await p.click('[data-tab="list"]');
+  await p.fill('[data-search]', em.business_name);
+  await p.click(`[data-expand="${em.id}"]`);
+  await p.click(`#l-${em.id} [data-act="edit"]`);
+  await p.fill('[data-e="whatsapp"]', '12345');
+  await p.click('[data-act="edit-save"]');
+  await p.waitForFunction(() => document.querySelector('[data-toast]').textContent.includes('格式不对'), null, { timeout: 5000 }).catch(() => {});
+  ok(/格式不对/.test(await p.textContent('[data-toast]')), 'bad WhatsApp number rejected');
+  await p.fill('[data-e="whatsapp"]', '012-345 6789');
+  await p.fill('[data-e="email"]', 'Hello@Brand.com');
+  await p.click('[data-act="edit-save"]');
+  await p.waitForSelector('[data-sheet]', { state: 'hidden' });
+  const e2 = JSON.parse(fs.readFileSync(STORE, 'utf8')).items.find((x) => x.id === em.id);
+  ok(e2.whatsapp === '60123456789' && e2.email === 'hello@brand.com', 'edited contacts saved and normalised');
+  await p.evaluate(() => { window.__mail = ''; const orig = HTMLAnchorElement.prototype.click; HTMLAnchorElement.prototype.click = function () { if (this.href.startsWith('mailto:')) { window.__mail = this.href; return; } return orig.call(this); }; });
+  await p.waitForSelector(`#l-${em.id} [data-act="email"]`);
+  await p.click(`#l-${em.id} [data-act="email"]`);
+  const mail = await p.evaluate(() => window.__mail);
+  ok(mail.startsWith('mailto:hello@brand.com?subject=') && mail.includes('&body='), 'Email button builds mailto with subject and body');
+  await p.waitForSelector('[data-sentbar]:not([hidden])');
+  await p.click('[data-act="sentbar-no"]');
+  await shot('channels');
+
+  // no emoji anywhere in the interface (message boxes excluded: their text comes from the AI)
+  const uiText = await p.evaluate(() => { const c = document.body.cloneNode(true); c.querySelectorAll('textarea').forEach((t) => t.remove()); return c.innerText; });
+  ok(!/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u.test(uiText), 'no emoji in the desk interface');
+  const fnSrc = fs.readFileSync(require('path').join(__dirname, '..', 'netlify', 'functions', 'desk', 'index.mjs'), 'utf8');
+  ok(/NEVER use a personal name/.test(fnSrc) && /No emojis/.test(fnSrc) && /sign off as "Cartsmith Studio"/.test(fnSrc), 'AI prompt: studio sign-off, no personal name, no emojis');
+  await p.fill('[data-search]', '');
   await p.reload();
   await p.waitForSelector('#app:not([hidden])');
   ok(!(await p.$('[data-inbox]')), 'inbox stays empty after reload');

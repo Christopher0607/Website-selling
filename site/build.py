@@ -1052,9 +1052,18 @@ def load_leads():
                 raise SystemExit("sales/leads/%s: duplicate lead id %s" % (name, lead["id"]))
             if lead.get("language") and lead["language"] not in LEAD_LANGS:
                 raise SystemExit("sales/leads/%s: %s language must be zh / en / ms" % (name, lead["id"]))
+            email = str(lead.get("email", "")).strip()
+            if email and not re.match(r"^[^\s@<>]+@[^\s@<>]+\.[A-Za-z]{2,}$", email):
+                raise SystemExit("sales/leads/%s: %s email looks wrong: %s" % (name, lead["id"], email))
             seen.add(lead["id"])
+            ig = str(lead.get("instagram", "")).strip().lstrip("@")
+            if not ig:
+                # 2026-11-08 俊宇：没有 IG 的商家不要放（IG 是基本条件；WhatsApp / Email 是加分的联系方式）
+                print("  sales/leads/%s: skip %s (no Instagram)" % (name, lead["id"]))
+                continue
             out.append({
-                "id": lead["id"], "name": lead["name"].strip(), "instagram": lead.get("instagram", "").strip().lstrip("@"),
+                "id": lead["id"], "name": lead["name"].strip(), "instagram": ig,
+                "whatsapp": str(lead.get("whatsapp", "")).strip(), "email": email, "contact_source": lead.get("contact_source", ""),
                 "store_url": lead.get("store_url", ""), "language": lead.get("language", ""), "template": lead.get("template", ""),
                 "priority": lead.get("priority", ""), "why": lead.get("why", ""), "verify": lead.get("verify", ""),
                 "batch": data.get("batch", name[:-5]), "input": lead["input"].strip()[:3000],

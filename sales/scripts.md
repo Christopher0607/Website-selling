@@ -1,6 +1,7 @@
-# 销售话术（定稿 v2 · 2026-11-07：改用 Instagram 联系，名字改为 Cartsmith Studio）
+# 销售话术（定稿 v3 · 2026-11-08：Instagram / WhatsApp / Email 通用；用工作室名义、不署个人名字、不用表情符号）
 
 > 基于 `docs/04-sales-kit.md`，按 Cartsmith 的决定修改：目标是 **Shopee / TikTok Shop 上有自己品牌的中小型卖家**；收费是**一次性建站费 + 月费**，**上线后第 1 个月维护免费**；前 3 个客户 7 折 + 维护免费 2 个月。
+> **写法规则（2026-11-08 俊宇定）：** 用「Cartsmith Studio」和「我们 / we」的名义，**不写个人名字**，**不用表情符号**；同一段话要能直接用在 Instagram 私信、WhatsApp 和 Email。
 > `[方括号]` 一定要换成真的内容。最重要的是「具体观察」——没有它，对方不会回。
 > 数字（Shopee 费用）先用工作室网站的计算器算，**不确定就说"大约"**。
 
@@ -33,22 +34,25 @@
 ### 1A. Shopee / TikTok Shop 品牌（通用）
 
 **中文**
-> 你好 [名字 / 店名] 👋 我是 Cartsmith 的 [你的名字]，专门帮本地品牌做自己的网店。
+> 你好 [名字 / 店名]，这里是 Cartsmith Studio，我们专门帮本地品牌做自己的网店。
 > 刚看了你们在 [Shopee / TikTok] 的店，[具体观察：例如 XX 有 2,000 多条好评，回头客应该不少]。
 > 想问一下，你们有考虑过让回头客直接在自己的网站下单吗？那些单不用被平台抽成，客户资料也是你们自己的。
-> 如果有兴趣，我可以免费帮你们做一个首页样板，只给你看，不满意完全没关系 🙂
+> 如果有兴趣，我们可以免费帮你们做一个首页样板，只给你看，不满意完全没关系。
+> —— Cartsmith Studio
 
 **English**
-> Hi [Name] 👋 I'm [Your name] from Cartsmith — I build online stores for local brands.
+> Hi [Name], this is Cartsmith Studio — we build online stores for local brands.
 > I just came across your [Shopee / TikTok] shop — [specific observation, e.g. your XX has 2,000+ reviews, so you must have plenty of repeat customers].
 > Have you thought about letting repeat customers order directly on your own website? Those orders wouldn't be subject to platform fees, and the customer data would be yours.
-> If you're open to it, I can make a free homepage mockup for you to look at — no obligation at all 🙂
+> If you're open to it, we can make a free homepage mockup for you to look at — no obligation at all.
+> — Cartsmith Studio
 
 **Bahasa Malaysia**
-> Hai [Nama] 👋 Saya [Nama anda] dari Cartsmith — saya bina kedai online untuk jenama tempatan.
+> Hai [Nama], ini Cartsmith Studio — kami bina kedai online untuk jenama tempatan.
 > Saya baru tengok kedai [Shopee / TikTok] anda — [pemerhatian spesifik, contohnya: XX anda ada lebih 2,000 ulasan, mesti ramai pelanggan tetap].
 > Pernah terfikir untuk benarkan pelanggan tetap order terus dari website sendiri? Order itu tak kena yuran platform, dan data pelanggan jadi milik anda.
-> Kalau berminat, saya boleh buatkan contoh homepage secara percuma — tiada sebarang komitmen 🙂
+> Kalau berminat, kami boleh buatkan contoh homepage secara percuma — tiada sebarang komitmen.
+> — Cartsmith Studio
 
 ### 1B. 按行业换「具体观察」的例子
 
@@ -62,14 +66,16 @@
 ### 1C. 只在 Instagram 接单（没有 Shopee）的品牌
 
 **中文**
-> 你好 [名字] 👋 我是 Cartsmith 的 [你的名字]。看到你们都是在 IG 私信接单，[具体观察：例如 每个帖子下面都有人问价钱和尺寸]。
+> 你好 [名字]，这里是 Cartsmith Studio。看到你们都是在 IG 私信接单，[具体观察：例如 每个帖子下面都有人问价钱和尺寸]。
 > 有没有想过放一个简单的网店？客人可以自己看价格、选尺寸、付款，你们就不用一个一个回私信。
-> 我可以免费做一个首页样板给你看，不满意没关系 🙂
+> 我们可以免费做一个首页样板给你看，不满意没关系。
+> —— Cartsmith Studio
 
 **English**
-> Hi [Name] 👋 I'm [Your name] from Cartsmith. I noticed you take orders through IG DMs — [specific observation, e.g. lots of "price?" and "size?" comments on every post].
+> Hi [Name], this is Cartsmith Studio. I noticed you take orders through IG DMs — [specific observation, e.g. lots of "price?" and "size?" comments on every post].
 > Have you thought about a simple online store, so customers can check prices, pick sizes and pay on their own instead of waiting for a DM reply?
-> I can make a free homepage mockup for you to look at — no obligation 🙂
+> We can make a free homepage mockup for you to look at — no obligation.
+> — Cartsmith Studio
 
 ---
 
@@ -100,13 +106,13 @@
 - 删除日期（程式会显示；最多 14 天）
 
 **送样板（中文）**
-> [名字] 你好！样板做好了 🙌 这是用你们的产品放在我们的 [模板名] 模板上：[网址]（密码：[密码]）
-> 用手机打开最准。我也录了 1 分钟介绍 👆 这个样板只给你看，[日期] 会删除。
+> [名字] 你好！样板做好了 这是用你们的产品放在我们的 [模板名] 模板上：[网址]（密码：[密码]）
+> 用手机打开最准。我也录了 1 分钟介绍 这个样板只给你看，[日期] 会删除。
 > 看完有什么想法都可以跟我说，要不要约 15 分钟通话聊聊？
 
 **Send the mockup (English)**
-> Hi [Name]! Your mockup is ready 🙌 It's your products on our [template] template: [link] (password: [password])
-> Best viewed on your phone. Here's a 1-minute walkthrough 👆 It's private to you and will be deleted on [date].
+> Hi [Name]! Your mockup is ready It's your products on our [template] template: [link] (password: [password])
+> Best viewed on your phone. Here's a 1-minute walkthrough It's private to you and will be deleted on [date].
 > Let me know what you think — happy to jump on a 15-minute call?
 
 ---
@@ -146,11 +152,11 @@ Instagram（专业账号）→ **设定 → Business tools and controls → Save
 
 | 快捷键 | 内容 |
 |---|---|
-| `hi` | 你好！我是 Cartsmith 的 [名字] 😊 我们帮本地品牌做自己的网店，上线后每个月帮你维护。想先看我们的 6 个样板店吗？👉 cartsmith.netlify.app/templates.html |
+| `hi` | 你好，这里是 Cartsmith Studio。我们帮本地品牌做自己的网店，上线后每个月帮你维护。想先看我们的 6 个样板店吗？ cartsmith.netlify.app/templates.html |
 | `price` | 套餐：Starter RM2,800（20 款产品）、Growth RM4,800（80 款 + 广告追踪）。上线后第 1 个月维护免费，之后 RM150/月起。详细：cartsmith.netlify.app/pricing.html |
-| `mockup` | 可以免费帮你做首页样板，只给你看、不满意没关系。请给我：店铺链接 + 喜欢的模板（cartsmith.netlify.app/templates.html）+ 3–5 款主打产品 🙏 |
+| `mockup` | 可以免费帮你做首页样板，只给你看、不满意没关系。请给我：店铺链接 + 喜欢的模板（cartsmith.netlify.app/templates.html）+ 3–5 款主打产品 |
 | `calc` | 这是 Shopee 费用计算器，可以算你的单在 Shopee 和自己网站各留多少：cartsmith.netlify.app/shopee-fee-calculator.html |
-| `thanks` | 谢谢你的时间 🙏 有任何问题随时 DM 我，祝生意越来越好！ |
+| `thanks` | 谢谢你的时间 有任何问题随时 DM 我，祝生意越来越好！ |
 
 **也要设：** 简介（Bio）和链接按 `docs/09-netlify-guide.md` 第 C 部分；Instagram 的「常见问题（FAQ）」可以放 3 个问题：多少钱？要多久？可以先看样板吗？
 
