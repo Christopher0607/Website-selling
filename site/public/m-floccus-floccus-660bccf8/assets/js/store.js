@@ -396,4 +396,5 @@
   }
 
   render();
+  document.documentElement.setAttribute('data-store', 'ready'); // check-preview.js: proves this script ran on the page
 })();
