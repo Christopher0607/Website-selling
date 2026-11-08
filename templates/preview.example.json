@@ -77,5 +77,34 @@
         }
       ]
     }
+  ],
+  "_餐厅和咖啡馆": "餐厅 / 咖啡馆不要写运费：用 trust 换成营业时间、地点、订位方式；chips 写 [] 拿掉「Free shipping」小标签；sticker 写 \"\" 拿掉免运费贴纸；social 只放对方真的有用的（instagram / tiktok / shopee / whatsapp / facebook / grabfood / foodpanda）；announcement 可以写地址或营业时间。不写这些就用模板原本的（适合网店）。",
+  "trust": [
+    [
+      "clock",
+      "Open Tue–Sun",
+      "11am–10pm"
+    ],
+    [
+      "map",
+      "Bangsar",
+      "69-1 Jalan Telawi 3"
+    ],
+    [
+      "phone",
+      "Book by phone",
+      "03-2201 1710"
+    ],
+    [
+      "cup",
+      "Dine-in & takeaway",
+      "Festive sets by pre-order"
+    ]
+  ],
+  "chips": [],
+  "sticker": "",
+  "social": [
+    "instagram",
+    "whatsapp"
   ]
 }

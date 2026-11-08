@@ -99,7 +99,7 @@
 **每次做样板：**
 1. 电话里对方说「可以」→ 在工作台按「可以发样板」。
 2. 跟 Claude Code 说「帮我做 <店名> 的样板」（附上对方的 IG 或报道链接）。Claude Code 会：
-   - 建 `clients/<代号>/preview/preview.json`（模板、品牌名、3–8 个招牌产品、密码、删除日期 = 今天 + 14 天），只用查得到的**真实**资料；**查不到价钱的产品不写 `price`，样板会显示「Ask for price」（不编价钱）**；照片用 Pexels 示意图（`photos: "placeholder"`，样板顶部会写明），对方给了照片才换成他们的；
+   - 建 `clients/<代号>/preview/preview.json`（模板、品牌名、3–8 个招牌产品、密码、删除日期 = 今天 + 14 天），只用查得到的**真实**资料；**查不到价钱的产品不写 `price`，样板会显示「Ask for price」（不编价钱）**；照片用 Pexels 示意图（`photos: "placeholder"`，样板顶部会写明），对方给了照片才换成他们的；餐厅 / 咖啡馆用 `trust` / `chips` / `sticker` / `social` / `announcement` 换掉网店的运费字样（例子在 `templates/preview.example.json`）；
    - 跑 `python3 site/build.py --preview clients/<代号>/preview/preview.json`；
    - 跑 `node scripts/local/preview-publish.js publish <代号>`（加密 + push 到 `previews` 分支，约 1 分钟后上线；preview.json 有 `lead_id` / `instagram` 时，会把网址和加密的密码写进 `sales/leads/previews.json`）；再跑 `python3 site/build.py`，把 `sales/leads/previews.json` 和 `sales/leads/inbox.json` 一起 commit 到 `leads` 分支——工作台那张卡就会出现网址、密码和写好的「附样板的信息」；
    - **发出去之前一定要跑完整检查**：`node site/tools/check-preview.js https://previews--cartsmith.netlify.app/<slug>/ <密码>`（检查密码页、每一页在手机 360/390/412、平板、电脑上有没有左右跑位、顶部提示条、字看不看得清楚、照片、输入框和按钮、浮动按钮有没有挡住按钮、加入购物车 → 结账 → 订单页）。**最后一行要是「✅ all checks passed」才可以发**；有 ❌ 就先修好。（2026-11-09 起：本机测试过但线上加密版有问题的事发生过，所以要测线上网址。）

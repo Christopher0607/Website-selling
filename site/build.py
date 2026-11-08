@@ -286,6 +286,22 @@ class Store:
         mark = f'<span class="logo__mark">{lg["mark"]}</span>' if lg.get("mark") else ""
         return f'<a class="logo" href="{sp}index.html">{mark}<span class="logo__txt">{e(lg["text"])}</span></a>'
 
+    SOCIAL = {
+        "instagram": ("ig", "Instagram", "Your Instagram link goes here."),
+        "tiktok": ("", "TikTok", "Your TikTok link goes here."),
+        "shopee": ("", "Shopee", "Your Shopee shop link goes here."),
+        "whatsapp": ("phone", "WhatsApp", "Your WhatsApp link goes here."),
+        "facebook": ("", "Facebook", "Your Facebook page goes here."),
+        "grabfood": ("", "GrabFood", "Your GrabFood link goes here."),
+        "foodpanda": ("", "foodpanda", "Your foodpanda link goes here."),
+    }
+
+    def social_links(self):
+        # mockups can list only the channels the business really uses ("social": ["instagram", "whatsapp"])
+        keys = self.pv.get("social") if self.pv and isinstance(self.pv.get("social"), list) else ["instagram", "tiktok", "shopee"]
+        links = "".join(f'<a href="#" data-demo="{e(d)}">{icon(i) + " " if i else ""}{e(n)}</a>' for k in keys if k in self.SOCIAL for i, n, d in [self.SOCIAL[k]])
+        return f'<p class="ftr__social">{links}</p>' if links else ""
+
     def footer(self, root, sp):
         t = self.t
         shop = "".join(f'<li><a href="{sp}shop.html?cat={c["id"]}">{e(c["name"])}</a></li>' for c in t["categories"])
@@ -293,7 +309,7 @@ class Store:
 <footer class="ftr">
   <div class="wrap ftr__grid">
     <div class="ftr__brand">{self.logo(sp)}<p>{e(t['footer_blurb'])}</p>
-      <p class="ftr__social"><a href="#" data-demo="Your Instagram link goes here.">{icon('ig')} Instagram</a><a href="#" data-demo="Your TikTok Shop link goes here.">TikTok</a><a href="#" data-demo="Your Shopee shop link goes here.">Shopee</a></p></div>
+      {self.social_links()}</div>
     <div><h4>Shop</h4><ul><li><a href="{sp}shop.html">Shop all</a></li>{shop}</ul></div>
     <div><h4>Help</h4><ul><li><a href="{sp}help.html#faq">FAQ</a></li><li><a href="{sp}help.html#shipping">Shipping</a></li><li><a href="{sp}help.html#returns">Returns &amp; exchanges</a></li><li><a href="{sp}about.html">{e(t.get('about_nav', 'Our story'))}</a></li></ul></div>
     <div><h4>{e(t.get('newsletter_title', 'Get first dibs'))}</h4><p>{e(t.get('newsletter_text', 'New drops and restocks, once or twice a month.'))}</p>
@@ -729,14 +745,16 @@ def apply_preview(t, pv):
     hero.update({"eyebrow": h.get("eyebrow", ""), "title": e(h.get("title", b["name"])), "text": h.get("text", b.get("tagline", "")),
                  "img": h.get("image", hero_tpl.get("img", "hero.jpg")), "alt": b["name"], "pos": h.get("pos", ""),
                  "buttons": [{"label": "Shop now", "href": "shop.html"}, {"label": "Our story", "href": "about.html"}],
-                 "chips": [["truck", f"Free shipping RM{ship['free_min']}+"], ["shield", "Secure checkout"]]})
-    if hero.get("sticker"):
+                 "chips": pv_list(pv, "chips", [["truck", f"Free shipping RM{ship['free_min']}+"], ["shield", "Secure checkout"]], 2)})
+    if "sticker" in pv:  # restaurants etc.: "" removes the free-shipping sticker
+        hero["sticker"] = e(pv["sticker"])
+    elif hero.get("sticker"):
         hero["sticker"] = f"Free<br>shipping<br><b>RM{ship['free_min']}+</b>"
     cat_tpl = next((s for s in t["home"] if s["type"] == "categories"), {"layout": "cards"})
     layout = cat_tpl.get("layout", "cards") if len(cats) <= 5 else "cards"
-    home = [hero,
-            {"type": "trust", "items": [["truck", f"Free shipping RM{ship['free_min']}+", "West & East Malaysia"], ["shield", "Secure checkout", "FPX, cards, e-wallets"],
-                                        ["box", "Ships in 1–2 days", "Tracking number by message"], ["chat", "Questions?", "Chat with us anytime"]]}]
+    trust = pv_list(pv, "trust", [["truck", f"Free shipping RM{ship['free_min']}+", "West & East Malaysia"], ["shield", "Secure checkout", "FPX, cards, e-wallets"],
+                                  ["box", "Ships in 1–2 days", "Tracking number by message"], ["chat", "Questions?", "Chat with us anytime"]], 3)
+    home = [hero] + ([{"type": "trust", "items": trust}] if trust else [])
     if len(cats) > 1:
         home.append({"type": "categories", "layout": layout, "title": "Shop by category", "class": cat_tpl.get("class", ""), "ids": [c["id"] for c in cats]})
     home.append({"type": "products", "eyebrow": h.get("featured_eyebrow", "Start here"), "title": h.get("featured_title", "Our favourites"), "pick": {"tag": "featured", "limit": 4}})
@@ -772,6 +790,22 @@ def _mix(a, b, t):
 def _contrast(a, b):
     la, lb = sorted((_lum(a), _lum(b)), reverse=True)
     return (la + 0.05) / (lb + 0.05)
+
+
+def pv_list(pv, key, default, size):
+    """preview.json overrides for the trust strip / hero chips: [[icon, title, text], …]; [] removes them."""
+    v = pv.get(key)
+    if not isinstance(v, list):
+        return default
+    out = []
+    for it in v:
+        if not isinstance(it, list) or len(it) < size - 1:
+            sys.exit(f"preview.json 的 {key} 每一项要像 [\"clock\", \"Open daily\", \"10am–10pm\"]")
+        it = [str(x) for x in it] + [""] * (size - len(it))
+        if it[0] not in ICONS:
+            it[0] = "spark"
+        out.append(it[:size])
+    return out
 
 
 def preview_css(pv, theme=""):
