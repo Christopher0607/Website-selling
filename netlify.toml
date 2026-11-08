@@ -1,0 +1,5 @@
+# previews 分支：只放加密的免费样板（scripts/local/preview-publish.js）。分支部署不扣 Netlify 点数。
+[build]
+  base = "site"
+  publish = "public"
+  command = "echo previews"
