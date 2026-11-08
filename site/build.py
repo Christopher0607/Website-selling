@@ -1052,13 +1052,16 @@ def load_leads():
         # "contacts": WhatsApp / Email found later for merchants already listed (fills only what is missing)
         for c in data.get("contacts", []):
             cid, wa, em, src = (str(c.get(k, "")).strip() for k in ("id", "whatsapp", "email", "contact_source"))
-            if not cid or not (wa or em) or not src:
-                raise SystemExit("sales/leads/%s: contact update %r needs id, whatsapp or email, and contact_source" % (name, cid))
+            extra = {k: str(c.get(k, "")).strip() for k in ("phone", "area", "address")}
+            if not cid or not (wa or em or any(extra.values())) or not src:
+                raise SystemExit("sales/leads/%s: contact update %r needs id, one of whatsapp / email / phone / area / address, and contact_source" % (name, cid))
+            if extra["phone"] and not 9 <= len(re.sub(r"\D", "", extra["phone"])) <= 15:
+                raise SystemExit("sales/leads/%s: %s phone number looks wrong: %s" % (name, cid, extra["phone"]))
             if em and not email_ok(em):
                 raise SystemExit("sales/leads/%s: %s email looks wrong: %s" % (name, cid, em))
             if wa and not 9 <= len(re.sub(r"\D", "", wa)) <= 15:
                 raise SystemExit("sales/leads/%s: %s WhatsApp number looks wrong: %s" % (name, cid, wa))
-            updates.append((name, cid, wa, em, src))
+            updates.append((name, cid, wa, em, src, extra))
         for lead in data.get("leads", []):
             missing = [k for k in LEAD_KEYS if not str(lead.get(k, "")).strip()]
             if missing:
@@ -1079,12 +1082,13 @@ def load_leads():
             out.append({
                 "id": lead["id"], "name": lead["name"].strip(), "instagram": ig,
                 "whatsapp": str(lead.get("whatsapp", "")).strip(), "email": email, "contact_source": lead.get("contact_source", ""),
+                "phone": str(lead.get("phone", "")).strip(), "area": str(lead.get("area", "")).strip()[:60], "address": str(lead.get("address", "")).strip()[:200],
                 "store_url": lead.get("store_url", ""), "language": lead.get("language", ""), "template": lead.get("template", ""),
                 "priority": lead.get("priority", ""), "why": lead.get("why", ""), "verify": lead.get("verify", ""),
                 "batch": data.get("batch", name[:-5]), "input": lead["input"].strip()[:3000],
             })
     by_id = {l["id"]: l for l in out}
-    for name, cid, wa, em, src in updates:
+    for name, cid, wa, em, src, extra in updates:
         l = by_id.get(cid)
         if not l:
             print("  sales/leads/%s: contact update for %s skipped (not in the inbox)" % (name, cid))
@@ -1096,6 +1100,10 @@ def load_leads():
         if em and not l["email"]:
             l["email"] = em
             filled.append("Email")
+        for k, label in (("phone", "电话"), ("area", "地区"), ("address", "地址")):
+            if extra[k] and not l[k]:
+                l[k] = extra[k][:200]
+                filled.append(label)
         if filled:
             l["contact_source"] = "；".join(x for x in (l["contact_source"], src) if x)
             print("  sales/leads/%s: %s + %s" % (name, cid, " / ".join(filled)))
