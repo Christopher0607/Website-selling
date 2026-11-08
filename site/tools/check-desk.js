@@ -18,7 +18,7 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
   await ctx.addInitScript(() => { window.DESK_NOW = '2026-11-10T07:00:00Z'; }); // 15:00 in Malaysia: inside good calling hours
   const p = await ctx.newPage();
   const errors = [];
-  p.on('pageerror', (e) => errors.push(e.message));
+  p.on('pageerror', (e) => { errors.push(e.message); if (process.env.DESK_DEBUG) console.log('PAGEERROR', e.message); });
   p.on('dialog', async (d) => { if (d.type() === 'prompt') await d.accept('https://p001-glowlab-x7.netlify.app'); else await d.accept(); });
   const shot = async (name) => { if (SHOTS) await p.screenshot({ path: `${SHOTS}/desk-${name}.png`, fullPage: true }); };
 
@@ -292,6 +292,60 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
     ok(/\+60 12-333 4444/.test(vt) && /\+60 3-2201 1710/.test(vt), 'mobile and landline numbers are formatted correctly');
     await shot('visit');
     await p.click('[data-filter="all"]');
+    await p.click('[data-tab="today"]');
+  }
+
+  // per-customer AI assistant (2026-11-09): separate memory per customer, ready-to-send drafts, backup
+  {
+    await p.click('[data-tab="list"]');
+    await p.click('[data-filter="all"]');
+    await p.click('[data-expand="p001"]');
+    await p.click('#l-p001 [data-act="ai"]');
+    await p.waitForSelector('[data-ai-text]');
+    ok(/还没有对话/.test(await p.textContent('[data-ai-log]')), 'AI sheet opens with an empty conversation');
+    await p.click('[data-act="ai-quick"][data-q^="对方问价钱"]');
+    ok(/对方问价钱/.test(await p.inputValue('[data-ai-text]')), 'quick question fills the box');
+    await p.click('[data-act="ai-send"]');
+    await p.waitForSelector('.ai__msg--ai .ai__draft');
+    ok(/Glow Lab/.test(await p.textContent('.ai__msg--ai')) && (await p.$('.ai__draft [data-act="ai-copy"]')) !== null, 'AI answers about this customer with a ready-to-send draft and a copy button');
+    await p.fill('[data-ai-text]', '对方说要考虑一下');
+    await p.click('[data-act="ai-send"]');
+    await p.waitForFunction(() => document.querySelectorAll('.ai__msg--ai').length === 2);
+    let calls = await (await fetch('http://localhost:9920/__calls')).json();
+    let chatCalls = calls.filter((c) => c.assistant);
+    ok(chatCalls.length === 2 && chatCalls[1].assistant.turns === 3 && chatCalls.every((c) => c.assistant.brand === 'Glow Lab' && c.assistant.otherBrands === 1), 'second question includes the earlier conversation, and only this customer\'s file');
+    let st = JSON.parse(fs.readFileSync(STORE, 'utf8'));
+    ok((st.items.find((x) => x.id === 'p001').ai_chat || []).length === 4, 'conversation saved on this customer (4 messages)');
+    await p.click('[data-sheet-panel] [data-sheet-close]');
+    // another customer: its own, empty conversation
+    await p.click('[data-expand="p901"]');
+    await p.click('#l-p901 [data-act="ai"]');
+    await p.waitForSelector('[data-ai-text]');
+    ok(/还没有对话/.test(await p.textContent('[data-ai-log]')), 'another customer starts empty (no mixing)');
+    await p.fill('[data-ai-text]', '下一步我应该怎么做？');
+    await p.click('[data-act="ai-send"]');
+    await p.waitForSelector('.ai__msg--ai');
+    calls = await (await fetch('http://localhost:9920/__calls')).json();
+    chatCalls = calls.filter((c) => c.assistant);
+    ok(chatCalls[2].assistant.brand === 'Roost Test' && chatCalls[2].assistant.turns === 1, 'that customer\'s AI only sees its own file and conversation');
+    await p.click('[data-sheet-panel] [data-sheet-close]');
+    // reload: memory is still there
+    await p.reload();
+    await p.click('[data-tab="list"]');
+    await p.click('[data-expand="p001"]');
+    ok(/AI · 4/.test(await p.textContent('#l-p001 [data-act="ai"]')), 'card shows how many AI messages this customer has');
+    await p.click('#l-p001 [data-act="ai"]');
+    await p.waitForSelector('.ai__msg--ai');
+    ok((await p.$$('.ai__msg')).length === 4, 'after reload the conversation is still there (no forgetting)');
+    await shot('ai');
+    await p.click('[data-sheet-panel] [data-sheet-close]');
+    const listJson = await p.evaluate(async () => { const r = await fetch('/api/desk', { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-desk-key': localStorage.getItem('cs_desk_key') || '' }, body: JSON.stringify({ action: 'list' }) }); return r.ok ? r.json() : null; });
+    ok(!!listJson && listJson.items.every((x) => !x.ai_chat), 'the list stays light (conversations load only when opened)');
+    // full backup includes the conversations
+    await p.click('[data-tab="stats"]');
+    const [dl] = await Promise.all([p.waitForEvent('download'), p.click('[data-backup]')]);
+    const bk = JSON.parse(fs.readFileSync(await dl.path(), 'utf8'));
+    ok(bk.doc && (bk.doc.items.find((x) => x.id === 'p001').ai_chat || []).length === 4, 'full backup (JSON) includes the AI conversations');
     await p.click('[data-tab="today"]');
   }
 

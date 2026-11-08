@@ -139,6 +139,81 @@ const REPLY = {
 };
 const LANG = { zh: 'Simplified Chinese (简体中文)', en: 'English', ms: 'Bahasa Malaysia' };
 
+// ---------------------------------------------------------------- per-customer AI assistant (2026-11-09)
+// One conversation per customer, stored on that customer only (doc.items[i].ai_chat) → never mixed up.
+// Long conversations keep a running summary (ai_summary) so nothing important is forgotten.
+// Lives in the desk's private storage (Netlify Blobs), never in git (the repo is public).
+const CHAT_KEEP = 300, CHAT_SEND = 24, CHAT_SUM_EVERY = 30;
+const CHAT_RULES = `
+
+=== CUSTOMER ASSISTANT ===
+You are now the studio owner's private assistant for ONE customer only (the file below). Everything in this conversation is about this customer.
+- Talk to the owner in Simplified Chinese: short, practical, step by step.
+- When the owner pastes the customer's message (WhatsApp / IG / email) or asks for a reply or follow-up, write the message he can send, in the customer's language, between a line 【可以直接发的信息】 and a line 【结束】. Sign it "Cartsmith Studio"; never use a personal name; no emojis. Only one such block per answer unless he asks for options.
+- Use only facts from the knowledge base, the approved scripts and this customer's file. If a price, policy or detail is not there, say you are not sure and suggest he confirms. Never invent results, clients, reviews or guarantees (no "guaranteed sales", no "first page of Google").
+- Remember what was agreed earlier in this conversation and in the summary, and point out the next step (call, send mockup, follow-up date, proposal).
+- If the customer says they are not interested or asks not to be contacted, tell the owner to mark "不需要 / 不再联系" and do not draft another pitch.`;
+
+function customerFile(p) {
+  const hist = (p.history || []).slice(-20).map((h) => `${h.d} ${h.e}${h.n ? ': ' + String(h.n).slice(0, 200) : ''}`).join('\n');
+  const parts = [
+    profile(p),
+    `Status: ${p.status}; first contact ${p.first_contact_date || '-'}; last contact ${p.last_contact_date || '-'}; next follow-up ${p.next_followup_date || '-'}; channels used: ${(p.channels || []).join(', ') || '-'}`,
+    `Contacts: WhatsApp ${p.whatsapp ? '+' + p.whatsapp : '-'}; phone ${p.phone ? '+' + p.phone : '-'}; email ${p.email || '-'}; area ${p.area || '-'}; address ${p.address || '-'}`,
+    p.preview_url ? `Free mockup we made: ${p.preview_url} (password ${p.preview_password || '?'}, deleted on ${p.preview_delete_by || '?'}${p.status === 'preview_sent' ? ', already sent to them' : ', not sent yet'})` : 'Free mockup: not made yet',
+    p.input ? `Research notes:\n${String(p.input).slice(0, 2500)}` : '',
+    p.followup ? `Our latest follow-up draft: ${p.followup}` : '',
+    p.reply_summary ? `Their last reply (summary): ${p.reply_summary}` : '',
+    hist ? `History:\n${hist}` : '',
+    p.ai_summary ? `Summary of our earlier conversation about this customer:\n${p.ai_summary}` : '',
+  ];
+  return parts.filter(Boolean).join('\n');
+}
+async function chatAsk(messages, maxTokens = 1400) {
+  const key = env('DEEPSEEK_API_KEY');
+  if (!key) throw Object.assign(new Error('DEEPSEEK_API_KEY 还没设定'), { code: 'no_ai' });
+  const base = (env('DEEPSEEK_BASE_URL') || 'https://api.deepseek.com').replace(/\/$/, '');
+  let last = 'AI 没有回应';
+  for (let i = 0; i < 2; i++) {
+    try {
+      const r = await fetch(base + '/chat/completions', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + key },
+        body: JSON.stringify({ model: env('DEEPSEEK_MODEL') || 'deepseek-flash', messages, thinking: { type: 'disabled' }, max_tokens: maxTokens, temperature: 0.5 }), signal: AbortSignal.timeout(25000) });
+      if (r.status === 401 || r.status === 402) throw Object.assign(new Error(r.status === 402 ? 'DeepSeek 余额不足，请充值' : 'DeepSeek Key 不对'), { code: 'ai_auth' });
+      if (!r.ok) { last = 'DeepSeek 错误 ' + r.status; continue; }
+      const data = await r.json();
+      const text = ((data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) || '').trim();
+      if (text) return text;
+      last = 'AI 回答是空的';
+    } catch (e) {
+      if (e.code === 'ai_auth') throw e;
+      last = e.name === 'TimeoutError' ? 'AI 太久没回应' : (e.message || last);
+    }
+  }
+  throw Object.assign(new Error(last), { code: 'ai_failed' });
+}
+function slimItem(p) { const { ai_chat, ...rest } = p; return { ...rest, ai_count: (ai_chat || []).length }; }
+async function chatInto(p, text) {
+  const q = String(text || '').trim().slice(0, 4000);
+  if (!q) throw Object.assign(new Error('先输入问题或贴上对方的信息'), { code: 'bad_input' });
+  const chat = (p.ai_chat = p.ai_chat || []);
+  chat.push({ r: 'u', t: q, d: myDate() });
+  const sys = SYSTEM + CHAT_RULES + '\n\n=== THIS CUSTOMER ===\n' + customerFile(p);
+  const msgs = [{ role: 'system', content: sys }, ...chat.slice(-CHAT_SEND).map((m) => ({ role: m.r === 'u' ? 'user' : 'assistant', content: m.t }))];
+  const answer = await chatAsk(msgs);
+  chat.push({ r: 'a', t: answer.slice(0, 6000), d: myDate() });
+  // running summary so long conversations keep the important facts
+  if (chat.length - (p.ai_sum_at || 0) >= CHAT_SUM_EVERY) {
+    try {
+      const older = chat.slice(p.ai_sum_at || 0).map((m) => (m.r === 'u' ? 'Owner: ' : 'Assistant: ') + m.t).join('\n').slice(-12000);
+      p.ai_summary = (await chatAsk([{ role: 'system', content: 'Summarise for the owner, in Simplified Chinese, max 180 words: what we know about this customer, what was offered or agreed (prices, dates, mockup), their concerns, and the next step. Facts only.' },
+        { role: 'user', content: (p.ai_summary ? 'Earlier summary:\n' + p.ai_summary + '\n\n' : '') + 'New conversation:\n' + older }], 500)).slice(0, 2000);
+      p.ai_sum_at = chat.length;
+    } catch (e) { /* keep the old summary; try again next time */ }
+  }
+  if (chat.length > CHAT_KEEP) { const cut = chat.length - CHAT_KEEP; chat.splice(0, cut); p.ai_sum_at = Math.max(0, (p.ai_sum_at || 0) - cut); }
+  log(p, 'ai_chat', q.slice(0, 120));
+}
+
 function profile(p) {
   return `Brand: ${p.business_name}\nPlatform: ${p.platform}\nNiche: ${p.niche}\nInstagram: ${p.instagram}\nStore: ${p.store_url}\nSpecific observation: ${p.observation}\nNotes: ${p.notes || ''}\nOur first message: ${p.message || ''}\nTouches so far: ${p.touches}\nLanguage: ${LANG[p.language] || 'English'}`;
 }
@@ -435,7 +510,7 @@ async function handle(action, b, doc) {
       const LEADS = await allLeads();
       let changed = refreshContacts(doc, LEADS);
       if (await applyPreviews(doc, allPreviews())) changed = true;
-      return { items: doc.items, settings: doc.settings, today: myDate(), inbox: pendingInbox(doc, LEADS), saved: changed };
+      return { items: doc.items.map(slimItem), settings: doc.settings, today: myDate(), inbox: pendingInbox(doc, LEADS), saved: changed };
     }
 
     case 'analyze': {
@@ -522,6 +597,21 @@ async function handle(action, b, doc) {
       const p = find(doc, b.id);
       callInto(p, b.outcome, b.date);
       return { item: p, saved: true };
+    }
+
+    case 'chat-get': {
+      const p = find(doc, b.id);
+      return { chat: p.ai_chat || [], summary: p.ai_summary || '' };
+    }
+
+    case 'chat': {
+      const p = find(doc, b.id);
+      await chatInto(p, b.text);
+      return { item: p, saved: true };
+    }
+
+    case 'backup': {
+      return { backup: { exported: myDate(), version: 1, doc } };
     }
 
     case 'settings': {

@@ -201,7 +201,7 @@ input[type=file] { display: block; width: 100%; margin-top: 6px; font: 400 .88re
 }
 
 /* phone calls, visit list (2026-11-09) */
-.ch--call { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+.ch--call { background: var(--ink); color: var(--bg); border-color: var(--ink); }
 .callout { margin: 10px 0; padding: 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--card); }
 .callout .btnrow { margin-top: 8px; }
 .callout__later { display: flex; flex-wrap: wrap; align-items: end; gap: 8px; margin-top: 10px; }
@@ -218,7 +218,23 @@ input[type=file] { display: block; width: 100%; margin-top: 6px; font: 400 .88re
 .hdr-link { font-size: .82rem; }
 
 /* finished mockup box (2026-11-09) */
-.pvbox { margin: 8px 0; padding: 10px 12px; border: 1px solid var(--line); border-left: 3px solid var(--accent); border-radius: 10px; background: var(--card); font-size: .88rem; }
+.pvbox { margin: 8px 0; padding: 10px 12px; border: 1px solid var(--line); border-left: 3px solid var(--ember); border-radius: 10px; background: var(--card); font-size: .88rem; }
 .pvbox__row { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; }
 .pvbox code { font-size: .92rem; background: var(--soft, #f1f0ec); padding: 1px 6px; border-radius: 5px; }
 .pvbox small { color: var(--muted); display: block; margin-top: 4px; }
+
+/* per-customer AI assistant (2026-11-09) */
+.ai__log { max-height: 48vh; overflow-y: auto; display: grid; gap: 10px; margin: 10px 0; padding: 4px 2px; }
+.ai__msg { padding: 10px 12px; border-radius: 12px; font-size: .9rem; line-height: 1.55; max-width: 92%; }
+.ai__msg p { margin: 4px 0; }
+.ai__msg small { display: block; color: var(--muted); font-size: .72rem; }
+.ai__msg--me { background: var(--ink); color: var(--bg); justify-self: end; }
+.ai__msg--me small { color: inherit; opacity: .7; }
+.ai__msg--ai { background: var(--card); border: 1px solid var(--line); justify-self: start; }
+.ai__draft { margin: 8px 0 4px; padding: 10px; border: 1px dashed var(--ember); border-radius: 10px; background: var(--bg); }
+.ai__draftlabel { font-size: .72rem; font-weight: 700; color: var(--muted); margin-bottom: 4px; }
+.ai__drafttext { white-space: pre-wrap; }
+.ai__quick { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 6px; scrollbar-width: none; }
+.ai__quick .chip { flex: none; }
+.ai__sum { font-size: .85rem; margin: 6px 0; }
+.ai__sum summary { cursor: pointer; color: var(--muted); font-weight: 600; }
