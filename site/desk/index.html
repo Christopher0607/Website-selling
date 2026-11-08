@@ -38,7 +38,7 @@
 
     <section class="view" data-view="add" hidden>
       <h2>加一个商家</h2>
-      <p class="hint">在 Shopee / TikTok / IG 看到合适的店，把你看到的贴进来。AI 会打分、写好开场白，自动加进名单。<b>「具体观察」最重要。</b></p>
+      <p class="hint">Claude Code 找的商家会自动出现在「今天」最上面，不用贴。这里是给你自己看到的店用的：在 Shopee / TikTok / IG 看到合适的店，把你看到的贴进来。AI 会打分、写好开场白，自动加进名单。<b>「具体观察」最重要。</b></p>
       <form class="addform" data-add>
         <label class="sr" for="add-in">商家资料</label>
         <textarea id="add-in" rows="8" maxlength="3000" required placeholder="例子：
@@ -85,6 +85,7 @@ IG @glowlab.my，粉丝 8,000，每天发
 </div>
 
 <div class="sheet" data-sheet hidden><div class="sheet__scrim" data-sheet-close></div><div class="sheet__panel" data-sheet-panel></div></div>
+<div class="sentbar" data-sentbar hidden><span data-sentbar-text></span><button type="button" class="btn btn--ok btn--sm" data-act="sent" data-sentbar-yes>✓ 已发送</button><button type="button" class="btn btn--ghost btn--sm" data-act="sentbar-no">还没</button></div>
 <div class="toast" data-toast hidden></div>
 </body>
 </html>

@@ -4,6 +4,8 @@
 //   DEEPSEEK_API_KEY   和网站 AI 客服共用
 //   DEEPSEEK_MODEL     选填，默认 deepseek-flash
 // 资料存在 Netlify Blobs（store: sales-desk）。本地测试：设定 DESK_LOCAL_FILE=/path/to/file.json
+// 新线索收件箱：Claude Code 把上网找到的商家写进 sales/leads/*.json → build.py 产生 inbox.mjs →
+//   工作台「今天」最上面显示，俊宇按「全部加入」就逐家打分、写开场白（不用复制粘贴资料）。
 //
 // 原则：AI 只负责分析和起草；信息一律由俊宇本人在 Instagram 手动发送（不自动发、不抓资料）。
 import crypto from 'node:crypto';
@@ -11,6 +13,7 @@ import fs from 'node:fs';
 import { getStore } from '@netlify/blobs';
 import { KNOWLEDGE, IG_HANDLE } from '../chat/knowledge.mjs';
 import { SCRIPTS } from './scripts.mjs';
+import { INBOX } from './inbox.mjs';
 
 const DOC = 'prospects-v1';
 const MAX_INPUT = 3000;
@@ -170,33 +173,77 @@ function toCsv(items) {
   return [CSV_FIELDS.join(','), ...rows.map((r) => CSV_FIELDS.map((f) => q(r[f])).join(','))].join('\n') + '\n';
 }
 
+async function analyzeInto(doc, input, lang, lead) {
+  const out = await ask(
+    (lead
+      ? 'Analyse this potential client from research notes Claude Code collected from public articles and a direct check of their website domains (Junyu glances at their Instagram before sending). '
+      : 'Analyse this potential client from the notes Junyu pasted (shop link, bio text, his observations). ') +
+    'Score each criterion strictly from the notes (unknown = false). ' +
+    'Pick the best-matching template. Write the FIRST Instagram DM (script 1A / 1C). ' + (lang ? `Write it in ${LANG[lang]}. ` : 'Use the language the prospect most likely uses (from the notes); default English. ') +
+    '\n<prospect_info>\n' + input + '\n</prospect_info>', ANALYZE);
+  const p = {
+    id: 'p' + String(doc.next).padStart(3, '0'), created: myDate(),
+    business_name: out.business_name || 'Unknown brand', platform: out.platform, store_url: out.store_url, instagram: handleOf(out.instagram),
+    niche: out.niche, language: lang || out.language, observation: out.observation, notes: '', input,
+    ...Object.fromEntries(CRITERIA.map((c) => [c, out[c]])), criteria_note: out.criteria_note_zh, fit: out.fit, fit_reason: out.fit_reason_zh,
+    template: out.template, message: out.message, status: 'new', touches: 0, history: []
+  };
+  if (lead) {
+    // facts Claude Code already checked win over the AI's reading of the notes
+    p.business_name = lead.name; p.instagram = handleOf(lead.instagram || ''); p.lead_id = lead.id; p.verify = lead.verify || ''; p.priority = lead.priority || '';
+    p.store_url = lead.store_url || '';
+    if (lead.template && TEMPLATES.includes(lead.template)) p.template = lead.template;
+  }
+  p.score = CRITERIA.filter((c) => p[c]).length;
+  const dup = doc.items.find((x) => (p.instagram && x.instagram === p.instagram) || (p.store_url && x.store_url === p.store_url));
+  if (dup) p.duplicate_of = dup.id;
+  doc.next += 1;
+  log(p, lead ? 'added_from_inbox' : 'added', lead ? lead.id : '');
+  doc.items.unshift(p);
+  return p;
+}
+
+// leads Claude Code found that are not yet imported / skipped / already in the list
+function pendingInbox(doc) {
+  const done = new Set(doc.inbox_done || []);
+  const have = new Set(doc.items.map((x) => x.instagram).filter(Boolean));
+  return INBOX.filter((l) => !done.has(l.id) && !(l.instagram && have.has(handleOf(l.instagram))))
+    .map((l) => ({ id: l.id, name: l.name, instagram: handleOf(l.instagram || ''), priority: l.priority || '', why: l.why || '', batch: l.batch || '', language: l.language || '' }));
+}
+function inboxLead(id) {
+  const l = INBOX.find((x) => x.id === id);
+  if (!l) throw Object.assign(new Error('找不到这个新商家（可能已经更新过）'), { code: 'not_found' });
+  return l;
+}
+
 async function handle(action, b, doc) {
   switch (action) {
     case 'list':
-      return { items: doc.items, settings: doc.settings, today: myDate() };
+      return { items: doc.items, settings: doc.settings, today: myDate(), inbox: pendingInbox(doc) };
 
     case 'analyze': {
       const input = String(b.input || '').trim().slice(0, MAX_INPUT);
       if (input.length < 10) throw Object.assign(new Error('资料太少：至少贴店名 + 一句观察'), { code: 'bad_input' });
       const lang = ['zh', 'en', 'ms'].includes(b.language) ? b.language : '';
-      const out = await ask(
-        'Analyse this potential client from the notes Junyu pasted (shop link, bio text, his observations). Score each criterion strictly from the notes (unknown = false). ' +
-        'Pick the best-matching template. Write the FIRST Instagram DM (script 1A / 1C). ' + (lang ? `Write it in ${LANG[lang]}. ` : 'Use the language the prospect most likely uses (from the notes); default English. ') +
-        '\n<prospect_info>\n' + input + '\n</prospect_info>', ANALYZE);
-      const p = {
-        id: 'p' + String(doc.next).padStart(3, '0'), created: myDate(),
-        business_name: out.business_name || 'Unknown brand', platform: out.platform, store_url: out.store_url, instagram: handleOf(out.instagram),
-        niche: out.niche, language: lang || out.language, observation: out.observation, notes: '', input,
-        ...Object.fromEntries(CRITERIA.map((c) => [c, out[c]])), criteria_note: out.criteria_note_zh, fit: out.fit, fit_reason: out.fit_reason_zh,
-        template: out.template, message: out.message, status: 'new', touches: 0, history: []
-      };
-      p.score = CRITERIA.filter((c) => p[c]).length;
-      const dup = doc.items.find((x) => (p.instagram && x.instagram === p.instagram) || (p.store_url && x.store_url === p.store_url));
-      if (dup) p.duplicate_of = dup.id;
-      doc.next += 1;
-      log(p, 'added', '');
-      doc.items.unshift(p);
+      const p = await analyzeInto(doc, input, lang, null);
       return { item: p, saved: true };
+    }
+
+    case 'import': {
+      const lead = inboxLead(b.lead_id);
+      doc.inbox_done = doc.inbox_done || [];
+      if (doc.inbox_done.includes(lead.id)) throw Object.assign(new Error(lead.name + ' 已经处理过了'), { code: 'bad_input' });
+      const lang = ['zh', 'en', 'ms'].includes(lead.language) ? lead.language : '';
+      const p = await analyzeInto(doc, String(lead.input || '').slice(0, MAX_INPUT), lang, lead);
+      doc.inbox_done.push(lead.id);
+      return { item: p, saved: true };
+    }
+
+    case 'skip': {
+      const lead = inboxLead(b.lead_id);
+      doc.inbox_done = doc.inbox_done || [];
+      if (!doc.inbox_done.includes(lead.id)) doc.inbox_done.push(lead.id);
+      return { skipped: lead.id, saved: true };
     }
 
     case 'update': {

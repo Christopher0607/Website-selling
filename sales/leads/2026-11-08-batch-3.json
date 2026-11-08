@@ -1,0 +1,117 @@
+{
+  "batch": "2026-11-08 第 3 批 · 英文市场",
+  "source": "sales/research/2026-11-08-batch-3-english.md",
+  "note": "Claude Code 从公开报道整理；每家都直接试过 .com / .com.my / .my / .co 域名。没有登录、没有用程式刷 IG。观察来自报道，发之前俊宇看一眼对方 IG。",
+  "leads": [
+    {
+      "id": "b3-ginger-batiks",
+      "name": "Ginger Batiks",
+      "instagram": "gingerbatiks",
+      "language": "en",
+      "template": "plainfold",
+      "priority": "A",
+      "why": "安邦，做了 10 年；外籍客人为主；自己办圣诞市集；没有网站",
+      "verify": "IG 简介有没有网站链接；最近有没有发圣诞市集",
+      "input": "Ginger Batiks · Instagram @gingerbatiks · Ampang, Kuala Lumpur\nHand block-printed 100% cotton (some silk) homeware and gifts: cushions, pouches, handbags, towels, blankets, kids' toys. Founder Kim Gruia (Canadian, in Malaysia 11 years).\nSignals: 2025 was the brand's 10th year. Private home boutique by appointment (booked via Instagram). Runs the Ginger & Spice Markets twice a year (spring and Christmas). Also sold on consignment in other shops.\nBudget signal: 10 years in business, expat customer base, consignment stockists, organises her own markets.\nWebsite: none found (gingerbatiks.com / .com.my / .my do not resolve).\nObservation (from The Edge / Options feature, Apr–May 2025): entering her 10th year; customers book private boutique visits through Instagram; the Christmas Ginger & Spice Market is her big season.\nAngle: let customers browse and order between markets, and send gifts overseas (expat customers shipping home)."
+    },
+    {
+      "id": "b3-ministry-of-cakes",
+      "name": "Ministry of Cakes",
+      "instagram": "ministry.of.cakes",
+      "language": "en",
+      "template": "chili-pantry",
+      "priority": "A",
+      "why": "八打灵，2015 年开始；有咖啡馆 + 上课工作室；花钱上过 Vulcan Post",
+      "verify": "IG 简介有没有网站或订蛋糕链接",
+      "input": "Ministry of Cakes · Instagram @ministry.of.cakes · Petaling Jaya\nCustom buttercream cakes; best seller Gulab Jamun Cheesecake. Started 2015 as 'Caked', rebranded 2017. Run by Lakhshmi Priya.\nSignals: physical café with kitchen, a studio for baking classes and private events; online orders started on Facebook and Instagram; plans for bottled iced coffee and ready-to-bake items.\nBudget signal: 10 years running, physical café + class studio, paid for a sponsored Vulcan Post feature (May 2024).\nWebsite: none found (ministryofcakes.com / .com.my / .my do not resolve).\nObservation (from the Vulcan Post feature, May 2024): the café doubles as a class studio and the Gulab Jamun Cheesecake is the top seller.\nAngle: online custom-cake orders (size, flavour, pickup date with lead time) and class booking with payment."
+    },
+    {
+      "id": "b3-best-borneo",
+      "name": "Best Borneo",
+      "instagram": "bestborneosarawak",
+      "language": "en",
+      "template": "plainfold",
+      "priority": "A",
+      "why": "古晋 Voco 酒店楼下的礼品店（2026-07 开）；网站还在「Under Construction」",
+      "verify": "网站可能已经有人在做——开场白先问一句",
+      "input": "Best Borneo · Instagram @bestborneosarawak · Kuching, ground floor of Voco Kuching (Wisma Elica)\nCurated Sarawak gift store: Bowerhaus accessories, woven bags by Penan Women Project, illustrated postcards, kek lapis, brandy fruitcake, Libex coffee, four heirloom rice varieties (Bario, Etem, Bajong, Bireh).\nFounders: Datin Shen-Tel Lee (co-founder of jewellery label Bowerhaus) and restaurateur Olivia Ling. Opened end of July 2026, open daily.\nBudget signal: retail store inside a hotel building; founders run other established brands.\nWebsite: bestborneo.com.my currently shows only 'Website Under Construction' — someone may already be building it, so ask politely first.\nObservation (from The Edge / Options feature, Aug 2026): the heirloom rice is sold individually or as a set of four, and the store mixes crafts with edible Sarawak treats.\nAngle: visitors can reorder after leaving Kuching; festive / corporate gift sets. Ask if they already have someone building the site."
+    },
+    {
+      "id": "b3-habitatku-loulou",
+      "name": "Habitatku + Loulou",
+      "instagram": "louloulookbook",
+      "language": "en",
+      "template": "dewlane",
+      "priority": "A",
+      "why": "同一对夫妻：Habitatku 蜡烛在中央艺术坊有店，Loulou 卖东南亚手作服饰；两个都没有网站",
+      "verify": "找 Habitatku 的 IG；看 Loulou 简介有没有网站",
+      "input": "Loulou (Instagram @louloulookbook) and Habitatku (candle brand with a store in Central Market, Kuala Lumpur) · same founders: husband-and-wife Philippe Bertrand and Valerie Khoo\nLoulou: handmade skirts and bags in bold Ankara prints from makers in Thailand, Indonesia, Vietnam and Malaysia; only a few pieces arrive each week (e.g. one maker makes four chicken bags a week). Customers are typically mid-30s to 70s.\nBudget signal: physical candle store in Central Market (tourist footfall); customer base aged 35–70.\nWebsite: none found for either brand (habitatku / loulou domains do not resolve or are parked).\nObservation (from The Edge / Options feature, Jul 2025): Loulou focuses on one designer at a time and each batch of skirts has 20 different patterns.\nAngle: one site for both brands; tourists who bought candles at Central Market can reorder; weekly new arrivals for Loulou."
+    },
+    {
+      "id": "b3-ilham-ceramics",
+      "name": "Ilham Ceramics",
+      "instagram": "",
+      "language": "en",
+      "template": "lowlight",
+      "priority": "A",
+      "why": "浮罗交怡陶瓷，2010 年开始；几乎所有高级酒店都用他的陶瓷；自己开咖啡馆",
+      "verify": "先在 IG 搜「Ilham Ceramics Langkawi」找到帐号，按「编辑资料」补上",
+      "input": "Ilham Ceramics (Ilham Seramik Studio) · Kampung Bendang Baru, Kuah, Langkawi · Instagram: not found yet\nCeramics by Mohammad Radzi Ismail, making ceramics since 2010. Pottery classes since 2020; opened MakLang Café next to the studio (named after his mother).\nSignals: The Sun reported his ceramics are the choice of almost all luxury hotels on Langkawi.\nBudget signal: hotel and restaurant clients, own café, 15 years running.\nWebsite: none found (ilhamceramics / ilhamseramik domains do not resolve).\nObservation (from The Edge / Options feature on MakLang Café): the café started because class participants kept asking for drinks and snacks.\nAngle: an online catalogue for hotels and restaurants with enquiry form, class booking, and orders from tourists after they go home."
+    },
+    {
+      "id": "b3-dimpled",
+      "name": "Dimpled",
+      "instagram": "dimpledmy",
+      "language": "en",
+      "template": "chili-pantry",
+      "priority": "A",
+      "why": "SS2 意式冰淇淋店（2024 开）；每周新口味；pint RM38–41",
+      "verify": "IG 简介有没有订购链接",
+      "input": "Dimpled · Instagram @dimpledmy · 151, Jalan SS 2/6, SS2, Petaling Jaya\nGelato shop opened 6 June 2024 by Eugenia, who left a 10-year job in Singapore to open it. 2–3 new flavours every week (Honey Milk, Sea Salt Sakura, Espresso Stracciatella).\nPints around RM38–41 (2024 data).\nBudget signal: physical shop, premium pricing.\nWebsite: none found.\nObservation (from Vulcan Post Aug 2024 and Grazia Feb 2025): weekly rotating flavours; Sea Salt Sakura and Honey Milk get mentioned a lot.\nAngle: weekly flavour menu online + pint pre-orders with delivery / pickup time slots; gift cards."
+    },
+    {
+      "id": "b3-forest-floor",
+      "name": "Forest Floor",
+      "instagram": "forestfloor.my",
+      "language": "en",
+      "template": "lowlight",
+      "priority": "A",
+      "why": "茶味意式冰淇淋，Damansara Utama 有店；用 WhatsApp 接单；pint RM38",
+      "verify": "先确认最近还有发文、店还在",
+      "input": "Forest Floor · Instagram @forestfloor.my · Damansara Utama, Petaling Jaya (57, Jalan SS 21/1a — confirm still open)\nTea-based gelato (pu-erh, ceremonial matcha). Founded by Shawn Low and Lai Jen Yeh; started in Cheras, moved to Damansara Utama.\nPints RM38; orders taken through a WhatsApp link (2024 data).\nBudget signal: physical shop, premium pricing.\nWebsite: none found.\nObservation (from Vulcan Post Aug 2024): they take pint orders through a WhatsApp link.\nAngle: replace WhatsApp ordering with an online menu that takes payment and delivery slots; tea gift boxes."
+    },
+    {
+      "id": "b3-artigusto",
+      "name": "Artigusto Gelato",
+      "instagram": "artigustogelato",
+      "language": "en",
+      "template": "chili-pantry",
+      "priority": "A",
+      "why": "Taman Paramount 意式冰淇淋（2024 年底开）；以前的网站已经过期",
+      "verify": "看 IG 简介是不是还放着过期的网站链接",
+      "input": "Artigusto Gelato · Instagram @artigustogelato · 37, Jalan 20/16, Taman Paramount, Petaling Jaya\nArtisanal gelato (Salted Pistachio, Bentong Ginger Chocolate, non-alcoholic Tiramisu), affogato and waffles. Opened late 2024; closed Mondays.\nBudget signal: physical shop.\nWebsite: artigustogelato.com currently shows 'Squarespace – Website Expired' (they had a site; it lapsed).\nObservation (from Malaysian Foodie Mar 2025): Bentong Ginger Chocolate uses a local ingredient; reviewers single out the Salted Pistachio.\nAngle: kindly mention their website link shows 'expired'; our monthly Care includes hosting, SSL and uptime monitoring, so the site doesn't quietly go offline. Do not criticise their old site."
+    },
+    {
+      "id": "b3-shiramics",
+      "name": "Shiramics",
+      "instagram": "shiramicss",
+      "language": "en",
+      "template": "lowlight",
+      "priority": "B",
+      "why": "手作陶瓷马克杯 RM70 起；以前的网站域名已失效（资料是 2022 年，要确认还在做）",
+      "verify": "最近 30 天没发文就跳过",
+      "input": "Shiramics · Instagram @shiramicss\nHandmade ceramic mugs (handbuilding and wheel throwing) by Shafina Hanafi from Kedah; started March 2021. Mugs from RM70. Had launched 10 collections and aimed for one release a month; production runs of 30 pieces (2022 data).\nBudget signal: premium pricing.\nWebsite: shiramics.com no longer resolves (lapsed).\nObservation (from The Edge / Options feature, 2022): each run is 30 pieces and takes four to six weeks.\nAngle: monthly collection drops with pre-orders on her own site."
+    },
+    {
+      "id": "b3-over-time-leathercraft",
+      "name": "Over Time Leathercraft",
+      "instagram": "over_time_leathercraft",
+      "language": "en",
+      "template": "plainfold",
+      "priority": "B",
+      "why": "一人工作室的定制皮件；The Edge 2026 报道；老板预算可能不多",
+      "verify": "IG 简介有没有网站链接",
+      "input": "Over Time Leathercraft · Instagram @over_time_leathercraft\nCustom leather goods (wallets, cardholders): clients choose design, shape, size, leather and colour, with optional embossed names or initials in metallic lettering. Founder Tan Boon Leong, home studio; full-time since 2024.\nBudget signal: handmade custom pricing above big fashion houses (one-person studio, so own budget may be small).\nWebsite: none found.\nObservation (from The Edge / Options feature, Apr 2026): the brand is about leather that gets better with wear and tear.\nAngle: let customers pick custom options and pay a deposit on the site instead of back-and-forth DMs."
+    }
+  ]
+}

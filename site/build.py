@@ -1030,6 +1030,38 @@ class Studio:
 
 
 # --------------------------------------------------------------------------
+LEAD_KEYS = ("id", "name", "input")
+LEAD_LANGS = ("zh", "en", "ms")
+
+
+def load_leads():
+    """sales/leads/*.json → one list for the desk inbox (Claude Code's research, no copy-paste)."""
+    folder = os.path.join(HERE, "..", "sales", "leads")
+    out, seen = [], set()
+    if not os.path.isdir(folder):
+        return out
+    for name in sorted(os.listdir(folder)):
+        if not name.endswith(".json"):
+            continue
+        data = load_json(os.path.join(folder, name))
+        for lead in data.get("leads", []):
+            missing = [k for k in LEAD_KEYS if not str(lead.get(k, "")).strip()]
+            if missing:
+                raise SystemExit("sales/leads/%s: lead %r is missing %s" % (name, lead.get("id"), ", ".join(missing)))
+            if lead["id"] in seen:
+                raise SystemExit("sales/leads/%s: duplicate lead id %s" % (name, lead["id"]))
+            if lead.get("language") and lead["language"] not in LEAD_LANGS:
+                raise SystemExit("sales/leads/%s: %s language must be zh / en / ms" % (name, lead["id"]))
+            seen.add(lead["id"])
+            out.append({
+                "id": lead["id"], "name": lead["name"].strip(), "instagram": lead.get("instagram", "").strip().lstrip("@"),
+                "store_url": lead.get("store_url", ""), "language": lead.get("language", ""), "template": lead.get("template", ""),
+                "priority": lead.get("priority", ""), "why": lead.get("why", ""), "verify": lead.get("verify", ""),
+                "batch": data.get("batch", name[:-5]), "input": lead["input"].strip()[:3000],
+            })
+    return out
+
+
 def build_knowledge():
     src = os.path.join(HERE, "..", "sales", "agent", "knowledge.md")
     dst = os.path.join(HERE, "netlify", "functions", "chat", "knowledge.mjs")
@@ -1047,6 +1079,8 @@ def build_knowledge():
         dst: content,
         os.path.join(HERE, "netlify", "functions", "desk", "scripts.mjs"):
             "// 自动产生 —— 不要手动改。改 sales/scripts.md，然后跑 python3 site/build.py\nexport const SCRIPTS = " + json.dumps(scripts, ensure_ascii=False) + ";\n",
+        os.path.join(HERE, "netlify", "functions", "desk", "inbox.mjs"):
+            "// 自动产生 —— 不要手动改。改 sales/leads/*.json，然后跑 python3 site/build.py\nexport const INBOX = " + json.dumps(load_leads(), ensure_ascii=False, indent=1) + ";\n",
     }
     for path, text_ in outputs.items():
         old = open(path, encoding="utf-8").read() if os.path.exists(path) else ""

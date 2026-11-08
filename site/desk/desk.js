@@ -1,4 +1,5 @@
 /* Cartsmith 销售工作台 — 前端。资料都在 /api/desk（Netlify Function + Netlify Blobs）。
+   Claude Code 找的商家会出现在「今天」最上面（新商家收件箱），按一下就加入名单。
    AI 只分析和起草；每条信息都由俊宇自己在 Instagram 按发送。 */
 (function () {
   'use strict';
@@ -11,7 +12,7 @@
     set(v) { try { localStorage.setItem(KEY, v); } catch (e) { this._k = v; } },
     clear() { try { localStorage.removeItem(KEY); } catch (e) { this._k = ''; } }
   };
-  const S = { items: [], settings: { dailyLimit: 10 }, today: '', tab: 'today', filter: 'all', q: '', open: {}, lastAdded: '' };
+  const S = { items: [], inbox: [], settings: { dailyLimit: 10 }, today: '', tab: 'today', filter: 'all', q: '', open: {}, lastAdded: '', pending: '' };
 
   const STATUS = { new: '未联系', contacted: '已联系', replied: '有回复', preview_sent: '样板已发', call_booked: '约了通话', proposal_sent: '报价已发', won: '成交 🎉', lost: '没成交', no_response: '没回应', do_not_contact: '不再联系' };
   const CRIT = { brand_clear: '有自己的品牌和 logo', sales_signal: '卖得不错（评价多 / 常开直播）', active_social: '最近 7 天有发文', no_or_weak_website: '没有网站或网站很旧', budget_signal: '看得出有预算' };
@@ -52,6 +53,7 @@
     const tags = [`<span class="tag tag--status">${esc(STATUS[p.status] || p.status)}</span>`];
     if (p.template) tags.push(`<span class="tag">建议模板：${esc(TPL[p.template] || p.template)}</span>`);
     if (p.language) tags.push(`<span class="tag">${esc(LANG[p.language] || p.language)}</span>`);
+    if (p.lead_id) tags.push(`<span class="tag tag--lead">Claude Code 找的${p.priority ? ' · ' + esc(p.priority) + ' 级' : ''}</span>`);
     if (p.duplicate_of) tags.push(`<span class="tag tag--warn">可能重复（${esc(p.duplicate_of)}）</span>`);
     if (p.next_followup_date) tags.push(`<span class="tag">跟进：${esc(p.next_followup_date)}</span>`);
     if (p.preview_delete_by && p.status !== 'won') tags.push(`<span class="tag tag--warn">样板删除：${esc(p.preview_delete_by)}</span>`);
@@ -65,6 +67,7 @@
       if (p.fit_reason) body += `<p class="note"><b>${p.fit === 'skip' ? '建议跳过' : p.fit === 'maybe' ? '可以试试' : '值得联系'}：</b>${esc(p.fit_reason)}</p>`;
     }
     if (p.observation) body += `<p class="obs">${esc(p.observation)}</p>`;
+    if (p.verify && p.status === 'new') body += `<p class="verify">📌 发之前看一眼：${esc(p.verify)}</p>`;
 
     if (p.status === 'new') {
       body += msgBox(p, 'message', '开场白（可以直接改）');
@@ -106,11 +109,19 @@
     const replied = S.items.filter((p) => p.status === 'replied');
     const purge = S.items.filter((p) => p.preview_delete_by && p.preview_delete_by <= S.today && p.status !== 'won');
     let h = '';
+    if (S.inbox.length) h += inboxSect();
     if (replied.length) h += sect('有回复，等你回', replied.length, replied.map((p) => card(p)).join(''), '');
     if (follow.length) h += sect('今天要跟进', follow.length, follow.map((p) => card(p)).join(''), '');
     h += sect(`新联系 · 今天还可以发 ${left} 个`, fresh.length, left ? fresh.slice(0, Math.max(left, 1) + 2).map((p) => card(p)).join('') : '<div class="empty">今天的新联系已经发满了 👍 明天继续。</div>', '名单里没有待联系的商家 → 去「加商家」加几个');
     if (purge.length) h += sect('样板到期，要删除', purge.length, purge.map((p) => `<div class="card"><b>${esc(p.business_name)}</b> 的样板 ${esc(p.preview_url || '')} 已到期（${esc(p.preview_delete_by)}）。到 Netlify 删除那个网站，然后按：<div class="btnrow"><button class="btn btn--sm" data-act="purged" data-id="${p.id}">已删除样板</button></div></div>`).join(''), '');
     $('[data-today-list]').innerHTML = h;
+  }
+  function inboxSect() {
+    const rows = S.inbox.map((l) => `<li><div><b>${esc(l.name)}</b>${l.priority ? ` <span class="tag">${esc(l.priority)} 级</span>` : ''}${l.instagram ? ` <small>@${esc(l.instagram)}</small>` : ' <small class="warnt">还没找到 IG</small>'}<br><small>${esc(l.why)}</small></div><button class="btn btn--ghost btn--sm" data-act="skip-lead" data-lead="${esc(l.id)}">跳过</button></li>`).join('');
+    return `<section class="sect inbox" data-inbox><div class="sect__head"><h2>新商家 · Claude Code 找的</h2><small>${S.inbox.length}</small></div>
+      <div class="card"><p class="hint">资料已经整理好。按下面的按钮，AI 会逐家打分、写好开场白，放进「新联系」。不合适的先按「跳过」。</p>
+      <ul class="inbox__list">${rows}</ul>
+      <button class="btn btn--block" data-act="import-all">全部加入（${S.inbox.length} 家，约 ${Math.max(1, Math.round(S.inbox.length * 8 / 60))} 分钟）</button></div></section>`;
   }
   function sect(title, n, inner, emptyMsg) {
     return `<section class="sect"><div class="sect__head"><h2>${esc(title)}</h2><small>${n}</small></div>${inner || (emptyMsg ? `<div class="empty">${esc(emptyMsg)}</div>` : '')}</section>`;
@@ -158,6 +169,16 @@
     if (S.tab === 'list') renderList();
     if (S.tab === 'stats') renderStats();
   }
+
+  // ------------------------------------------------------------ "sent?" bar after copy & open
+  function showSentbar(p) {
+    S.pending = p.id;
+    const bar = $('[data-sentbar]');
+    $('[data-sentbar-text]', bar).textContent = `发给 ${p.business_name} 了吗？`;
+    $('[data-sentbar-yes]', bar).dataset.id = p.id;
+    bar.hidden = false;
+  }
+  function hideSentbar() { S.pending = ''; $('[data-sentbar]').hidden = true; const y = $('[data-sentbar-yes]'); y.disabled = false; y.textContent = '✓ 已发送'; delete y.dataset.label; }
 
   // ------------------------------------------------------------ sheet (more actions)
   function sheet(html) { $('[data-sheet-panel]').innerHTML = html; $('[data-sheet]').hidden = false; }
@@ -225,7 +246,28 @@
         const text = box ? box.value : p[t.dataset.field];
         copy(text);
         if (act === 'copyopen') window.open(igLink(p.instagram), '_blank', 'noopener');
-        toast('已复制 ✓ 在 Instagram 贴上、看一遍再按发送。发完回来按「已发送」。');
+        toast('已复制 ✓ 在 Instagram 长按 → 贴上 → 看一遍再按发送。');
+        if (['message', 'followup', 'draft_reply'].includes(t.dataset.field)) showSentbar(p);
+        return;
+      }
+      if (act === 'sentbar-no') { hideSentbar(); return; }
+      if (act === 'skip-lead') {
+        const id = t.dataset.lead;
+        busy(t, true, '…');
+        await api('skip', { lead_id: id });
+        S.inbox = S.inbox.filter((l) => l.id !== id); render(); toast('已跳过'); return;
+      }
+      if (act === 'import-all') {
+        const todo = S.inbox.slice();
+        let done = 0; const failed = [];
+        t.disabled = true;
+        for (const l of todo) {
+          t.textContent = `AI 正在处理 ${done + failed.length + 1}/${todo.length}：${l.name}…`;
+          try { const j = await api('import', { lead_id: l.id }); upsert(j.item); done++; } catch (e) { if (e.message === 'unauthorised') throw e; failed.push(l); }
+        }
+        S.inbox = failed;
+        render();
+        toast(failed.length ? `加入了 ${done} 家；${failed.length} 家失败，可以再按一次` : `✓ 加入了 ${done} 家，开场白都写好了`);
         return;
       }
       if (act === 'more') { moreSheet(p); return; }
@@ -249,7 +291,7 @@
       if (act === 'purged') { const j = await api('mark', { id: p.id, event: 'preview_deleted' }); upsert(j.item); render(); toast('已记录：样板删除了'); return; }
       busy(t, true, act === 'reply-go' || act === 'followup' || act === 'rewrite' ? 'AI 写作中…' : '保存中…');
       let j;
-      if (act === 'sent') { j = await api('mark', { id: p.id, event: 'sent' }); toast(j.item.next_followup_date ? `已记录 ✓ ${j.item.next_followup_date} 会提醒你跟进` : '已记录 ✓'); }
+      if (act === 'sent') { j = await api('mark', { id: p.id, event: 'sent' }); if (S.pending === p.id) hideSentbar(); toast(j.item.next_followup_date ? `已记录 ✓ ${j.item.next_followup_date} 会提醒你跟进` : '已记录 ✓'); }
       else if (act === 'mark') { j = await api('mark', { id: p.id, event: t.dataset.ev }); toast('已记录 ✓'); }
       else if (act === 'followup') j = await api('followup', { id: p.id });
       else if (act === 'rewrite') j = await api('rewrite', { id: p.id, language: t.dataset.lang || '', hint: t.dataset.hint || '' });
@@ -319,7 +361,7 @@
   async function load() {
     try {
       const j = await api('list');
-      S.items = j.items || []; S.settings = j.settings || S.settings; S.today = j.today;
+      S.items = j.items || []; S.inbox = j.inbox || []; S.settings = j.settings || S.settings; S.today = j.today;
       $('#login').hidden = true; $('#app').hidden = false;
       render();
     } catch (e) {

@@ -7,7 +7,7 @@
 ## 当前状态
 
 - 当前阶段：**Phase 4.1 找客户**（网站 https://cartsmith.netlify.app 已上线；俊宇 2026-11-07 说开始找客户）
-- 下一个任务：**俊宇：① 2026-11-11 在工作台跟进已联系的 4 家 ② 核实第 3 批英文市场商家（`sales/research/2026-11-08-batch-3-english.md`，先联系 8 家 A 级）和第 2 批剩下的，再加进工作台、发开场白（一天 ≤10 家） ③ 设定 IG 自动回复（`docs/10-instagram-auto-replies.md`）**
+- 下一个任务：**俊宇：① 打开工作台 → 「今天」最上面「新商家」按「全部加入」（第 3 批 10 家，不用再复制粘贴）→ 逐家发开场白（一天 ≤10 家） ② 2026-11-11 跟进已联系的 4 家 ③ 回答两个问题：要不要用非官方工具自动发 IG（默认不要）、Claude Code 定时找商家的频率（默认每周一、四各 10 家） ④ 设定 IG 自动回复（`docs/10-instagram-auto-replies.md`）**
 - 卡住的事：没有（DigitalOcean 服务器、域名、SSM 都等第一个客户说「好」再做；SSM 一定要在收订金前完成）
 
 ---
@@ -110,6 +110,7 @@
 
 | 日期 | 任务 | 结果 | 网址 / 文件 | 未解决的问题 |
 |---|---|---|---|---|
+| 2026-11-08 | 4.1d 工作台「新商家收件箱」（俊宇要求把 instagram_dm_mcp 和工作台结合、全部自动化、不要复制粘贴） | 查证：instagram_dm_mcp 用 instagrapi（非官方接口，用 IG 帐号密码登入），README 没有提 Instagram 条款或封号风险；Meta 官方接口不能主动发第一条私信 → 自动发送先不做，等俊宇决定。已做：Claude Code 找的商家写进 `sales/leads/*.json` → build 产生 `inbox.mjs` → 工作台「今天」最上面显示，「全部加入」逐家 AI 打分写开场白、可以「跳过」、已加过的不会重复；卡片显示「Claude Code 找的 · A 级」和「发之前看一眼」；按「复制并打开 IG 私信」后底部出现「发给 ○○ 了吗？✓ 已发送」提示条；第 3 批 10 家已放进收件箱；本地测试 32 项全通过 | `site/netlify/functions/desk/`、`site/desk/`、`site/build.py`、`sales/leads/`、`docs/11-sales-desk.md` | 自动发 IG 要俊宇决定（有封号风险）；定时找商家的频率待确认 |
 | 2026-11-08 | 4.1 候选商家第 3 批：英文市场、规模不大、有购买力（俊宇要求；他发现第 2 批有几家已经有网站） | A 级标准加第 5 项「购买力」（实体店 / 公司客户 / 寄卖点 / 单价 RM40+ / 花钱推广，至少一项）；每家都直接试品牌域名（.com/.com.my/.my/.co），排除了约 35 家已经有网站或太大 / 太小的；选出 8 家 A 级（Ginger Batiks、Ministry of Cakes、Best Borneo、Habitatku + Loulou、Ilham Ceramics、Dimpled、Forest Floor、Artigusto）+ 2 家 B 级（Shiramics、Over Time Leathercraft），附英文开场白注意事项、贴进工作台的资料格、排除名单；第 2 批补注：壹家有 yijiapastry.com | `sales/research/2026-11-08-batch-3-english.md`、`sales/research/2026-11-08-batch-2-chinese.md` | Habitatku、Ilham Ceramics 的 IG 要俊宇找；Forest Floor、Shiramics 要确认还在营业；IG 简介里的链接要俊宇亲眼看 |
 | 2026-11-08 | 4.1 候选商家第 2 批：华人商家，只要 A 级（俊宇已用工作台发出 4 个开场白：Benang Needle、Sambal Enak、Let's Coopi、Tokey Sambal Hitam，11-11 跟进） | 用公开资料（Shopee 官方年饼 / 月饼推荐、新闻、美食指南、商家名录）查了约 25 家华人商家，严格按 4 项（自有品牌、卖得好的证据、还在营业、搜不到网站）筛出 5 家 A 级：Joymom's 娇妈妈、Yi Jia Pastry House 壹家烘培坊、Silli Chilli、Arcane Leather、Hejia 合家；附切入点（2027 新年 2/6 → 年饼预订 + 公司礼盒询价）、贴进工作台的资料格、排除名单和原因 | `sales/research/2026-11-08-batch-2-chinese.md` | 合家搜不到 IG / FB（找不到就跳过，不用 Shopee 聊天推销）；壹家的 IG 要核实；全部要俊宇点进去确认没有网站 |
 | 2026-11-08 | 后台导览（俊宇要看后台） | 俊宇确认：交付彩排（真服务器 + Billplz 测试模式）等第一个有兴趣的商家再做；从本地测试店截了 8 张 WooCommerce 后台（订单、订单详情、产品、编辑产品、运费、付款、我们的设定、手机版），加中英说明、标示示范资料 | `content/backend-tour/`、`scripts/local/make-backend-tour.js` | 真服务器和付款网关测试模式还没做（等有兴趣的商家） |

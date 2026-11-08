@@ -1,4 +1,5 @@
 // 测试销售工作台：登录 → 加商家（AI 分析）→ 复制并打开 IG → 已发送 → 跟进 → 对方回复 → 样板 → 不再联系 → 名单 / 数字 / 导出
+// → Claude Code 新商家收件箱（跳过 / 全部加入）→ 复制并打开后的「已发送」提示条
 // 需要：一个跑着 dist + /api/desk 的服务（本地用模拟的 DeepSeek），密码在环境变量 DESK_TEST_KEY
 // 用法：node tools/check-desk.js http://localhost:8769 /path/to/desk-store.json [截图资料夹]
 const { chromium } = require('playwright');
@@ -110,6 +111,43 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
   const [dl] = await Promise.all([p.waitForEvent('download'), p.click('[data-export]')]);
   const csv = fs.readFileSync(await dl.path(), 'utf8');
   ok(/^﻿?id,business_name/.test(csv) && csv.includes('Glow Lab') && csv.includes('do_not_contact'), 'CSV export has both merchants');
+
+  // Claude Code's new-lead inbox (sales/leads/*.json → inbox.mjs)
+  const leadsTotal = (await import('../netlify/functions/desk/inbox.mjs')).INBOX.length;
+  await p.click('[data-tab="today"]');
+  await p.waitForSelector('[data-inbox]');
+  ok((await p.$$('[data-inbox] .inbox__list li')).length === leadsTotal, `inbox shows ${leadsTotal} new leads`);
+  await shot('inbox');
+  const skipId = 'b3-over-time-leathercraft';
+  await p.click(`[data-act="skip-lead"][data-lead="${skipId}"]`);
+  await p.waitForFunction((n) => document.querySelectorAll('[data-inbox] .inbox__list li').length === n, leadsTotal - 1);
+  ok(true, 'skip removes one lead');
+  await p.click('[data-act="import-all"]');
+  await p.waitForSelector('[data-inbox]', { state: 'detached', timeout: 90000 });
+  const d3 = JSON.parse(fs.readFileSync(STORE, 'utf8'));
+  const imported = d3.items.filter((x) => x.lead_id);
+  ok(imported.length === leadsTotal - 1 && (d3.inbox_done || []).length === leadsTotal, `imported ${imported.length} leads, ${(d3.inbox_done || []).length} marked done`);
+  const gb = imported.find((x) => x.lead_id === 'b3-ginger-batiks');
+  ok(gb && gb.business_name === 'Ginger Batiks' && gb.instagram === 'gingerbatiks' && gb.template === 'plainfold' && !!gb.verify && !gb.duplicate_of && gb.status === 'new', 'lead facts (name, IG, template, verify) kept over AI output');
+  ok(!imported.some((x) => x.lead_id === skipId), 'skipped lead not imported');
+  ok(/b3-ginger-batiks/.test(JSON.stringify(gb.history)), 'history notes the inbox source');
+  const gCard = '#c-' + gb.id;
+  await p.waitForSelector(gCard);
+  ok(/Claude Code 找的/.test(await p.textContent(gCard)) && /发之前看一眼/.test(await p.textContent(gCard)), 'card shows source tag + verify note');
+  const [pop2] = await Promise.all([p.waitForEvent('popup'), p.click(gCard + ' [data-act="copyopen"]')]);
+  await pop2.close();
+  await p.waitForSelector('[data-sentbar]:not([hidden])');
+  ok(/Ginger Batiks/.test(await p.textContent('[data-sentbar]')), '"sent?" bar appears after copy & open');
+  await shot('sentbar');
+  await p.click('[data-sentbar-yes]');
+  await p.waitForSelector('[data-sentbar]', { state: 'hidden' });
+  await p.waitForFunction(() => document.querySelector('[data-sent-count]').textContent.includes('新联系 2/'));
+  ok(JSON.parse(fs.readFileSync(STORE, 'utf8')).items.find((x) => x.id === gb.id).status === 'contacted', 'bar ✓ marks the lead as contacted');
+  const ilham = imported.find((x) => x.lead_id === 'b3-ilham-ceramics');
+  ok(ilham && !ilham.instagram, 'lead without IG imported with empty handle');
+  await p.reload();
+  await p.waitForSelector('#app:not([hidden])');
+  ok(!(await p.$('[data-inbox]')), 'inbox stays empty after reload');
 
   ok(errors.length === 0, 'no JavaScript errors' + (errors.length ? ': ' + errors.join(' | ') : ''));
   await b.close();

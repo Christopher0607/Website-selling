@@ -139,7 +139,7 @@ Artigusto Gelato · IG https://www.instagram.com/artigustogelato/ · 37, Jalan 2
 购买力：实体店
 网站：artigustogelato.com 现在显示「Squarespace – Website Expired」（以前有，过期了）
 观察：【改成你看到的；看 IG 简介是不是还放着那个过期链接】
-切入：友善提醒网站链接过期了；我们的月费方案包维护，不会突然过期
+切入：友善提醒网站链接过期了；我们的月费方案包主机、SSL 和网站监测，网站不会悄悄下线
 语言：英文
 ```
 
