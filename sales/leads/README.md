@@ -4,13 +4,21 @@ Claude Code 上网找到的商家写在这里。`python3 site/build.py` 会把�
 
 ## 每天的定时任务（2026-11-08 起）
 
-Claude Code 每天早上约 06:40（马来西亚时间）自动找商家，**目标 40 家，电话优先**（2026-11-09 俊宇定：改成以打电话为主要的第一步；中午第二轮停用）。写成 `sales/leads/<日期>-daily.json`（id `d<YYYYMMDD>-<店名>`）。临时加的一轮（俊宇说「现在继续找」）用 `<日期>-extra-<HHMM>.json`、id `x<YYYYMMDD><HHMM>-<店名>`。档案已经存在就表示那一轮做过了，不要重做。
+Claude Code 每天早上约 06:40（马来西亚时间）做「**可以直接打电话的商家包**」（2026-11-09 俊宇定：每一家在俊宇联系之前，样板就要做好放在工作台那张卡上）。每天大约 **15 个样板**（Claude 额度的上限）：
 
-**优先顺序：** 1. 有公开电话号码（手机或座机都可以，打电话用）而且在巴生谷有实体店的（方便俊宇拜访）；2. 有 Email 的；3. 其他地区有电话的。每一家都要写 `area`（地区，例如「PJ SS2」「Bangsar」「槟城 George Town」）和 `address`（店的地址，在家做的写「在家做 · <地区>」）。
+1. **先清积压：** `sales/leads/inbox.json` 里有电话（`whatsapp` 或 `phone`）、但 `sales/leads/previews.json` 里还没有样板的商家，先帮它们做样板（旧的先做）。
+2. **积压清完才找新商家：** 每找到一家合格的（一定要有电话），马上帮它做样板，直到当天一共 15 个。新商家写进 `sales/leads/<日期>-daily.json`（id `d<YYYYMMDD>-<店名>`）。
+3. **每天顺便删除到期的样板：** `node scripts/local/preview-publish.js list` 看到「到期了」的，跑 `delete <代号>`（会一起拿掉 previews.json 的那一行），再删 `clients/<代号>/preview/`。
 
-范围：餐厅、咖啡馆、烘焙 / 甜点、在家做的食品品牌、自有品牌的产品卖家（护肤、服装、饰品、礼品、宠物用品、花店等）。2026-11-08 以前的档案叫 `-restaurants.json` / `-batch-N.json`；`-daily-2.json` 是停用的第二轮。跑 `python3 site/build.py`（会产生 `sales/leads/inbox.json`），**只 commit `sales/leads/`，push 到 `leads` 分支**。
+**做样板的规则（`docs/09-netlify-guide.md` 第 D 部分）：** 代号 `m-<店名>`；`preview.json` 写 `lead_id`、`instagram`、`photos: "placeholder"`、`delete_by` = 今天 + 14 天、`password` = 店名一个字 + 4 个随机数字；店名、招牌产品、地点只用查得到的真实资料；**查不到价钱的产品就不要写 `price`**（样板会显示 Ask for price，不要编价钱），3–8 个产品；照片用 Pexels（`scripts/local/fetch-stock-images.py`），不用对方 IG / Facebook / 报道里的照片。`python3 site/build.py --preview …` → `node scripts/local/preview-publish.js publish <代号>` → `python3 site/build.py` → commit `sales/leads/previews.json` + `sales/leads/inbox.json`（+ 当天的 daily.json）到 `leads` 分支。
 
-**边找边 push：** 每放好 10 家就跑一次 `python3 site/build.py`、commit、push（俊宇在等着发；工作台 5 分钟内就会出现）。最后一次 push 再写总结。
+临时加的一轮（俊宇说「现在继续找」）用 `<日期>-extra-<HHMM>.json`、id `x<YYYYMMDD><HHMM>-<店名>`。档案已经存在就表示那一轮做过了，不要重做。
+
+**优先顺序（找新商家时）：** 1. 有公开电话号码（手机或座机）而且在巴生谷有实体店的；2. 其他地区有电话的。每一家都要写 `area` 和 `address`（在家做的写「在家做 · <地区>」）。
+
+范围：餐厅、咖啡馆、烘焙 / 甜点、在家做的食品品牌、自有品牌的产品卖家。2026-11-08 以前的档案叫 `-restaurants.json` / `-batch-N.json`；`-daily-2.json` 是停用的第二轮。跑 `python3 site/build.py`（会产生 `sales/leads/inbox.json`），**只 commit `sales/leads/`，push 到 `leads` 分支**；样板本身由 publish 推到 `previews` 分支。
+
+**边做边 push：** 每做好 3 个样板就跑一次 `python3 site/build.py`、commit、push（工作台 5 分钟内就会出现）。最后一次 push 再写总结。
 
 **为什么用 `leads` 分支：** Netlify 免费方案每次正式部署扣 15 点（每月 300 点）。工作台会直接读 GitHub 上 `leads` 分支的 `sales/leads/inbox.json`（`LEADS_URL`，5 分钟更新一次），所以新商家不用部署就会出现在「新商家」。正式分支 `ccr-4e1e8221-7msrbj` 只放程式的改动。
 

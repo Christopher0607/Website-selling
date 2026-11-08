@@ -24,7 +24,7 @@
   const $ = (s, r) => (r || document).querySelector(s);
   const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  const rm = (n) => 'RM' + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  const rm = (n) => (n == null || isNaN(n) ? '' : 'RM' + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')); // mockups: products without a published price
   const ico = (n) => '<svg class="i" aria-hidden="true"><use href="#i-' + n + '"/></svg>';
 
   function unit(id, sel) {
