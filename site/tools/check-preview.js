@@ -136,8 +136,9 @@ function audit() {
 async function scan(page, url, vp, shotDir) {
   await page.goto(url, { waitUntil: 'load' });
   await unlock(page);
+  const ready = await page.waitForFunction(() => document.documentElement.getAttribute('data-store') === 'ready', null, { timeout: 8000 }).then(() => true).catch(() => false);
   await page.waitForTimeout(300);
-  const total = { overflow: null, bar: [], contrast: new Set(), lowContrast: new Set(), cut: new Set(), broken: new Set(), small: new Set(), covered: new Set() };
+  const total = { overflow: null, bar: [], contrast: new Set(), lowContrast: new Set(), cut: new Set(), broken: new Set(), small: new Set(), covered: new Set(), noJs: !ready };
   const h = await page.evaluate(() => document.documentElement.scrollHeight);
   for (let y = 0; y < h; y += Math.floor(vp.height * 0.8)) {
     await page.evaluate((yy) => window.scrollTo(0, yy), y);
@@ -192,7 +193,7 @@ async function scan(page, url, vp, shotDir) {
     const errors = [];
     page.on('pageerror', (e) => errors.push(e.message));
     page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });
-    const issues = { overflow: [], bar: [], contrast: [], low: [], cut: [], broken: [], small: [], covered: [] };
+    const issues = { overflow: [], bar: [], contrast: [], low: [], cut: [], broken: [], small: [], covered: [], noJs: [] };
     for (const pg of pages) {
       const t = await scan(page, BASE + pg, vp, SHOTS);
       if (t.overflow) issues.overflow.push(`${pg}: ${t.overflow}`);
@@ -203,6 +204,7 @@ async function scan(page, url, vp, shotDir) {
       t.broken.forEach((x) => issues.broken.push(`${pg}: ${x}`));
       t.small.forEach((x) => issues.small.push(`${pg}: ${x}`));
       t.covered.forEach((x) => issues.covered.push(`${pg}: ${x}`));
+      if (t.noJs) issues.noJs.push(pg);
     }
     const list = (a) => (a.length ? ': ' + a.slice(0, 6).join(' | ') + (a.length > 6 ? ` (+${a.length - 6} more)` : '') : '');
     ok(!issues.overflow.length, `no sideways shift on ${pages.length} pages` + list(issues.overflow));
@@ -212,13 +214,15 @@ async function scan(page, url, vp, shotDir) {
     ok(!issues.broken.length, 'no broken photos' + list(issues.broken));
     ok(!issues.small.length, 'form fields and buttons are not squashed' + list(issues.small));
     ok(!issues.covered.length, 'nothing floating covers a button at the top of the page' + list(issues.covered));
+    ok(!issues.noJs.length, 'store script ran on every page (buttons work)' + list(issues.noJs));
     ok(!errors.length, 'no JavaScript errors' + list(errors));
     if (issues.low.length) warn('small text below 4.5:1' + list(issues.low));
     await ctx.close();
   }
 
-  // 3) buying flow on a phone
-  console.log('— buying flow (phone)');
+  // 3) buying flow on a phone, 3 times (a timing bug once made it fail only some of the time)
+  for (let run = 1; run <= 3; run++) {
+  console.log(`— buying flow (phone, run ${run}/3)`);
   {
     const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
     const page = await ctx.newPage();
@@ -253,6 +257,7 @@ async function scan(page, url, vp, shotDir) {
     }
     ok(!errors.length, 'no JavaScript errors in the flow' + (errors.length ? ': ' + errors.join(' | ') : ''));
     await ctx.close();
+  }
   }
 
   await browser.close();
