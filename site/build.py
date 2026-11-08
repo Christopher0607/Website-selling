@@ -239,7 +239,8 @@ class Store:
                 gate = ("<script>(function(){var H='" + pv["_hash"] + "';try{if(localStorage.getItem('pv_'+H)==='1')return;}catch(e){}"
                         "document.documentElement.classList.add('pv-locked');window.__pvHash=H;})();</script>")
             return (f'{gate}<div class="demo-bar"><div class="wrap demo-bar__in"><span class="demo-bar__txt"><b>Private mockup</b> for {e(pv["brand"]["name"])} · made by Cartsmith Studio · '
-                    f'not a live store{" · photos are placeholders" if pv.get("photos") == "placeholder" else ""} · will be deleted by {e(pv["delete_by"])}</span><span class="demo-bar__links"><a class="demo-bar__cta" href="{e(self.studio_link(root, "index.html"))}">Cartsmith Studio {icon("arrow")}</a></span></div></div>')
+                    f'not a live store{" · photos are placeholders" if pv.get("photos") == "placeholder" else ""} · will be deleted by {e(pv["delete_by"])}</span>'
+                    f'<span class="demo-bar__short">Private mockup{" · photos &amp; details are examples" if pv.get("photos") == "placeholder" else ""}</span><span class="demo-bar__links"><a class="demo-bar__cta" href="{e(self.studio_link(root, "index.html"))}">Cartsmith Studio {icon("arrow")}</a></span></div></div>')
         return (f'<div class="demo-bar"><div class="wrap demo-bar__in"><span class="demo-bar__txt"><b>Concept demo</b> · fictional brand by Cartsmith Studio · no real orders or payments</span>'
                 f'<span class="demo-bar__links"><a href="{root}templates.html">All templates</a><a class="demo-bar__cta" href="{root}start.html?template={self.slug}">Use this template {icon("arrow")}</a></span></div></div>')
 

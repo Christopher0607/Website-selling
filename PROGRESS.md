@@ -7,7 +7,7 @@
 ## 当前状态
 
 - 当前阶段：**Phase 4.1 找客户**（网站 https://cartsmith.netlify.app 已上线；俊宇 2026-11-07 说开始找客户）
-- 下一个任务：**俊宇：① 用手机打开测试样板确认（网址和密码在聊天里），确认后 Claude Code 删除测试样板 ② 平日 14:30–17:00 打电话，有人说可以 → 说「帮我做 <店名> 的样板」 ③ 2026-11-11 跟进已联系的 4 家。Claude Code：每天 07:45 检查早上那一轮；删除测试样板 ztest 和 clients/ztest/**
+- 下一个任务：**俊宇：① 平日 14:30–17:00 打电话；5 家已有样板（Hideaway、Contour、Ome、Dreamz、Floccus Floccus）→ 卡片上的「附样板的信息」按 WhatsApp 发；Floccus Floccus 要先在「新商家」按「全部加入」 ② 另外 5 家（Blue Dahlia、Baba Beng、Secawan Tepung、Monét、Haruki）打电话时问 4–6 个招牌产品和价钱（或请对方传菜单照片），拿到后 15 分钟做好样板 ③ 2026-11-23 前删除这批样板（工作台会提醒）。Claude Code：每天 07:45 检查早上那一轮；之后每天做约 10 个样板**
 - 卡住的事：没有（DigitalOcean 服务器、域名、SSM 都等第一个客户说「好」再做；SSM 一定要在收订金前完成）
 
 ---
@@ -110,6 +110,7 @@
 
 | 日期 | 任务 | 结果 | 网址 / 文件 | 未解决的问题 |
 |---|---|---|---|---|
+| 2026-11-09 | 4.1o 帮名单上的商家做好样板（俊宇：今天有 WhatsApp 的新商家 + 已经联系过的，明天直接发成品；用对方正确的资讯和照片；工作台每家备注网址和密码） | 工作台：卡片显示样板网址、密码、删除日期 + 写好的「附样板的信息」（中 / 英 / 马来文，含网址和密码、照片和细节是示意），发出后记录「已发样板」；密码用工作台的公钥加密才放进公开的 repo（私钥只在 Netlify Blobs）。研究会话做了第一批：5 家完成（Hideaway、Contour、Ome、Dreamz、Floccus Floccus，删除日期 2026-11-23），5 家报道里查不到足够价钱没做（不编价钱）。照片：对方的照片只在 IG / Facebook / Google 地图，不能用程式拿，所以用 Pexels 示意图并写明；手机上样板顶部加「Private mockup · photos & details are examples」。抽查 Contour：品牌、真实产品、地址正确，8/8 照片解得开；公开档案里没有密码。工作台测试 65 项 + 样板备注 6 项通过 | leads 分支 `sales/leads/previews.json`、`scripts/local/preview-publish.js`、`site/netlify/functions/desk/index.mjs` | 部分价钱来自 2018–2020 年的报道（样板里写了待确认）；模板默认的运费 / 政策字样不是对方的；20 家只有 IG 的还没有样板 |
 | 2026-11-09 | 4.1n 免费样板改成加密 + 分支部署（俊宇：样板不要用我们 Netlify 的额度；手机上存不了金钥） | 不开第二个 Netlify 帐号（违反使用政策）；金钥在手机上存不了（表单两次被拒、设定页存不了），改用不需要金钥的方法：样板每一页和照片用密码加密，push 到 `previews` 分支，Netlify 分支部署（俊宇在 Netlify 加了 previews 分支）。线上测试：约 10 秒上线、noindex / no-referrer、原始照片 404、浏览器 10 项全通过（密码页、错误密码、解密、换页不再问、产品页和购物车照片、别的手机要密码），正式网站没有重新部署（不扣点） | `scripts/local/preview-publish.js`、`docs/09-netlify-guide.md` 第 D 部分、`docs/00-decisions.md` #26；测试样板 https://previews--cartsmith.netlify.app/ztest-dd332149/ | 工作台「记录样板」的新文字要等下次部署才上线 |
 | 2026-11-09 | 4.1m 改成先打电话（俊宇：朋友说信息成交差、IG 尤其差、WhatsApp 容易封号、晚上发没人理，他的经验是直接打电话） | 工作台：卡片「打电话」按钮（tel: 拨号）、4 个结果（没接 → 隔天再出现、3 次后改发信息 / 可以发样板 → 「刚刚通过电话」WhatsApp 草稿，固定模板不用 AI / 改天再打 → 选日期 / 不需要 → 不再联系）、「今天要打电话」区、电话开场（中 / 英 / 马来文）、午餐 / 晚餐 / 晚上按打电话或 WhatsApp 会先提醒、拜访清单（按地区 + Google 地图）、电话 / 地区 / 地址栏位（编辑、CSV 备份和还原都有）、电话号码格式；电话脚本页 `site/desk/call-script.html`（开场、收尾、12 种回话和处理方式、守则）；AI 第一封信息改成只问可不可以发免费样板。研究：新的早上任务 40 家、电话优先、要地区和地址、第一次顺便帮昨晚 34 家补地址；旧的 50 家任务和中午第二轮停用。工作台测试 65 项全通过 | `site/desk/`、`site/netlify/functions/desk/index.mjs`、`site/build.py`、`sales/leads/README.md`、`docs/11-sales-desk.md`、`docs/00-decisions.md` #25 | 样板用 Netlify Drop 发布很可能每个扣 15 点（一个月最多十几个），之后要改成不扣点的发布方式 |
 | 2026-11-08 | 4.1l 临时加一轮（俊宇：现在先给我 80 家，明天早上照旧） | 研究会话 17:50 开始，放了 34 家（A 26、B 8），全部是吃的（巴生谷约 24、槟城 10），都有手机号码、0 家 Email（号码多数是报道写的订购电话，卡片提醒先确认能不能 WhatsApp）；看了约 170 个候选，合格率约四分之一。18:00 帐号碰到 Claude Code「5 小时用量上限」（研究会话和主会话共用），20:50 恢复、21:20 继续。主会话自己找非食品 / 东马：十几次搜索 0 家合格（多数是 IG 私信下单、已有网站、单价太低或报道太旧），改由研究会话统筹。抽查 3 家（Floccus Floccus、Le Dux、Cream & Krim）都没有网站。工作台上限超过 100 改成清楚报错（ad59cc5，用 [skip netlify] 先不部署，确认跳过成功）| leads 分支 `sales/leads/2026-11-08-extra-1750.json` | 没达到 80；每天 100 家很可能常碰到用量上限（这一轮约 USD 10 用量）；号码不一定都能 WhatsApp |

@@ -101,7 +101,7 @@
 2. 跟 Claude Code 说「帮我做 <店名> 的样板」（附上对方的 IG 或报道链接）。Claude Code 会：
    - 建 `clients/<代号>/preview/preview.json`（模板、品牌名和颜色、4–8 个主打产品、密码、删除日期 = 今天 + 14 天），只用对方**公开的**资料和照片（照片只放在这个私人样板）；
    - 跑 `python3 site/build.py --preview clients/<代号>/preview/preview.json`；
-   - 跑 `node scripts/local/preview-publish.js publish <代号>`（加密 + push 到 `previews` 分支，约 1 分钟后上线）；
+   - 跑 `node scripts/local/preview-publish.js publish <代号>`（加密 + push 到 `previews` 分支，约 1 分钟后上线；preview.json 有 `lead_id` / `instagram` 时，会把网址和加密的密码写进 `sales/leads/previews.json`）；再跑 `python3 site/build.py`，把 `sales/leads/previews.json` 和 `sales/leads/inbox.json` 一起 commit 到 `leads` 分支——工作台那张卡就会出现网址、密码和写好的「附样板的信息」；
    - 给你**网址、密码、删除日期**。（`clients/*/preview/` 不进 git。）
 3. 用手机打开网址、输入密码看一遍 → 回到工作台「有回复，等你回」那张卡，把网址和密码贴进「刚刚通过电话」的信息 → 按 WhatsApp 发出去 → 按「记录样板」贴上网址（14 天后会提醒删除）。
 4. **到期删除（必须做）：** 工作台提醒时，跟 Claude Code 说「删除 <店名> 的样板」（它会跑 `node scripts/local/preview-publish.js delete <代号>`，网站上马上拿掉；git 历史里只剩加密的档案），再删掉 `clients/<代号>/preview/`。随时可以用 `node scripts/local/preview-publish.js list` 看还有哪些样板、哪天到期。
