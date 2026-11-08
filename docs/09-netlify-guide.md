@@ -92,29 +92,23 @@
 > 这是我们最重要的成交工具：对方先看到**自己的品牌**放在模板上，再决定。
 > **2026-11-09 起只给电话里说「可以」的商家做**（每天最多 2–3 个）。注意点数：用 Netlify Drop 发布一个样板很可能算一次正式部署（15 点，免费方案每月 300 点）；deploy preview / branch deploy 不扣点（2026-11-09 查，[官方说明](https://docs.netlify.com/manage/accounts-and-billing/billing/billing-for-credit-based-plans/how-credits-work/)）。一个月要做超过十几个样板之前，先请 Claude Code 改成不扣点的发布方式。
 
-**准备（只做一次）：** 在你的 Windows 电脑装 Python：https://www.python.org/downloads/ → Download → 安装时**勾选「Add python.exe to PATH」**。
+**2026-11-09 起的做法（不扣 Netlify 点数，不用电脑）：** 样板加密后放到 GitHub 的 `previews` 分支，Netlify 用「分支部署」免费发布（网址像 `https://previews--cartsmith.netlify.app/p012-xxxx/`）。每一页、每一张照片都用样板密码加密，没有密码的人（包括看 GitHub 的人）只看到密码页和乱码。
 
-1. 在项目文件夹建 `clients/p012/preview/`（p012 换成名单里的代号），把 `templates/preview.example.json` 复制进去、改名 `preview.json`。
-2. 打开 `preview.json` 填：
-   - `template`：对方最适合的模板（`dewlane` / `plainfold` / `chili-pantry` / `lowlight` / `tailmate` / `voltnest`）
-   - `delete_by`：今天 + 14 天（程式不接受超过 14 天）
-   - `password`：一个简单密码（发给对方用）
-   - `brand`：名字、简介、颜色（从对方 logo 取）
-   - `products`：4–8 个主打产品（名字、价格、分类、照片文件名）
-3. 把对方店里**公开的**产品照片和一张大图存进 `clients/p012/preview/img/`（只用在这个私人样板）。
-4. 在项目文件夹开 PowerShell，执行：
-   ```
-   python site/build.py --preview clients/p012/preview/preview.json
-   ```
-   会产生 `clients/p012/preview/site/` 文件夹。（这个文件夹和照片**不会**进 git。）
-   > 不想自己跑：在电脑版 Claude Code 说「帮我做 p012 的样板」，它会帮你填和执行。
-5. 打开 https://app.netlify.com/drop ，把 `site` 文件夹**拖进去** → 得到一个网址。
-6. 改成不好猜的名字：那个网站 → Project configuration → General → Change project name → `p012-glowlab-7k3q`（加几个随机字）。
-7. 用手机打开、输入密码、确认没问题 → 录 1 分钟屏幕（边滑边讲）→ 在 Instagram 发给对方：网址 + 密码 + 录屏 + 删除日期。
-8. 记录：`python sales/agent/sales_agent.py mark p012 preview_sent --url https://p012-glowlab-7k3q.netlify.app`
-9. **到期删除（必须做）：** 每天的销售清单会提醒。Netlify → 那个网站 → Project configuration → General → 最下面 **Delete this project**；电脑里的 `clients/p012/preview/` 文件夹也删掉。
+**只做一次（已在 2026-11-09 设好）：** Netlify → cartsmith 网站 → Site configuration → Build & deploy → Continuous deployment → Branches and deploy contexts → Configure → Branch deploys 选 **Let me add individual branches**，加 `previews` → Save。
 
-> ⚠ 限制（老实说）：Netlify 免费方案没有真正的密码保护。我们的做法是「不公开的随机网址 + 密码页 + 不给搜索引擎收录」，可以挡住一般人，但懂技术的人还是看得到网页内容。所以样板只放对方本来就公开的资料。需要真正的密码保护：Netlify 付费方案（Pro 约 USD 20/月，开之前先确认价格）或以后用服务器版 `make-preview.sh`。
+**每次做样板：**
+1. 电话里对方说「可以」→ 在工作台按「可以发样板」。
+2. 跟 Claude Code 说「帮我做 <店名> 的样板」（附上对方的 IG 或报道链接）。Claude Code 会：
+   - 建 `clients/<代号>/preview/preview.json`（模板、品牌名和颜色、4–8 个主打产品、密码、删除日期 = 今天 + 14 天），只用对方**公开的**资料和照片（照片只放在这个私人样板）；
+   - 跑 `python3 site/build.py --preview clients/<代号>/preview/preview.json`；
+   - 跑 `node scripts/local/preview-publish.js publish <代号>`（加密 + push 到 `previews` 分支，约 1 分钟后上线）；
+   - 给你**网址、密码、删除日期**。（`clients/*/preview/` 不进 git。）
+3. 用手机打开网址、输入密码看一遍 → 回到工作台「有回复，等你回」那张卡，把网址和密码贴进「刚刚通过电话」的信息 → 按 WhatsApp 发出去 → 按「记录样板」贴上网址（14 天后会提醒删除）。
+4. **到期删除（必须做）：** 工作台提醒时，跟 Claude Code 说「删除 <店名> 的样板」（它会跑 `node scripts/local/preview-publish.js delete <代号>`，网站上马上拿掉；git 历史里只剩加密的档案），再删掉 `clients/<代号>/preview/`。随时可以用 `node scripts/local/preview-publish.js list` 看还有哪些样板、哪天到期。
+
+**备用（会扣点数）：** 上面的方法有问题时，才用 https://app.netlify.com/drop 把 `clients/<代号>/preview/site` 拖进去（每个扣 15 点）。
+
+> ⚠ 老实说：加密样板没有密码就看不到内容；但对方拿到密码后可以转给别人看，所以样板还是只放对方本来就公开的资料。需要真正的密码保护：Netlify 付费方案（Pro 约 USD 20/月，开之前先确认价格）或以后用服务器版 `make-preview.sh`。
 
 ---
 

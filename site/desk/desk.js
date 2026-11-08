@@ -228,7 +228,7 @@
     if (follow.length) h += sect('今天要跟进', follow.length, follow.map((p) => card(p)).join(''), '');
     if (left && fresh.length) h += `<div class="queuebar"><div><b>连续发送</b><small>一家一家打开已经填好的 WhatsApp / Email / Instagram，你按发送，再按「下一家」。有 WhatsApp / Email 的排前面。</small></div><button class="btn btn--sm" data-act="queue-start">开始（${Math.min(left, fresh.length)} 家）</button></div>`;
     h += sect(`新联系 · 今天还可以发 ${left} 个`, fresh.length, left ? fresh.slice(0, Math.max(left, 1) + 2).map((p) => card(p)).join('') : '<div class="empty">今天的新联系已经发满了，明天继续。</div>', '名单里没有待联系的商家。');
-    if (purge.length) h += sect('样板到期，要删除', purge.length, purge.map((p) => `<div class="card"><p>${esc(p.business_name)} 的样板 ${esc(p.preview_url || '')} 已到期（${esc(p.preview_delete_by)}）。到 Netlify 删除那个网站，然后按：</p><div class="btnrow"><button class="btn btn--sm" data-act="purged" data-id="${p.id}">已删除样板</button></div></div>`).join(''), '');
+    if (purge.length) h += sect('样板到期，要删除', purge.length, purge.map((p) => `<div class="card"><p>${esc(p.business_name)} 的样板 ${esc(p.preview_url || '')} 已到期（${esc(p.preview_delete_by)}）。跟 Claude Code 说「删除 ${esc(p.business_name)} 的样板」，删好后按：</p><div class="btnrow"><button class="btn btn--sm" data-act="purged" data-id="${p.id}">已删除样板</button></div></div>`).join(''), '');
     $('[data-today-list]').innerHTML = h;
   }
   function inboxSect() {
@@ -481,7 +481,7 @@
       if (act === 'reply') { replySheet(p); return; }
       if (act === 'edit') { S.queueFromEdit = S.queueOn; editSheet(p); S.queueOn = false; return; }
       if (act === 'preview') {
-        const url = prompt('样板网址（Netlify Drop 的网址）：', p.preview_url || 'https://');
+        const url = prompt('样板网址（Claude Code 发布后给你的网址）：', p.preview_url || 'https://');
         if (url === null) return;
         const j = await api('mark', { id: p.id, event: 'preview_sent', url });
         upsert(j.item); closeSheet(); render(); toast('已记录：14 天后提醒你删除样板。'); return;
