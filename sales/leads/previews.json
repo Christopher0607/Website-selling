@@ -1,0 +1,38 @@
+{
+ "note": "做好的免费样板。网址公开，密码用工作台的公钥加密（只有工作台解得开）。scripts/local/preview-publish.js 自动写。",
+ "previews": [
+  {
+   "code": "m-hideaway-cafe",
+   "slug": "m-hideaway-cafe-a8cef8fc",
+   "url": "https://previews--cartsmith.netlify.app/m-hideaway-cafe-a8cef8fc/",
+   "delete_by": "2026-11-23",
+   "lead_id": "x202611081750-hideaway-cafe",
+   "instagram": "hideaway_17",
+   "name": "Hideaway",
+   "photos": "placeholder",
+   "enc": "bG1hp5KgRcRLr8P5ShGVVhZdOX1KWbKemBfTpJYOHslGTKFb6fN9zbwVNBkDz1iXGT4RCpspCrvKxjvlTEO3um1Vrpee+zkWYWFkcJuCV7Jp2RkNFFIi8juBnByie3826lhwW/GH1ptzfEPDM0g5097ZaUvwE1ZzaYbv//hGN+xeNikD/Ct5G9NiZZXxPA4MXFp6XUsfVX7bLn2Pm34xfGLHCebdMHawqHVmXg7dE/GKkZsK8saiHPxkSYrgCbsrMy4ei2qH7E9BHKGVAqrhzWyU1iarW7v5VtxygWqmAEwhFgrULpAVQbs27tcK4b+we9YypMmf/voOCvagzPKODw=="
+  },
+  {
+   "code": "m-contour-pj",
+   "slug": "m-contour-pj-6055ccfb",
+   "url": "https://previews--cartsmith.netlify.app/m-contour-pj-6055ccfb/",
+   "delete_by": "2026-11-23",
+   "lead_id": "x202611081750-contour-pj",
+   "instagram": "contour.pj",
+   "name": "Contour",
+   "photos": "placeholder",
+   "enc": "qOknK44UxIGWZUqh4lMAmhUAn7929qEDe3hllwdWF6mA4tCUTf5Tth1bWDhTzrgagwhu4rYBQQCL28BiCQYXECBHiQSqAPoBr/IYbG2sVBTqaP1sfD8yn19/N0C4om1/DS5IAvapUNcBSZXhZ4QxKHioLqEd3mM22Vbnfxg06JGpo0/bxPOYxQ743p6Ved0F1r22w5VJL1IWpkDWUvxJEL558SCdf8qXuNxX63j1+TGynt38H8T9WLrR5C7k9fw56o6BY9YZIn1Qo+Iq0Y+RxTj/dCLHcwtMlzN4nA/+crIw7I9MK0VIJsZpHaPkyDoYZUWU5O/JFhdAhdgxSTA71w=="
+  },
+  {
+   "code": "m-ome-by-spacebar",
+   "slug": "m-ome-by-spacebar-c95e16d2",
+   "url": "https://previews--cartsmith.netlify.app/m-ome-by-spacebar-c95e16d2/",
+   "delete_by": "2026-11-23",
+   "lead_id": "x202611081750-ome-by-spacebar",
+   "instagram": "ome.space",
+   "name": "Ome by Spacebar Coffee",
+   "photos": "placeholder",
+   "enc": "bxtdp5IlIddeKzIm2dL0Vc/BFl6UsMFG1M5o84bDAHNSbXVXWAyul3MmmfusciLE+Y225dPOZK/yICI0K10UQ34nki4hGRiZ2lZ+pFkQwroLxVlwKWYJU6E2sX0ZpEamhBBDj61ruxAdEvYLrBZ6dT9oHGaFbSLcMRh4oc/u2AUhiXFcPiSUvoFm9pxTTeFAiJAO3Y7DqCSsXhFgjLCu7vfzDax/h0KTbhyp/lXB/ZNVPvpeowGv5B8HWijsO0qH05iKv0Zj+lnUtNxYBc7Nk4S6EYCSpSy6HDcOq9w90R7a7ecN7Im3mf6hgb+oPJz+SC799jJyocAXaqmU/4g/+g=="
+  }
+ ]
+}
