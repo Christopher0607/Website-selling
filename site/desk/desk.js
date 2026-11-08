@@ -138,11 +138,19 @@
   function msgBox(p, field, label) { return `<div class="msg"><label>${esc(label)}</label><textarea data-field="${field}" data-id="${p.id}">${esc(p[field] || '')}</textarea></div>`; }
   function sendRow(p, field) {
     const b = [];
-    if (p.whatsapp) b.push(`<button class="btn btn--sm ch ch--wa" data-act="wa" data-field="${field}" data-id="${p.id}">${svg('wa', 16)}WhatsApp</button>`);
-    if (p.email) b.push(`<button class="btn btn--sm ch ch--mail" data-act="email" data-field="${field}" data-id="${p.id}">${svg('mail', 16)}Email</button>`);
-    if (p.instagram) b.push(`<button class="btn btn--sm ch ch--ig" data-act="copyopen" data-field="${field}" data-id="${p.id}">${svg('ig', 16)}Instagram</button>`);
-    if (!b.length) b.push(`<button class="btn btn--sm" data-act="copyonly" data-field="${field}" data-id="${p.id}">复制信息</button>`);
-    return `<div class="send"><span class="send__label">发送</span><div class="send__btns">${b.join('')}</div></div>`;
+    if (p.whatsapp) b.push(['wa', `<button class="btn btn--sm ch ch--wa" data-act="wa" data-field="${field}" data-id="${p.id}">${svg('wa', 16)}WhatsApp</button>`]);
+    if (p.email) b.push(['email', `<button class="btn btn--sm ch ch--mail" data-act="email" data-field="${field}" data-id="${p.id}">${svg('mail', 16)}Email</button>`]);
+    if (p.instagram) b.push(['ig', `<button class="btn btn--sm ch ch--ig" data-act="copyopen" data-field="${field}" data-id="${p.id}">${svg('ig', 16)}Instagram</button>`]);
+    if (!b.length) b.push(['', `<button class="btn btn--sm" data-act="copyonly" data-field="${field}" data-id="${p.id}">复制信息</button>`]);
+    // follow-ups: try a channel they have not seen yet (one channel per message, never all at once)
+    let hint = '';
+    if (field === 'followup' && p.last_channel) {
+      const used = p.channels && p.channels.length ? p.channels : [p.last_channel];
+      b.sort((x, y) => used.includes(x[0]) - used.includes(y[0]));
+      const fresh = b.find((x) => x[0] && !used.includes(x[0]));
+      hint = `<p class="send__hint" data-send-hint>上次用 ${esc(CH[p.last_channel] || p.last_channel)}。${fresh ? `这次可以换 ${CH[fresh[0]]}，对方可能比较常看。` : '没有别的联系方式，可以先在卡片补上 WhatsApp / Email。'}同一条信息只用一个渠道发。</p>`;
+    }
+    return `<div class="send"><span class="send__label">发送</span><div class="send__btns">${b.map((x) => x[1]).join('')}</div></div>${hint}`;
   }
   function mini(p) {
     return `<div class="mini" data-expand="${p.id}"><div class="mini__l"><b>${esc(p.business_name)}</b><small>${esc([p.instagram ? '@' + p.instagram : '', STATUS[p.status], p.next_followup_date ? '跟进 ' + p.next_followup_date : ''].filter(Boolean).join(' · '))}</small></div><div class="score ${scoreClass(p.score)}">${p.score}</div></div>${S.open[p.id] ? card(p, 'full') : ''}`;
@@ -235,7 +243,7 @@
   }
   function hideSentbar() { S.pending = ''; $('[data-sentbar]').hidden = true; const y = $('[data-sentbar-yes]'); y.disabled = false; y.innerHTML = svg('check', 16) + '已发送'; delete y.dataset.label; }
 
-  // ------------------------------------------------------------ rapid manual sending (one lead at a time; Junyu presses send in each app)
+  // ------------------------------------------------------------ rapid manual sending (one lead at a time; a person presses send in each app)
   const hasDirect = (p) => (p.whatsapp || p.email ? 1 : 0);
   function queueList() {
     const left = Math.max(0, (S.settings.dailyLimit || 10) - sentToday());

@@ -861,11 +861,11 @@ class Studio:
         return f"""<div class="chat" data-chat data-endpoint="/api/chat" data-dm="{e(ig['dm'])}">
   <button class="chat__fab" type="button" data-chat-open aria-label="Ask us anything">{icon('chat')}<span>Ask us anything</span></button>
   <section class="chat__panel" role="dialog" aria-label="Chat with Cartsmith's AI assistant" hidden>
-    <header class="chat__head"><div><strong>Cartsmith assistant</strong><small>AI · answers from our price list · Junyu takes over anytime</small></div><button class="chat__x" type="button" data-chat-close aria-label="Close">{icon('x')}</button></header>
+    <header class="chat__head"><div><strong>Cartsmith assistant</strong><small>AI · answers from our price list · a real person takes over anytime</small></div><button class="chat__x" type="button" data-chat-close aria-label="Close">{icon('x')}</button></header>
     <div class="chat__log" data-chat-log aria-live="polite"></div>
     <div class="chat__quick" data-chat-quick><button type="button">How much is a website?</button><button type="button">Do I need to leave Shopee?</button><button type="button">网站要多少钱？</button></div>
     <form class="chat__form" data-chat-form><label class="sr" for="chat-in">Message</label><textarea id="chat-in" rows="1" maxlength="800" placeholder="Type your question…" required></textarea><button class="s-btn s-btn--sm" type="submit">Send</button></form>
-    <p class="chat__fine">AI can make mistakes — prices and terms are confirmed by Junyu in writing. Don't share passwords or card details. <a href="{root}privacy.html#ai">Privacy</a></p>
+    <p class="chat__fine">AI can make mistakes — prices and terms are confirmed by the Cartsmith team in writing. Don't share passwords or card details. <a href="{root}privacy.html#ai">Privacy</a></p>
   </section>
 </div>
 <form name="ai-chat-lead" data-netlify="true" netlify-honeypot="bot-field" hidden>
@@ -1041,13 +1041,24 @@ LEAD_LANGS = ("zh", "en", "ms")
 def load_leads():
     """sales/leads/*.json → one list for the desk inbox (Claude Code's research, no copy-paste)."""
     folder = os.path.join(HERE, "..", "sales", "leads")
-    out, seen = [], set()
+    out, seen, updates = [], set(), []
+    email_ok = lambda v: re.match(r"^[^\s@<>]+@[^\s@<>]+\.[A-Za-z]{2,}$", v)
     if not os.path.isdir(folder):
         return out
     for name in sorted(os.listdir(folder)):
         if not name.endswith(".json") or name == "inbox.json":
             continue
         data = load_json(os.path.join(folder, name))
+        # "contacts": WhatsApp / Email found later for merchants already listed (fills only what is missing)
+        for c in data.get("contacts", []):
+            cid, wa, em, src = (str(c.get(k, "")).strip() for k in ("id", "whatsapp", "email", "contact_source"))
+            if not cid or not (wa or em) or not src:
+                raise SystemExit("sales/leads/%s: contact update %r needs id, whatsapp or email, and contact_source" % (name, cid))
+            if em and not email_ok(em):
+                raise SystemExit("sales/leads/%s: %s email looks wrong: %s" % (name, cid, em))
+            if wa and not 9 <= len(re.sub(r"\D", "", wa)) <= 15:
+                raise SystemExit("sales/leads/%s: %s WhatsApp number looks wrong: %s" % (name, cid, wa))
+            updates.append((name, cid, wa, em, src))
         for lead in data.get("leads", []):
             missing = [k for k in LEAD_KEYS if not str(lead.get(k, "")).strip()]
             if missing:
@@ -1057,7 +1068,7 @@ def load_leads():
             if lead.get("language") and lead["language"] not in LEAD_LANGS:
                 raise SystemExit("sales/leads/%s: %s language must be zh / en / ms" % (name, lead["id"]))
             email = str(lead.get("email", "")).strip()
-            if email and not re.match(r"^[^\s@<>]+@[^\s@<>]+\.[A-Za-z]{2,}$", email):
+            if email and not email_ok(email):
                 raise SystemExit("sales/leads/%s: %s email looks wrong: %s" % (name, lead["id"], email))
             seen.add(lead["id"])
             ig = str(lead.get("instagram", "")).strip().lstrip("@")
@@ -1072,6 +1083,22 @@ def load_leads():
                 "priority": lead.get("priority", ""), "why": lead.get("why", ""), "verify": lead.get("verify", ""),
                 "batch": data.get("batch", name[:-5]), "input": lead["input"].strip()[:3000],
             })
+    by_id = {l["id"]: l for l in out}
+    for name, cid, wa, em, src in updates:
+        l = by_id.get(cid)
+        if not l:
+            print("  sales/leads/%s: contact update for %s skipped (not in the inbox)" % (name, cid))
+            continue
+        filled = []
+        if wa and not l["whatsapp"]:
+            l["whatsapp"] = wa
+            filled.append("WhatsApp")
+        if em and not l["email"]:
+            l["email"] = em
+            filled.append("Email")
+        if filled:
+            l["contact_source"] = "；".join(x for x in (l["contact_source"], src) if x)
+            print("  sales/leads/%s: %s + %s" % (name, cid, " / ".join(filled)))
     return out
 
 

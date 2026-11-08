@@ -62,6 +62,7 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
   const it = doc.items.find((x) => x.id === 'p001');
   ok(it.status === 'contacted' && it.touches === 1 && !!it.next_followup_date, `stored: contacted, touches 1, follow-up ${it.next_followup_date}`);
   it.next_followup_date = '2000-01-01';
+  it.last_channel = 'ig'; it.channels = ['ig']; it.whatsapp = it.whatsapp || '60123456789';
   fs.writeFileSync(STORE, JSON.stringify(doc));
   await p.reload();
   await p.waitForSelector('#c-p001 [data-act="followup"]');
@@ -69,6 +70,9 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
   await p.click('#c-p001 [data-act="followup"]');
   await p.waitForSelector('#c-p001 textarea[data-field="followup"]');
   ok(true, 'AI follow-up drafted');
+  const firstCh = await p.getAttribute('#c-p001 .send__btns button:first-child', 'data-act');
+  const hint = await p.textContent('#c-p001 [data-send-hint]');
+  ok(firstCh === 'wa' && /上次用 Instagram/.test(hint) && /换 WhatsApp/.test(hint), 'follow-up suggests a channel they have not seen yet (WhatsApp first after an IG message)');
   await p.click('#c-p001 [data-act="sent"]');
   await p.waitForTimeout(500);
 

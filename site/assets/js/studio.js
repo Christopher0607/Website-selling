@@ -93,7 +93,7 @@
     log.innerHTML = '';
     bubble('bot', 'Hi! I’m Cartsmith’s AI assistant. Ask me about prices, the 6 templates, timelines or how it works — in English, 中文 or Bahasa Malaysia.');
     state.msgs.forEach((m) => bubble(m.role === 'user' ? 'me' : 'bot', m.content));
-    if (state.lead) bubble('note', '✓ Your details were sent to Junyu. He’ll reply on Instagram within 1 working day.');
+    if (state.lead) bubble('note', '✓ Your details were sent to the Cartsmith team. We’ll reply on Instagram within 1 working day.');
     quick.hidden = state.msgs.length > 0;
   }
   function openChat() {
@@ -108,7 +108,7 @@
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !panel.hidden) closeChat(); });
 
   function offline() {
-    bubble('note', 'The AI assistant isn’t available right now. Please message Junyu on Instagram — <a href="' + esc(dm) + '" target="_blank" rel="noopener">open Instagram DM</a>.', true);
+    bubble('note', 'The AI assistant isn’t available right now. Please message the Cartsmith team on Instagram — <a href="' + esc(dm) + '" target="_blank" rel="noopener">open Instagram DM</a>.', true);
   }
   function saveLead(lead) {
     if (state.lead) return;
@@ -119,7 +119,7 @@
     }).then(() => {
       state.lead = true;
       store.set(KEY, state);
-      bubble('note', '✓ Sent to Junyu. He’ll reply on Instagram within 1 working day.');
+      bubble('note', '✓ Sent to the Cartsmith team. We’ll reply on Instagram within 1 working day.');
     }).catch(() => {
       bubble('note', 'Couldn’t save your details automatically — please <a href="' + esc(dm) + '" target="_blank" rel="noopener">DM us on Instagram</a> so we don’t miss you.', true);
     });
@@ -147,7 +147,7 @@
         store.set(KEY, state);
         bubble('bot', j.reply);
         if (j.lead_ready && j.lead && j.lead.name && (j.lead.instagram || j.lead.contact || j.lead.shop_url)) saveLead(j.lead);
-        if (j.handoff) bubble('note', 'For this one, Junyu will help you directly — <a href="' + esc(dm) + '" target="_blank" rel="noopener">message him on Instagram</a>.', true);
+        if (j.handoff) bubble('note', 'For this one, the Cartsmith team will help you directly — <a href="' + esc(dm) + '" target="_blank" rel="noopener">message us on Instagram</a>.', true);
       })
       .catch(() => { typing.remove(); state.msgs.pop(); store.set(KEY, state); offline(); })
       .finally(() => { busy = false; });

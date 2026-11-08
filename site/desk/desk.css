@@ -115,6 +115,7 @@ main { padding: 16px; max-width: 720px; margin: 0 auto; }
 .msg textarea { min-height: 128px; font-size: .93rem; line-height: 1.55; background: #fcfcfb; }
 .send { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .send__label { font-size: .76rem; font-weight: 600; color: var(--muted); }
+.send__hint { margin: 8px 0 0; font-size: .8rem; color: var(--muted); }
 .send__btns { display: flex; flex-wrap: wrap; gap: 8px; flex: 1; }
 .send__btns .btn { flex: 1 1 auto; }
 .ch--wa { background: var(--wa); border-color: var(--wa); }
