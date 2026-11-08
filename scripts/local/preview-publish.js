@@ -183,7 +183,7 @@ async function deskNote(code) {
   doc.previews = (doc.previews || []).filter((x) => x.slug !== rec.slug && x.code !== code);
   doc.previews.push({ code, slug: rec.slug, url: rec.url, delete_by: rec.delete_by || p.cfg.delete_by || '', lead_id: p.cfg.lead_id || '', instagram: String(p.cfg.instagram || '').replace(/^@/, ''), name: (p.cfg.brand && p.cfg.brand.name) || '', photos: p.cfg.photos || '', enc });
   fs.writeFileSync(NOTES, JSON.stringify(doc, null, 1) + '\n');
-  console.log(`工作台备注写好了：sales/leads/previews.json（${code}）。commit + push 到 leads 分支后，工作台 5 分钟内在那张卡显示网址和密码。`);
+  console.log(`工作台备注写好了：sales/leads/previews.json（${code}）。接着跑 python3 site/build.py（工作台从 inbox.json 读样板），把 sales/leads/previews.json 和 sales/leads/inbox.json 一起 commit + push 到 leads 分支，工作台 5 分钟内在那张卡显示网址和密码。`);
 }
 function dropNote(code) {
   if (!fs.existsSync(NOTES)) return;

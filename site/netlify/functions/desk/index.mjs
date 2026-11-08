@@ -284,9 +284,9 @@ function allPreviews() {
   return [...bySlug.values()];
 }
 const PVMSG = {
-  zh: (n, u, pw, d) => `你好，我是 Cartsmith Studio。我们在网上看到 ${n}，用你们的店名和产品做了一个免费的网上订购首页样板，给你参考：\n${u}\n密码：${pw}\n\n用手机打开就可以看。照片是示意图，正式网站会用你们自己的照片。样板只给你看，${d} 会删除；不用钱，也不用马上决定。有兴趣的话回复这里就好。\n\n— Cartsmith Studio`,
-  en: (n, u, pw, d) => `Hi, this is Cartsmith Studio. We came across ${n} and made a free sample online-ordering homepage with your name and products:\n${u}\nPassword: ${pw}\n\nIt opens best on your phone. The photos are placeholders; a real site would use your own. It's private to you and will be deleted on ${d}, with no cost and no obligation. If you'd like to talk about it, just reply here.\n\n— Cartsmith Studio`,
-  ms: (n, u, pw, d) => `Hai, ini Cartsmith Studio. Kami nampak ${n} dan buatkan contoh laman utama tempahan online percuma dengan nama dan produk anda:\n${u}\nKata laluan: ${pw}\n\nBuka di telefon untuk tengok. Gambar hanya contoh; laman sebenar akan guna gambar anda sendiri. Ia hanya untuk anda dan akan dipadam pada ${d}, tiada bayaran dan tiada komitmen. Kalau berminat, balas sahaja di sini.\n\n— Cartsmith Studio`,
+  zh: (n, u, pw, d) => `你好，我是 Cartsmith Studio。我们在网上看到 ${n}，用你们的店名和产品做了一个免费的网上订购首页样板，给你参考：\n${u}\n密码：${pw}\n\n用手机打开就可以看。照片和运费等细节是示意，正式网站会照你们的照片和做法改。样板只给你看，${d} 会删除；不用钱，也不用马上决定。有兴趣的话回复这里就好。\n\n— Cartsmith Studio`,
+  en: (n, u, pw, d) => `Hi, this is Cartsmith Studio. We came across ${n} and made a free sample online-ordering homepage with your name and products:\n${u}\nPassword: ${pw}\n\nIt opens best on your phone. Photos and details like shipping are placeholders; a real site would use your own photos and policies. It's private to you and will be deleted on ${d}, with no cost and no obligation. If you'd like to talk about it, just reply here.\n\n— Cartsmith Studio`,
+  ms: (n, u, pw, d) => `Hai, ini Cartsmith Studio. Kami nampak ${n} dan buatkan contoh laman utama tempahan online percuma dengan nama dan produk anda:\n${u}\nKata laluan: ${pw}\n\nBuka di telefon untuk tengok. Gambar dan butiran seperti penghantaran hanya contoh; laman sebenar akan ikut gambar dan cara anda. Ia hanya untuk anda dan akan dipadam pada ${d}, tiada bayaran dan tiada komitmen. Kalau berminat, balas sahaja di sini.\n\n— Cartsmith Studio`,
 };
 async function applyPreviews(doc, list) {
   if (!list.length) return false;
