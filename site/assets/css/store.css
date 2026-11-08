@@ -464,6 +464,16 @@ p { margin: 0 0 1em; }
 /* chat fab + toast */
 .chat-fab { position: fixed; right: 18px; bottom: 18px; z-index: 45; display: inline-flex; align-items: center; gap: 8px; height: 52px; padding: 0 20px 0 16px; border: 0; border-radius: 26px; background: var(--accent); color: var(--accent-fg); font-weight: 700; box-shadow: 0 8px 24px rgba(0,0,0,.2); cursor: pointer; transition: bottom .3s; }
 .has-sticky .chat-fab { bottom: 92px; }
+.page-cart .chat-fab, .page-checkout .chat-fab { display: none; } /* it sat on top of form fields on tablets; checkout needs no distraction */
+@media (min-width: 601px) and (max-width: 1599px) {
+  /* round icon button: the wide "Chat" pill covered the last product's "Add to cart" on laptop screens */
+  .chat-fab { width: 52px; padding: 0; justify-content: center; }
+  .chat-fab span { display: none; }
+}
+@media (max-width: 860px) {
+  .chat-fab { transition: bottom .3s, opacity .2s; }
+  .atc-in-view .chat-fab { opacity: 0; pointer-events: none; } /* it covered the corner of "Add to cart" on phones */
+}
 .toast { position: fixed; left: 50%; bottom: 24px; z-index: 100; transform: translate(-50%, 140%); visibility: hidden; opacity: 0; background: #111; color: #fff; padding: 14px 18px; border-radius: 12px; max-width: min(460px, calc(100vw - 32px)); font-size: .92rem; box-shadow: 0 10px 30px rgba(0,0,0,.3); transition: transform .3s; pointer-events: none; }
 .toast.is-on { transform: translate(-50%, 0); visibility: visible; opacity: 1; }
 .has-sticky .toast { bottom: 96px; }
@@ -523,6 +533,7 @@ p { margin: 0 0 1em; }
   .f3 label:last-child { grid-column: 1 / -1; }
   .f2 { grid-template-columns: 1fr; }
   .nl { flex-direction: column; }
+  .nl input { flex: none; width: 100%; } /* flex:1 in a column squashed the field to ~22px tall */
   .nl .btn { width: 100%; }
   .buy__row .qty { height: 52px; }
   .tbl th, .tbl td { padding: 12px 14px; }

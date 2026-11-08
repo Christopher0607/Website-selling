@@ -273,6 +273,7 @@
         sticky.classList.toggle('is-on', on);
         sticky.setAttribute('aria-hidden', on ? 'false' : 'true');
         document.body.classList.toggle('has-sticky', on);
+        document.body.classList.toggle('atc-in-view', mq.matches && e.isIntersecting); // phones: chat button stays off the buy buttons
       }).observe(atc);
       $('[data-sticky-add]', sticky).addEventListener('click', () => add(id, sel(), parseInt(qty.value, 10) || 1));
     }
