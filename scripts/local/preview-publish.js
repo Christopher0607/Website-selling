@@ -108,6 +108,11 @@ function encryptSite(p, out) {
       let h = fs.readFileSync(f, 'utf8');
       // inline the product data (names / prices) so it is encrypted with the page
       h = h.replace(/<script src="((?:\.\.\/)*)data\.js"[^>]*><\/script>/, (m, up) => `<script>${fs.readFileSync(path.join(p.site, 'data.js'), 'utf8').replace(/<\/script/gi, '<\\/script')}</script>`);
+      // the page is put in with document.write, where browsers do not reliably run `defer` scripts (store.js sometimes
+      // never ran, so "Add to cart" did nothing): move them to the end of <body> as normal scripts, same order
+      const late = [];
+      h = h.replace(/<script\b([^>]*?)\s+defer\b([^>]*)><\/script>\s*/gi, (m, a, b) => { late.push(`<script${a}${b}></script>`); return ''; });
+      if (late.length) h = h.replace(/<\/body>/i, late.join('') + '</body>');
       // no request for the (unpublished) original photos; the runtime fills them in
       h = h.replace(/(<img\b[^>]*?)\ssrc="([^"]*img\/[^"]+)"/gi, '$1 data-pv-src="$2"');
       const { iv, ct } = seal(key, Buffer.from(h, 'utf8'));
