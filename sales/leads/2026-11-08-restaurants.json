@@ -1,0 +1,90 @@
+{
+  "batch": "2026-11-08 每日餐厅",
+  "source": "sales/leads/2026-11-08-restaurants.json（每日定时任务，第一次测试执行；来源网址写在每家的 input 里）",
+  "leads": [
+    {
+      "id": "r20261108-roost-kl",
+      "name": "Roost KL",
+      "instagram": "roostkl",
+      "store_url": "",
+      "language": "en",
+      "template": "chili-pantry",
+      "priority": "A",
+      "why": "孟沙 Telawi 开了 10 年左右的独立西餐厅，圣诞烤羊肩 / 烤全鸭外卖套餐 RM359–398，现在只能打电话订，roostkl.com 已经打不开。",
+      "verify": "先看 IG 今年有没有圣诞外卖套餐的帖子，以及简介里是不是还放着 roostkl.com 这个打不开的链接。",
+      "input": "What they sell / Location: Independent modern European restaurant (farm-to-fork), 69-1 Jalan Telawi 3, Bangsar Baru, KL. Festive takeaway roasts every Christmas.\nSignals: Running since at least 2014 (Eat Drink KL covered Roost in Nov 2014). Listed by Tatler Dining. In SAYS' Christmas 2025 list (pre-order Angus tomahawk or beef short rib).\nBudget signal: Vulcan Post Dec 2023 Christmas takeaway: roasted boneless lamb shoulder (3–5 pax) RM398+, roasted stuffed whole duck (3–5 pax) RM359+, delivery anywhere in Peninsular Malaysia via Grab Express.\nWebsite check: (a) check-domains.sh roostkl → roostkl.com returns a Wix 'ConnectYourDomain Error' page (domain points to Wix but no live site); roost.my is for sale (not theirs); roostbangsar NONE. (b) Searched 'Roost KL order online' / 'website': only phone ordering (+603-2201 1710), no web shop, no Beepit/Oddle/StoreHub found. (c) No other brand by the owners found in coverage.\nObservation: SAYS (Christmas 2025 roundup) lists Roost for pre-order Angus tomahawk / beef short rib; Vulcan Post (Dec 2023) lists the lamb shoulder and whole duck sets, ordered by phone with 3 days' notice.\nAngle: Festive roast pre-order page (choose set, delivery date, pay deposit) instead of phone calls; year-round 'roast at home' sets and gift vouchers. A friendly note that roostkl.com currently shows an error page.\nSources: https://says.com/my/eats/restaurants-in-klang-valley-to-celebrate-christmas-2025 ; https://vulcanpost.com/847559/restaurants-klang-valley-christmas-takeaway-set-2023 ; https://www.eatdrinkkl.com/posts/snapshot/roost-jaslyn-cakes-telawi-bangsar ; https://www.pressreader.com/malaysia/tatler-dining-malaysia/20200101/284618899379002"
+    },
+    {
+      "id": "r20261108-good-blue-men",
+      "name": "Good Blue Men",
+      "instagram": "goodbluemen",
+      "store_url": "",
+      "language": "en",
+      "template": "lowlight",
+      "priority": "A",
+      "why": "PJ Section 17 Happy Mansion 开了 8 年多的咖啡馆，Tatler 推荐过；2025 圣诞烤鸡分享套餐 RM149，只能打电话或 IG 私信订。",
+      "verify": "看 IG 今年圣诞有没有再做烤鸡套餐，确认简介里没有网上下单链接。",
+      "input": "What they sell / Location: Independent café, AG-01 Block A, Happy Mansion, Jalan 17/13, Section 17, Petaling Jaya. Sandwiches (kam heong chicken), rice bowls, pasta; seasonal Christmas roast sets for takeaway.\nSignals: Open since at least 2017 (blog reviews Aug 2017); featured in Tatler Asia's Happy Mansion guide (updated Mar 2023); in TheSmartLocal's Christmas takeaway list (13 Dec 2025).\nBudget signal: Christmas 2025 Sharing Feast RM149 (whole roast chicken, truffle garlic mash, salad, garlic bread, gravy; up to 4 pax) and Roast Chicken set RM99.\nWebsite check: (a) check-domains.sh goodbluemen / goodbluemencafe / goodbluemenmy → all NONE. (b) Searched 'Good Blue Men order online' and 'website': no own site or web shop; TheSmartLocal says orders are by call/message (012-238 5212) or Instagram DM. (c) No other brand by the founders found.\nObservation: TheSmartLocal (Dec 2025) lists their Christmas Sharing Feast at RM149, ordering window 15–31 Dec, by phone or IG DM only.\nAngle: Festive set pre-orders with pick-up slots and online payment; office lunch / catering orders for Section 17 offices; gift cards.\nSources: https://thesmartlocal.my/christmas-takeaways/ ; https://www.tatlerasia.com/dining/food/where-what-to-eat-happy-mansion-in-section-17-pj ; https://amandalynworld.blogspot.com/2017/08/good-blue-men-cafe-section-17-happy.html"
+    },
+    {
+      "id": "r20261108-rata-subang",
+      "name": "RATA Restaurant",
+      "instagram": "rata_subang",
+      "store_url": "",
+      "language": "en",
+      "template": "chili-pantry",
+      "priority": "A",
+      "why": "SS15 梳邦的现代马来西亚菜餐厅（The Star、Tatler 都写过），2025 圣诞慢烤新西兰羊腿套餐 RM199/kg，只能打电话订。",
+      "verify": "看 IG 最近还有发文、今年有没有圣诞羊腿；rata.com.my 是别人的空目录，不是他们的。",
+      "input": "What they sell / Location: Independent restaurant, 25 Jalan SS 15/5A, Subang Jaya. Modern Malaysian dishes with a twist (lamb ragout & mango chutney pizza, coconut lamb skewers, spicy lamb linguine). Festive lamb roasts for takeaway.\nSignals: Reviewed by The Star (Feb 2019) and Eat Drink KL (2018); listed in Tatler Asia's Subang Jaya guide; in TheSmartLocal's Christmas takeaway list (13 Dec 2025).\nBudget signal: Christmas 2025 slow-roasted boneless New Zealand leg of lamb set RM199/kg with sides (up to 4 pax).\nWebsite check: (a) check-domains.sh ratasubang / ratass15 → NONE; rata.com (US company), rata.com.my ('Index of /', not theirs), ratarestaurant.com (Queenstown, NZ) are other businesses. (b) Searched 'RATA restaurant Subang' order online / website: no own site or web shop found; TheSmartLocal says orders are by call/message (012-424 1194). (c) No other brand by the owners found.\nObservation: TheSmartLocal (Dec 2025): lamb leg set RM199/kg, orders from 24 Nov by phone. The Star (2019) called it 'where Malaysian food gets a modern, innovative twist'.\nAngle: Festive lamb pre-order page with deposit; 'RATA at home' frozen lamb ragout / marinated skewers; party trays for Subang families.\nSources: https://thesmartlocal.my/christmas-takeaways/ ; https://www.thestar.com.my/lifestyle/food/2019/02/19/rata-subang-restaurant-review ; https://www.tatlerasia.com/dining/food/where-to-eat-subang-jaya ; https://www.eatdrinkkl.com/posts/spotlight/rata-ss15-subang"
+    },
+    {
+      "id": "r20261108-fluffed",
+      "name": "Fluffed Café & Dessert Bar",
+      "instagram": "fluffedcafe",
+      "store_url": "",
+      "language": "en",
+      "template": "chili-pantry",
+      "priority": "A",
+      "why": "PJ 开了 10 年的窝夫甜点店，2025 年再开新店；农历新年 6 寸戚风蛋糕 RM168 只接预订，fluffedcafe.com 停在「Coming Soon」。",
+      "verify": "看 IG 现在有几家分店、蛋糕是不是还只靠 IG 私信预订；确认 fluffedcafe.com 还是「Coming Soon」。",
+      "input": "What they sell / Location: Independent dessert café known for waffles; outlets at Taman Paramount (since ~2016) and 28 Jalan PJS 8/4, Sunway Mentari, PJ; Malay Mail (Aug 2025) reports the founding duo (also behind Flurr) opened a new heritage café in Petaling Street. Pre-order celebration cakes.\nSignals: Running about 10 years (Bangsar Babe review Mar 2016); Time Out listing; Malay Mail feature Aug 2025; TheSmartLocal CNY 2026 pastry list (10 Feb 2026).\nBudget signal: 'Pearl of Orient' 6-inch chiffon cake RM168 (pre-order only); Nian Gao Prosperity Waffle RM33 (TheSmartLocal, Feb 2026).\nWebsite check: (a) check-domains.sh fluffedcafe → fluffedcafe.com is a Squarespace 'Coming Soon' page (EXPIRED); fluffed.com parked (not theirs); fluffedkl / fluffedmy NONE. (b) Searched 'Fluffed cafe order' / 'website': no web shop found; TheSmartLocal says cake is pre-order via Instagram. (c) Sister brand Flurr: flurrcafe / flurrkl NONE, flurr.com is an unrelated smart-home company; no Flurr website found.\nObservation: TheSmartLocal (Feb 2026) lists their CNY chiffon cake at RM168, pre-order only, contact via Instagram; Malay Mail (Aug 2025) profiled the duo building Fluffed and Flurr 'one waffle at a time'.\nAngle: Cake pre-order site (size, flavour, pick-up outlet and date, lead time), festive cake drops (CNY, Mid-Autumn, Christmas), and one site covering all their outlets/brands. Their own domain is already reserved but empty.\nSources: https://thesmartlocal.my/chinese-new-year-pastries/ ; https://www.malaymail.com/news/eat-drink/2025/08/05/with-a-new-heritage-cafe-in-petaling-street-heres-how-the-duo-behind-fluffed-and-flurr-built-their-sweet-dreams-one-waffle-at-a-time/186453 ; https://www.timeout.com/kuala-lumpur/restaurants/fluffed-cafe-dessert-bar ; https://www.bangsarbabe.com/2016/03/fluffed-cafe-dessert-bar-taman-paramount.html"
+    },
+    {
+      "id": "r20261108-pik-wah",
+      "name": "Restoran Pik Wah",
+      "instagram": "",
+      "store_url": "",
+      "language": "zh",
+      "template": "chili-pantry",
+      "priority": "A",
+      "why": "1971 年开的粤菜老字号（Chinwoo 体育馆内），2024–2025 米其林必比登；2026 农历新年 10 人团圆套餐 RM1,488，只靠电话和 Facebook。",
+      "verify": "先在 IG 搜到帐号（报道只给了 Facebook：facebook.com/pikwah1971）；pikwah.com 是 2026 年 6 月才出现的空白 WordPress，问一句是不是已经有人在帮他们做网站。",
+      "input": "What they sell / Location: Independent old-school Cantonese restaurant, Lot 352 Seksyen 56, Stadium Chinwoo, Jalan Hang Jebat, KL. Signature: crispy onion meat slices with vinegar sauce, steamed fish in superior soy, Loongtun fish head soup. CNY reunion set menus.\nSignals: Established 1971 (moved from Jaya Shopping Centre PJ → MABA building → Chinwoo Stadium). Michelin Bib Gourmand 2024 and 2025 (dropped from the Bib list in the 2026 edition, Malay Mail Nov 2025). Options/The Edge feature (Jan–Feb 2025).\nBudget signal: CNY 2026 Set A RM1,488 for 10 pax incl. red wine (TheSmartLocal, 13 Feb 2026).\nWebsite check: (a) check-domains.sh pikwahrestaurant / pikwah1971 → NONE; pikwah.com shows a blank default WordPress (title 'XXXX', sample post dated 16 Jun 2026) — not a working site, possibly someone just started one. (b) Searched 'Restoran Pik Wah order online takeaway': no web shop, no GrabFood/foodpanda listing found; Options lists only Facebook and phone (03-2072 3668). (c) No other brand found.\nObservation: Options (Feb 2025): 'has earned trust across several generations'; TheSmartLocal (Feb 2026): CNY sets ordered by call/message or Facebook DM.\nAngle: CNY / reunion set pre-orders with deposit, takeaway signature dishes, private-event booking; bilingual site for the older regulars and their kids.\nSources: https://thesmartlocal.my/cny-reunion-dinners/ ; https://www.optionstheedge.com/node/4302 ; https://guide.michelin.com/en/kuala-lumpur-region/kuala-lumpur/restaurant/restoran-pik-wah ; https://malaymail.com/news/eat-drink/2025/11/11/michelin-guide-kuala-lumpur-and-penang-2026-bib-gourmand-list-has-five-new-entrants-three-dropped/198038"
+    },
+    {
+      "id": "r20261108-leens-middle-east-kitchen",
+      "name": "Leen's Middle East Kitchen",
+      "instagram": "",
+      "store_url": "",
+      "language": "en",
+      "template": "chili-pantry",
+      "priority": "A",
+      "why": "TTDI 叙利亚菜，2025 米其林必比登；主菜 RM48–58，卖过外带鹰嘴豆泥罐（RM30），老板另开了 S.A.J Bistronomy，两家都没网站。",
+      "verify": "先在 IG 搜到帐号；确认现在还卖外带鹰嘴豆泥 / 有没有接派对外烩。",
+      "input": "What they sell / Location: Independent contemporary Syrian restaurant, 136 Jalan Burhanuddin Helmi, Taman Tun Dr Ismail, KL. Chef-owner Ameer Alzalek. Started as a delivery business during the pandemic; sold take-home hummus jars.\nSignals: Michelin Bib Gourmand (new in the 2025 edition). Options/The Edge review (Jan 2023), Malay Mail (Mar 2023), Tatler. Chef opened a second venue, S.A.J Bistronomy by Leen's (Robb Report, Feb 2024).\nBudget signal: Options (2023): smoked hummus RM28, lamb kebab RM48, grilled chicken RM58, 'nothing priced above RM78' → about RM40+ per person. Take-home hummus jar with 4 Arabic breads RM30 (2023).\nWebsite check: (a) check-domains.sh leenskl / leensmy / leensmiddleeastkitchen / leenskitchen → NONE; leens.com is an unrelated Dubai restaurant. (b) Searched 'Leen's TTDI order online' / 'catering website': no own site or web shop found; reservations by phone 011-7020 7551. (c) Sister venue S.A.J Bistronomy: sajbistronomy NONE (saj.com.my is a government page, not theirs).\nObservation: Options (Jan 2023) 'crowd-pleasing Syrian cuisine builds up loyal following'; Michelin added it as a Bib Gourmand in the 2025 guide.\nAngle: Mezze platters / party catering orders, take-home hummus & dips, gift vouchers, one site for Leen's + S.A.J with booking links.\nSources: https://www.optionstheedge.com/node/3219 ; https://www.malaymail.com/news/eat-drink/2024/11/14/michelin-guide-kuala-lumpur-and-penang-2025-12-new-entries-for-the-bib-gourmand-list/156836 ; https://www.themalaysianinsight.com/s/424241 ; https://robbreport.com.my/2024/02/07/chef-ameer-alzalek-middle-eastern-cuisine-saj-bistronomy-by-leens"
+    },
+    {
+      "id": "r20261108-naj-belle",
+      "name": "Naj & Belle",
+      "instagram": "najnbelle",
+      "store_url": "",
+      "language": "en",
+      "template": "chili-pantry",
+      "priority": "A",
+      "why": "SS15 起家、现在开到孟沙 Jalan Tandok 的餐厅咖啡馆，2025 圣诞做堂食 + 外带菜单（每道 RM40–56），只放在 IG。",
+      "verify": "看 IG 现在有几家分店、今年有没有圣诞外带；确认简介没有网上下单链接（2018 年的评论提过一个网站，现在打不开）。",
+      "input": "What they sell / Location: Independent café-restaurant; started in SS15 Courtyard, Subang Jaya (reviewed 2018), later KL East Mall, now Jalan Tandok, Bangsar. Fusion comfort food; festive potluck-style menu for dine-in and takeaway.\nSignals: Operating since at least 2018 (Discover KL review Aug 2018); SAYS Christmas 2025 roundup plus a dedicated SAYS story on their Christmas 2025 menu; Malaysian Foodie feature (Sep 2025).\nBudget signal: Christmas 2025 menu: smoked spring chicken RM56, Swedish meatballs RM45, miso capellini with scallops RM45, beef pot pie RM40 (each 1–2 pax) → about RM40+ per person.\nWebsite check: (a) check-domains.sh najnbelle / najandbelle / najnbellemy → all NONE (a 2018 review mentioned a website; it no longer resolves). (b) Searched 'Naj & Belle Bangsar order online' / 'website': no web shop found; SAYS only points to Instagram @najnbelle. (c) No other brand by the owners found.\nObservation: SAYS (Nov 2025) 'Naj & Belle Bangsar's Christmas menu brings homely festive flavours in a small, easygoing menu', available from 20 Nov for dine-in and takeaway.\nAngle: Festive takeaway pre-orders (pick date, pay online), party trays, a simple menu + location site replacing the dead old domain.\nSources: https://says.com/my/lifestyle/eats/naj-and-belle-christmas-2025 ; https://says.com/my/eats/restaurants-in-klang-valley-to-celebrate-christmas-2025 ; https://www.malaysianfoodie.com/2025/09/naj-belle-where-local-traditions-meet-modern-indulgence.html ; https://discoverkl.com/2018/08/09/naj-belle-ss15-subang-jaya-food-review"
+    }
+  ]
+}
