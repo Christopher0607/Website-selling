@@ -1,0 +1,63 @@
+/* Lowlight Roasters — dark & premium */
+:root {
+  --bg: #12100e; --fg: #f3ece4; --muted: #a89c90; --accent: #d9a35b; --accent-fg: #12100e;
+  --card: transparent; --line: #2e2925; --soft: #1b1815; --img-bg: #201c18; --sale: #ff8a65;
+  --radius: 4px; --radius-sm: 3px; --btn-radius: 2px;
+  --font-head: "Playfair Display", Georgia, serif; --font-body: "Inter", system-ui, sans-serif;
+  --head-weight: 500; --head-ls: -0.01em;
+  --hdr-bg: rgba(18, 16, 14, .9); --ann-bg: #d9a35b; --ann-fg: #12100e;
+  --ftr-bg: #0c0b0a; --ftr-fg: #f3ece4; --ftr-muted: #8f847a;
+  --shadow: 0 10px 30px rgba(0,0,0,.4);
+}
+.hdr { backdrop-filter: blur(10px); }
+.logo__txt { font-weight: 500; font-size: 1.75rem; letter-spacing: .01em; font-style: italic; }
+.logo__mark { color: var(--accent); }
+.hdr__nav a { text-transform: uppercase; font-size: .76rem; letter-spacing: .16em; }
+.eyebrow { letter-spacing: .22em; font-weight: 500; }
+.hero--center { align-items: center; text-align: center; min-height: min(88vh, 820px); }
+.hero--center .hero__content { padding-top: 80px; padding-bottom: 80px; }
+.hero--center .hero__inner { margin: 0 auto; max-width: 760px; }
+.hero--center .hero__lead { margin: 0 auto; }
+.hero--center .btns { justify-content: center; }
+.hero--center .hero__media::after { background: radial-gradient(ellipse at center, rgba(18,16,14,.55), rgba(18,16,14,.85)); }
+.hero--center .eyebrow { color: var(--accent); }
+.hero h1 { font-weight: 400; font-style: italic; font-size: clamp(2.8rem, 7vw, 6rem); }
+.btn { text-transform: uppercase; letter-spacing: .14em; font-size: .76rem; font-weight: 600; }
+.btn--lg { font-size: .8rem; }
+.hero--cover .btn--ghost { border-color: rgba(243,236,228,.6); }
+.btn--ghost { color: var(--fg); }
+.btn--ghost:hover { background: var(--fg); color: var(--bg); }
+.hdr .icon-btn:hover { background: rgba(255,255,255,.08); }
+.sec__head { flex-direction: column; align-items: center; text-align: center; }
+.sec__head .sec__sub { margin-left: auto; margin-right: auto; }
+.sec__head h2 { font-style: italic; font-weight: 400; }
+.card__media { border: 1px solid var(--line); }
+.card__title { font-family: var(--font-head); font-size: 1.25rem; font-weight: 500; }
+.card__cat { color: var(--accent); }
+.card .btn--sm { background: transparent; color: var(--fg); border-color: var(--line); }
+.card .btn--sm:hover { border-color: var(--accent); color: var(--accent); background: transparent; }
+.badge { background: transparent; color: var(--accent); border: 1px solid var(--accent); backdrop-filter: blur(4px); background: rgba(18,16,14,.6); }
+.split__txt p { color: var(--muted); }
+.split h2 { font-style: italic; font-weight: 400; font-size: clamp(2rem, 3.6vw, 3rem); }
+.statement { font-style: italic; font-weight: 400; color: var(--accent); }
+.band--img > img { opacity: .35; }
+.band .btn { background: var(--accent); border-color: var(--accent); color: #12100e; }
+.trust .i { color: var(--accent); }
+.sec--trust { border-color: var(--line); }
+.chip.is-on { background: var(--accent); color: #12100e; border-color: var(--accent); }
+.opt__v input:checked + span { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.thumb.is-on { border-color: var(--accent); }
+.co-form input, .co-form select, .coupon input, .nl input, .sort select { background: #1b1815; border-color: var(--line); color: var(--fg); }
+.summary, .order-box, .demo-note, .shipbar, .nlbox { background: #1b1815; }
+.tbl thead th { background: #1b1815; }
+.drawer__panel { background: #16130f; }
+.chat-fab { box-shadow: 0 8px 24px rgba(0,0,0,.5); }
+.toast { background: var(--fg); color: var(--bg); }
+.demo-bar { background: #000; }
+
+/* preview overrides */
+:root{--accent:#3d4a3d;--bg:#f6f4ef;--soft:#e9e5dc;}
+html.pv-locked body > *:not(.pv-gate){visibility:hidden}
+.pv-gate{display:none}
+html.pv-locked .pv-gate{display:grid;position:fixed;inset:0;z-index:999;place-items:center;background:var(--bg);visibility:visible}
+.pv-gate form{width:min(340px,90vw);text-align:center}.pv-gate input{width:100%;height:48px;margin:10px 0;border:1.5px solid var(--line);border-radius:10px;padding:0 14px}.pv-gate__t{font:700 1.4rem var(--font-head)}.pv-gate__err{color:#c0392b;margin-top:10px}
