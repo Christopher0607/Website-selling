@@ -242,7 +242,7 @@ class Store:
             if pv.get("_hash"):
                 gate = ("<script>(function(){var H='" + pv["_hash"] + "';try{if(localStorage.getItem('pv_'+H)==='1')return;}catch(e){}"
                         "document.documentElement.classList.add('pv-locked');window.__pvHash=H;})();</script>")
-            return (f'{gate}<div class="demo-bar"><div class="wrap demo-bar__in"><span class="demo-bar__txt"><b>Private mockup</b> for {e(pv["brand"]["name"])} · made by Cartsmith Studio · '
+            return (f'{gate}<div class="demo-bar demo-bar--pv"><div class="wrap demo-bar__in"><span class="demo-bar__txt"><b>Private mockup</b> for {e(pv["brand"]["name"])} · made by Cartsmith Studio · '
                     f'not a live store{" · photos are placeholders" if pv.get("photos") == "placeholder" else ""} · will be deleted by {e(pv["delete_by"])}</span>'
                     f'<span class="demo-bar__short">Private mockup{" · photos &amp; details are examples" if pv.get("photos") == "placeholder" else ""}</span><span class="demo-bar__links"><a class="demo-bar__cta" href="{e(self.studio_link(root, "index.html"))}">Cartsmith Studio {icon("arrow")}</a></span></div></div>')
         return (f'<div class="demo-bar"><div class="wrap demo-bar__in"><span class="demo-bar__txt"><b>Concept demo</b> · fictional brand by Cartsmith Studio · no real orders or payments</span>'
@@ -472,7 +472,7 @@ if(h===window.__pvHash){try{localStorage.setItem('pv_'+h,'1');}catch(e){}documen
         theme = open(os.path.join(self.dir, "theme.css"), encoding="utf-8").read()
         if self.pv:
             shutil.copytree(self.pv["_img"], dst_img, dirs_exist_ok=True)
-            theme += preview_css(self.pv)
+            theme += preview_css(self.pv, theme)
         write(f"{pre}theme.css", theme, self.out)
         # data.js
         data = {
@@ -751,15 +751,47 @@ def apply_preview(t, pv):
     t["returns"] = "Your own returns and exchange policy goes here. We'll draft it together during setup."
 
 
-def preview_css(pv):
-    c = pv["brand"].get("colors", {})
+def _lum(hexc):
+    h = hexc.lstrip("#")
+    h = "".join(c * 2 for c in h) if len(h) == 3 else h[:6]
+    ch = [int(h[i:i + 2], 16) / 255 for i in (0, 2, 4)]
+    ch = [c / 12.92 if c <= 0.03928 else ((c + 0.055) / 1.055) ** 2.4 for c in ch]
+    return 0.2126 * ch[0] + 0.7152 * ch[1] + 0.0722 * ch[2]
+
+
+def _contrast(a, b):
+    la, lb = sorted((_lum(a), _lum(b)), reverse=True)
+    return (la + 0.05) / (lb + 0.05)
+
+
+def preview_css(pv, theme=""):
+    """Brand colours for a mockup. Colours that would make text unreadable on this template
+    (e.g. a light background on a dark template) are dropped with a warning instead of applied."""
+    c = {k: v for k, v in pv["brand"].get("colors", {}).items() if isinstance(v, str) and re.match(r"^#[0-9a-fA-F]{3,8}$", v)}
+    base = dict(re.findall(r"--(bg|fg|accent|accent-fg|soft):\s*(#[0-9a-fA-F]{3,8})", theme.split("}", 1)[0]))
+    eff = lambda k, ck: c.get(ck, base.get(k))
+    dropped = []
+    if base.get("bg") and base.get("fg") and _contrast(eff("fg", "fg"), eff("bg", "bg")) < 4.5:
+        for k in ("bg", "soft", "fg"):
+            if c.pop(k, None):
+                dropped.append(k)
+    if eff("accent", "accent") and eff("bg", "bg") and _contrast(eff("accent", "accent"), eff("bg", "bg")) < 2.5:
+        if c.pop("accent", None):
+            dropped.append("accent")
+    if eff("accent", "accent") and eff("accent-fg", "accent_fg") and _contrast(eff("accent", "accent"), eff("accent-fg", "accent_fg")) < 3:
+        acc = eff("accent", "accent")
+        c["accent_fg"] = "#ffffff" if _contrast(acc, "#ffffff") >= _contrast(acc, "#111111") else "#111111"
+    if dropped:
+        print(f"⚠ 颜色 {', '.join(dropped)} 在模板 {pv['template']} 上会看不清，已改用模板原本的颜色")
     m = {"accent": "--accent", "accent_fg": "--accent-fg", "bg": "--bg", "fg": "--fg", "soft": "--soft"}
-    vars_ = "".join(f"{m[k]}:{v};" for k, v in c.items() if k in m and re.match(r"^#[0-9a-fA-F]{3,8}$", v))
+    vars_ = "".join(f"{m[k]}:{v};" for k, v in c.items() if k in m)
     return ("\n/* preview overrides */\n:root{" + vars_ + "}\n"
             "html.pv-locked body > *:not(.pv-gate){visibility:hidden}\n.pv-gate{display:none}\n"
             "html.pv-locked .pv-gate{display:grid;position:fixed;inset:0;z-index:999;place-items:center;background:var(--bg);visibility:visible}\n"
             ".pv-gate form{width:min(340px,90vw);text-align:center}.pv-gate input{width:100%;height:48px;margin:10px 0;border:1.5px solid var(--line);border-radius:10px;padding:0 14px}"
-            ".pv-gate__t{font:700 1.4rem var(--font-head)}.pv-gate__err{color:#c0392b;margin-top:10px}\n")
+            ".pv-gate__t{font:700 1.4rem var(--font-head)}.pv-gate__err{color:#c0392b;margin-top:10px}\n"
+            # stock photos are random: keep hero text readable whatever the picture
+            ".hero--cover .hero__media::after{background:linear-gradient(180deg,rgba(0,0,0,.35),rgba(0,0,0,.65))}\n")
 
 
 def build_preview(cfg_path, out=None):
