@@ -10,7 +10,7 @@ Claude Code 每天早上约 06:40（马来西亚时间）做「**可以直接打
 2. **积压清完才找新商家：** 每找到一家合格的（一定要有电话），马上帮它做样板，直到当天一共 15 个。新商家写进 `sales/leads/<日期>-daily.json`（id `d<YYYYMMDD>-<店名>`）。
 3. **每天顺便删除到期的样板：** `node scripts/local/preview-publish.js list` 看到「到期了」的，跑 `delete <代号>`（会一起拿掉 previews.json 的那一行），再删 `clients/<代号>/preview/`。
 
-**做样板的规则（`docs/09-netlify-guide.md` 第 D 部分）：** 代号 `m-<店名>`；`preview.json` 写 `lead_id`、`instagram`、`photos: "placeholder"`、`delete_by` = 今天 + 14 天、`password` = 店名一个字 + 4 个随机数字；店名、招牌产品、地点只用查得到的真实资料；**查不到价钱的产品就不要写 `price`**（样板会显示 Ask for price，不要编价钱），3–8 个产品；照片用 Pexels（`scripts/local/fetch-stock-images.py`），不用对方 IG / Facebook / 报道里的照片。`python3 site/build.py --preview …` → `node scripts/local/preview-publish.js publish <代号>` → `python3 site/build.py` → commit `sales/leads/previews.json` + `sales/leads/inbox.json`（+ 当天的 daily.json）到 `leads` 分支。
+**做样板的规则（`docs/09-netlify-guide.md` 第 D 部分）：** 代号 `m-<店名>`；`preview.json` 写 `lead_id`、`instagram`、`photos: "placeholder"`、`delete_by` = 今天 + 14 天、`password` = 店名一个字 + 4 个随机数字；店名、招牌产品、地点只用查得到的真实资料；**查不到价钱的产品就不要写 `price`**（样板会显示 Ask for price，不要编价钱），3–8 个产品；照片用 Pexels（`scripts/local/fetch-stock-images.py`），不用对方 IG / Facebook / 报道里的照片。**餐厅 / 咖啡馆**：用 `trust`（营业时间、地点、订位方式）、`chips: []`、`sticker: ""`、`social`（只放对方真的有用的平台）、`announcement`（地址或营业时间）取代模板的运费字样，不要写对方没有的政策（见 `templates/preview.example.json`）。`python3 site/build.py --preview …` → `node scripts/local/preview-publish.js publish <代号>` → `python3 site/build.py` → commit `sales/leads/previews.json` + `sales/leads/inbox.json`（+ 当天的 daily.json）到 `leads` 分支。
 
 临时加的一轮（俊宇说「现在继续找」）用 `<日期>-extra-<HHMM>.json`、id `x<YYYYMMDD><HHMM>-<店名>`。档案已经存在就表示那一轮做过了，不要重做。
 
