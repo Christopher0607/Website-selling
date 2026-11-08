@@ -7,7 +7,7 @@
 ## 当前状态
 
 - 当前阶段：**Phase 4.1 找客户**（网站 https://cartsmith.netlify.app 已上线；俊宇 2026-11-07 说开始找客户）
-- 下一个任务：**俊宇：① 2026-11-11 在工作台跟进已联系的 4 家 ② 核实第 2 批华人 A 级商家（`sales/research/2026-11-08-batch-2-chinese.md`）后加进工作台、发开场白（一天 ≤10 家） ③ 设定 IG 自动回复（`docs/10-instagram-auto-replies.md`）**
+- 下一个任务：**俊宇：① 2026-11-11 在工作台跟进已联系的 4 家 ② 核实第 3 批英文市场商家（`sales/research/2026-11-08-batch-3-english.md`，先联系 8 家 A 级）和第 2 批剩下的，再加进工作台、发开场白（一天 ≤10 家） ③ 设定 IG 自动回复（`docs/10-instagram-auto-replies.md`）**
 - 卡住的事：没有（DigitalOcean 服务器、域名、SSM 都等第一个客户说「好」再做；SSM 一定要在收订金前完成）
 
 ---
@@ -110,6 +110,7 @@
 
 | 日期 | 任务 | 结果 | 网址 / 文件 | 未解决的问题 |
 |---|---|---|---|---|
+| 2026-11-08 | 4.1 候选商家第 3 批：英文市场、规模不大、有购买力（俊宇要求；他发现第 2 批有几家已经有网站） | A 级标准加第 5 项「购买力」（实体店 / 公司客户 / 寄卖点 / 单价 RM40+ / 花钱推广，至少一项）；每家都直接试品牌域名（.com/.com.my/.my/.co），排除了约 35 家已经有网站或太大 / 太小的；选出 8 家 A 级（Ginger Batiks、Ministry of Cakes、Best Borneo、Habitatku + Loulou、Ilham Ceramics、Dimpled、Forest Floor、Artigusto）+ 2 家 B 级（Shiramics、Over Time Leathercraft），附英文开场白注意事项、贴进工作台的资料格、排除名单；第 2 批补注：壹家有 yijiapastry.com | `sales/research/2026-11-08-batch-3-english.md`、`sales/research/2026-11-08-batch-2-chinese.md` | Habitatku、Ilham Ceramics 的 IG 要俊宇找；Forest Floor、Shiramics 要确认还在营业；IG 简介里的链接要俊宇亲眼看 |
 | 2026-11-08 | 4.1 候选商家第 2 批：华人商家，只要 A 级（俊宇已用工作台发出 4 个开场白：Benang Needle、Sambal Enak、Let's Coopi、Tokey Sambal Hitam，11-11 跟进） | 用公开资料（Shopee 官方年饼 / 月饼推荐、新闻、美食指南、商家名录）查了约 25 家华人商家，严格按 4 项（自有品牌、卖得好的证据、还在营业、搜不到网站）筛出 5 家 A 级：Joymom's 娇妈妈、Yi Jia Pastry House 壹家烘培坊、Silli Chilli、Arcane Leather、Hejia 合家；附切入点（2027 新年 2/6 → 年饼预订 + 公司礼盒询价）、贴进工作台的资料格、排除名单和原因 | `sales/research/2026-11-08-batch-2-chinese.md` | 合家搜不到 IG / FB（找不到就跳过，不用 Shopee 聊天推销）；壹家的 IG 要核实；全部要俊宇点进去确认没有网站 |
 | 2026-11-08 | 后台导览（俊宇要看后台） | 俊宇确认：交付彩排（真服务器 + Billplz 测试模式）等第一个有兴趣的商家再做；从本地测试店截了 8 张 WooCommerce 后台（订单、订单详情、产品、编辑产品、运费、付款、我们的设定、手机版），加中英说明、标示示范资料 | `content/backend-tour/`、`scripts/local/make-backend-tour.js` | 真服务器和付款网关测试模式还没做（等有兴趣的商家） |
 | 2026-11-08 | 4.1 候选商家第 1 批（俊宇要求 Claude Code 上网找） | 用搜索引擎的公开资料找了 17 个马来西亚本地中小品牌（头巾 5、sambal 7、咖啡 4、护肤 3，按 A/B/C 排优先），每个附链接、看到的信号、建议模板、贴进工作台的资料格（观察要俊宇亲眼核实补上）；没有登录、没有用程式刷 IG / Shopee | `sales/research/2026-11-08-batch-1.md` | 粉丝 / 评价数来自搜索结果，要逐个核实 |
