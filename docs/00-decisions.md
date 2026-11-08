@@ -30,6 +30,8 @@
 | 15 | AI | Claude | **DeepSeek API**（`deepseek-flash`，预付制）：网站 AI 客服 + 销售助理 |
 | 17 | 标志 | — | **2 号：几何 C + 橙色小方块**（2026-11-08 俊宇选，已用在 IG 头像和网站）。档案在 `content/brand/` |
 | 16 | 免费样板怎么做 | 服务器 `make-preview.sh` | `python site/build.py --preview` 产生 → 拖进 Netlify Drop（随机网址 + 密码页 + noindex，14 天内删除） |
+| 18 | 自动找商家 | 俊宇自己找 | **每天早上约 7 点（马来西亚时间）Claude Code 定时任务自动找 20 家 A 级餐厅**（2026-11-08 俊宇决定）：英文市场、有购买力、有东西可以在网上卖（节日套餐、外烩、预订蛋糕、冷冻 / 瓶装产品、礼券），用 `scripts/local/check-domains.sh` 确认没有网站，写进 `sales/leads/`，push 后出现在工作台收件箱 |
+| 19 | Instagram 私信 | 手动发 | **还是手动发**（工作台「复制并打开」+「已发送」提示条）。2026-11-08 俊宇想用 instagram_dm_mcp（非官方 instagrapi，用帐号密码登入）自动发；Claude Code 不做自动发陌生私信的工具 |
 
 ---
 

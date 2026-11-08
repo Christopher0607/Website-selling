@@ -2,10 +2,14 @@
 
 Claude Code 上网找到的商家写在这里。`python3 site/build.py` 会把所有 `*.json` 合成 `site/netlify/functions/desk/inbox.mjs`。push 之后 Netlify 自动部署，工作台「今天」最上面就会出现「新商家 · Claude Code 找的」。俊宇按「全部加入」，AI 就逐家打分、写开场白，**资料不用复制粘贴**。
 
+## 每天的定时任务（2026-11-08 起）
+
+Claude Code 每天早上约 7 点（马来西亚时间）自动找 **20 家 A 级餐厅**，写成 `sales/leads/<日期>-restaurants.json`（id 用 `r<日期>-<店名>`），跑 build、commit、push 到 `ccr-4e1e8221-7msrbj`。Netlify 自动部署后，俊宇在工作台按「全部加入」。
+
 ## 规则
 
 - **只放查证过的商家。** 资料来自搜索引擎、新闻报道和公开推荐清单，不登录、不用程式刷 Instagram / Shopee。
-- **有没有网站要直接试：** `.com / .com.my / .my / .co` 都打不开、是停放域名，或者显示过期 / 建设中，才算「没有网站」。在 `input` 里写清楚试了什么。
+- **有没有网站要直接试：** 跑 `bash scripts/local/check-domains.sh <名字1> <名字2> …`（每家试两三种写法，例如 `brand`、`brandmy`、`brandkl`）。结果是 NONE / PARKED / EXPIRED 才算「没有网站」；SITE 要看标题是不是同一家，CHECK（有防护页）当作可能有网站、不放进 A 级。在 `input` 里写清楚试了什么。
 - **只写有来源的事实。** 粉丝数、销量这种看不到的就不写；观察写报道里的具体内容（例如「The Edge 2025 年 5 月报道：第 10 年」）。
 - `id` 一旦用过就不要改、不要重复：工作台用它记录加过或跳过的商家。已经在名单里的 IG 不会再出现。
 - 同一批的研究说明放在 `sales/research/`，这里的 JSON 是给工作台读的版本。
