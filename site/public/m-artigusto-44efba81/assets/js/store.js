@@ -277,6 +277,12 @@
       }).observe(atc);
       $('[data-sticky-add]', sticky).addEventListener('click', () => add(id, sel(), parseInt(qty.value, 10) || 1));
     }
+    // "Ask for price" products have no cart button: keep the chat button off the WhatsApp button the same way
+    const ask = $('[data-ask]');
+    if (ask && 'IntersectionObserver' in window) {
+      const mq = matchMedia('(max-width: 860px)');
+      new IntersectionObserver((ents) => document.body.classList.toggle('atc-in-view', mq.matches && ents[0].isIntersecting)).observe(ask);
+    }
     update();
   }
 
