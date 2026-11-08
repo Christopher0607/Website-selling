@@ -4,11 +4,36 @@ Claude Code 上网找到的商家写在这里。`python3 site/build.py` 会把�
 
 ## 每天的定时任务（2026-11-08 起）
 
-Claude Code 每天早上约 7 点（马来西亚时间）自动找商家，**目标 50 家**（2026-11-08 俊宇改：IG 效果不大，改用 WhatsApp / Email，量要多）。范围：餐厅、咖啡馆、烘焙 / 甜点、在家做的食品品牌、自有品牌的产品卖家（护肤、服装、礼品等）。写成 `sales/leads/<日期>-daily.json`（id 用 `d<日期>-<店名>`；2026-11-08 以前的档案叫 `-restaurants.json`），跑 `python3 site/build.py`（会产生 `sales/leads/inbox.json`），**只 commit `sales/leads/`，push 到 `leads` 分支**。
+Claude Code 每天自动找商家，**每天两轮、目标共 100 家**（2026-11-08 俊宇改：50 → 100，「你继续找资料，我继续发」）：
+
+| 轮 | 时间（马来西亚） | 目标 | 档案 | id |
+|---|---|---|---|---|
+| 第一轮 | 约 06:40 | 50 | `sales/leads/<日期>-daily.json` | `d<YYYYMMDD>-<店名>` |
+| 第二轮 | 约 11:20 | 50 | `sales/leads/<日期>-daily-2.json` | `d<YYYYMMDD>b-<店名>` |
+
+临时加的一轮（俊宇说「现在继续找」）用 `<日期>-extra-<HHMM>.json`、id `x<YYYYMMDD><HHMM>-<店名>`。档案已经存在就表示那一轮做过了，不要重做。
+
+范围：餐厅、咖啡馆、烘焙 / 甜点、在家做的食品品牌、自有品牌的产品卖家（护肤、服装、饰品、礼品、宠物用品、花店等）。2026-11-08 以前的档案叫 `-restaurants.json` / `-batch-N.json`。跑 `python3 site/build.py`（会产生 `sales/leads/inbox.json`），**只 commit `sales/leads/`，push 到 `leads` 分支**。
+
+**边找边 push：** 每放好 10 家就跑一次 `python3 site/build.py`、commit、push（俊宇在等着发；工作台 5 分钟内就会出现）。最后一次 push 再写总结。
 
 **为什么用 `leads` 分支：** Netlify 免费方案每次正式部署扣 15 点（每月 300 点）。工作台会直接读 GitHub 上 `leads` 分支的 `sales/leads/inbox.json`（`LEADS_URL`，5 分钟更新一次），所以新商家不用部署就会出现在「新商家」。正式分支 `ccr-4e1e8221-7msrbj` 只放程式的改动。
 
 每天开始前：`git fetch origin ccr-4e1e8221-7msrbj leads && git checkout -B leads origin/leads && git merge --no-edit origin/ccr-4e1e8221-7msrbj`（拿到最新的规则和工具）。合并如果只在 `sales/leads/inbox.json` 或 `site/netlify/functions/desk/inbox.mjs` 有冲突，跑一次 `python3 site/build.py` 重新产生，再 `git add` 这两个档案、`git commit --no-edit`。
+
+## 商家标准（A / B 级）
+
+**A 级：下面七项都要符合。**
+
+1. 自己的品牌或独立经营的店（不要连锁 5 家分店以上、酒店餐厅、新加坡的店、转卖别人品牌的店）。
+2. **有东西可以在网上卖**（产品、节日套餐、预订蛋糕、外烩、礼券、课程等）。
+3. 做得好的证据：最近 2 年的媒体报道或推荐清单、或 Google 评价数量多（例如 200+ 条，从搜索结果摘要看）、或开店多年。
+4. **有购买力**：人均 / 单价 RM40 以上、或节日套餐 / 产品 RM80 以上、或有实体店加上报道、或有公司 / 酒店客户、或花钱做过推广。
+5. **没有网站**：a. `bash scripts/local/check-domains.sh <写法1> <写法2> <写法3>`（只有 NONE / PARKED / EXPIRED 算没有）；b. 搜「<店名> order online」和「<店名> website」（Shopify、StoreHub、Beepit、Oddle、EasyStore、take.app、WooCommerce、Wix 网上商店 → 排除）；c. 老板的其他品牌有网站 → 排除。
+6. **一定要有 Instagram 帐号**。
+7. **一定要有公开的 WhatsApp 手机号码或 Email**（03- 等座机不算）。
+
+**B 级（2026-11-08 起，为了每天 100 家）：只有第 3 项（做得好的证据）不够，其他六项都符合——购买力（第 4 项）一样要有。** `priority` 写 `B`，`why` 写清楚缺什么。每一轮先找 A 级，A 级找不到了才放 B 级。不符合第 1、2、4、5、6、7 项的一律不放，不要为了凑数降低标准。
 
 ## 规则
 

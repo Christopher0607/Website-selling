@@ -225,6 +225,17 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
   await p.waitForSelector('[data-sheet]', { state: 'hidden' });
   ok(!(await p.$(`#c-${q1}`)), 'sent lead leaves today after closing the queue');
 
+  // daily limit can go up to 100 (2026-11-08: 100 new contacts a day)
+  await p.click('[data-tab="stats"]');
+  await p.fill('[data-limit]', '100');
+  await p.click('[data-save-limit]');
+  await p.waitForTimeout(500);
+  ok(JSON.parse(fs.readFileSync(STORE, 'utf8')).settings.dailyLimit === 100, 'daily limit saves 100');
+  await p.fill('[data-limit]', '101');
+  await p.click('[data-save-limit]');
+  await p.waitForTimeout(500);
+  ok(JSON.parse(fs.readFileSync(STORE, 'utf8')).settings.dailyLimit === 100, 'daily limit above 100 is ignored');
+
   // no emoji anywhere in the interface (message boxes excluded: their text comes from the AI)
   const uiText = await p.evaluate(() => { const c = document.body.cloneNode(true); c.querySelectorAll('textarea').forEach((t) => t.remove()); return c.innerText; });
   ok(!/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u.test(uiText), 'no emoji in the desk interface');

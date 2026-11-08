@@ -405,7 +405,7 @@ async function handle(action, b, doc) {
 
     case 'settings': {
       const n = parseInt(b.dailyLimit, 10);
-      if (n >= 1 && n <= 60) doc.settings.dailyLimit = n;
+      if (n >= 1 && n <= 100) doc.settings.dailyLimit = n;
       return { settings: doc.settings, saved: true };
     }
 
