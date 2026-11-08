@@ -589,7 +589,7 @@ p { margin: 0 0 1em; }
 
   /* shop page: category chips in one swipeable line */
   .page-head { padding: 22px 0 16px; }
-  .shop__bar { flex-direction: column; align-items: stretch; gap: 10px; margin-bottom: 20px; }
+  .shop__bar { flex-direction: column; flex-wrap: nowrap; align-items: stretch; gap: 10px; margin-bottom: 20px; } /* nowrap: a wrapping column grows to the chips' full width (page shifted sideways) */
   .chips { flex-wrap: nowrap; overflow-x: auto; margin-inline: calc(var(--gutter) * -1); padding: 0 var(--gutter) 4px; scrollbar-width: none; }
   .chip { flex: none; padding: 9px 16px; }
   .sort { justify-content: flex-end; }
