@@ -4,16 +4,11 @@ Claude Code 上网找到的商家写在这里。`python3 site/build.py` 会把�
 
 ## 每天的定时任务（2026-11-08 起）
 
-Claude Code 每天自动找商家，**每天两轮、目标共 100 家**（2026-11-08 俊宇改：50 → 100，「你继续找资料，我继续发」）：
+Claude Code 每天早上约 06:40（马来西亚时间）自动找商家，**目标 40 家，电话优先**（2026-11-09 俊宇定：改成以打电话为主要的第一步；中午第二轮停用）。写成 `sales/leads/<日期>-daily.json`（id `d<YYYYMMDD>-<店名>`）。临时加的一轮（俊宇说「现在继续找」）用 `<日期>-extra-<HHMM>.json`、id `x<YYYYMMDD><HHMM>-<店名>`。档案已经存在就表示那一轮做过了，不要重做。
 
-| 轮 | 时间（马来西亚） | 目标 | 档案 | id |
-|---|---|---|---|---|
-| 第一轮 | 约 06:40 | 50 | `sales/leads/<日期>-daily.json` | `d<YYYYMMDD>-<店名>` |
-| 第二轮 | 约 11:20 | 50 | `sales/leads/<日期>-daily-2.json` | `d<YYYYMMDD>b-<店名>` |
+**优先顺序：** 1. 有公开电话号码（手机或座机都可以，打电话用）而且在巴生谷有实体店的（方便俊宇拜访）；2. 有 Email 的；3. 其他地区有电话的。每一家都要写 `area`（地区，例如「PJ SS2」「Bangsar」「槟城 George Town」）和 `address`（店的地址，在家做的写「在家做 · <地区>」）。
 
-临时加的一轮（俊宇说「现在继续找」）用 `<日期>-extra-<HHMM>.json`、id `x<YYYYMMDD><HHMM>-<店名>`。档案已经存在就表示那一轮做过了，不要重做。
-
-范围：餐厅、咖啡馆、烘焙 / 甜点、在家做的食品品牌、自有品牌的产品卖家（护肤、服装、饰品、礼品、宠物用品、花店等）。2026-11-08 以前的档案叫 `-restaurants.json` / `-batch-N.json`。跑 `python3 site/build.py`（会产生 `sales/leads/inbox.json`），**只 commit `sales/leads/`，push 到 `leads` 分支**。
+范围：餐厅、咖啡馆、烘焙 / 甜点、在家做的食品品牌、自有品牌的产品卖家（护肤、服装、饰品、礼品、宠物用品、花店等）。2026-11-08 以前的档案叫 `-restaurants.json` / `-batch-N.json`；`-daily-2.json` 是停用的第二轮。跑 `python3 site/build.py`（会产生 `sales/leads/inbox.json`），**只 commit `sales/leads/`，push 到 `leads` 分支**。
 
 **边找边 push：** 每放好 10 家就跑一次 `python3 site/build.py`、commit、push（俊宇在等着发；工作台 5 分钟内就会出现）。最后一次 push 再写总结。
 
@@ -31,7 +26,7 @@ Claude Code 每天自动找商家，**每天两轮、目标共 100 家**（2026-
 4. **有购买力**：人均 / 单价 RM40 以上、或节日套餐 / 产品 RM80 以上、或有实体店加上报道、或有公司 / 酒店客户、或花钱做过推广。
 5. **没有网站**：a. `bash scripts/local/check-domains.sh <写法1> <写法2> <写法3>`（只有 NONE / PARKED / EXPIRED 算没有）；b. 搜「<店名> order online」和「<店名> website」（Shopify、StoreHub、Beepit、Oddle、EasyStore、take.app、WooCommerce、Wix 网上商店 → 排除）；c. 老板的其他品牌有网站 → 排除。
 6. **一定要有 Instagram 帐号**。
-7. **一定要有公开的 WhatsApp 手机号码或 Email**（03- 等座机不算）。
+7. **一定要有公开的电话号码（手机或座机）或 Email**（2026-11-09 起座机也可以，因为改成打电话为主）。手机号码写进 `whatsapp`，座机写进 `phone`。
 
 **B 级（2026-11-08 起，为了每天 100 家）：只有第 3 项（做得好的证据）不够，其他六项都符合——购买力（第 4 项）一样要有。** `priority` 写 `B`，`why` 写清楚缺什么。每一轮先找 A 级，A 级找不到了才放 B 级。不符合第 1、2、4、5、6、7 项的一律不放，不要为了凑数降低标准。
 
@@ -58,7 +53,10 @@ Claude Code 每天自动找商家，**每天两轮、目标共 100 家**（2026-
       "id": "b3-ginger-batiks",            // 必填，唯一，小写英文 + 连字符
       "name": "Ginger Batiks",             // 必填，显示用的店名
       "instagram": "gingerbatiks",         // 必填，不用 @（没有 IG 的不放）
-      "whatsapp": "012-345 6789",          // 选填：公开的手机号码
+      "whatsapp": "012-345 6789",          // 选填：公开的手机号码（可以打电话也可能有 WhatsApp）
+      "phone": "03-2201 1710",             // 选填：座机（只能打电话）
+      "area": "Bangsar",                   // 必填（2026-11-09 起）：地区，拜访清单用
+      "address": "69-1 Jalan Telawi 3, Bangsar Baru, KL",  // 必填：店的地址；在家做的写「在家做 · 地区」
       "email": "hello@brand.com",          // 选填：公开的 Email
       "contact_source": "TheSmartLocal 圣诞清单（2025-12）",  // 有填 whatsapp / email 就写来源
       "store_url": "",                     // 选填：Shopee 店铺链接
@@ -81,12 +79,12 @@ Claude Code 每天自动找商家，**每天两轮、目标共 100 家**（2026-
 {
   "batch": "2026-11-09 补联系方式",
   "contacts": [
-    { "id": "b3-forest-floor", "whatsapp": "012-345 6789", "email": "", "contact_source": "Vulcan Post 2026-01 报道里的订购 WhatsApp" }
+    { "id": "b3-forest-floor", "whatsapp": "012-345 6789", "email": "", "phone": "", "area": "Damansara Utama", "address": "57 Jalan SS 21/1a, PJ", "contact_source": "Vulcan Post 2026-01 报道里的订购 WhatsApp" }
   ]
 }
 ```
 
-`id` 要跟原来那家商家一样；`whatsapp` 或 `email` 至少一个；`contact_source` 必填。
+`id` 要跟原来那家商家一样；`whatsapp` / `email` / `phone` / `area` / `address` 至少一个；`contact_source` 必填。也可以用来帮以前的商家补上地区和地址（拜访清单用）。
 
 ## 改完检查
 

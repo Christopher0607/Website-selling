@@ -239,7 +239,7 @@ class Store:
                 gate = ("<script>(function(){var H='" + pv["_hash"] + "';try{if(localStorage.getItem('pv_'+H)==='1')return;}catch(e){}"
                         "document.documentElement.classList.add('pv-locked');window.__pvHash=H;})();</script>")
             return (f'{gate}<div class="demo-bar"><div class="wrap demo-bar__in"><span class="demo-bar__txt"><b>Private mockup</b> for {e(pv["brand"]["name"])} · made by Cartsmith Studio · '
-                    f'not a live store · will be deleted by {e(pv["delete_by"])}</span><span class="demo-bar__links"><a class="demo-bar__cta" href="{e(self.studio_link(root, "index.html"))}">Cartsmith Studio {icon("arrow")}</a></span></div></div>')
+                    f'not a live store{" · photos are placeholders" if pv.get("photos") == "placeholder" else ""} · will be deleted by {e(pv["delete_by"])}</span><span class="demo-bar__links"><a class="demo-bar__cta" href="{e(self.studio_link(root, "index.html"))}">Cartsmith Studio {icon("arrow")}</a></span></div></div>')
         return (f'<div class="demo-bar"><div class="wrap demo-bar__in"><span class="demo-bar__txt"><b>Concept demo</b> · fictional brand by Cartsmith Studio · no real orders or payments</span>'
                 f'<span class="demo-bar__links"><a href="{root}templates.html">All templates</a><a class="demo-bar__cta" href="{root}start.html?template={self.slug}">Use this template {icon("arrow")}</a></span></div></div>')
 
@@ -1052,13 +1052,16 @@ def load_leads():
         # "contacts": WhatsApp / Email found later for merchants already listed (fills only what is missing)
         for c in data.get("contacts", []):
             cid, wa, em, src = (str(c.get(k, "")).strip() for k in ("id", "whatsapp", "email", "contact_source"))
-            if not cid or not (wa or em) or not src:
-                raise SystemExit("sales/leads/%s: contact update %r needs id, whatsapp or email, and contact_source" % (name, cid))
+            extra = {k: str(c.get(k, "")).strip() for k in ("phone", "area", "address")}
+            if not cid or not (wa or em or any(extra.values())) or not src:
+                raise SystemExit("sales/leads/%s: contact update %r needs id, one of whatsapp / email / phone / area / address, and contact_source" % (name, cid))
+            if extra["phone"] and not 9 <= len(re.sub(r"\D", "", extra["phone"])) <= 15:
+                raise SystemExit("sales/leads/%s: %s phone number looks wrong: %s" % (name, cid, extra["phone"]))
             if em and not email_ok(em):
                 raise SystemExit("sales/leads/%s: %s email looks wrong: %s" % (name, cid, em))
             if wa and not 9 <= len(re.sub(r"\D", "", wa)) <= 15:
                 raise SystemExit("sales/leads/%s: %s WhatsApp number looks wrong: %s" % (name, cid, wa))
-            updates.append((name, cid, wa, em, src))
+            updates.append((name, cid, wa, em, src, extra))
         for lead in data.get("leads", []):
             missing = [k for k in LEAD_KEYS if not str(lead.get(k, "")).strip()]
             if missing:
@@ -1079,12 +1082,13 @@ def load_leads():
             out.append({
                 "id": lead["id"], "name": lead["name"].strip(), "instagram": ig,
                 "whatsapp": str(lead.get("whatsapp", "")).strip(), "email": email, "contact_source": lead.get("contact_source", ""),
+                "phone": str(lead.get("phone", "")).strip(), "area": str(lead.get("area", "")).strip()[:60], "address": str(lead.get("address", "")).strip()[:200],
                 "store_url": lead.get("store_url", ""), "language": lead.get("language", ""), "template": lead.get("template", ""),
                 "priority": lead.get("priority", ""), "why": lead.get("why", ""), "verify": lead.get("verify", ""),
                 "batch": data.get("batch", name[:-5]), "input": lead["input"].strip()[:3000],
             })
     by_id = {l["id"]: l for l in out}
-    for name, cid, wa, em, src in updates:
+    for name, cid, wa, em, src, extra in updates:
         l = by_id.get(cid)
         if not l:
             print("  sales/leads/%s: contact update for %s skipped (not in the inbox)" % (name, cid))
@@ -1096,10 +1100,34 @@ def load_leads():
         if em and not l["email"]:
             l["email"] = em
             filled.append("Email")
+        for k, label in (("phone", "电话"), ("area", "地区"), ("address", "地址")):
+            if extra[k] and not l[k]:
+                l[k] = extra[k][:200]
+                filled.append(label)
         if filled:
             l["contact_source"] = "；".join(x for x in (l["contact_source"], src) if x)
             print("  sales/leads/%s: %s + %s" % (name, cid, " / ".join(filled)))
     return out
+
+
+def load_previews():
+    """sales/leads/*.json 的 "previews"：做好的免费样板（网址公开；密码用工作台的公钥加密，repo 公开也看不到）。"""
+    folder = os.path.join(HERE, "..", "sales", "leads")
+    out = {}
+    if not os.path.isdir(folder):
+        return []
+    for name in sorted(os.listdir(folder)):
+        if not name.endswith(".json") or name == "inbox.json":
+            continue
+        for pv in load_json(os.path.join(folder, name)).get("previews", []):
+            slug, url, enc = (str(pv.get(k, "")).strip() for k in ("slug", "url", "enc"))
+            if not re.match(r"^[a-z0-9-]{4,80}$", slug) or not url.startswith("https://") or len(enc) < 40:
+                raise SystemExit("sales/leads/%s: preview %r needs slug, https url and enc" % (name, slug))
+            if not (pv.get("lead_id") or pv.get("instagram")):
+                raise SystemExit("sales/leads/%s: preview %s needs lead_id or instagram" % (name, slug))
+            out[slug] = {"slug": slug, "url": url, "enc": enc, "lead_id": str(pv.get("lead_id", "")), "instagram": str(pv.get("instagram", "")).lstrip("@"),
+                         "name": str(pv.get("name", ""))[:120], "delete_by": str(pv.get("delete_by", ""))[:10], "photos": str(pv.get("photos", ""))[:20]}
+    return list(out.values())
 
 
 def build_knowledge():
@@ -1114,6 +1142,7 @@ def build_knowledge():
                "export const KNOWLEDGE = " + json.dumps(text, ensure_ascii=False) + ";\n"
                "export const IG_HANDLE = " + json.dumps(ig) + ";\n")
     leads = load_leads()
+    previews = load_previews()
     scripts_src = os.path.join(HERE, "..", "sales", "scripts.md")
     scripts = open(scripts_src, encoding="utf-8").read() if os.path.exists(scripts_src) else ""
     outputs = {
@@ -1121,10 +1150,11 @@ def build_knowledge():
         os.path.join(HERE, "netlify", "functions", "desk", "scripts.mjs"):
             "// 自动产生 —— 不要手动改。改 sales/scripts.md，然后跑 python3 site/build.py\nexport const SCRIPTS = " + json.dumps(scripts, ensure_ascii=False) + ";\n",
         os.path.join(HERE, "netlify", "functions", "desk", "inbox.mjs"):
-            "// 自动产生 —— 不要手动改。改 sales/leads/*.json，然后跑 python3 site/build.py\nexport const INBOX = " + json.dumps(leads, ensure_ascii=False, indent=1) + ";\n",
+            "// 自动产生 —— 不要手动改。改 sales/leads/*.json，然后跑 python3 site/build.py\nexport const INBOX = " + json.dumps(leads, ensure_ascii=False, indent=1) + ";\n"
+            + "export const PREVIEWS = " + json.dumps(previews, ensure_ascii=False, indent=1) + ";\n",
         # 同一份资料的 JSON 版：工作台直接从 GitHub 的 leads 分支读取它，所以每天的新商家不用部署（不扣 Netlify 点数）
         os.path.join(HERE, "..", "sales", "leads", "inbox.json"):
-            json.dumps({"note": "自动产生，不要手动改（python3 site/build.py）", "leads": leads}, ensure_ascii=False, indent=1) + "\n",
+            json.dumps({"note": "自动产生，不要手动改（python3 site/build.py）", "leads": leads, "previews": previews}, ensure_ascii=False, indent=1) + "\n",
     }
     for path, text_ in outputs.items():
         old = open(path, encoding="utf-8").read() if os.path.exists(path) else ""

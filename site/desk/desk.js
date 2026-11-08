@@ -20,7 +20,7 @@
   const TPL = { dewlane: 'Dewlane', plainfold: 'Plainfold', 'chili-pantry': 'Little Chili Pantry', lowlight: 'Lowlight', tailmate: 'Tailmate', voltnest: 'Voltnest' };
   const LANG = { zh: '中文', en: 'English', ms: 'BM' };
   const PLATFORM = { shopee: 'Shopee', tiktok: 'TikTok Shop', instagram: 'Instagram', website: '网站', other: '其他' };
-  const CH = { ig: 'Instagram', wa: 'WhatsApp', email: 'Email' };
+  const CH = { ig: 'Instagram', wa: 'WhatsApp', email: 'Email', call: '电话' };
 
   // ------------------------------------------------------------ icons (inline SVG, stroke = currentColor)
   const I = {
@@ -80,6 +80,66 @@
   function scoreClass(n) { return n >= 4 ? 'score--hi' : n >= 3 ? 'score--mid' : 'score--lo'; }
   function textOf(t, p) { const box = (t.closest('.card, .q') || document).querySelector(`textarea[data-field="${t.dataset.field}"]`); return box ? box.value : p[t.dataset.field]; }
 
+  // ------------------------------------------------------------ phone calls + good hours (2026-11-09)
+  const callNo = (p) => p.phone || p.whatsapp || '';
+  const fmtPhone = (n) => !n ? '' : /^601/.test(n) ? fmtWa(n) : '+' + n.replace(/^(60)([2-9])(\d{3,4})(\d{4})$/, '$1 $2-$3 $4');
+  const callBtn = (p) => `<button class="btn btn--sm ch ch--call" data-act="call" data-id="${p.id}">${svg('phone', 16)}打电话</button>`;
+  const callDue = (p) => !!p.next_call_date && p.next_call_date <= S.today && ['new', 'contacted'].includes(p.status) && !!callNo(p);
+  const nowMY = () => { const d = window.DESK_NOW ? new Date(window.DESK_NOW) : new Date(); const m = new Date(d.getTime() + 8 * 3600e3); return m.getUTCHours() * 60 + m.getUTCMinutes(); };
+  function badHour() {
+    const t = nowMY();
+    if (t < 600 || t >= 1260) return '太早或太晚';
+    if (t >= 690 && t < 840) return '午餐时间';
+    if (t >= 1080) return '晚餐时间';
+    return '';
+  }
+  function okNow(what) {
+    const why = badHour();
+    if (!why) return true;
+    const t = nowMY();
+    return confirm(`现在是 ${String(Math.floor(t / 60)).padStart(2, '0')}:${String(t % 60).padStart(2, '0')}（${why}），餐厅和店家多数在忙，常常不会理。建议：餐厅 14:30–17:00、卖产品的 10:00–12:00。\n\n还是要现在${what}吗？`);
+  }
+  const OPENER = {
+    zh: (n) => `你好，我是 Cartsmith Studio 的，我们帮本地的餐厅和品牌做网上接单的网站。想跟老板讲 30 秒，方便吗？……我们在网上看到 ${n}，想帮你们做一个免费的网上订购首页样板，用你们的店名和产品，不用钱，也不用马上决定。我 WhatsApp 发给你看看，可以吗？`,
+    en: (n) => `Hi, this is Cartsmith Studio — we build online-ordering websites for local food businesses and brands. Could I have 30 seconds with the owner? … We came across ${n} and would like to make you a free sample homepage with your name and menu — no cost, no commitment. Can I WhatsApp it to you to have a look?`,
+    ms: (n) => `Hai, saya dari Cartsmith Studio — kami buat laman web tempahan online untuk perniagaan tempatan. Boleh saya cakap dengan pemilik sekejap? … Kami nampak ${n} dan nak buatkan contoh laman utama percuma dengan nama dan menu anda — tiada bayaran, tiada komitmen. Boleh saya WhatsApp untuk anda tengok?`,
+  };
+  function callBlock(p) {
+    if (S.calling === p.id) {
+      return `<div class="callout" data-callout="${p.id}"><b>电话打得怎么样？</b>
+        <div class="btnrow">
+          <button class="btn btn--sm" data-act="call-out" data-out="ok" data-id="${p.id}">${svg('check', 16)}可以发样板</button>
+          <button class="btn btn--ghost btn--sm" data-act="call-out" data-out="no_answer" data-id="${p.id}">没接</button>
+          <button class="btn btn--ghost btn--sm" data-act="call-out" data-out="no" data-id="${p.id}">不需要</button>
+        </div>
+        <div class="callout__later"><label>改天再打<input type="date" data-call-date value="${esc(nextDay())}" min="${esc(S.today)}"></label><button class="btn btn--ghost btn--sm" data-act="call-out" data-out="callback" data-id="${p.id}">记下</button><button class="linkbtn" data-act="call-cancel" data-id="${p.id}">还没打</button></div></div>`;
+    }
+    let h = '';
+    if (callDue(p) && p.status !== 'new') h += `<div class="send"><span class="send__label">今天再打</span><div class="send__btns">${callBtn(p)}</div></div>`;
+    if (callNo(p) && (p.status === 'new' || callDue(p))) {
+      const tries = p.call_misses ? `（已经打过 ${p.call_misses} 次没接）` : '';
+      h += `<details class="cue"><summary>${svg('phone', 14)}电话开场（照着念）${tries}</summary><p>${esc((OPENER[p.language] || OPENER.en)(p.business_name))}</p>${p.observation ? `<p class="hint">可以提的一点：${esc(p.observation)}</p>` : ''}<p><a href="call-script.html" target="_blank" rel="noopener">完整电话脚本和各种回话 →</a></p></details>`;
+    }
+    return h;
+  }
+  const nextDay = () => { const d = new Date(S.today + 'T00:00:00Z'); d.setUTCDate(d.getUTCDate() + 1); return d.toISOString().slice(0, 10); };
+  function visitList(q) {
+    const open = ['new', 'contacted', 'replied', 'preview_sent'];
+    const items = S.items.filter((p) => p.address && open.includes(p.status) && !/^在家做/.test(p.address) && (!q || [p.business_name, p.area, p.address].join(' ').toLowerCase().includes(q)));
+    if (!items.length) return '<div class="empty">还没有带地址的商家。每天新找的商家会附上地区和地址；以前的也可以在「编辑」补上。</div>';
+    const groups = {};
+    items.forEach((p) => { (groups[p.area || '其他'] = groups[p.area || '其他'] || []).push(p); });
+    return Object.keys(groups).sort((a, b) => groups[b].length - groups[a].length || a.localeCompare(b)).map((area) => `<section class="visit"><h3>${esc(area)} <small>${groups[area].length} 家</small></h3>${groups[area].map((p) => `<div class="visit__row"><div><b>${esc(p.business_name)}</b><small>${esc(STATUS[p.status] || p.status)}${callNo(p) ? ' · ' + esc(fmtPhone(callNo(p))) : ''}</small><small>${esc(p.address)}</small></div><a class="btn btn--ghost btn--sm" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.business_name + ' ' + p.address)}" target="_blank" rel="noopener">${svg('pin', 14)}地图</a></div>`).join('')}</section>`).join('') + '<p class="hint">建议平日 14:30–17:00 去；买一样东西，用手机给老板看他们的样板。</p>';
+  }
+
+  // ------------------------------------------------------------ finished mockup on the card (2026-11-09)
+  function pvBlock(p) {
+    if (!p.preview_url || !p.preview_password || ['do_not_contact', 'won', 'lost'].includes(p.status)) return '';
+    let h = `<div class="pvbox" data-pvbox><div class="pvbox__row"><b>样板</b><a href="${esc(p.preview_url)}" target="_blank" rel="noopener">打开看看</a><span>密码 <code>${esc(p.preview_password)}</code></span><button class="linkbtn" data-act="copy-pv" data-id="${p.id}">复制网址和密码</button></div><small>${esc(p.preview_delete_by)} 删除${p.status === 'preview_sent' ? ' · 已经发给对方' : ''}</small></div>`;
+    if (p.status !== 'preview_sent' && p.preview_msg && !(p.status === 'replied' && p.draft_reply)) h += msgBox(p, 'preview_msg', '附样板的信息（打完电话或直接发）') + sendRow(p, 'preview_msg');
+    return h;
+  }
+
   // ------------------------------------------------------------ card
   function card(p, mode) {
     const sub = [p.instagram ? '@' + esc(p.instagram) : '', esc(PLATFORM[p.platform] || ''), esc(p.niche || ''), p.store_url ? `<a href="${esc(p.store_url)}" target="_blank" rel="noopener">店铺</a>` : ''].filter(Boolean).join('<span class="dot">·</span>');
@@ -103,6 +163,8 @@
     if (p.observation) body += `<p class="obs">${esc(p.observation)}</p>`;
     if (p.verify && p.status === 'new') body += `<p class="verify">${svg('pin', 14)}<span>发之前看一眼：${esc(p.verify)}</span></p>`;
     body += contacts(p);
+    body += pvBlock(p);
+    body += callBlock(p);
 
     if (p.status === 'new') {
       body += msgBox(p, 'message', '开场白（可以直接改）') + sendRow(p, 'message');
@@ -132,12 +194,15 @@
     if (p.instagram) items.push(`<span>${svg('ig', 14)}@${esc(p.instagram)}</span>`);
     if (p.whatsapp) items.push(`<span>${svg('wa', 14)}${esc(fmtWa(p.whatsapp))}</span>`);
     if (p.email) items.push(`<span>${svg('mail', 14)}${esc(p.email)}</span>`);
-    const missing = !p.whatsapp && !p.email;
-    return `<div class="contacts">${items.join('')}${missing ? `<button class="linkbtn" data-act="edit" data-id="${p.id}">${svg('plus', 14)}补上 WhatsApp / Email</button>` : ''}</div>`;
+    if (p.phone) items.push(`<span>${svg('phone', 14)}${esc(fmtPhone(p.phone))}</span>`);
+    if (p.address) items.push(`<span>${svg('pin', 14)}${esc(p.address)}</span>`);
+    const missing = !p.whatsapp && !p.email && !p.phone;
+    return `<div class="contacts">${items.join('')}${missing ? `<button class="linkbtn" data-act="edit" data-id="${p.id}">${svg('plus', 14)}补上电话 / WhatsApp / Email</button>` : ''}</div>`;
   }
   function msgBox(p, field, label) { return `<div class="msg"><label>${esc(label)}</label><textarea data-field="${field}" data-id="${p.id}">${esc(p[field] || '')}</textarea></div>`; }
   function sendRow(p, field) {
     const b = [];
+    if (callNo(p) && (field === 'message' || field === 'followup')) b.push(['call', callBtn(p)]);
     if (p.whatsapp) b.push(['wa', `<button class="btn btn--sm ch ch--wa" data-act="wa" data-field="${field}" data-id="${p.id}">${svg('wa', 16)}WhatsApp</button>`]);
     if (p.email) b.push(['email', `<button class="btn btn--sm ch ch--mail" data-act="email" data-field="${field}" data-id="${p.id}">${svg('mail', 16)}Email</button>`]);
     if (p.instagram) b.push(['ig', `<button class="btn btn--sm ch ch--ig" data-act="copyopen" data-field="${field}" data-id="${p.id}">${svg('ig', 16)}Instagram</button>`]);
@@ -160,17 +225,19 @@
   function renderToday() {
     const limit = S.settings.dailyLimit || 10;
     const left = Math.max(0, limit - sentToday());
-    const fresh = S.items.filter((p) => p.status === 'new' && p.score >= 3 && p.fit !== 'skip' && !p.duplicate_of).sort((a, b) => b.score - a.score || (a.id < b.id ? -1 : 1));
+    const fresh = S.items.filter((p) => p.status === 'new' && p.score >= 3 && p.fit !== 'skip' && !p.duplicate_of && !p.next_call_date).sort((a, b) => b.score - a.score || (a.id < b.id ? -1 : 1));
     const follow = S.items.filter((p) => ['contacted', 'preview_sent', 'proposal_sent', 'call_booked'].includes(p.status) && p.next_followup_date && p.next_followup_date <= S.today);
     const replied = S.items.filter((p) => p.status === 'replied');
+    const calls = S.items.filter((p) => callDue(p));
     const purge = S.items.filter((p) => p.preview_delete_by && p.preview_delete_by <= S.today && p.status !== 'won');
     let h = '';
     if (S.inbox.length) h += inboxSect();
     if (replied.length) h += sect('有回复，等你回', replied.length, replied.map((p) => card(p)).join(''), '');
+    if (calls.length) h += sect('今天要打电话', calls.length, calls.map((p) => card(p)).join(''), '');
     if (follow.length) h += sect('今天要跟进', follow.length, follow.map((p) => card(p)).join(''), '');
     if (left && fresh.length) h += `<div class="queuebar"><div><b>连续发送</b><small>一家一家打开已经填好的 WhatsApp / Email / Instagram，你按发送，再按「下一家」。有 WhatsApp / Email 的排前面。</small></div><button class="btn btn--sm" data-act="queue-start">开始（${Math.min(left, fresh.length)} 家）</button></div>`;
     h += sect(`新联系 · 今天还可以发 ${left} 个`, fresh.length, left ? fresh.slice(0, Math.max(left, 1) + 2).map((p) => card(p)).join('') : '<div class="empty">今天的新联系已经发满了，明天继续。</div>', '名单里没有待联系的商家。');
-    if (purge.length) h += sect('样板到期，要删除', purge.length, purge.map((p) => `<div class="card"><p>${esc(p.business_name)} 的样板 ${esc(p.preview_url || '')} 已到期（${esc(p.preview_delete_by)}）。到 Netlify 删除那个网站，然后按：</p><div class="btnrow"><button class="btn btn--sm" data-act="purged" data-id="${p.id}">已删除样板</button></div></div>`).join(''), '');
+    if (purge.length) h += sect('样板到期，要删除', purge.length, purge.map((p) => `<div class="card"><p>${esc(p.business_name)} 的样板 ${esc(p.preview_url || '')} 已到期（${esc(p.preview_delete_by)}）。跟 Claude Code 说「删除 ${esc(p.business_name)} 的样板」，删好后按：</p><div class="btnrow"><button class="btn btn--sm" data-act="purged" data-id="${p.id}">已删除样板</button></div></div>`).join(''), '');
     $('[data-today-list]').innerHTML = h;
   }
   function inboxSect() {
@@ -183,10 +250,11 @@
   function sect(title, n, inner, emptyMsg) {
     return `<section class="sect"><div class="sect__head"><h2>${esc(title)}</h2><small>${n}</small></div>${inner || (emptyMsg ? `<div class="empty">${esc(emptyMsg)}</div>` : '')}</section>`;
   }
-  const FILTERS = [['all', '全部'], ['new', '未联系'], ['contacted', '已联系'], ['replied', '有回复'], ['preview_sent', '样板'], ['won', '成交'], ['low', '低分'], ['do_not_contact', '不再联系']];
+  const FILTERS = [['all', '全部'], ['visit', '拜访清单'], ['new', '未联系'], ['contacted', '已联系'], ['replied', '有回复'], ['preview_sent', '样板'], ['won', '成交'], ['low', '低分'], ['do_not_contact', '不再联系']];
   function renderList() {
     $('[data-filters]').innerHTML = FILTERS.map(([k, l]) => `<button class="chip${S.filter === k ? ' is-on' : ''}" data-filter="${k}">${l}</button>`).join('');
     const q = S.q.trim().toLowerCase();
+    if (S.filter === 'visit') { $('[data-all-list]').innerHTML = visitList(q); return; }
     const items = S.items.filter((p) => {
       if (S.filter === 'low') { if (!(p.score < 3 || p.fit === 'skip')) return false; } else if (S.filter !== 'all' && p.status !== S.filter) return false;
       return !q || [p.business_name, p.instagram, p.niche, p.id, p.email, p.whatsapp].join(' ').toLowerCase().includes(q);
@@ -247,7 +315,7 @@
   const hasDirect = (p) => (p.whatsapp || p.email ? 1 : 0);
   function queueList() {
     const left = Math.max(0, (S.settings.dailyLimit || 10) - sentToday());
-    return S.items.filter((p) => p.status === 'new' && p.score >= 3 && p.fit !== 'skip' && !p.duplicate_of)
+    return S.items.filter((p) => p.status === 'new' && p.score >= 3 && p.fit !== 'skip' && !p.duplicate_of && !p.next_call_date)
       .sort((a, b) => hasDirect(b) - hasDirect(a) || b.score - a.score || (a.id < b.id ? -1 : 1))
       .slice(0, left).map((p) => p.id);
   }
@@ -326,6 +394,9 @@
       <label>Instagram（不用 @）<input type="text" data-e="instagram" value="${esc(p.instagram)}"></label>
       <label>WhatsApp 号码<input type="tel" data-e="whatsapp" value="${esc(p.whatsapp ? '+' + p.whatsapp : '')}" placeholder="例：012-345 6789"></label>
       <label>Email<input type="email" data-e="email" value="${esc(p.email || '')}" placeholder="例：hello@brand.com"></label>
+      <label>电话（座机也可以）<input type="tel" data-e="phone" value="${esc(p.phone ? '+' + p.phone : '')}" placeholder="例：03-2201 1710"></label>
+      <label>地区（拜访清单用）<input type="text" data-e="area" value="${esc(p.area || '')}" placeholder="例：PJ SS2、Bangsar"></label>
+      <label>地址<input type="text" data-e="address" value="${esc(p.address || '')}"></label>
       <p class="hint">只用对方公开给客人的联系方式（IG 简介、Linktree、Google 商家资料、报道）。</p>
       <label>店铺链接<input type="url" data-e="store_url" value="${esc(p.store_url)}"></label>
       <label>卖什么<input type="text" data-e="niche" value="${esc(p.niche)}"></label>
@@ -355,7 +426,10 @@
         else if (act === 'copyopen' && ['message', 'followup', 'draft_reply'].includes(t.dataset.field)) showSentbar(p, 'ig');
         return;
       }
+      if (['wa', 'email', 'copyopen'].includes(act)) S.pendingField = t.dataset.field || '';
+      if (act === 'copy-pv') { copy(`${p.preview_url}\n密码：${p.preview_password}`); toast('网址和密码已复制。'); return; }
       if (act === 'wa') {
+        if (!okNow('发 WhatsApp')) return;
         window.open(waLink(p.whatsapp, textOf(t, p)), '_blank', 'noopener');
         toast('WhatsApp 已打开，信息已经填好，看一遍再发送。');
         if (S.queueOn) S.qch = 'wa'; else showSentbar(p, 'wa');
@@ -365,6 +439,24 @@
         const a = document.createElement('a'); a.href = mailLink(p, textOf(t, p)); a.rel = 'noopener'; document.body.appendChild(a); a.click(); a.remove();
         toast('邮件已经填好主旨和内容，看一遍再发送。');
         if (S.queueOn) S.qch = 'email'; else showSentbar(p, 'email');
+        return;
+      }
+      if (act === 'call') {
+        ev.preventDefault();
+        if (!okNow('打电话')) return;
+        const a = document.createElement('a'); a.href = 'tel:+' + callNo(p); document.body.appendChild(a); a.click(); a.remove();
+        S.calling = p.id; render();
+        return;
+      }
+      if (act === 'call-cancel') { S.calling = null; render(); return; }
+      if (act === 'call-out') {
+        const outcome = t.dataset.out;
+        if (outcome === 'no' && !confirm(`${p.business_name} 说不需要？之后不会再出现在联系清单。`)) return;
+        const dateEl = t.closest('.callout') && t.closest('.callout').querySelector('[data-call-date]');
+        busy(t, true, '记录中…');
+        const j = await api('call', { id: p.id, outcome, date: dateEl ? dateEl.value : '' });
+        upsert(j.item); S.calling = null; render();
+        toast({ no_answer: j.item.next_call_date ? `已记录没接，${j.item.next_call_date} 再打。` : '3 次都没接：改用 WhatsApp / Email 发开场白。', ok: '已记录。样板做好后，在「有回复，等你回」把网址贴进信息再发。', callback: `已记录，${j.item.next_call_date} 会提醒你再打。`, no: '已标记不再联系。' }[outcome]);
         return;
       }
       if (act === 'queue-start') { startQueue(); return; }
@@ -400,7 +492,7 @@
       if (act === 'reply') { replySheet(p); return; }
       if (act === 'edit') { S.queueFromEdit = S.queueOn; editSheet(p); S.queueOn = false; return; }
       if (act === 'preview') {
-        const url = prompt('样板网址（Netlify Drop 的网址）：', p.preview_url || 'https://');
+        const url = prompt('样板网址（Claude Code 发布后给你的网址）：', p.preview_url || 'https://');
         if (url === null) return;
         const j = await api('mark', { id: p.id, event: 'preview_sent', url });
         upsert(j.item); closeSheet(); render(); toast('已记录：14 天后提醒你删除样板。'); return;
@@ -416,7 +508,8 @@
       if (act === 'purged') { const j = await api('mark', { id: p.id, event: 'preview_deleted' }); upsert(j.item); render(); toast('已记录：样板删除了。'); return; }
       busy(t, true, act === 'reply-go' || act === 'followup' || act === 'rewrite' ? 'AI 写作中…' : '保存中…');
       let j;
-      if (act === 'sent') { j = await api('mark', { id: p.id, event: 'sent', channel: t.dataset.ch || '' }); if (S.pending === p.id) hideSentbar(); toast(j.item.next_followup_date ? `已记录，${j.item.next_followup_date} 会提醒你跟进。` : '已记录。'); }
+      if (act === 'sent' && S.pending === p.id && S.pendingField === 'preview_msg') { j = await api('mark', { id: p.id, event: 'preview_sent', url: p.preview_url, channel: t.dataset.ch || '' }); hideSentbar(); toast(`已记录发了样板，${j.item.next_followup_date} 提醒你跟进；${j.item.preview_delete_by} 要删除样板。`); }
+      else if (act === 'sent') { j = await api('mark', { id: p.id, event: 'sent', channel: t.dataset.ch || '' }); if (S.pending === p.id) hideSentbar(); toast(j.item.next_followup_date ? `已记录，${j.item.next_followup_date} 会提醒你跟进。` : '已记录。'); }
       else if (act === 'mark') { j = await api('mark', { id: p.id, event: t.dataset.ev }); toast('已记录。'); }
       else if (act === 'followup') j = await api('followup', { id: p.id });
       else if (act === 'rewrite') j = await api('rewrite', { id: p.id, language: t.dataset.lang || '', hint: t.dataset.hint || '' });
@@ -463,7 +556,7 @@
   });
 
   $('[data-search]').addEventListener('input', (e) => { S.q = e.target.value; renderList(); });
-  $('[data-save-limit]').addEventListener('click', async () => { try { const j = await api('settings', { dailyLimit: $('[data-limit]').value }); S.settings = j.settings; render(); toast('已保存。'); } catch (e) { toast(e.message); } });
+  $('[data-save-limit]').addEventListener('click', async () => { try { const j = await api('settings', { dailyLimit: $('[data-limit]').value }); S.settings = j.settings; render(); toast('已保存：每天最多 ' + j.settings.dailyLimit + ' 个。'); } catch (e) { $('[data-limit]').value = S.settings.dailyLimit || 10; toast(e.message); } });
   $('[data-export]').addEventListener('click', async () => {
     try {
       const j = await api('export');
