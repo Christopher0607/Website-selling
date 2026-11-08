@@ -45,6 +45,7 @@
     refresh: '<path d="M20 11a8 8 0 0 0-14.5-4.5L4 8"/><path d="M4 4v4h4"/><path d="M4 13a8 8 0 0 0 14.5 4.5L20 16"/><path d="M20 20v-4h-4"/>',
     pen: '<path d="M4 20h16"/><path d="M14.5 5.5l3 3L9 17H6v-3z"/>',
     clock: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+    chat: '<path d="M5 4.5h14a1.5 1.5 0 0 1 1.5 1.5v9a1.5 1.5 0 0 1-1.5 1.5h-8l-4.5 3.5V16.5H5A1.5 1.5 0 0 1 3.5 15V6A1.5 1.5 0 0 1 5 4.5z"/>',
     pin: '<path d="M12 21s-6.5-5.6-6.5-11A6.5 6.5 0 0 1 18.5 10c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/>'
   };
   const svg = (n, size) => `<svg class="ic" viewBox="0 0 24 24" width="${size || 18}" height="${size || 18}" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${I[n] || ''}</svg>`;
@@ -153,7 +154,7 @@
 
     let body = '';
     const due = p.next_followup_date && p.next_followup_date <= S.today;
-    const moreBtn = `<button class="btn btn--ghost btn--sm btn--icon" data-act="more" data-id="${p.id}" aria-label="更多">${svg('more', 18)}</button>`;
+    const moreBtn = `<button class="btn btn--ghost btn--sm" data-act="ai" data-id="${p.id}">${svg('chat', 16)}AI${p.ai_count ? ' · ' + p.ai_count : ''}</button><button class="btn btn--ghost btn--sm btn--icon" data-act="more" data-id="${p.id}" aria-label="更多">${svg('more', 18)}</button>`;
     const sentBtn = `<button class="btn btn--ghost btn--sm" data-act="sent" data-id="${p.id}">${svg('check', 16)}已发送</button>`;
     if (mode === 'analysis') {
       body += `<ul class="crit">${Object.keys(CRIT).map((k) => `<li class="${p[k] ? 'on' : ''}">${svg(p[k] ? 'check' : 'x', 14)}<span>${CRIT[k]}</span></li>`).join('')}</ul>`;
@@ -347,6 +348,45 @@
   function closeSheet() { $('[data-sheet]').hidden = true; S.queueOn = false; }
   const closeBtn = `<button class="btn btn--ghost btn--sm btn--icon" data-sheet-close aria-label="关闭">${svg('x', 18)}</button>`;
   const row = (act, icon, label, id, extra) => `<button class="row" data-act="${act}" data-id="${id}"${extra || ''}>${svg(icon, 18)}<span>${label}</span></button>`;
+  // ------------------------------------------------------------ per-customer AI assistant (2026-11-09)
+  const AI_QUICK = [
+    ['对方回了这个，帮我回：\n', '贴上对方的回复'],
+    ['下一步我应该怎么做？', '下一步'],
+    ['帮我写一条跟进信息。', '写跟进'],
+    ['对方问价钱，我应该怎么回？', '问价钱'],
+    ['对方说要考虑一下，我应该怎么回？', '说要考虑'],
+  ];
+  async function aiSheet(p) {
+    sheet(`<div class="sheet__head"><h3>${esc(p.business_name)} · AI 助手</h3>${closeBtn}</div><div class="empty">读取中…</div>`);
+    const j = await api('chat-get', { id: p.id });
+    S.ai = { id: p.id, chat: j.chat || [], summary: j.summary || '' };
+    renderAi(p);
+  }
+  function aiText(t) {
+    // turn 【可以直接发的信息】…【结束】 blocks into a ready-to-send box
+    const parts = String(t).split(/【可以直接发的信息】|【结束】/);
+    return parts.map((seg, i) => {
+      if (i % 2 === 1) {
+        const k = S.aiDrafts.push(seg.trim()) - 1;
+        const p = S.items.find((x) => x.id === S.ai.id) || {};
+        return `<div class="ai__draft"><div class="ai__draftlabel">可以直接发的信息</div><div class="ai__drafttext">${esc(seg.trim())}</div><div class="btnrow"><button class="btn btn--sm" data-act="ai-copy" data-k="${k}" data-id="${S.ai.id}">复制</button>${p.whatsapp ? `<button class="btn btn--sm ch ch--wa" data-act="ai-wa" data-k="${k}" data-id="${S.ai.id}">${svg('wa', 16)}WhatsApp</button>` : ''}${p.email ? `<button class="btn btn--sm ch ch--mail" data-act="ai-email" data-k="${k}" data-id="${S.ai.id}">${svg('mail', 16)}Email</button>` : ''}</div></div>`;
+      }
+      return seg.trim() ? `<p>${esc(seg.trim()).replace(/\n/g, '<br>')}</p>` : '';
+    }).join('');
+  }
+  function renderAi(p) {
+    S.aiDrafts = [];
+    const msgs = S.ai.chat.map((m) => `<div class="ai__msg ai__msg--${m.r === 'u' ? 'me' : 'ai'}"><small>${m.r === 'u' ? '你' : 'AI'} · ${esc(m.d || '')}</small>${m.r === 'u' ? `<p>${esc(m.t).replace(/\n/g, '<br>')}</p>` : aiText(m.t)}</div>`).join('');
+    sheet(`<div class="sheet__head"><h3>${esc(p.business_name)} · AI 助手</h3>${closeBtn}</div>
+      <p class="hint">只看得到这一家的资料和对话；对话会一直保存，不会忘记，也不会混到别家。贴上对方的 WhatsApp，或直接问问题。</p>
+      ${S.ai.summary ? `<details class="ai__sum"><summary>AI 记住的重点</summary><p>${esc(S.ai.summary).replace(/\n/g, '<br>')}</p></details>` : ''}
+      <div class="ai__log" data-ai-log>${msgs || '<div class="empty">还没有对话。可以先按下面的按钮试试看。</div>'}</div>
+      <div class="ai__quick">${AI_QUICK.map(([q, l]) => `<button class="chip" data-act="ai-quick" data-id="${p.id}" data-q="${esc(q)}">${esc(l)}</button>`).join('')}</div>
+      <textarea rows="4" data-ai-text maxlength="4000" placeholder="例：对方说「多少钱？可以先看看吗」，帮我回"></textarea>
+      <div class="btnrow"><button class="btn" data-act="ai-send" data-id="${p.id}">${svg('chat', 16)}问 AI</button></div>`);
+    const log = $('[data-ai-log]'); if (log) log.scrollTop = log.scrollHeight;
+  }
+
   function moreSheet(p) {
     sheet(`<div class="sheet__head"><h3>${esc(p.business_name)}</h3>${closeBtn}</div>
       <div class="sheet__label">重写开场白</div>
@@ -488,6 +528,22 @@
         return;
       }
       if (act === 'more') { moreSheet(p); return; }
+      if (act === 'ai') { await aiSheet(p); return; }
+      if (act === 'ai-quick') { const ta = $('[data-ai-text]'); ta.value = t.dataset.q; ta.focus(); return; }
+      if (act === 'ai-send') {
+        const ta = $('[data-ai-text]'); const text = ta.value.trim();
+        if (!text) { toast('先输入问题，或贴上对方的信息。'); return; }
+        busy(t, true, 'AI 在想…');
+        const j = await api('chat', { id: p.id, text });
+        upsert(j.item); S.ai = { id: p.id, chat: j.item.ai_chat || [], summary: j.item.ai_summary || '' };
+        renderAi(p); return;
+      }
+      if (act === 'ai-copy' || act === 'ai-wa' || act === 'ai-email') {
+        const text = (S.aiDrafts || [])[+t.dataset.k] || '';
+        if (act === 'ai-copy') { copy(text); toast('已复制，可以贴到 WhatsApp / IG / Email。'); return; }
+        if (act === 'ai-wa') { if (!okNow('发 WhatsApp')) return; window.open(waLink(p.whatsapp, text), '_blank', 'noopener'); toast('WhatsApp 已打开，信息已经填好，看一遍再发送。'); return; }
+        const a = document.createElement('a'); a.href = mailLink(p, text); a.rel = 'noopener'; document.body.appendChild(a); a.click(); a.remove(); toast('邮件已经填好，看一遍再发送。'); return;
+      }
       if (act === 'replied-more') { repliedSheet(p); return; }
       if (act === 'reply') { replySheet(p); return; }
       if (act === 'edit') { S.queueFromEdit = S.queueOn; editSheet(p); S.queueOn = false; return; }
@@ -557,6 +613,17 @@
 
   $('[data-search]').addEventListener('input', (e) => { S.q = e.target.value; renderList(); });
   $('[data-save-limit]').addEventListener('click', async () => { try { const j = await api('settings', { dailyLimit: $('[data-limit]').value }); S.settings = j.settings; render(); toast('已保存：每天最多 ' + j.settings.dailyLimit + ' 个。'); } catch (e) { $('[data-limit]').value = S.settings.dailyLimit || 10; toast(e.message); } });
+  const bk = $('[data-backup]');
+  if (bk) bk.addEventListener('click', async () => {
+    try {
+      const j = await api('backup');
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([JSON.stringify(j.backup, null, 1)], { type: 'application/json' }));
+      a.download = `cartsmith-desk-backup-${S.today}.json`;
+      document.body.appendChild(a); a.click(); a.remove();
+      toast('完整备份已下载（名单、记录、AI 对话都在里面），请存在安全的地方。');
+    } catch (e) { toast(e.message); }
+  });
   $('[data-export]').addEventListener('click', async () => {
     try {
       const j = await api('export');

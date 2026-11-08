@@ -80,7 +80,11 @@ function open(raw){return crypto.subtle.importKey('raw',raw,'AES-GCM',false,['de
   try{localStorage.setItem(K,s64(raw))}catch(e){}
   var h=new TextDecoder().decode(pt),m=h.match(/var H='([0-9a-f]+)'/);if(m){try{localStorage.setItem('pv_'+m[1],'1')}catch(e){}}
   h=h.replace(/<head([^>]*)>/i,'<head$1><style>img[data-pv-src]{visibility:hidden}</style><script>'+RT.replace(/<\\/script/gi,'<\\\\/script')+'<\\/script>');
-  document.open();document.write(h);document.close()})}
+  // only replace the password page once it has finished loading: if the saved key decrypts while the page is still
+  // being read, document.open() does nothing and the store got written INSIDE the password page (its centred grid
+  // squeezed the top bar and pushed the page sideways on phones)
+  return new Promise(function(done){function go(){document.open();document.write(h);document.close();done()}
+    if(document.readyState==='complete')go();else addEventListener('load',function(){setTimeout(go,0)},{once:true})})})}
 if(!window.crypto||!crypto.subtle){document.body.innerHTML='<p style="padding:24px">Please open this link in Chrome or Safari. · 请用 Chrome 或 Safari 打开。</p>';return}
 var saved;try{saved=localStorage.getItem(K)}catch(e){}
 if(saved)open(u8(saved)).catch(function(){try{localStorage.removeItem(K)}catch(e){}show(false)});else show(false);

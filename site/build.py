@@ -314,7 +314,7 @@ class Store:
       <a class="btn btn--ghost btn--block" href="{sp}cart.html">View cart</a>
     </div>
   </aside></div>
-<button class="chat-fab" type="button" data-demo="In your store this button opens a chat with you on WhatsApp or Instagram — with the product name already filled in.">{icon('chat')}<span>Chat</span></button>
+<button class="chat-fab" type="button" aria-label="Chat" data-demo="In your store this button opens a chat with you on WhatsApp or Instagram — with the product name already filled in.">{icon('chat')}<span>Chat</span></button>
 <div class="toast" role="status" aria-live="polite" data-toast></div>
 {self.gate_html()}
 </body>
@@ -759,6 +759,16 @@ def _lum(hexc):
     return 0.2126 * ch[0] + 0.7152 * ch[1] + 0.0722 * ch[2]
 
 
+def _mix(a, b, t):
+    """a moved toward b by t (0..1), as #rrggbb"""
+    def h(x):
+        x = x.lstrip("#")
+        x = "".join(ch * 2 for ch in x) if len(x) == 3 else x[:6]
+        return [int(x[i:i + 2], 16) for i in (0, 2, 4)]
+    pa, pb = h(a), h(b)
+    return "#" + "".join(f"{round(pa[i] + (pb[i] - pa[i]) * t):02x}" for i in range(3))
+
+
 def _contrast(a, b):
     la, lb = sorted((_lum(a), _lum(b)), reverse=True)
     return (la + 0.05) / (lb + 0.05)
@@ -778,9 +788,20 @@ def preview_css(pv, theme=""):
     if eff("accent", "accent") and eff("bg", "bg") and _contrast(eff("accent", "accent"), eff("bg", "bg")) < 2.5:
         if c.pop("accent", None):
             dropped.append("accent")
-    if eff("accent", "accent") and eff("accent-fg", "accent_fg") and _contrast(eff("accent", "accent"), eff("accent-fg", "accent_fg")) < 3:
-        acc = eff("accent", "accent")
-        c["accent_fg"] = "#ffffff" if _contrast(acc, "#ffffff") >= _contrast(acc, "#111111") else "#111111"
+    if "accent" in c:
+        # brand colour is used for buttons (with accent-fg text) and small coloured text on the page background:
+        # nudge it darker (light templates) or lighter (dark templates) until both read at 4.5:1
+        bg_ = eff("bg", "bg") or "#ffffff"
+        light_bg = _lum(bg_) > 0.4
+        fg_ = c.get("accent_fg") or ("#ffffff" if light_bg else "#111111")
+        acc = c["accent"]
+        for _ in range(40):
+            if _contrast(acc, fg_) >= 4.5 and _contrast(acc, bg_) >= 4.5:
+                break
+            acc = _mix(acc, "#000000" if light_bg else "#ffffff", 0.06)
+        if acc != c["accent"]:
+            print(f"ℹ 品牌色 {c['accent']} 调深/调浅成 {acc}，按钮和小字才看得清楚")
+        c["accent"], c["accent_fg"] = acc, fg_
     if dropped:
         print(f"⚠ 颜色 {', '.join(dropped)} 在模板 {pv['template']} 上会看不清，已改用模板原本的颜色")
     m = {"accent": "--accent", "accent_fg": "--accent-fg", "bg": "--bg", "fg": "--fg", "soft": "--soft"}
