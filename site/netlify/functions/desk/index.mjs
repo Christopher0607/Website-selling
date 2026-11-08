@@ -405,7 +405,8 @@ async function handle(action, b, doc) {
 
     case 'settings': {
       const n = parseInt(b.dailyLimit, 10);
-      if (n >= 1 && n <= 100) doc.settings.dailyLimit = n;
+      if (!(n >= 1 && n <= 100)) throw Object.assign(new Error('每天上限要在 1 到 100 之间（WhatsApp 一天发太多容易被封）'), { code: 'bad_input' });
+      doc.settings.dailyLimit = n;
       return { settings: doc.settings, saved: true };
     }
 

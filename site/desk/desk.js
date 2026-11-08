@@ -463,7 +463,7 @@
   });
 
   $('[data-search]').addEventListener('input', (e) => { S.q = e.target.value; renderList(); });
-  $('[data-save-limit]').addEventListener('click', async () => { try { const j = await api('settings', { dailyLimit: $('[data-limit]').value }); S.settings = j.settings; render(); toast('已保存。'); } catch (e) { toast(e.message); } });
+  $('[data-save-limit]').addEventListener('click', async () => { try { const j = await api('settings', { dailyLimit: $('[data-limit]').value }); S.settings = j.settings; render(); toast('已保存：每天最多 ' + j.settings.dailyLimit + ' 个。'); } catch (e) { $('[data-limit]').value = S.settings.dailyLimit || 10; toast(e.message); } });
   $('[data-export]').addEventListener('click', async () => {
     try {
       const j = await api('export');

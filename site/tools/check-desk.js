@@ -234,7 +234,8 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
   await p.fill('[data-limit]', '101');
   await p.click('[data-save-limit]');
   await p.waitForTimeout(500);
-  ok(JSON.parse(fs.readFileSync(STORE, 'utf8')).settings.dailyLimit === 100, 'daily limit above 100 is ignored');
+  ok(JSON.parse(fs.readFileSync(STORE, 'utf8')).settings.dailyLimit === 100, 'daily limit above 100 is not saved');
+  ok(/1 到 100/.test(await p.textContent('[data-toast], .toast')) && (await p.inputValue('[data-limit]')) === '100', 'above 100: clear error, box goes back to 100 (no fake "saved")');
 
   // no emoji anywhere in the interface (message boxes excluded: their text comes from the AI)
   const uiText = await p.evaluate(() => { const c = document.body.cloneNode(true); c.querySelectorAll('textarea').forEach((t) => t.remove()); return c.innerText; });
