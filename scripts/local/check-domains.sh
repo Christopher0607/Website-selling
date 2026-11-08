@@ -30,7 +30,8 @@ title = html.unescape(re.sub(r"\s+", " ", t.group(1)).strip())[:80] if t else "-
 kind = "SITE"
 if "/lander" in h or "for sale" in low or "parked" in low or "domain is for sale" in low:
     kind = "PARKED"
-elif any(k in low for k in ["website expired", "under construction", "coming soon", "site not found", "temporarily unavailable", "this site is under development"]):
+elif any(k in low for k in ["website expired", "under construction", "coming soon", "site not found", "temporarily unavailable", "this site is under development",
+                             "connectyourdomain", "just another wordpress site", "<title>index of /"]):
     kind = "EXPIRED"
 elif "just a moment" in low or "attention required" in low:
     kind = "CHECK"

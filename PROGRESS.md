@@ -7,7 +7,7 @@
 ## 当前状态
 
 - 当前阶段：**Phase 4.1 找客户**（网站 https://cartsmith.netlify.app 已上线；俊宇 2026-11-07 说开始找客户）
-- 下一个任务：**俊宇：① 每天早上打开工作台 → 「新商家」按「全部加入」（Claude Code 每天约 7 点自动放 20 家餐厅）→ 逐家发开场白（一天 ≤10 家，两星期后最多 20） ② 2026-11-11 跟进已联系的 4 家 ③ 设定 IG 自动回复（`docs/10-instagram-auto-replies.md`）**
+- 下一个任务：**俊宇：① 打开工作台 → 「新商家」按「全部加入」（第 3 批 10 家 + 今天 7 家餐厅）→ 逐家发开场白（一天 ≤10 家） ② 以后每天早上约 7 点会有新的餐厅出现 ③ 2026-11-11 跟进已联系的 4 家 ④ 设定 IG 自动回复（`docs/10-instagram-auto-replies.md`）。Claude Code：2026-11-09 07:45 确认定时任务有没有送进固定 session（session_01QtqzzUGnykcU7RTi4ow58S）**
 - 卡住的事：没有（DigitalOcean 服务器、域名、SSM 都等第一个客户说「好」再做；SSM 一定要在收订金前完成）
 
 ---
@@ -110,6 +110,7 @@
 
 | 日期 | 任务 | 结果 | 网址 / 文件 | 未解决的问题 |
 |---|---|---|---|---|
+| 2026-11-08 | 4.1e 每日找餐厅：测试和修正 | 前两次测试失败：定时任务新开的 session 没有 repo 写入权限（push 403），也没有 add_repo 工具；第一次还只找了 3 家、漏掉 Jan's Gelato 老板另有网店 → 没放进工作台。改成固定 session「每日餐厅研究（定时任务专用）」（session_01QtqzzUGnykcU7RTi4ow58S，带 repo），新定时任务 trig_01Hsdep7eaLpgXd9jzyii6fS 每天 6:39 送进去；旧任务删除；提示词加严（看 60+ 候选、8+ 来源、三项网站检查、价钱门槛）。固定 session 测试成功：看了约 110 家、17 个来源，放 7 家（Roost KL、Good Blue Men、RATA、Fluffed、Pik Wah、Leen's、Naj & Belle），已 push（4c50bee）；抽查域名检查都对；修了 check-domains.sh（Wix 没接上的错误页、空白 WordPress、空目录算 EXPIRED） | `sales/leads/2026-11-08-restaurants.json`、`scripts/local/check-domains.sh` | 手动触发会另开新 session（没有 repo），所以要明早确认定时执行有没有送对；每天 7 家左右，比 20 家少（很多餐厅已经有网站或用 Beepit / Oddle）；Pik Wah 的网站可能已经有人在做 |
 | 2026-11-08 | 4.1e 每天自动找餐厅（俊宇要求：每天早上 7 点找 20 家 A 级餐厅、确认没有网站；另外想用 instagram_dm_mcp 自动发 IG） | 新增 `scripts/local/check-domains.sh`（试 .com/.com.my/.my/.co，分 NONE/PARKED/EXPIRED/CHECK/SITE）；用它重查发现 Joymom's 有 joymoms.my、第 3 批 10 家仍然没有网站；设定每天约 6:39（马来西亚时间）的定时任务：新 session 找 20 家 A 级餐厅（英文市场、有购买力、有东西可以在网上卖），写 `sales/leads/<日期>-restaurants.json`，build、push，工作台收件箱自动出现；决定记进 `docs/00-decisions.md` #18、#19。自动发 IG 私信：Claude Code 不做（非官方接口 + 自动发陌生私信），私信继续手动发 | `scripts/local/check-domains.sh`、`sales/leads/README.md`、`docs/00-decisions.md` | 每天 20 家多过每天可以发的 10 家，名单会累积；餐厅是新方向，第一批出来后看适不适合 |
 | 2026-11-08 | 4.1d 工作台「新商家收件箱」（俊宇要求把 instagram_dm_mcp 和工作台结合、全部自动化、不要复制粘贴） | 查证：instagram_dm_mcp 用 instagrapi（非官方接口，用 IG 帐号密码登入），README 没有提 Instagram 条款或封号风险；Meta 官方接口不能主动发第一条私信 → 自动发送先不做，等俊宇决定。已做：Claude Code 找的商家写进 `sales/leads/*.json` → build 产生 `inbox.mjs` → 工作台「今天」最上面显示，「全部加入」逐家 AI 打分写开场白、可以「跳过」、已加过的不会重复；卡片显示「Claude Code 找的 · A 级」和「发之前看一眼」；按「复制并打开 IG 私信」后底部出现「发给 ○○ 了吗？✓ 已发送」提示条；第 3 批 10 家已放进收件箱；本地测试 32 项全通过 | `site/netlify/functions/desk/`、`site/desk/`、`site/build.py`、`sales/leads/`、`docs/11-sales-desk.md` | 自动发 IG 要俊宇决定（有封号风险）；定时找商家的频率待确认 |
 | 2026-11-08 | 4.1 候选商家第 3 批：英文市场、规模不大、有购买力（俊宇要求；他发现第 2 批有几家已经有网站） | A 级标准加第 5 项「购买力」（实体店 / 公司客户 / 寄卖点 / 单价 RM40+ / 花钱推广，至少一项）；每家都直接试品牌域名（.com/.com.my/.my/.co），排除了约 35 家已经有网站或太大 / 太小的；选出 8 家 A 级（Ginger Batiks、Ministry of Cakes、Best Borneo、Habitatku + Loulou、Ilham Ceramics、Dimpled、Forest Floor、Artigusto）+ 2 家 B 级（Shiramics、Over Time Leathercraft），附英文开场白注意事项、贴进工作台的资料格、排除名单；第 2 批补注：壹家有 yijiapastry.com | `sales/research/2026-11-08-batch-3-english.md`、`sales/research/2026-11-08-batch-2-chinese.md` | Habitatku、Ilham Ceramics 的 IG 要俊宇找；Forest Floor、Shiramics 要确认还在营业；IG 简介里的链接要俊宇亲眼看 |
