@@ -36,6 +36,9 @@ async function unlock(page) {
     await page.waitForFunction(() => { const i = document.querySelector('input[type=password]'); return !i || !i.offsetParent; }, null, { timeout: 15000 }).catch(() => {});
     await page.waitForTimeout(800);
   }
+  // the page shows ~0.1 s before store.js has run (it loads after the HTML, like on any site): wait for it the way a
+  // person would, so a tap is not lost in that gap. A page where it never runs is still caught ("store script ran").
+  await page.waitForFunction(() => document.documentElement.getAttribute('data-store') === 'ready', null, { timeout: 8000 }).catch(() => {});
 }
 
 // Runs inside the page: layout, demo bar, contrast, broken images.
