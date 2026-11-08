@@ -132,6 +132,14 @@
     return Object.keys(groups).sort((a, b) => groups[b].length - groups[a].length || a.localeCompare(b)).map((area) => `<section class="visit"><h3>${esc(area)} <small>${groups[area].length} 家</small></h3>${groups[area].map((p) => `<div class="visit__row"><div><b>${esc(p.business_name)}</b><small>${esc(STATUS[p.status] || p.status)}${callNo(p) ? ' · ' + esc(fmtPhone(callNo(p))) : ''}</small><small>${esc(p.address)}</small></div><a class="btn btn--ghost btn--sm" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.business_name + ' ' + p.address)}" target="_blank" rel="noopener">${svg('pin', 14)}地图</a></div>`).join('')}</section>`).join('') + '<p class="hint">建议平日 14:30–17:00 去；买一样东西，用手机给老板看他们的样板。</p>';
   }
 
+  // ------------------------------------------------------------ finished mockup on the card (2026-11-09)
+  function pvBlock(p) {
+    if (!p.preview_url || !p.preview_password || ['do_not_contact', 'won', 'lost'].includes(p.status)) return '';
+    let h = `<div class="pvbox" data-pvbox><div class="pvbox__row"><b>样板</b><a href="${esc(p.preview_url)}" target="_blank" rel="noopener">打开看看</a><span>密码 <code>${esc(p.preview_password)}</code></span><button class="linkbtn" data-act="copy-pv" data-id="${p.id}">复制网址和密码</button></div><small>${esc(p.preview_delete_by)} 删除${p.status === 'preview_sent' ? ' · 已经发给对方' : ''}</small></div>`;
+    if (p.status !== 'preview_sent' && p.preview_msg && !(p.status === 'replied' && p.draft_reply)) h += msgBox(p, 'preview_msg', '附样板的信息（打完电话或直接发）') + sendRow(p, 'preview_msg');
+    return h;
+  }
+
   // ------------------------------------------------------------ card
   function card(p, mode) {
     const sub = [p.instagram ? '@' + esc(p.instagram) : '', esc(PLATFORM[p.platform] || ''), esc(p.niche || ''), p.store_url ? `<a href="${esc(p.store_url)}" target="_blank" rel="noopener">店铺</a>` : ''].filter(Boolean).join('<span class="dot">·</span>');
@@ -155,6 +163,7 @@
     if (p.observation) body += `<p class="obs">${esc(p.observation)}</p>`;
     if (p.verify && p.status === 'new') body += `<p class="verify">${svg('pin', 14)}<span>发之前看一眼：${esc(p.verify)}</span></p>`;
     body += contacts(p);
+    body += pvBlock(p);
     body += callBlock(p);
 
     if (p.status === 'new') {
@@ -417,6 +426,8 @@
         else if (act === 'copyopen' && ['message', 'followup', 'draft_reply'].includes(t.dataset.field)) showSentbar(p, 'ig');
         return;
       }
+      if (['wa', 'email', 'copyopen'].includes(act)) S.pendingField = t.dataset.field || '';
+      if (act === 'copy-pv') { copy(`${p.preview_url}\n密码：${p.preview_password}`); toast('网址和密码已复制。'); return; }
       if (act === 'wa') {
         if (!okNow('发 WhatsApp')) return;
         window.open(waLink(p.whatsapp, textOf(t, p)), '_blank', 'noopener');
@@ -497,7 +508,8 @@
       if (act === 'purged') { const j = await api('mark', { id: p.id, event: 'preview_deleted' }); upsert(j.item); render(); toast('已记录：样板删除了。'); return; }
       busy(t, true, act === 'reply-go' || act === 'followup' || act === 'rewrite' ? 'AI 写作中…' : '保存中…');
       let j;
-      if (act === 'sent') { j = await api('mark', { id: p.id, event: 'sent', channel: t.dataset.ch || '' }); if (S.pending === p.id) hideSentbar(); toast(j.item.next_followup_date ? `已记录，${j.item.next_followup_date} 会提醒你跟进。` : '已记录。'); }
+      if (act === 'sent' && S.pending === p.id && S.pendingField === 'preview_msg') { j = await api('mark', { id: p.id, event: 'preview_sent', url: p.preview_url, channel: t.dataset.ch || '' }); hideSentbar(); toast(`已记录发了样板，${j.item.next_followup_date} 提醒你跟进；${j.item.preview_delete_by} 要删除样板。`); }
+      else if (act === 'sent') { j = await api('mark', { id: p.id, event: 'sent', channel: t.dataset.ch || '' }); if (S.pending === p.id) hideSentbar(); toast(j.item.next_followup_date ? `已记录，${j.item.next_followup_date} 会提醒你跟进。` : '已记录。'); }
       else if (act === 'mark') { j = await api('mark', { id: p.id, event: t.dataset.ev }); toast('已记录。'); }
       else if (act === 'followup') j = await api('followup', { id: p.id });
       else if (act === 'rewrite') j = await api('rewrite', { id: p.id, language: t.dataset.lang || '', hint: t.dataset.hint || '' });

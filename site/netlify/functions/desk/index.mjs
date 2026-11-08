@@ -15,7 +15,7 @@ import fs from 'node:fs';
 import { getStore } from '@netlify/blobs';
 import { KNOWLEDGE, IG_HANDLE } from '../chat/knowledge.mjs';
 import { SCRIPTS } from './scripts.mjs';
-import { INBOX } from './inbox.mjs';
+import { INBOX, PREVIEWS as BUNDLED_PREVIEWS } from './inbox.mjs';
 
 const DOC = 'prospects-v1';
 const MAX_INPUT = 3000;
@@ -175,7 +175,12 @@ function mark(p, ev, url, channel) {
     }
     p.followup = '';
   } else if (ev === 'dnc') { p.status = 'do_not_contact'; p.next_followup_date = ''; }
-  else if (ev === 'preview_sent') { p.status = 'preview_sent'; p.preview_delete_by = myDate(14); p.next_followup_date = myDate(2); if (url) p.preview_url = url.slice(0, 300); }
+  else if (ev === 'preview_sent') {
+    p.status = 'preview_sent'; p.preview_delete_by = p.preview_delete_by || myDate(14); p.next_followup_date = myDate(2); if (url) p.preview_url = url.slice(0, 300);
+    if (CHANNELS.includes(channel)) { p.last_channel = channel; (p.channels = p.channels || []).includes(channel) || p.channels.push(channel); }
+    if (!p.first_contact_date) { p.first_contact_date = today; p.touches = (p.touches || 0) + 1; }
+    p.last_contact_date = today;
+  }
   else if (ev === 'proposal_sent') { p.status = 'proposal_sent'; p.next_followup_date = myDate(3); }
   else if (ev === 'replied') { p.status = 'replied'; p.next_followup_date = ''; p.last_contact_date = today; }
   else if (ev === 'reopen') { p.status = p.touches ? 'contacted' : 'new'; }
@@ -243,13 +248,68 @@ async function allLeads() {
   if (url !== 'off' && (!leadsCache.list || now - leadsCache.at > 5 * 60e3)) {
     try {
       const r = await fetch(url, { signal: AbortSignal.timeout(4000), headers: { Accept: 'application/json' } });
-      if (r.ok) { const j = await r.json(); leadsCache = { at: now, list: (Array.isArray(j) ? j : j.leads || []).map(cleanLead).filter(Boolean) }; }
-      else leadsCache = { at: now, list: leadsCache.list || [] };
-    } catch (e) { leadsCache = { at: now, list: leadsCache.list || [] }; }
+      if (r.ok) { const j = await r.json(); leadsCache = { at: now, list: (Array.isArray(j) ? j : j.leads || []).map(cleanLead).filter(Boolean), previews: Array.isArray(j.previews) ? j.previews : [] }; }
+      else leadsCache = { at: now, list: leadsCache.list || [], previews: leadsCache.previews || [] };
+    } catch (e) { leadsCache = { at: now, list: leadsCache.list || [], previews: leadsCache.previews || [] }; }
   }
   const byId = new Map(INBOX.map((l) => [l.id, l]));
   for (const l of (url === 'off' ? [] : leadsCache.list || [])) byId.set(l.id, l); // the leads branch is newer
   return [...byId.values()];
+}
+
+// ---------------------------------------------------------------- finished mockups (2026-11-09)
+// The research side publishes encrypted mockups (scripts/local/preview-publish.js) and adds
+// {slug, url, enc, lead_id / instagram} to the leads branch. `enc` is the mockup password encrypted with
+// this desk's public key, so the public repo never holds a password. The private key never leaves Blobs.
+let keyCache = null;
+async function previewKeys() {
+  if (keyCache) return keyCache;
+  const file = env('DESK_LOCAL_FILE');
+  const load = file ? async () => { try { return JSON.parse(fs.readFileSync(file + '.keys.json', 'utf8')); } catch (e) { return null; } }
+    : async () => getStore({ name: 'sales-desk', consistency: 'strong' }).get('preview-keys-v1', { type: 'json' });
+  const save = file ? async (k) => fs.writeFileSync(file + '.keys.json', JSON.stringify(k))
+    : async (k) => getStore({ name: 'sales-desk', consistency: 'strong' }).setJSON('preview-keys-v1', k);
+  let k = await load();
+  if (!k || !k.publicKey || !k.privateKey) {
+    const pair = crypto.generateKeyPairSync('rsa', { modulusLength: 2048, publicKeyEncoding: { type: 'spki', format: 'pem' }, privateKeyEncoding: { type: 'pkcs8', format: 'pem' } });
+    k = { publicKey: pair.publicKey, privateKey: pair.privateKey, created: myDate() };
+    await save(k);
+  }
+  keyCache = k;
+  return k;
+}
+function allPreviews() {
+  const bySlug = new Map((BUNDLED_PREVIEWS || []).map((x) => [x.slug, x]));
+  for (const x of (env('LEADS_URL') === 'off' ? [] : (leadsCache.previews || []))) bySlug.set(x.slug, x);
+  return [...bySlug.values()];
+}
+const PVMSG = {
+  zh: (n, u, pw, d) => `你好，我是 Cartsmith Studio。我们在网上看到 ${n}，用你们的店名和产品做了一个免费的网上订购首页样板，给你参考：\n${u}\n密码：${pw}\n\n用手机打开就可以看。照片是示意图，正式网站会用你们自己的照片。样板只给你看，${d} 会删除；不用钱，也不用马上决定。有兴趣的话回复这里就好。\n\n— Cartsmith Studio`,
+  en: (n, u, pw, d) => `Hi, this is Cartsmith Studio. We came across ${n} and made a free sample online-ordering homepage with your name and products:\n${u}\nPassword: ${pw}\n\nIt opens best on your phone. The photos are placeholders; a real site would use your own. It's private to you and will be deleted on ${d}, with no cost and no obligation. If you'd like to talk about it, just reply here.\n\n— Cartsmith Studio`,
+  ms: (n, u, pw, d) => `Hai, ini Cartsmith Studio. Kami nampak ${n} dan buatkan contoh laman utama tempahan online percuma dengan nama dan produk anda:\n${u}\nKata laluan: ${pw}\n\nBuka di telefon untuk tengok. Gambar hanya contoh; laman sebenar akan guna gambar anda sendiri. Ia hanya untuk anda dan akan dipadam pada ${d}, tiada bayaran dan tiada komitmen. Kalau berminat, balas sahaja di sini.\n\n— Cartsmith Studio`,
+};
+async function applyPreviews(doc, list) {
+  if (!list.length) return false;
+  let keys = null, changed = false;
+  for (const pv of list) {
+    const ig = handleOf(pv.instagram || '');
+    const p = doc.items.find((x) => (pv.lead_id && x.lead_id === pv.lead_id) || (ig && x.instagram === ig));
+    if (!p || p.preview_slug === pv.slug || ['do_not_contact', 'won', 'lost'].includes(p.status)) continue;
+    let secret;
+    try {
+      keys = keys || await previewKeys();
+      secret = JSON.parse(crypto.privateDecrypt({ key: keys.privateKey, padding: crypto.constants.RSA_PKCS1_OAEP_PADDING, oaepHash: 'sha256' }, Buffer.from(pv.enc, 'base64')).toString('utf8'));
+    } catch (e) { console.error('preview decrypt', pv.slug, e.message); continue; }
+    const pw = String(secret.password || '').slice(0, 80);
+    if (!pw) continue;
+    p.preview_slug = pv.slug; p.preview_url = String(pv.url).slice(0, 300); p.preview_password = pw;
+    p.preview_delete_by = /^\d{4}-\d{2}-\d{2}$/.test(pv.delete_by || '') ? pv.delete_by : (p.preview_delete_by || myDate(14));
+    p.preview_msg = (PVMSG[p.language] || PVMSG.en)(p.business_name, p.preview_url, pw, p.preview_delete_by);
+    if (p.draft_reply) p.draft_reply = p.draft_reply.replace(/\[(样板网址|mockup link|pautan contoh)\]/g, p.preview_url).replace(/\[(密码|password|kata laluan)\]/g, pw);
+    log(p, 'preview_made', p.preview_url);
+    changed = true;
+  }
+  return changed;
 }
 
 // leads Claude Code found that are not yet imported / skipped / already in the list
@@ -373,7 +433,8 @@ async function handle(action, b, doc) {
   switch (action) {
     case 'list': {
       const LEADS = await allLeads();
-      const changed = refreshContacts(doc, LEADS);
+      let changed = refreshContacts(doc, LEADS);
+      if (await applyPreviews(doc, allPreviews())) changed = true;
       return { items: doc.items, settings: doc.settings, today: myDate(), inbox: pendingInbox(doc, LEADS), saved: changed };
     }
 
@@ -487,6 +548,9 @@ async function handle(action, b, doc) {
 }
 
 export default async (req, context) => {
+  if (req.method === 'GET' && new URL(req.url).searchParams.has('pubkey')) {
+    try { return json({ pubkey: (await previewKeys()).publicKey }); } catch (e) { console.error('pubkey', e); return json({ error: 'server_error' }, 500); }
+  }
   if (req.method !== 'POST') return json({ error: 'method_not_allowed' }, 405);
   const origin = req.headers.get('origin');
   const host = req.headers.get('host');

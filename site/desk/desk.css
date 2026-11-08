@@ -216,3 +216,9 @@ input[type=file] { display: block; width: 100%; margin-top: 6px; font: 400 .88re
 .visit__row { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 0; border-top: 1px solid var(--line); }
 .visit__row small { display: block; color: var(--muted); font-size: .8rem; }
 .hdr-link { font-size: .82rem; }
+
+/* finished mockup box (2026-11-09) */
+.pvbox { margin: 8px 0; padding: 10px 12px; border: 1px solid var(--line); border-left: 3px solid var(--accent); border-radius: 10px; background: var(--card); font-size: .88rem; }
+.pvbox__row { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; }
+.pvbox code { font-size: .92rem; background: var(--soft, #f1f0ec); padding: 1px 6px; border-radius: 5px; }
+.pvbox small { color: var(--muted); display: block; margin-top: 4px; }

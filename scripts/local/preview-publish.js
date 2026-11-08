@@ -12,6 +12,9 @@
 //   node scripts/local/preview-publish.js list                # 列出 previews 分支上的样板和删除日期
 //   node scripts/local/preview-publish.js delete p012         # 删除（14 天内一定要删）
 //   node scripts/local/preview-publish.js encrypt p012 <资料夹>  # 只加密到本机资料夹（测试用，不 push）
+//   node scripts/local/preview-publish.js desk-note p012      # 把网址 + 加密的密码写进 sales/leads/previews.json（publish 会自动做）
+// 工作台备注：密码用工作台的公钥（/api/desk?pubkey=1）加密后才写进 repo，只有工作台解得开；
+// preview.json 要有 lead_id（新商家 id）或 instagram，工作台才知道是哪一家。commit sales/leads/previews.json 到 leads 分支。
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
@@ -161,9 +164,41 @@ function listOnBranch() {
   return out.split('\n').filter((s) => /^[a-z0-9-]+-[0-9a-f]{8}$/.test(s));
 }
 
+// ---------------------------------------------------------------- desk note (url + password encrypted for the sales desk)
+const NOTES = path.join(ROOT, 'sales', 'leads', 'previews.json');
+async function deskNote(code) {
+  const p = previewOf(code);
+  if (!fs.existsSync(p.recPath)) die(`${code} 还没发布：先跑 publish`);
+  const rec = JSON.parse(fs.readFileSync(p.recPath, 'utf8'));
+  if (!p.cfg.lead_id && !p.cfg.instagram) die('preview.json 要有 lead_id 或 instagram，工作台才知道是哪一家');
+  const deskUrl = (process.env.DESK_URL || studio.site_url || 'https://cartsmith.netlify.app').replace(/\/$/, '') + '/api/desk?pubkey=1';
+  let pubkey;
+  for (const wait of [0, 3, 10, 20]) {
+    if (wait) execFileSync('sleep', [String(wait)]);
+    try { const r = await fetch(deskUrl); if (r.ok) { pubkey = (await r.json()).pubkey; if (pubkey) break; } } catch (e) { /* retry */ }
+  }
+  if (!pubkey) die(`拿不到工作台的公钥（${deskUrl}）。工作台的新版本还没上线？晚一点再跑：node scripts/local/preview-publish.js desk-note ${code}`);
+  const enc = crypto.publicEncrypt({ key: pubkey, padding: crypto.constants.RSA_PKCS1_OAEP_PADDING, oaepHash: 'sha256' }, Buffer.from(JSON.stringify({ password: p.pw }))).toString('base64');
+  const doc = fs.existsSync(NOTES) ? JSON.parse(fs.readFileSync(NOTES, 'utf8')) : { note: '做好的免费样板。网址公开，密码用工作台的公钥加密（只有工作台解得开）。scripts/local/preview-publish.js 自动写。', previews: [] };
+  doc.previews = (doc.previews || []).filter((x) => x.slug !== rec.slug && x.code !== code);
+  doc.previews.push({ code, slug: rec.slug, url: rec.url, delete_by: rec.delete_by || p.cfg.delete_by || '', lead_id: p.cfg.lead_id || '', instagram: String(p.cfg.instagram || '').replace(/^@/, ''), name: (p.cfg.brand && p.cfg.brand.name) || '', photos: p.cfg.photos || '', enc });
+  fs.writeFileSync(NOTES, JSON.stringify(doc, null, 1) + '\n');
+  console.log(`工作台备注写好了：sales/leads/previews.json（${code}）。commit + push 到 leads 分支后，工作台 5 分钟内在那张卡显示网址和密码。`);
+}
+function dropNote(code) {
+  if (!fs.existsSync(NOTES)) return;
+  const doc = JSON.parse(fs.readFileSync(NOTES, 'utf8'));
+  const before = (doc.previews || []).length;
+  doc.previews = (doc.previews || []).filter((x) => x.code !== code);
+  if (doc.previews.length !== before) { fs.writeFileSync(NOTES, JSON.stringify(doc, null, 1) + '\n'); console.log('也从 sales/leads/previews.json 拿掉了（记得 commit 到 leads 分支）。'); }
+}
+
 // ---------------------------------------------------------------- commands
 const [cmd, code, extra] = process.argv.slice(2);
-if (cmd === 'encrypt') {
+(async () => {
+if (cmd === 'desk-note') {
+  await deskNote(code);
+} else if (cmd === 'encrypt') {
   const p = previewOf(code);
   const out = path.resolve(extra || path.join(os.tmpdir(), 'pv-' + p.slug));
   const n = encryptSite(p, path.join(out, p.slug));
@@ -184,6 +219,8 @@ if (cmd === 'encrypt') {
   console.log(`网址：${url}`);
   console.log(`密码：${p.pw}`);
   console.log(`删除日期：${p.cfg.delete_by || '（preview.json 没写）'} —— 到期跑：node scripts/local/preview-publish.js delete ${p.code}`);
+  if (p.cfg.lead_id || p.cfg.instagram) await deskNote(p.code);
+  else console.log('（preview.json 没有 lead_id / instagram，所以没有写工作台备注）');
 } else if (cmd === 'list') {
   const slugs = listOnBranch();
   if (!slugs.length) console.log('previews 分支上没有样板。');
@@ -201,6 +238,8 @@ if (cmd === 'encrypt') {
   const rec = path.join(ROOT, 'clients', code, 'preview', 'publish.json');
   if (fs.existsSync(rec)) fs.rmSync(rec);
   console.log(`已从网站删除 ${slugs.join(', ')}（大约 1 分钟后生效）。git 历史里只剩加密过的档案，没有密码打不开。`);
+  dropNote(code);
 } else {
-  console.log('用法：publish <代号> | list | delete <代号> | encrypt <代号> [资料夹]（见档案开头的说明）');
+  console.log('用法：publish <代号> | list | delete <代号> | desk-note <代号> | encrypt <代号> [资料夹]（见档案开头的说明）');
 }
+})().catch((e) => die(String(e && e.stack || e)));
