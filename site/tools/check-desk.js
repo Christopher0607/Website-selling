@@ -15,6 +15,7 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
   let fail = 0;
   const ok = (c, m) => { console.log((c ? '  ✅ ' : '  ❌ ') + m); if (!c) fail++; };
   const ctx = await b.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, permissions: ['clipboard-read', 'clipboard-write'] });
+  await ctx.addInitScript(() => { window.DESK_NOW = '2026-11-10T07:00:00Z'; }); // 15:00 in Malaysia: inside good calling hours
   const p = await ctx.newPage();
   const errors = [];
   p.on('pageerror', (e) => errors.push(e.message));
@@ -70,9 +71,9 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
   await p.click('#c-p001 [data-act="followup"]');
   await p.waitForSelector('#c-p001 textarea[data-field="followup"]');
   ok(true, 'AI follow-up drafted');
-  const firstCh = await p.getAttribute('#c-p001 .send__btns button:first-child', 'data-act');
+  const order = await p.$$eval('#c-p001 .send__btns button', (bs) => bs.map((x) => x.dataset.act));
   const hint = await p.textContent('#c-p001 [data-send-hint]');
-  ok(firstCh === 'wa' && /上次用 Instagram/.test(hint) && /换 WhatsApp/.test(hint), 'follow-up suggests a channel they have not seen yet (WhatsApp first after an IG message)');
+  ok(order[0] === 'call' && order.indexOf('wa') < order.indexOf('copyopen') && /上次用 Instagram/.test(hint) && /换 电话/.test(hint), 'follow-up after an IG message: call first, then WhatsApp, Instagram last');
   await p.click('#c-p001 [data-act="sent"]');
   await p.waitForTimeout(500);
 
@@ -236,6 +237,63 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
   await p.waitForTimeout(500);
   ok(JSON.parse(fs.readFileSync(STORE, 'utf8')).settings.dailyLimit === 100, 'daily limit above 100 is not saved');
   ok(/1 到 100/.test(await p.textContent('[data-toast], .toast')) && (await p.inputValue('[data-limit]')) === '100', 'above 100: clear error, box goes back to 100 (no fake "saved")');
+
+  // phone calls (2026-11-09): call button, bad-hour warning, outcomes, post-call draft, visit list
+  {
+    const d0 = JSON.parse(fs.readFileSync(STORE, 'utf8'));
+    const base = { created: '2026-11-09', platform: 'other', store_url: '', instagram: '', whatsapp: '', email: '', niche: 'cafe', input: 'x', observation: 'Festive roast boxes every December', notes: '', brand_clear: true, sales_signal: true, active_social: true, no_or_weak_website: true, budget_signal: true, score: 5, fit: 'good', template: 'chili-pantry', status: 'new', touches: 0, history: [] };
+    d0.items.unshift({ ...base, id: 'p901', business_name: 'Roost Test', language: 'zh', phone: '60322011710', area: 'Bangsar', address: '69-1 Jalan Telawi 3, Bangsar Baru', message: '你好' });
+    d0.items.unshift({ ...base, id: 'p902', business_name: 'Callback Cafe', language: 'en', whatsapp: '60123334444', area: 'PJ SS2', address: '12 Jalan SS2/24, PJ', message: 'Hi' });
+    fs.writeFileSync(STORE, JSON.stringify(d0));
+    await p.reload();
+    await p.click('[data-tab="today"]');
+    await p.waitForSelector('#c-p901 [data-act="call"]');
+    ok((await p.getAttribute('#c-p901 .send__btns button:first-child', 'data-act')) === 'call', 'lead with a phone number: call is the first button');
+    ok(/Cartsmith Studio/.test(await p.textContent('#c-p901 .cue')), 'card shows the phone opener to read out');
+    const dialogs = [];
+    p.on('dialog', (dg) => dialogs.push(dg.message()));
+    await p.evaluate(() => { window.DESK_NOW = '2026-11-10T04:30:00Z'; }); // 12:30 in Malaysia
+    await p.click('#c-p901 [data-act="call"]');
+    await p.waitForSelector('#c-p901 [data-callout]');
+    ok(dialogs.some((m) => /午餐时间/.test(m)), 'calling at lunchtime asks first (bad-hour warning)');
+    await shot('callout');
+    await p.evaluate(() => { window.DESK_NOW = '2026-11-10T07:00:00Z'; }); // 15:00
+    await p.click('#c-p901 [data-act="call-out"][data-out="no_answer"]');
+    await p.waitForFunction(() => !document.querySelector('#c-p901'));
+    let s1 = JSON.parse(fs.readFileSync(STORE, 'utf8')).items.find((x) => x.id === 'p901');
+    ok(s1.call_misses === 1 && s1.next_call_date > s1.created && s1.status === 'new', 'no answer: logged, comes back tomorrow, not counted as contacted');
+    // next day: it shows under "今天要打电话"; they say yes
+    const d1 = JSON.parse(fs.readFileSync(STORE, 'utf8'));
+    d1.items.find((x) => x.id === 'p901').next_call_date = '2000-01-01';
+    fs.writeFileSync(STORE, JSON.stringify(d1));
+    await p.reload();
+    await p.waitForSelector('#c-p901 [data-act="call"]');
+    ok(/今天要打电话/.test(await p.textContent('[data-today-list]')), 'due call appears under 今天要打电话');
+    await p.click('#c-p901 [data-act="call"]');
+    await p.waitForSelector('#c-p901 [data-callout]');
+    await p.click('#c-p901 [data-act="call-out"][data-out="ok"]');
+    await p.waitForSelector('#c-p901 textarea[data-field="draft_reply"]');
+    s1 = JSON.parse(fs.readFileSync(STORE, 'utf8')).items.find((x) => x.id === 'p901');
+    ok(s1.status === 'replied' && /刚刚跟你通过电话/.test(s1.draft_reply) && s1.touches === 1 && s1.last_channel === 'call', 'yes on the phone: post-call message drafted (no AI), counted as first contact');
+    // another one asks to call back on a date
+    await p.click('#c-p902 [data-act="call"]');
+    await p.waitForSelector('#c-p902 [data-callout]');
+    await p.fill('#c-p902 [data-call-date]', '2099-01-01');
+    await p.click('#c-p902 [data-act="call-out"][data-out="callback"]');
+    await p.waitForFunction(() => !document.querySelector('#c-p902 [data-callout]'));
+    const s2 = JSON.parse(fs.readFileSync(STORE, 'utf8')).items.find((x) => x.id === 'p902');
+    ok(s2.next_call_date === '2099-01-01' && s2.status === 'contacted', 'call back later: date saved');
+    // visit list groups shops with an address by area, with a map link
+    await p.click('[data-tab="list"]');
+    await p.click('[data-filter="visit"]');
+    await p.waitForSelector('.visit');
+    const vt = await p.textContent('[data-all-list]');
+    ok(/Bangsar/.test(vt) && /PJ SS2/.test(vt) && (await p.$('.visit a[href*="google.com/maps"]')) !== null, 'visit list: grouped by area with map links');
+    ok(/\+60 12-333 4444/.test(vt) && /\+60 3-2201 1710/.test(vt), 'mobile and landline numbers are formatted correctly');
+    await shot('visit');
+    await p.click('[data-filter="all"]');
+    await p.click('[data-tab="today"]');
+  }
 
   // no emoji anywhere in the interface (message boxes excluded: their text comes from the AI)
   const uiText = await p.evaluate(() => { const c = document.body.cloneNode(true); c.querySelectorAll('textarea').forEach((t) => t.remove()); return c.innerText; });

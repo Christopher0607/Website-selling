@@ -58,7 +58,7 @@ label.check { display: flex; gap: 8px; align-items: center; font-weight: 500; }
 .top__row { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
 .top__brand { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 1rem; letter-spacing: -.01em; }
 .top__sep { color: var(--muted); font-weight: 500; padding-left: 8px; border-left: 1px solid var(--line-2); }
-.top__meta { font-size: .82rem; color: var(--muted); }
+.top__meta { font-size: .82rem; color: var(--muted); display: flex; gap: 12px; align-items: center; }
 .top__progress { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
 .pill { font-size: .78rem; font-weight: 600; color: var(--ink-2); white-space: nowrap; }
 .pill.is-full { color: var(--ember); }
@@ -199,3 +199,20 @@ input[type=file] { display: block; width: 100%; margin-top: 6px; font: 400 .88re
   .statgrid { grid-template-columns: repeat(4, 1fr); }
   .tabs { max-width: 720px; margin: 0 auto; border-left: 1px solid var(--line); border-right: 1px solid var(--line); }
 }
+
+/* phone calls, visit list (2026-11-09) */
+.ch--call { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+.callout { margin: 10px 0; padding: 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--card); }
+.callout .btnrow { margin-top: 8px; }
+.callout__later { display: flex; flex-wrap: wrap; align-items: end; gap: 8px; margin-top: 10px; }
+.callout__later label { display: grid; gap: 4px; font-size: .8rem; color: var(--muted); }
+.callout__later input { height: 36px; }
+.cue { margin: 8px 0; font-size: .88rem; }
+.cue summary { cursor: pointer; color: var(--muted); font-weight: 600; display: flex; align-items: center; gap: 6px; }
+.cue p { margin: 6px 0; line-height: 1.55; }
+.visit { margin: 0 0 18px; }
+.visit h3 { font-size: 1rem; margin: 0 0 8px; }
+.visit h3 small { color: var(--muted); font-weight: 500; }
+.visit__row { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 0; border-top: 1px solid var(--line); }
+.visit__row small { display: block; color: var(--muted); font-size: .8rem; }
+.hdr-link { font-size: .82rem; }

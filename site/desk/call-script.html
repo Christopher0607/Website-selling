@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>电话脚本 · Cartsmith 工作台</title>
+<link rel="stylesheet" href="desk.css">
+<style>
+  body { background: var(--bg); }
+  .cs { max-width: 760px; margin: 0 auto; padding: 18px 16px 80px; }
+  .cs h1 { font-size: 1.35rem; margin: 6px 0 4px; }
+  .cs h2 { font-size: 1.05rem; margin: 28px 0 10px; padding-top: 14px; border-top: 1px solid var(--line); }
+  .cs p, .cs li { line-height: 1.6; }
+  .cs .lead { color: var(--muted); margin: 0 0 14px; }
+  .say { background: var(--card); border: 1px solid var(--line); border-left: 3px solid var(--accent); border-radius: 10px; padding: 12px 14px; margin: 8px 0; }
+  .say b.l { display: inline-block; min-width: 2.2em; font-size: .72rem; color: var(--muted); font-weight: 600; letter-spacing: .04em; }
+  .say p { margin: 6px 0; }
+  details.obj { background: var(--card); border: 1px solid var(--line); border-radius: 10px; margin: 8px 0; }
+  details.obj summary { cursor: pointer; padding: 12px 14px; font-weight: 600; list-style: none; }
+  details.obj summary::-webkit-details-marker { display: none; }
+  details.obj summary::after { content: "+"; float: right; color: var(--muted); }
+  details.obj[open] summary::after { content: "–"; }
+  details.obj .in { padding: 0 14px 12px; }
+  .press { display: inline-block; font-size: .78rem; font-weight: 600; background: var(--soft, #f1f0ec); border-radius: 6px; padding: 2px 8px; margin-top: 4px; }
+  .rules li { margin: 4px 0; }
+  .back { font-size: .9rem; }
+  table.t { width: 100%; border-collapse: collapse; font-size: .92rem; }
+  table.t td { border-top: 1px solid var(--line); padding: 8px 6px; vertical-align: top; }
+</style>
+</head>
+<body>
+<main class="cs">
+  <p class="back"><a href="./">← 回工作台</a></p>
+  <h1>电话脚本</h1>
+  <p class="lead">目标只有一个：拿到对方一句「可以，你发给我看」。电话里不报套餐、不硬推。打完马上在卡片按结果。</p>
+
+  <h2>1. 打之前（30 秒）</h2>
+  <ul>
+    <li><b>时间：</b>餐厅、咖啡馆平日 14:30–17:00；卖产品的 10:00–12:00。不要在 11:30–14:00、18:00–21:00 和晚上打。很多餐厅星期一或星期二休息，先看营业时间。</li>
+    <li><b>看卡片：</b>店名、卖什么、卡片上的那一句观察（从报道看到的具体事情）。挑一句你自己讲得出口的。</li>
+    <li><b>准备好：</b>在卡片按「打电话」，打完会出现 4 个结果按钮。</li>
+    <li><b>心态：</b>一半以上会没接或说忙，正常。每天打 20–30 通，看的是总数，不是每一通。</li>
+  </ul>
+
+  <h2>2. 开场（照着念，30 秒内讲完）</h2>
+  <div class="say">
+    <p><b class="l">中文</b>你好，我是 Cartsmith Studio 的，我们帮本地的餐厅和品牌做网上接单的网站。想跟老板讲 30 秒，方便吗？</p>
+    <p><b class="l">EN</b>Hi, this is Cartsmith Studio — we build online-ordering websites for local food businesses and brands. Could I have 30 seconds with the owner?</p>
+    <p><b class="l">BM</b>Hai, saya dari Cartsmith Studio — kami buat laman web tempahan online untuk perniagaan makanan dan jenama tempatan. Boleh saya cakap dengan pemilik sekejap, 30 saat sahaja?</p>
+  </div>
+  <p>对方说「可以 / 我就是」，接着讲：</p>
+  <div class="say">
+    <p><b class="l">中文</b>我们在 <i>[报道 / 网上]</i> 看到你们的 <i>[招牌产品]</i>，很多人在问怎么订。我们想帮你们做一个免费的网上订购首页样板，用你们的店名和产品，不用钱，也不用马上决定。我 WhatsApp 发给你看看，可以吗？</p>
+    <p><b class="l">EN</b>We saw your <i>[signature item]</i> in <i>[article / online]</i>, and people often ask how to order. We'd like to make you a free sample homepage with your name and menu — no cost, no commitment. Can I WhatsApp it to you to have a look?</p>
+    <p><b class="l">BM</b>Kami nampak <i>[produk]</i> anda dalam <i>[artikel / online]</i>, dan ramai tanya macam mana nak tempah. Kami nak buatkan contoh laman utama percuma dengan nama dan menu anda — tiada bayaran, tiada komitmen. Boleh saya WhatsApp untuk anda tengok?</p>
+  </div>
+  <p>对方说可以，<b>收尾</b>：</p>
+  <div class="say">
+    <p><b class="l">中文</b>好，谢谢。这个号码有 WhatsApp 吗？请问怎么称呼？我们 1 到 2 个工作天内发给你，你看了喜欢再说，不喜欢也没关系。</p>
+    <p><b class="l">EN</b>Great, thank you. Is this number on WhatsApp? And may I know your name? We'll send it within 1–2 working days — no obligation at all.</p>
+    <p><b class="l">BM</b>Baik, terima kasih. Nombor ini ada WhatsApp? Boleh saya tahu nama? Kami akan hantar dalam 1–2 hari bekerja — tiada paksaan.</p>
+  </div>
+  <p><span class="press">按：可以发样板</span>（卡片会自动出现「刚刚通过电话」的 WhatsApp 草稿）</p>
+
+  <h2>3. 对方可能会说的话，怎么回</h2>
+
+  <details class="obj"><summary>「老板不在」「你找谁？」（员工接的）</summary><div class="in">
+    <div class="say"><p>没关系。请问老板通常几点比较方便？我那个时候再打。</p><p><b class="l">EN</b>No problem — what time is the owner usually free? I'll call back then.</p></div>
+    <p>问到时间就记下来。<span class="press">按：改天再打（选日期）</span>　员工愿意给老板的 WhatsApp 也可以接受，但不要硬要。</p>
+  </div></details>
+
+  <details class="obj"><summary>「我们现在很忙」</summary><div class="in">
+    <div class="say"><p>不好意思打扰。我什么时候再打比较方便？明天下午 3 点可以吗？</p><p><b class="l">EN</b>Sorry to catch you at a busy time. When's better — maybe tomorrow around 3pm?</p></div>
+    <p><span class="press">按：改天再打</span>　忙的时候不要硬讲，下次再打反而比较容易谈。</p>
+  </div></details>
+
+  <details class="obj"><summary>「不需要网站，我们有 IG / Shopee / Grab 就够了」</summary><div class="in">
+    <div class="say"><p>明白，IG 和平台都很重要，我们不是叫你不用。网站是多一个你自己的接单地方：客人可以自己看菜单、选日期、付款，不用一个一个回 DM；而且平台每一单会抽佣金，自己网站的单就不用。样板是免费的，你看一下觉得没用就算了，可以吗？</p>
+    <p><b class="l">EN</b>Totally — IG and the platforms matter, and you'd keep them. A website just adds your own ordering page: customers browse, pick a date and pay without you replying to every DM, and you don't pay platform commission on those orders. The sample is free — if it's not useful, no problem. Shall I send it?</p></div>
+    <p>还是不要 → 礼貌结束。<span class="press">按：不需要</span></p>
+  </div></details>
+
+  <details class="obj"><summary>「多少钱？」</summary><div class="in">
+    <div class="say"><p>老实跟你讲：一次性 RM2,800 起，看你要什么功能；之后每个月 RM150 起，包维护和小改动。不过先不用想价钱，我们先把样板做给你看，你觉得合适再谈。</p>
+    <p><b class="l">EN</b>Honestly, it starts from RM2,800 one-off depending on features, then from RM150 a month for upkeep and small changes. But let's not worry about price yet — see the sample first, and we'll talk only if it fits.</p></div>
+    <p>价钱照实讲（以 <code>site/studio.json</code> 为准），不要说「很便宜」「保证赚回来」。</p>
+  </div></details>
+
+  <details class="obj"><summary>「我们已经有网站了」</summary><div class="in">
+    <div class="say"><p>啊，不好意思，我们没查到。可以给我网址吗？我记下来，就不会再打扰你。</p><p><b class="l">EN</b>Ah, sorry — we couldn't find it. Could you share the link so we note it down and won't bother you again?</p></div>
+    <p><span class="press">按：不需要</span>，在备注写网址（之后研究会更准）。</p>
+  </div></details>
+
+  <details class="obj"><summary>「之前做过网站，没用 / 被骗过」</summary><div class="in">
+    <div class="say"><p>明白，很多老板有过不好的经验。我们的做法是：域名和付款帐户用你自己的名字开，付清之后网站是你的，要走的话我们给完整备份。样板是免费的，你先看，不喜欢就不用谈。</p>
+    <p><b class="l">EN</b>That's fair — many owners have had bad experiences. With us, the domain and payment accounts are in your own name, the site is yours once paid, and if you ever leave you get a full backup. The sample is free, so there's no risk in looking.</p></div>
+  </div></details>
+
+  <details class="obj"><summary>「发资料给我看」「WhatsApp 我」</summary><div class="in">
+    <div class="say"><p>好的，谢谢。这个号码有 WhatsApp 吗？我们 1–2 个工作天内把样板发给你。</p></div>
+    <p>这就是「可以」。<span class="press">按：可以发样板</span></p>
+  </div></details>
+
+  <details class="obj"><summary>「我要考虑 / 要问合伙人」</summary><div class="in">
+    <div class="say"><p>当然。我先把样板发给你，你可以直接拿给合伙人看，比我讲清楚。可以吗？</p><p><b class="l">EN</b>Of course. Let me send you the sample so you can show your partner — easier than me explaining. OK?</p></div>
+    <p>答应 → <span class="press">按：可以发样板</span>；不答应 → <span class="press">按：改天再打</span>（一周后）。</p>
+  </div></details>
+
+  <details class="obj"><summary>「你怎么有我的号码？」</summary><div class="in">
+    <div class="say"><p>是你们公开给客人订购的号码，我们在 <i>[报道 / Google 商家资料]</i> 看到的。如果不方便，我不会再打来。</p><p><b class="l">EN</b>It's the order number you share publicly — we saw it in <i>[article / Google listing]</i>. If you'd rather not, I won't call again.</p></div>
+    <p>照实讲来源（卡片的联系方式来源有写）。</p>
+  </div></details>
+
+  <details class="obj"><summary>「我们是小生意，没预算」</summary><div class="in">
+    <div class="say"><p>明白，没关系。样板是免费的，看看也不会有压力；以后生意需要的时候，你知道可以找我们就好。</p></div>
+    <p>对方还是不要 → <span class="press">按：不需要</span>。对方说「以后再说」→ <span class="press">按：改天再打</span>（一个月后）。</p>
+  </div></details>
+
+  <details class="obj"><summary>对方很不高兴、「不要再打来」</summary><div class="in">
+    <div class="say"><p>不好意思打扰了，我们不会再联系你。祝生意好。</p><p><b class="l">EN</b>Sorry for the trouble — we won't contact you again. All the best.</p></div>
+    <p>马上结束。<span class="press">按：不需要</span>（以后永远不会再出现）。</p>
+  </div></details>
+
+  <details class="obj"><summary>没人接 / 转去留言</summary><div class="in">
+    <p>不用留长留言。<span class="press">按：没接</span>，隔天会再出现（换一个时段打）。3 次都没接，就改用 WhatsApp / Email 发一条简短的开场白。</p>
+  </div></details>
+
+  <h2>4. 打完之后</h2>
+  <table class="t">
+    <tr><td><b>可以发样板</b></td><td>跟 Claude Code 说「帮我做 <i>店名</i> 的样板」（只用对方公开的资料、设密码、14 天内删除），做好后在卡片按 WhatsApp，草稿已经写好「刚刚通过电话」，贴上样板网址和密码再发。</td></tr>
+    <tr><td><b>改天再打</b></td><td>到了那天，「今天要打电话」会出现。</td></tr>
+    <tr><td><b>没接</b></td><td>隔天再出现；3 次没接就改发信息。</td></tr>
+    <tr><td><b>不需要</b></td><td>标记「不再联系」，永远不会再出现。</td></tr>
+  </table>
+
+  <h2>5. 守则</h2>
+  <ul class="rules">
+    <li>一开口就说明是谈生意的电话，不假装是客人。</li>
+    <li>不说我们做过多少客户（我们还没有），不保证销量、不保证上 Google 第一页。</li>
+    <li>对方说不要就结束，按「不需要」，不再联系。</li>
+    <li>只在营业时间打，不在吃饭时间、晚上打。</li>
+    <li>样板只给对方本人看：设密码、14 天内删除。</li>
+  </ul>
+</main>
+</body>
+</html>

@@ -74,6 +74,7 @@ Rules:
 - Use ONLY facts from the knowledge base and the notes you are given. Never invent facts about the prospect (sales numbers, reviews, followers) — if it isn't in the notes, treat it as unknown.
 - Cartsmith is new and has no clients yet: never claim or imply past clients, results or numbers.
 - Messages: warm, short (max ~70 words for first messages), sound like a real person writing to another business owner, use the specific observation, no fake urgency, no guarantees, no links in the first message.
+- First messages end with ONE simple yes/no question: may we send them a free homepage mockup made with their own name and products? Do not pitch packages or prices in the first message.
 - Voice and sign-off: write as "we" (the studio) and sign off as "Cartsmith Studio". NEVER use a personal name (no "Junyu", no "俊宇", no "[Your name]").
 - No emojis or emoticons at all, no hashtags, no exclamation-mark streaks. Plain, professional, friendly.
 - The same text may go out by Instagram DM, WhatsApp or email, so don't mention the channel ("saw your DM", "replying here") and keep it readable as a short email.
@@ -183,7 +184,7 @@ function mark(p, ev, url, channel) {
   log(p, ev, url || (ev === 'sent' && CHANNELS.includes(channel) ? channel : ''));
 }
 
-const CSV_FIELDS = ['id', 'business_name', 'niche', 'platform', 'store_url', 'social_url', 'contact_channel', 'contact_handle', 'whatsapp', 'email', 'language', ...CRITERIA, 'score', 'observation', 'opening_line', 'status', 'first_contact_date', 'last_contact_date', 'next_followup_date', 'preview_url', 'preview_delete_by', 'notes', 'touches'];
+const CSV_FIELDS = ['id', 'business_name', 'niche', 'platform', 'store_url', 'social_url', 'contact_channel', 'contact_handle', 'whatsapp', 'email', 'phone', 'area', 'address', 'language', ...CRITERIA, 'score', 'observation', 'opening_line', 'status', 'first_contact_date', 'last_contact_date', 'next_followup_date', 'preview_url', 'preview_delete_by', 'notes', 'touches'];
 function toCsv(items) {
   const q = (v) => { const s = String(v == null ? '' : v); return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
   const rows = items.map((p) => ({ ...p, social_url: p.instagram ? 'https://instagram.com/' + p.instagram : '', contact_channel: ({ ig: 'instagram', wa: 'whatsapp', email: 'email' })[p.last_channel] || 'instagram', contact_handle: p.instagram ? '@' + p.instagram : '', opening_line: p.message, ...Object.fromEntries(CRITERIA.map((c) => [c, p[c] ? 1 : 0])) }));
@@ -210,6 +211,7 @@ async function analyzeInto(doc, input, lang, lead) {
     // facts Claude Code already checked win over the AI's reading of the notes
     p.business_name = lead.name; p.instagram = handleOf(lead.instagram || ''); p.lead_id = lead.id; p.verify = lead.verify || ''; p.priority = lead.priority || '';
     p.whatsapp = waOf(lead.whatsapp) || p.whatsapp; p.email = emailOf(lead.email) || p.email; p.contact_source = lead.contact_source || '';
+    p.phone = waOf(lead.phone) || p.phone || ''; p.area = lead.area || p.area || ''; p.address = lead.address || p.address || '';
     p.store_url = lead.store_url || '';
     if (lead.template && TEMPLATES.includes(lead.template)) p.template = lead.template;
   }
@@ -231,6 +233,7 @@ function cleanLead(l) {
   if (!/^[a-z0-9][a-z0-9-]{2,80}$/.test(id) || !name || input.length < 10 || !handleOf(l.instagram)) return null;
   const str = (v, n) => String(v == null ? '' : v).slice(0, n);
   return { id, name: name.slice(0, 120), instagram: handleOf(l.instagram), whatsapp: str(l.whatsapp, 40), email: str(l.email, 120), contact_source: str(l.contact_source, 200),
+    phone: str(l.phone, 40), area: str(l.area, 60), address: str(l.address, 200),
     store_url: str(l.store_url, 300), language: ['zh', 'en', 'ms'].includes(l.language) ? l.language : '', template: TEMPLATES.includes(l.template) ? l.template : '',
     priority: str(l.priority, 4), why: str(l.why, 300), verify: str(l.verify, 300), batch: str(l.batch, 80), input: input.slice(0, MAX_INPUT) };
 }
@@ -265,8 +268,55 @@ function refreshContacts(doc, LEADS) {
     if (!l) continue;
     if (!p.whatsapp && waOf(l.whatsapp)) { p.whatsapp = waOf(l.whatsapp); changed = true; }
     if (!p.email && emailOf(l.email)) { p.email = emailOf(l.email); changed = true; }
+    if (!p.phone && waOf(l.phone)) { p.phone = waOf(l.phone); changed = true; }
+    if (!p.area && l.area) { p.area = String(l.area).slice(0, 60); changed = true; }
+    if (!p.address && l.address) { p.address = String(l.address).slice(0, 200); changed = true; }
   }
   return changed;
+}
+// ---------------------------------------------------------------- phone calls (2026-11-09: calling is the first step)
+const CALL_OUTCOMES = ['no_answer', 'ok', 'callback', 'no'];
+const POSTCALL = {
+  zh: (n) => `你好，我是 Cartsmith Studio，刚刚跟你通过电话，谢谢你抽时间。\n\n这是我们帮 ${n} 做的免费首页样板：[样板网址]\n密码：[密码]\n\n用手机打开就可以看。样板只给你看，14 天后会删除。看了有什么想法，直接回复这里就好，不喜欢也没关系。\n\n— Cartsmith Studio`,
+  en: (n) => `Hi, this is Cartsmith Studio — thanks for taking our call just now.\n\nHere's the free sample homepage we made for ${n}: [mockup link]\nPassword: [password]\n\nIt opens best on your phone. It's private to you and will be deleted in 14 days. Any thoughts, just reply here — and no worries if it's not for you.\n\n— Cartsmith Studio`,
+  ms: (n) => `Hai, ini Cartsmith Studio — terima kasih kerana sudi bercakap dengan kami tadi.\n\nIni contoh laman utama percuma yang kami buat untuk ${n}: [pautan contoh]\nKata laluan: [kata laluan]\n\nBuka di telefon untuk tengok. Ia hanya untuk anda dan akan dipadam dalam 14 hari. Kalau ada pendapat, balas sahaja di sini — tiada masalah kalau tak berminat.\n\n— Cartsmith Studio`,
+};
+function callInto(p, outcome, date) {
+  if (!CALL_OUTCOMES.includes(outcome)) throw Object.assign(new Error('电话结果不对'), { code: 'bad_input' });
+  const today = myDate();
+  p.calls = (p.calls || 0) + 1;
+  p.last_call_date = today;
+  if (outcome === 'no_answer') {
+    p.call_misses = (p.call_misses || 0) + 1;
+    p.next_call_date = p.call_misses >= 3 ? '' : myDate(1);
+    log(p, 'call', '没接' + (p.call_misses >= 3 ? '（3 次了，改发信息）' : ''));
+    return;
+  }
+  (p.channels = p.channels || []).includes('call') || p.channels.push('call');
+  p.last_channel = 'call';
+  p.first_contact_date = p.first_contact_date || today;
+  p.last_contact_date = today;
+  if (outcome === 'ok') {
+    p.touches = (p.touches || 0) + 1;
+    p.prev_status = 'contacted';
+    p.status = 'replied';
+    p.next_call_date = '';
+    p.next_followup_date = '';
+    p.reply_summary = '电话：对方说可以，发样板给他看。';
+    p.reply_next = '做样板（跟 Claude Code 说「帮我做 ' + p.business_name + ' 的样板」），把网址和密码贴进下面的信息，再用 WhatsApp / Email 发出去。';
+    p.draft_reply = (POSTCALL[p.language] || POSTCALL.en)(p.business_name);
+    log(p, 'call', '可以发样板');
+  } else if (outcome === 'callback') {
+    const d = /^\d{4}-\d{2}-\d{2}$/.test(date || '') && date >= today ? date : myDate(1);
+    p.next_call_date = d;
+    if (p.status === 'new') p.status = 'contacted';
+    log(p, 'call', '改天再打：' + d);
+  } else if (outcome === 'no') {
+    p.status = 'do_not_contact';
+    p.next_call_date = '';
+    p.next_followup_date = '';
+    log(p, 'call', '不需要（不再联系）');
+  }
 }
 function inboxLead(LEADS, id) {
   const l = LEADS.find((x) => x.id === id);
@@ -303,7 +353,8 @@ function restoreRows(doc, rows) {
     const id = /^p\d{3,}$/.test(r.id || '') ? r.id : 'p' + String(doc.next++).padStart(3, '0');
     const p = {
       id, created: myDate(), business_name: name, platform: r.platform || 'other', store_url: (r.store_url || '').slice(0, 300), instagram: ig,
-      whatsapp: waOf(r.whatsapp), email: emailOf(r.email), niche: (r.niche || '').slice(0, 200), language: ['zh', 'en', 'ms'].includes(r.language) ? r.language : 'en',
+      whatsapp: waOf(r.whatsapp), email: emailOf(r.email), phone: waOf(r.phone), area: (r.area || '').slice(0, 60), address: (r.address || '').slice(0, 200),
+      niche: (r.niche || '').slice(0, 200), language: ['zh', 'en', 'ms'].includes(r.language) ? r.language : 'en',
       observation: (r.observation || '').slice(0, 3000), notes: (r.notes || '').slice(0, 3000), input: '',
       ...Object.fromEntries(CRITERIA.map((c) => [c, r[c] === '1' || r[c] === 'true'])), criteria_note: '', fit: 'good', fit_reason: '', template: '',
       message: (r.opening_line || r.message || '').slice(0, 3000), status: STATUSES.includes(r.status) ? r.status : 'new', touches: Math.max(0, parseInt(r.touches, 10) || 0),
@@ -353,11 +404,14 @@ async function handle(action, b, doc) {
 
     case 'update': {
       const p = find(doc, b.id);
-      const allowed = ['business_name', 'instagram', 'whatsapp', 'email', 'store_url', 'niche', 'observation', 'notes', 'message', 'followup', 'language', 'preview_url', ...CRITERIA];
+      const allowed = ['business_name', 'instagram', 'whatsapp', 'email', 'phone', 'area', 'address', 'store_url', 'niche', 'observation', 'notes', 'message', 'followup', 'language', 'preview_url', ...CRITERIA];
       for (const k of allowed) if (k in (b.fields || {})) p[k] = CRITERIA.includes(k) ? b.fields[k] === true : String(b.fields[k]).slice(0, 3000);
       if (b.fields && 'instagram' in b.fields) p.instagram = handleOf(p.instagram);
       if (b.fields && 'whatsapp' in b.fields) { p.whatsapp = waOf(p.whatsapp); if (String(b.fields.whatsapp).trim() && !p.whatsapp) throw Object.assign(new Error('WhatsApp 号码格式不对（例：012-345 6789）'), { code: 'bad_input' }); }
       if (b.fields && 'email' in b.fields) { p.email = emailOf(p.email); if (String(b.fields.email).trim() && !p.email) throw Object.assign(new Error('Email 格式不对'), { code: 'bad_input' }); }
+      if (b.fields && 'phone' in b.fields) { p.phone = waOf(p.phone); if (String(b.fields.phone).trim() && !p.phone) throw Object.assign(new Error('电话号码格式不对（例：03-2201 1710）'), { code: 'bad_input' }); }
+      if (b.fields && 'area' in b.fields) p.area = String(p.area).slice(0, 60);
+      if (b.fields && 'address' in b.fields) p.address = String(p.address).slice(0, 200);
       p.score = CRITERIA.filter((c) => p[c]).length;
       return { item: p, saved: true };
     }
@@ -401,6 +455,12 @@ async function handle(action, b, doc) {
       if (i < 0) throw Object.assign(new Error('找不到这个商家'), { code: 'not_found' });
       doc.items.splice(i, 1);
       return { deleted: b.id, saved: true };
+    }
+
+    case 'call': {
+      const p = find(doc, b.id);
+      callInto(p, b.outcome, b.date);
+      return { item: p, saved: true };
     }
 
     case 'settings': {

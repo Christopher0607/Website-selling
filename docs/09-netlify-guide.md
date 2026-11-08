@@ -90,6 +90,7 @@
 ## 第 D 部分：给潜在客户做免费样板（每个 15–20 分钟）
 
 > 这是我们最重要的成交工具：对方先看到**自己的品牌**放在模板上，再决定。
+> **2026-11-09 起只给电话里说「可以」的商家做**（每天最多 2–3 个）。注意点数：用 Netlify Drop 发布一个样板很可能算一次正式部署（15 点，免费方案每月 300 点）；deploy preview / branch deploy 不扣点（2026-11-09 查，[官方说明](https://docs.netlify.com/manage/accounts-and-billing/billing/billing-for-credit-based-plans/how-credits-work/)）。一个月要做超过十几个样板之前，先请 Claude Code 改成不扣点的发布方式。
 
 **准备（只做一次）：** 在你的 Windows 电脑装 Python：https://www.python.org/downloads/ → Download → 安装时**勾选「Add python.exe to PATH」**。
 
