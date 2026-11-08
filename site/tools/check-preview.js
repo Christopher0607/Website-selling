@@ -139,9 +139,16 @@ function audit() {
 async function scan(page, url, vp, shotDir) {
   await page.goto(url, { waitUntil: 'load' });
   await unlock(page);
-  const ready = await page.waitForFunction(() => document.documentElement.getAttribute('data-store') === 'ready', null, { timeout: 8000 }).then(() => true).catch(() => false);
+  const isReady = () => document.documentElement.getAttribute('data-store') === 'ready';
+  const ready = await page.waitForFunction(isReady, null, { timeout: 8000 }).then(() => true).catch(() => false);
+  let noJs = '';
+  if (!ready) { // say why, so a rare failure can be told apart: slow network vs. the script really not running
+    const got = await page.evaluate(() => performance.getEntriesByType('resource').filter((r) => /store\.js/.test(r.name)).map((r) => Math.round(r.responseEnd)));
+    const late = await page.waitForFunction(isReady, null, { timeout: 15000 }).then(() => true).catch(() => false);
+    noJs = late ? ' (ran after 8+ s: slow network?)' : got.length ? ` (store.js downloaded at ${got[0]} ms but never ran)` : ' (store.js never requested)';
+  }
   await page.waitForTimeout(300);
-  const total = { overflow: null, bar: [], contrast: new Set(), lowContrast: new Set(), cut: new Set(), broken: new Set(), small: new Set(), covered: new Set(), noJs: !ready };
+  const total = { overflow: null, bar: [], contrast: new Set(), lowContrast: new Set(), cut: new Set(), broken: new Set(), small: new Set(), covered: new Set(), noJs };
   const h = await page.evaluate(() => document.documentElement.scrollHeight);
   for (let y = 0; y < h; y += Math.floor(vp.height * 0.8)) {
     await page.evaluate((yy) => window.scrollTo(0, yy), y);
@@ -207,7 +214,7 @@ async function scan(page, url, vp, shotDir) {
       t.broken.forEach((x) => issues.broken.push(`${pg}: ${x}`));
       t.small.forEach((x) => issues.small.push(`${pg}: ${x}`));
       t.covered.forEach((x) => issues.covered.push(`${pg}: ${x}`));
-      if (t.noJs) issues.noJs.push(pg);
+      if (t.noJs) issues.noJs.push(pg + t.noJs);
     }
     const list = (a) => (a.length ? ': ' + a.slice(0, 6).join(' | ') + (a.length > 6 ? ` (+${a.length - 6} more)` : '') : '');
     ok(!issues.overflow.length, `no sideways shift on ${pages.length} pages` + list(issues.overflow));
