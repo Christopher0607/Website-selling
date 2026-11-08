@@ -194,12 +194,38 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
   await p.click('[data-act="sentbar-no"]');
   await shot('channels');
 
+  // rapid manual sending: one lead at a time, leads with WhatsApp / email first
+  await p.fill('[data-search]', '');
+  await p.click('[data-tab="today"]');
+  await p.waitForSelector('[data-act="queue-start"]');
+  await p.click('[data-act="queue-start"]');
+  await p.waitForSelector('[data-q-card]');
+  ok(/连续发送 · 1 \//.test(await p.textContent('[data-sheet]')), 'send queue opens at 1 / N');
+  const q1 = await p.getAttribute('[data-q-card]', 'data-q-card');
+  const q1item = JSON.parse(fs.readFileSync(STORE, 'utf8')).items.find((x) => x.id === q1);
+  ok(q1item && (q1item.whatsapp || q1item.email), 'lead with WhatsApp / email comes first in the queue');
+  const [qPop] = await Promise.all([p.waitForEvent('popup'), p.click('[data-q-card] [data-act="wa"]')]);
+  ok(qPop.url().startsWith('https://wa.me/' + q1item.whatsapp) || qPop.url().includes('whatsapp.com'), 'queue WhatsApp button opens the pre-filled chat');
+  await qPop.close();
+  ok(await p.isHidden('[data-sentbar]'), 'no separate sent bar inside the queue');
+  await p.click('[data-act="q-sent"]');
+  await p.waitForFunction(() => /连续发送 · 2 \//.test(document.querySelector('[data-sheet]').textContent));
+  const q1s = JSON.parse(fs.readFileSync(STORE, 'utf8')).items.find((x) => x.id === q1);
+  ok(q1s.status === 'contacted' && q1s.last_channel === 'wa', 'queue "sent, next" records the send with its channel');
+  const q2 = await p.getAttribute('[data-q-card]', 'data-q-card');
+  await p.click('[data-act="q-skip"]');
+  await p.waitForFunction(() => /连续发送 · 3 \//.test(document.querySelector('[data-sheet]').textContent));
+  ok(JSON.parse(fs.readFileSync(STORE, 'utf8')).items.find((x) => x.id === q2).status === 'new', 'skip leaves the lead untouched');
+  await shot('queue');
+  await p.click('[data-sheet-panel] [data-sheet-close]');
+  await p.waitForSelector('[data-sheet]', { state: 'hidden' });
+  ok(!(await p.$(`#c-${q1}`)), 'sent lead leaves today after closing the queue');
+
   // no emoji anywhere in the interface (message boxes excluded: their text comes from the AI)
   const uiText = await p.evaluate(() => { const c = document.body.cloneNode(true); c.querySelectorAll('textarea').forEach((t) => t.remove()); return c.innerText; });
   ok(!/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u.test(uiText), 'no emoji in the desk interface');
   const fnSrc = fs.readFileSync(require('path').join(__dirname, '..', 'netlify', 'functions', 'desk', 'index.mjs'), 'utf8');
   ok(/NEVER use a personal name/.test(fnSrc) && /No emojis/.test(fnSrc) && /sign off as "Cartsmith Studio"/.test(fnSrc), 'AI prompt: studio sign-off, no personal name, no emojis');
-  await p.fill('[data-search]', '');
   await p.reload();
   await p.waitForSelector('#app:not([hidden])');
   ok(!(await p.$('[data-inbox]')), 'inbox stays empty after reload');

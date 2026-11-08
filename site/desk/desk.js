@@ -13,7 +13,7 @@
     set(v) { try { localStorage.setItem(KEY, v); } catch (e) { this._k = v; } },
     clear() { try { localStorage.removeItem(KEY); } catch (e) { this._k = ''; } }
   };
-  const S = { items: [], inbox: [], settings: { dailyLimit: 10 }, today: '', tab: 'today', filter: 'all', q: '', open: {}, lastAdded: '', pending: '' };
+  const S = { items: [], inbox: [], settings: { dailyLimit: 10 }, today: '', tab: 'today', filter: 'all', q: '', open: {}, lastAdded: '', pending: '', queue: [], qi: 0, qch: '', qsent: 0, queueOn: false };
 
   const STATUS = { new: '未联系', contacted: '已联系', replied: '有回复', preview_sent: '样板已发', call_booked: '约了通话', proposal_sent: '报价已发', won: '成交', lost: '没成交', no_response: '没回应', do_not_contact: '不再联系' };
   const CRIT = { brand_clear: '有自己的品牌', sales_signal: '卖得不错 / 有报道', active_social: '最近有在发文', no_or_weak_website: '没有网站或网站很旧', budget_signal: '看得出有预算' };
@@ -78,7 +78,7 @@
   function busy(btn, on, label) { if (!btn) return; if (on) { btn.dataset.label = btn.innerHTML; btn.textContent = label || '处理中…'; btn.disabled = true; } else { if (btn.dataset.label) btn.innerHTML = btn.dataset.label; btn.disabled = false; } }
   function sentToday() { return S.items.filter((p) => p.first_contact_date === S.today).length; }
   function scoreClass(n) { return n >= 4 ? 'score--hi' : n >= 3 ? 'score--mid' : 'score--lo'; }
-  function textOf(t, p) { const box = (t.closest('.card') || document).querySelector(`textarea[data-field="${t.dataset.field}"]`); return box ? box.value : p[t.dataset.field]; }
+  function textOf(t, p) { const box = (t.closest('.card, .q') || document).querySelector(`textarea[data-field="${t.dataset.field}"]`); return box ? box.value : p[t.dataset.field]; }
 
   // ------------------------------------------------------------ card
   function card(p, mode) {
@@ -160,6 +160,7 @@
     if (S.inbox.length) h += inboxSect();
     if (replied.length) h += sect('有回复，等你回', replied.length, replied.map((p) => card(p)).join(''), '');
     if (follow.length) h += sect('今天要跟进', follow.length, follow.map((p) => card(p)).join(''), '');
+    if (left && fresh.length) h += `<div class="queuebar"><div><b>连续发送</b><small>一家一家打开已经填好的 WhatsApp / Email / Instagram，你按发送，再按「下一家」。有 WhatsApp / Email 的排前面。</small></div><button class="btn btn--sm" data-act="queue-start">开始（${Math.min(left, fresh.length)} 家）</button></div>`;
     h += sect(`新联系 · 今天还可以发 ${left} 个`, fresh.length, left ? fresh.slice(0, Math.max(left, 1) + 2).map((p) => card(p)).join('') : '<div class="empty">今天的新联系已经发满了，明天继续。</div>', '名单里没有待联系的商家。');
     if (purge.length) h += sect('样板到期，要删除', purge.length, purge.map((p) => `<div class="card"><p>${esc(p.business_name)} 的样板 ${esc(p.preview_url || '')} 已到期（${esc(p.preview_delete_by)}）。到 Netlify 删除那个网站，然后按：</p><div class="btnrow"><button class="btn btn--sm" data-act="purged" data-id="${p.id}">已删除样板</button></div></div>`).join(''), '');
     $('[data-today-list]').innerHTML = h;
@@ -234,9 +235,40 @@
   }
   function hideSentbar() { S.pending = ''; $('[data-sentbar]').hidden = true; const y = $('[data-sentbar-yes]'); y.disabled = false; y.innerHTML = svg('check', 16) + '已发送'; delete y.dataset.label; }
 
+  // ------------------------------------------------------------ rapid manual sending (one lead at a time; Junyu presses send in each app)
+  const hasDirect = (p) => (p.whatsapp || p.email ? 1 : 0);
+  function queueList() {
+    const left = Math.max(0, (S.settings.dailyLimit || 10) - sentToday());
+    return S.items.filter((p) => p.status === 'new' && p.score >= 3 && p.fit !== 'skip' && !p.duplicate_of)
+      .sort((a, b) => hasDirect(b) - hasDirect(a) || b.score - a.score || (a.id < b.id ? -1 : 1))
+      .slice(0, left).map((p) => p.id);
+  }
+  function startQueue() {
+    S.queue = queueList(); S.qi = 0; S.qch = ''; S.qsent = 0;
+    if (!S.queue.length) { toast('今天没有要发的了。'); return; }
+    S.queueOn = true; renderQueue();
+  }
+  function renderQueue() {
+    const p = S.items.find((x) => x.id === S.queue[S.qi]);
+    if (!p) { S.queueOn = false; closeSheet(); render(); toast(`连续发送结束：这次发了 ${S.qsent} 家。`); return; }
+    S.qch = '';
+    const sub = [p.instagram ? '@' + esc(p.instagram) : '', esc(p.niche || ''), esc(LANG[p.language] || '')].filter(Boolean).join('<span class="dot">·</span>');
+    sheet(`<div class="sheet__head"><h3>连续发送 · ${S.qi + 1} / ${S.queue.length}</h3>${closeBtn}</div>
+      <div class="q" data-q-card="${p.id}">
+        <div class="card__name">${esc(p.business_name)}</div><div class="card__sub">${sub}</div>
+        ${p.observation ? `<p class="obs">${esc(p.observation)}</p>` : ''}
+        ${p.verify ? `<p class="verify">${svg('pin', 14)}<span>发之前看一眼：${esc(p.verify)}</span></p>` : ''}
+        ${contacts(p)}
+        ${msgBox(p, 'message', '开场白（可以直接改）')}
+        ${sendRow(p, 'message')}
+        <div class="btnrow"><button class="btn" data-act="q-sent" data-id="${p.id}">${svg('check', 16)}已发送，下一家</button><button class="btn btn--ghost" data-act="q-skip">跳过</button></div>
+        <p class="hint">先按上面其中一个发送方式，在 App 里看一遍再按发送，回来按「已发送，下一家」。按「跳过」不会记录，这家之后还会出现。</p>
+      </div>`);
+  }
+
   // ------------------------------------------------------------ sheet (more actions)
   function sheet(html) { $('[data-sheet-panel]').innerHTML = html; $('[data-sheet]').hidden = false; }
-  function closeSheet() { $('[data-sheet]').hidden = true; }
+  function closeSheet() { $('[data-sheet]').hidden = true; S.queueOn = false; }
   const closeBtn = `<button class="btn btn--ghost btn--sm btn--icon" data-sheet-close aria-label="关闭">${svg('x', 18)}</button>`;
   const row = (act, icon, label, id, extra) => `<button class="row" data-act="${act}" data-id="${id}"${extra || ''}>${svg(icon, 18)}<span>${label}</span></button>`;
   function moreSheet(p) {
@@ -300,7 +332,7 @@
   document.addEventListener('click', async (ev) => {
     const t = ev.target.closest('[data-act],[data-tab],[data-filter],[data-expand],[data-sheet-close]');
     if (!t) return;
-    if (t.hasAttribute('data-sheet-close')) { closeSheet(); return; }
+    if (t.hasAttribute('data-sheet-close')) { const wasQueue = S.queueOn; closeSheet(); if (wasQueue) render(); return; }
     if (t.dataset.tab) { S.tab = t.dataset.tab; $$('[data-tab]').forEach((b) => b.classList.toggle('is-on', b === t)); $$('[data-view]').forEach((v) => { v.hidden = v.dataset.view !== S.tab; }); render(); window.scrollTo(0, 0); return; }
     if (t.dataset.filter) { S.filter = t.dataset.filter; renderList(); return; }
     if (t.dataset.expand) { S.open[t.dataset.expand] = !S.open[t.dataset.expand]; renderList(); return; }
@@ -311,19 +343,28 @@
         copy(textOf(t, p));
         if (act === 'copyopen') window.open(igLink(p.instagram), '_blank', 'noopener');
         toast(act === 'copyopen' ? '信息已复制。在 Instagram 长按输入框贴上，看一遍再发送。' : '信息已复制。');
-        if (act === 'copyopen' && ['message', 'followup', 'draft_reply'].includes(t.dataset.field)) showSentbar(p, 'ig');
+        if (act === 'copyopen' && S.queueOn) S.qch = 'ig';
+        else if (act === 'copyopen' && ['message', 'followup', 'draft_reply'].includes(t.dataset.field)) showSentbar(p, 'ig');
         return;
       }
       if (act === 'wa') {
         window.open(waLink(p.whatsapp, textOf(t, p)), '_blank', 'noopener');
         toast('WhatsApp 已打开，信息已经填好，看一遍再发送。');
-        showSentbar(p, 'wa');
+        if (S.queueOn) S.qch = 'wa'; else showSentbar(p, 'wa');
         return;
       }
       if (act === 'email') {
         const a = document.createElement('a'); a.href = mailLink(p, textOf(t, p)); a.rel = 'noopener'; document.body.appendChild(a); a.click(); a.remove();
         toast('邮件已经填好主旨和内容，看一遍再发送。');
-        showSentbar(p, 'email');
+        if (S.queueOn) S.qch = 'email'; else showSentbar(p, 'email');
+        return;
+      }
+      if (act === 'queue-start') { startQueue(); return; }
+      if (act === 'q-skip') { S.qi++; renderQueue(); return; }
+      if (act === 'q-sent') {
+        busy(t, true, '记录中…');
+        const j = await api('mark', { id: p.id, event: 'sent', channel: S.qch });
+        upsert(j.item); S.qsent++; S.qi++; renderQueue();
         return;
       }
       if (act === 'sentbar-no') { hideSentbar(); return; }
@@ -349,7 +390,7 @@
       if (act === 'more') { moreSheet(p); return; }
       if (act === 'replied-more') { repliedSheet(p); return; }
       if (act === 'reply') { replySheet(p); return; }
-      if (act === 'edit') { editSheet(p); return; }
+      if (act === 'edit') { S.queueFromEdit = S.queueOn; editSheet(p); S.queueOn = false; return; }
       if (act === 'preview') {
         const url = prompt('样板网址（Netlify Drop 的网址）：', p.preview_url || 'https://');
         if (url === null) return;
@@ -378,6 +419,9 @@
         j = await api('update', { id: p.id, fields });
       }
       if (j && j.item) upsert(j.item);
+      const backToQueue = act === 'edit-save' && S.queue.length && S.qi < S.queue.length && S.queueFromEdit;
+      S.queueFromEdit = false;
+      if (backToQueue) { S.queueOn = true; renderQueue(); render(); return; }
       closeSheet(); render();
       if (act === 'rewrite' || act === 'followup' || act === 'reply-go') { const c = document.getElementById('c-' + p.id); if (c) c.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
     } catch (e) { busy(t, false); if (e.message !== 'unauthorised') toast(e.message); }
