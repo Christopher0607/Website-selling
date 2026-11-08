@@ -4,8 +4,10 @@
 //   DEEPSEEK_API_KEY   和网站 AI 客服共用
 //   DEEPSEEK_MODEL     选填，默认 deepseek-flash
 // 资料存在 Netlify Blobs（store: sales-desk）。本地测试：设定 DESK_LOCAL_FILE=/path/to/file.json
-// 新线索收件箱：Claude Code 把上网找到的商家写进 sales/leads/*.json → build.py 产生 inbox.mjs →
+// 新商家收件箱：Claude Code 把上网找到的商家写进 sales/leads/*.json → build.py 产生 inbox.mjs + sales/leads/inbox.json →
 //   工作台「今天」最上面显示，俊宇按「全部加入」就逐家打分、写开场白（不用复制粘贴资料）。
+//   每天的新商家 push 到 GitHub 的 leads 分支（Netlify 不部署那个分支，不扣点数）；这里在执行时读取
+//   LEADS_URL（默认 leads 分支的 sales/leads/inbox.json），和部署时打包的 INBOX 合并。LEADS_URL=off 关掉。
 //
 // 原则：AI 只负责分析和起草；信息一律由俊宇本人手动发送（Instagram / WhatsApp / Email 都是按一下打开、自己按发送；不自动发、不抓资料）。
 import crypto from 'node:crypto';
@@ -220,16 +222,43 @@ async function analyzeInto(doc, input, lang, lead) {
   return p;
 }
 
+// ---------------------------------------------------------------- leads: bundled at deploy + fetched live from the leads branch
+const DEFAULT_LEADS_URL = 'https://raw.githubusercontent.com/christopher0607/website-selling/leads/sales/leads/inbox.json';
+let leadsCache = { at: 0, list: null };
+function cleanLead(l) {
+  if (!l || typeof l !== 'object') return null;
+  const id = String(l.id || '').trim(); const name = String(l.name || '').trim(); const input = String(l.input || '').trim();
+  if (!/^[a-z0-9][a-z0-9-]{2,80}$/.test(id) || !name || input.length < 10 || !handleOf(l.instagram)) return null;
+  const str = (v, n) => String(v == null ? '' : v).slice(0, n);
+  return { id, name: name.slice(0, 120), instagram: handleOf(l.instagram), whatsapp: str(l.whatsapp, 40), email: str(l.email, 120), contact_source: str(l.contact_source, 200),
+    store_url: str(l.store_url, 300), language: ['zh', 'en', 'ms'].includes(l.language) ? l.language : '', template: TEMPLATES.includes(l.template) ? l.template : '',
+    priority: str(l.priority, 4), why: str(l.why, 300), verify: str(l.verify, 300), batch: str(l.batch, 80), input: input.slice(0, MAX_INPUT) };
+}
+async function allLeads() {
+  const url = env('LEADS_URL') || DEFAULT_LEADS_URL;
+  const now = Date.now();
+  if (url !== 'off' && (!leadsCache.list || now - leadsCache.at > 5 * 60e3)) {
+    try {
+      const r = await fetch(url, { signal: AbortSignal.timeout(4000), headers: { Accept: 'application/json' } });
+      if (r.ok) { const j = await r.json(); leadsCache = { at: now, list: (Array.isArray(j) ? j : j.leads || []).map(cleanLead).filter(Boolean) }; }
+      else leadsCache = { at: now, list: leadsCache.list || [] };
+    } catch (e) { leadsCache = { at: now, list: leadsCache.list || [] }; }
+  }
+  const byId = new Map(INBOX.map((l) => [l.id, l]));
+  for (const l of (url === 'off' ? [] : leadsCache.list || [])) byId.set(l.id, l); // the leads branch is newer
+  return [...byId.values()];
+}
+
 // leads Claude Code found that are not yet imported / skipped / already in the list
-function pendingInbox(doc) {
+function pendingInbox(doc, LEADS) {
   const done = new Set(doc.inbox_done || []);
   const have = new Set(doc.items.map((x) => x.instagram).filter(Boolean));
-  return INBOX.filter((l) => l.instagram && !done.has(l.id) && !have.has(handleOf(l.instagram)))
+  return LEADS.filter((l) => l.instagram && !done.has(l.id) && !have.has(handleOf(l.instagram)))
     .map((l) => ({ id: l.id, name: l.name, instagram: handleOf(l.instagram), wa: !!waOf(l.whatsapp), email: !!emailOf(l.email), priority: l.priority || '', why: l.why || '', batch: l.batch || '', language: l.language || '' }));
 }
 // contacts Claude Code found later (or after import) flow into already-imported items
-function refreshContacts(doc) {
-  const byId = new Map(INBOX.map((l) => [l.id, l]));
+function refreshContacts(doc, LEADS) {
+  const byId = new Map(LEADS.map((l) => [l.id, l]));
   let changed = false;
   for (const p of doc.items) {
     const l = p.lead_id && byId.get(p.lead_id);
@@ -239,17 +268,62 @@ function refreshContacts(doc) {
   }
   return changed;
 }
-function inboxLead(id) {
-  const l = INBOX.find((x) => x.id === id);
+function inboxLead(LEADS, id) {
+  const l = LEADS.find((x) => x.id === id);
   if (!l) throw Object.assign(new Error('找不到这个新商家（可能已经更新过）'), { code: 'not_found' });
   return l;
+}
+
+// ---------------------------------------------------------------- restore from a CSV export (e.g. moving to a new Netlify account)
+function parseCsv(text) {
+  const rows = []; let row = []; let cell = ''; let q = false;
+  const s = String(text || '').replace(/^\uFEFF/, '');
+  for (let i = 0; i < s.length; i++) {
+    const c = s[i];
+    if (q) { if (c === '"') { if (s[i + 1] === '"') { cell += '"'; i++; } else q = false; } else cell += c; continue; }
+    if (c === '"') q = true;
+    else if (c === ',') { row.push(cell); cell = ''; }
+    else if (c === '\n' || c === '\r') { if (c === '\r' && s[i + 1] === '\n') i++; row.push(cell); rows.push(row); row = []; cell = ''; }
+    else cell += c;
+  }
+  if (cell || row.length) { row.push(cell); rows.push(row); }
+  const head = (rows.shift() || []).map((h) => h.trim());
+  return rows.filter((r) => r.some((v) => v.trim())).map((r) => Object.fromEntries(head.map((h, i) => [h, (r[i] || '').trim()])));
+}
+const STATUSES = ['new', 'contacted', 'replied', 'preview_sent', 'call_booked', 'proposal_sent', 'won', 'lost', 'no_response', 'do_not_contact'];
+const isDate = (v) => /^\d{4}-\d{2}-\d{2}$/.test(v || '') ? v : '';
+function restoreRows(doc, rows) {
+  let added = 0, skipped = 0;
+  const ids = new Set(doc.items.map((x) => x.id));
+  const igs = new Set(doc.items.map((x) => x.instagram).filter(Boolean));
+  for (const r of rows.slice(0, 2000)) {
+    const name = (r.business_name || '').slice(0, 120);
+    const ig = handleOf(r.instagram || r.contact_handle || r.social_url || '');
+    if (!name || (r.id && ids.has(r.id)) || (ig && igs.has(ig))) { skipped++; continue; }
+    const id = /^p\d{3,}$/.test(r.id || '') ? r.id : 'p' + String(doc.next++).padStart(3, '0');
+    const p = {
+      id, created: myDate(), business_name: name, platform: r.platform || 'other', store_url: (r.store_url || '').slice(0, 300), instagram: ig,
+      whatsapp: waOf(r.whatsapp), email: emailOf(r.email), niche: (r.niche || '').slice(0, 200), language: ['zh', 'en', 'ms'].includes(r.language) ? r.language : 'en',
+      observation: (r.observation || '').slice(0, 3000), notes: (r.notes || '').slice(0, 3000), input: '',
+      ...Object.fromEntries(CRITERIA.map((c) => [c, r[c] === '1' || r[c] === 'true'])), criteria_note: '', fit: 'good', fit_reason: '', template: '',
+      message: (r.opening_line || r.message || '').slice(0, 3000), status: STATUSES.includes(r.status) ? r.status : 'new', touches: Math.max(0, parseInt(r.touches, 10) || 0),
+      first_contact_date: isDate(r.first_contact_date), last_contact_date: isDate(r.last_contact_date), next_followup_date: isDate(r.next_followup_date),
+      preview_url: (r.preview_url || '').slice(0, 300), preview_delete_by: isDate(r.preview_delete_by), history: [{ d: myDate(), e: 'restored', n: 'CSV backup' }]
+    };
+    p.score = CRITERIA.filter((c) => p[c]).length;
+    doc.items.push(p); ids.add(id); if (ig) igs.add(ig); added++;
+  }
+  const maxId = Math.max(0, ...doc.items.map((x) => parseInt(String(x.id).slice(1), 10) || 0));
+  doc.next = Math.max(doc.next, maxId + 1);
+  return { added, skipped };
 }
 
 async function handle(action, b, doc) {
   switch (action) {
     case 'list': {
-      const changed = refreshContacts(doc);
-      return { items: doc.items, settings: doc.settings, today: myDate(), inbox: pendingInbox(doc), saved: changed };
+      const LEADS = await allLeads();
+      const changed = refreshContacts(doc, LEADS);
+      return { items: doc.items, settings: doc.settings, today: myDate(), inbox: pendingInbox(doc, LEADS), saved: changed };
     }
 
     case 'analyze': {
@@ -261,7 +335,7 @@ async function handle(action, b, doc) {
     }
 
     case 'import': {
-      const lead = inboxLead(b.lead_id);
+      const lead = inboxLead(await allLeads(), b.lead_id);
       doc.inbox_done = doc.inbox_done || [];
       if (doc.inbox_done.includes(lead.id)) throw Object.assign(new Error(lead.name + ' 已经处理过了'), { code: 'bad_input' });
       const lang = ['zh', 'en', 'ms'].includes(lead.language) ? lead.language : '';
@@ -271,7 +345,7 @@ async function handle(action, b, doc) {
     }
 
     case 'skip': {
-      const lead = inboxLead(b.lead_id);
+      const lead = inboxLead(await allLeads(), b.lead_id);
       doc.inbox_done = doc.inbox_done || [];
       if (!doc.inbox_done.includes(lead.id)) doc.inbox_done.push(lead.id);
       return { skipped: lead.id, saved: true };
@@ -337,6 +411,14 @@ async function handle(action, b, doc) {
 
     case 'export':
       return { csv: toCsv(doc.items) };
+
+    case 'restore': {
+      const csv = String(b.csv || '');
+      if (!csv.trim() || csv.length > 3e6) throw Object.assign(new Error('备份档案是空的或太大'), { code: 'bad_input' });
+      const rows = parseCsv(csv);
+      if (!rows.length || !('business_name' in rows[0])) throw Object.assign(new Error('这不是工作台下载的名单（CSV）'), { code: 'bad_input' });
+      return { ...restoreRows(doc, rows), saved: true };
+    }
 
     default:
       throw Object.assign(new Error('unknown action'), { code: 'bad_input' });

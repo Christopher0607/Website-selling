@@ -120,8 +120,49 @@
 ## 第 E 部分：以后怎么更新网站
 
 - 跟 Claude Code 说要改什么（价格、文字、加模板……）→ 它改好、commit、push → Netlify 自动更新（1–3 分钟）。
+- **省点数：** 免费方案每次正式部署扣 15 点（每月 300 点）。所以改动会集中起来一次 push；只改文件、研究资料、每天的新商家，都不会部署（`scripts/netlify-ignore.sh`、`leads` 分支）。
 - 改了价格或优惠：一定要同时改 `site/studio.json` 和 `sales/agent/knowledge.md`（Claude Code 会提醒）。
 - 看部署有没有成功：Netlify → **Deploys**，最新一个是绿色 Published 就好。失败的话，点进去复制错误给 Claude Code。
+
+## 第 F 部分：换一个 Netlify 帐号（2026-11-08，旧帐号的点数用完了）
+
+> **为什么：** 免费方案每月 300 点，**每次正式部署扣 15 点**（等于一个月只能部署 20 次），点数用完后部署会被挡、网站最后会暂停到下个月（2026-11-08 查：[Netlify 计费更新](https://www.netlify.com/changelog/netlify-pricing-update-introducing-credit-based-plans/)、[Free 方案比较](https://www.netlify.com/pricing/pro-vs-free/)）。
+> **以后不会再那么快用完：** 每天的新商家改放在 GitHub 的 `leads` 分支，工作台直接读取，不用部署；只改文件的 commit 也会自动跳过 build（`scripts/netlify-ignore.sh`）。只有网站或工作台真的改了才部署，Claude Code 也会把改动集中起来一次 push。
+> 只开**一个**新帐号就好，不要一直换（Netlify 的使用政策不允许大量开帐号）。
+
+**第 1 步：先在旧网站备份（5 分钟）**
+1. 手机打开旧的工作台 `https://cartsmith.netlify.app/desk/` → 下面「数字」→「下载名单（CSV）」。把档案存好（例如传到自己的 Google Drive）。
+2. 旧帐号的 Netlify 后台 → 左边菜单 **Forms** → 看有没有客人填过的「免费样板申请」，有的话截图或复制下来。
+
+**第 2 步：让旧网站停下来、把名字让出来（3 分钟）**
+3. 旧帐号 → 网站 → **Project configuration → Build & deploy → Continuous deployment → Build settings → Configure → Builds: Stopped** → Save。（这样以后 push 不会再触发旧帐号的 build。）
+4. **Project configuration → General → Change project name** → 改成 `cartsmith-old` → Save。这样 `cartsmith` 这个名字就空出来给新帐号用。
+
+**第 3 步：用新帐号开网站（15 分钟）**
+5. 先登出旧帐号。打开 https://app.netlify.com/signup ，**用一个新的 Email 注册**（建议用工作室专用的 Gmail，例如 `cartsmith.studio@gmail.com`）。
+6. 注册好以后：**Add new project → Import an existing project → GitHub** → 用 `Christopher0607` 的 GitHub 授权 → 安装 Netlify GitHub App 时选 **Only select repositories → Website-selling**。
+   - 如果 GitHub 说这个 App 已经装过了：在 GitHub → Settings → Applications → Netlify → Configure，确认有勾 `Website-selling`。
+7. 选 `Website-selling` → **Branch to deploy：`ccr-4e1e8221-7msrbj`** → Build settings 不要改 → 先**不要按 Deploy**，往下找 **Add environment variables**（或部署后再到 Project configuration → Environment variables）加这三个：
+   - `DEEPSEEK_API_KEY` = 你的 DeepSeek Key（跟旧的一样）
+   - `SALES_DESK_KEY` = 工作台密码（可以跟旧的一样）
+   - `DEEPSEEK_MODEL` = `deepseek-flash`（选填）
+   - Scopes 至少勾 **Functions**。
+8. 按 **Deploy**，等 1–3 分钟变绿色 **Published**。
+9. **Project configuration → General → Change project name** → `cartsmith` → Save。网址就会是 `https://cartsmith.netlify.app`，跟以前一样（IG 简介不用改）。
+   - 名字如果还没空出来：先用 `cartsmith-studio`，告诉 Claude Code，它会把网址改掉。
+10. **只部署正式分支（省点数）：** Project configuration → Build & deploy → Branches and deploy contexts → Configure → **Branch deploys: Deploy only the production branch** → Save。
+11. **表单：** 左边菜单 **Forms → Enable form detection** → 然后 **Deploys → Trigger deploy → Deploy project** 重新部署一次 → 再到 Forms 设电邮通知（照第 A 部分第 12 步）。
+
+**第 4 步：把名单搬过去（2 分钟）**
+12. 打开新的 `https://cartsmith.netlify.app/desk/` → 输入工作台密码 → 下面「数字」→ **从备份还原** → 选第 1 步下载的 CSV → 按「还原」。联系过的商家、跟进日期都会回来。
+13. 「今天」最上面应该看到「新商家」。
+
+**第 5 步：确认没问题后，删掉旧网站（1 分钟，可以过几天再做）**
+14. 旧帐号 → `cartsmith-old` → Project configuration → General → 最下面 **Delete project**。
+
+> 做完告诉 Claude Code「新帐号好了」，它会检查网站、工作台、AI 客服，再重新开启每天找餐厅的定时任务。
+
+---
 
 ## 常见问题
 

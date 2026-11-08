@@ -7,7 +7,7 @@
 ## 当前状态
 
 - 当前阶段：**Phase 4.1 找客户**（网站 https://cartsmith.netlify.app 已上线；俊宇 2026-11-07 说开始找客户）
-- 下一个任务：**俊宇：① 打开工作台 → 「新商家」按「全部加入」（第 3 批 10 家 + 今天 7 家餐厅）→ 逐家发开场白（一天 ≤10 家） ② 以后每天早上约 7 点会有新的餐厅出现 ③ 2026-11-11 跟进已联系的 4 家 ④ 设定 IG 自动回复（`docs/10-instagram-auto-replies.md`）。Claude Code：2026-11-09 07:45 确认定时任务有没有送进固定 session（session_01QtqzzUGnykcU7RTi4ow58S）**
+- 下一个任务：**俊宇：照 `docs/09-netlify-guide.md` 第 F 部分换新的 Netlify 帐号（先在旧工作台下载名单 CSV → 旧网站停止 build、改名 cartsmith-old → 新帐号导入 repo、加 3 个环境变量、改名 cartsmith、只部署正式分支、开表单 → 新工作台「从备份还原」），做完说「新帐号好了」。Claude Code：检查新网站、工作台、AI 客服；2026-11-11 提醒跟进那 4 家**
 - 卡住的事：没有（DigitalOcean 服务器、域名、SSM 都等第一个客户说「好」再做；SSM 一定要在收订金前完成）
 
 ---
@@ -110,6 +110,7 @@
 
 | 日期 | 任务 | 结果 | 网址 / 文件 | 未解决的问题 |
 |---|---|---|---|---|
+| 2026-11-08 | 4.1g Netlify 点数用完 → 换新帐号 + 省点数（俊宇选默认做法、换帐号） | 查证（Netlify 官方）：免费方案每月 300 点、每次正式部署 15 点、用完部署被挡 / 网站暂停；上线后约部署 20 次 → 1f2b652 的改版没部署。改法：每天的新商家 push 到 GitHub `leads` 分支，工作台执行时读取 `leads` 分支的 `sales/leads/inbox.json`（5 分钟快取，失败就用部署时打包的）；`scripts/netlify-ignore.sh` 让 leads 分支和只改文件 / 新商家的 commit 不 build（6 种情况测过）；工作台加「从备份还原（CSV）」给换帐号用；`docs/09` 第 F 部分写好换帐号步骤；每日定时任务改成 push 到 `leads` 分支（新任务，旧的停用）；本地测试全部通过（含还原、远端新商家合并） | `scripts/netlify-ignore.sh`、`netlify.toml`、`site/netlify/functions/desk/index.mjs`、`site/desk/`、`docs/09-netlify-guide.md`、`sales/leads/README.md` | 等俊宇开新帐号；旧的定时任务删不掉（系统不允许），已停用；GitHub repo 是公开的（新商家资料是公开商业资料，没有密码） |
 | 2026-11-08 | 4.1f 工作台改版：WhatsApp / Email、只放有 IG 的商家、不署名、不用表情符号（俊宇要求） | 新商家一定要有 IG（build 自动跳过没有 IG 的：Ilham Ceramics、Pik Wah、Leen's）；工作台加 WhatsApp（wa.me 预先填好信息）和 Email（mailto 预先填好主旨和内容）发送按钮，号码自动整理成国际格式，「补上 WhatsApp / Email」可以手动贴；「已发送」记录渠道，数字页分渠道统计；AI 提示词改成用 Cartsmith Studio / 我们署名、不写个人名字、不用表情符号（工作台、网站 AI 客服、话术、知识库都改）；工作台介面重新设计（浅色、线条图示、没有表情符号）；已知电话补进 Good Blue Men、RATA、Artigusto；每日研究规则写进 `sales/leads/README.md`（一定要有 IG、找公开的 WhatsApp / Email，不读 IG 页面）；本地测试全部通过 | `site/desk/`、`site/netlify/functions/desk/`、`sales/scripts.md`、`sales/agent/knowledge.md`、`sales/leads/README.md`、`docs/11-sales-desk.md` | 定时任务本身的指示只能在固定 session 里改（它每天会读 README，所以照新规则做）；大多数 IG 店的电话只在 IG 主页上，要俊宇打开主页时补；WhatsApp 用哪个号码发要俊宇决定 |
 | 2026-11-08 | 4.1e 每日找餐厅：测试和修正 | 前两次测试失败：定时任务新开的 session 没有 repo 写入权限（push 403），也没有 add_repo 工具；第一次还只找了 3 家、漏掉 Jan's Gelato 老板另有网店 → 没放进工作台。改成固定 session「每日餐厅研究（定时任务专用）」（session_01QtqzzUGnykcU7RTi4ow58S，带 repo），新定时任务 trig_01Hsdep7eaLpgXd9jzyii6fS 每天 6:39 送进去；旧任务删除；提示词加严（看 60+ 候选、8+ 来源、三项网站检查、价钱门槛）。固定 session 测试成功：看了约 110 家、17 个来源，放 7 家（Roost KL、Good Blue Men、RATA、Fluffed、Pik Wah、Leen's、Naj & Belle），已 push（4c50bee）；抽查域名检查都对；修了 check-domains.sh（Wix 没接上的错误页、空白 WordPress、空目录算 EXPIRED） | `sales/leads/2026-11-08-restaurants.json`、`scripts/local/check-domains.sh` | 手动触发会另开新 session（没有 repo），所以要明早确认定时执行有没有送对；每天 7 家左右，比 20 家少（很多餐厅已经有网站或用 Beepit / Oddle）；Pik Wah 的网站可能已经有人在做 |
 | 2026-11-08 | 4.1e 每天自动找餐厅（俊宇要求：每天早上 7 点找 20 家 A 级餐厅、确认没有网站；另外想用 instagram_dm_mcp 自动发 IG） | 新增 `scripts/local/check-domains.sh`（试 .com/.com.my/.my/.co，分 NONE/PARKED/EXPIRED/CHECK/SITE）；用它重查发现 Joymom's 有 joymoms.my、第 3 批 10 家仍然没有网站；设定每天约 6:39（马来西亚时间）的定时任务：新 session 找 20 家 A 级餐厅（英文市场、有购买力、有东西可以在网上卖），写 `sales/leads/<日期>-restaurants.json`，build、push，工作台收件箱自动出现；决定记进 `docs/00-decisions.md` #18、#19。自动发 IG 私信：Claude Code 不做（非官方接口 + 自动发陌生私信），私信继续手动发 | `scripts/local/check-domains.sh`、`sales/leads/README.md`、`docs/00-decisions.md` | 每天 20 家多过每天可以发的 10 家，名单会累积；餐厅是新方向，第一批出来后看适不适合 |

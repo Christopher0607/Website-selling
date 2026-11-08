@@ -422,6 +422,20 @@
     } catch (e) { toast(e.message); }
   });
   $('[data-logout]').addEventListener('click', () => { store.clear(); location.reload(); });
+  $('[data-restore]').addEventListener('click', async (ev) => {
+    const f = $('[data-restore-file]').files[0];
+    if (!f) { toast('先选一个名单档案（CSV）。'); return; }
+    const btn = ev.currentTarget;
+    busy(btn, true, '还原中…');
+    try {
+      const j = await api('restore', { csv: await f.text() });
+      const l = await api('list');
+      S.items = l.items || []; S.inbox = l.inbox || [];
+      render();
+      toast(`还原了 ${j.added} 家${j.skipped ? `，跳过 ${j.skipped} 家（已经有了）` : ''}。`);
+    } catch (e) { if (e.message !== 'unauthorised') toast(e.message); }
+    busy(btn, false);
+  });
 
   // ------------------------------------------------------------ login + load
   function showLogin(msg) {

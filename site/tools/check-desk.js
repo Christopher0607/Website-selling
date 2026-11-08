@@ -204,6 +204,21 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
   await p.waitForSelector('#app:not([hidden])');
   ok(!(await p.$('[data-inbox]')), 'inbox stays empty after reload');
 
+  // restore from a CSV backup (moving to a new Netlify account)
+  await p.click('[data-tab="stats"]');
+  await p.setInputFiles('[data-restore-file]', { name: 'backup.csv', mimeType: 'text/csv', buffer: Buffer.from(csv) });
+  await p.click('[data-restore]');
+  await p.waitForFunction(() => /还原了 0 家/.test(document.querySelector('[data-toast]').textContent), null, { timeout: 10000 });
+  ok(true, 'restoring the same backup skips everyone already in the list');
+  const newRow = 'id,business_name,niche,platform,store_url,social_url,contact_channel,contact_handle,whatsapp,email,language,brand_clear,sales_signal,active_social,no_or_weak_website,budget_signal,score,observation,opening_line,status,first_contact_date,last_contact_date,next_followup_date,preview_url,preview_delete_by,notes,touches\n'
+    + 'p950,"Restored Shop, KL",cafe,instagram,,https://instagram.com/restored.shop,instagram,@restored.shop,012-345 6789,,en,1,1,0,1,1,4,"Seen in ""Time Out""",Hi there,contacted,2026-11-01,2026-11-01,2026-11-11,,,,1\n';
+  await p.setInputFiles('[data-restore-file]', { name: 'old-desk.csv', mimeType: 'text/csv', buffer: Buffer.from('﻿' + newRow) });
+  await p.click('[data-restore]');
+  await p.waitForFunction(() => /还原了 1 家/.test(document.querySelector('[data-toast]').textContent), null, { timeout: 10000 });
+  const r1 = JSON.parse(fs.readFileSync(STORE, 'utf8')).items.find((x) => x.id === 'p950');
+  ok(r1 && r1.business_name === 'Restored Shop, KL' && r1.instagram === 'restored.shop' && r1.status === 'contacted' && r1.touches === 1 && r1.whatsapp === '60123456789' && r1.next_followup_date === '2026-11-11' && r1.observation === 'Seen in "Time Out"', 'restored row keeps status, dates, contacts and quoted text');
+  ok(JSON.parse(fs.readFileSync(STORE, 'utf8')).next > 950, 'next id moves past restored ids');
+
   ok(errors.length === 0, 'no JavaScript errors' + (errors.length ? ': ' + errors.join(' | ') : ''));
   await b.close();
   console.log(fail ? `\n${fail} check(s) failed` : '\nall checks passed');

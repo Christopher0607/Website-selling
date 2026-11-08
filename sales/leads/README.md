@@ -4,7 +4,11 @@ Claude Code 上网找到的商家写在这里。`python3 site/build.py` 会把�
 
 ## 每天的定时任务（2026-11-08 起）
 
-Claude Code 每天早上约 7 点（马来西亚时间）自动找 **20 家 A 级餐厅**，写成 `sales/leads/<日期>-restaurants.json`（id 用 `r<日期>-<店名>`），跑 build、commit、push 到 `ccr-4e1e8221-7msrbj`。Netlify 自动部署后，俊宇在工作台按「全部加入」。
+Claude Code 每天早上约 7 点（马来西亚时间）自动找 **20 家 A 级餐厅**，写成 `sales/leads/<日期>-restaurants.json`（id 用 `r<日期>-<店名>`），跑 `python3 site/build.py`（会产生 `sales/leads/inbox.json`），**只 commit `sales/leads/`，push 到 `leads` 分支**。
+
+**为什么用 `leads` 分支：** Netlify 免费方案每次正式部署扣 15 点（每月 300 点）。工作台会直接读 GitHub 上 `leads` 分支的 `sales/leads/inbox.json`（`LEADS_URL`，5 分钟更新一次），所以新商家不用部署就会出现在「新商家」。正式分支 `ccr-4e1e8221-7msrbj` 只放程式的改动。
+
+每天开始前：`git fetch origin ccr-4e1e8221-7msrbj leads && git checkout -B leads origin/leads && git merge --no-edit origin/ccr-4e1e8221-7msrbj`（拿到最新的规则和工具）。合并如果只在 `sales/leads/inbox.json` 或 `site/netlify/functions/desk/inbox.mjs` 有冲突，跑一次 `python3 site/build.py` 重新产生，再 `git add` 这两个档案、`git commit --no-edit`。
 
 ## 规则
 

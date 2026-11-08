@@ -1041,7 +1041,7 @@ def load_leads():
     if not os.path.isdir(folder):
         return out
     for name in sorted(os.listdir(folder)):
-        if not name.endswith(".json"):
+        if not name.endswith(".json") or name == "inbox.json":
             continue
         data = load_json(os.path.join(folder, name))
         for lead in data.get("leads", []):
@@ -1082,6 +1082,7 @@ def build_knowledge():
     content = ("// 自动产生 —— 不要手动改。改 sales/agent/knowledge.md 或 site/studio.json，然后跑 python3 site/build.py\n"
                "export const KNOWLEDGE = " + json.dumps(text, ensure_ascii=False) + ";\n"
                "export const IG_HANDLE = " + json.dumps(ig) + ";\n")
+    leads = load_leads()
     scripts_src = os.path.join(HERE, "..", "sales", "scripts.md")
     scripts = open(scripts_src, encoding="utf-8").read() if os.path.exists(scripts_src) else ""
     outputs = {
@@ -1089,7 +1090,10 @@ def build_knowledge():
         os.path.join(HERE, "netlify", "functions", "desk", "scripts.mjs"):
             "// 自动产生 —— 不要手动改。改 sales/scripts.md，然后跑 python3 site/build.py\nexport const SCRIPTS = " + json.dumps(scripts, ensure_ascii=False) + ";\n",
         os.path.join(HERE, "netlify", "functions", "desk", "inbox.mjs"):
-            "// 自动产生 —— 不要手动改。改 sales/leads/*.json，然后跑 python3 site/build.py\nexport const INBOX = " + json.dumps(load_leads(), ensure_ascii=False, indent=1) + ";\n",
+            "// 自动产生 —— 不要手动改。改 sales/leads/*.json，然后跑 python3 site/build.py\nexport const INBOX = " + json.dumps(leads, ensure_ascii=False, indent=1) + ";\n",
+        # 同一份资料的 JSON 版：工作台直接从 GitHub 的 leads 分支读取它，所以每天的新商家不用部署（不扣 Netlify 点数）
+        os.path.join(HERE, "..", "sales", "leads", "inbox.json"):
+            json.dumps({"note": "自动产生，不要手动改（python3 site/build.py）", "leads": leads}, ensure_ascii=False, indent=1) + "\n",
     }
     for path, text_ in outputs.items():
         old = open(path, encoding="utf-8").read() if os.path.exists(path) else ""

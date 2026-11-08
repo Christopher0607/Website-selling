@@ -5,6 +5,8 @@
   command = "python3 build.py"
   publish = "dist"
   functions = "netlify/functions"
+  # 省 Netlify 点数（免费方案每次正式部署 15 点）：leads 分支、只改文件的 commit 不 build
+  ignore = "bash ../scripts/netlify-ignore.sh"
 
 # 样板店不给搜索引擎收录
 [[headers]]
