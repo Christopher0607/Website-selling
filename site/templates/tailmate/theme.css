@@ -56,3 +56,6 @@ body { font-weight: 600; }
   .hero--play .hero__sticker { right: 26px; top: 26px; width: 92px; height: 92px; font-size: .78rem; }
   .band { border-radius: 0; margin: 0; }
 }
+@media (max-width: 600px) {
+  .feats .feat { padding: 16px; }
+}

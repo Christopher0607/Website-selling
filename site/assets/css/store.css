@@ -509,7 +509,6 @@ p { margin: 0 0 1em; }
   .price { font-size: .92rem; margin-bottom: 10px; }
   .trust { grid-template-columns: 1fr 1fr; gap: 14px; padding: 16px 0; }
   .trust .i { width: 24px; height: 24px; }
-  .steps, .feats { grid-template-columns: 1fr; }
   .cats--tiles { grid-template-columns: 1fr 1fr; }
   .cats--tiles .cat { aspect-ratio: 3 / 4; }
   .cats--tiles strong { font-size: 1.15rem; }
@@ -521,9 +520,6 @@ p { margin: 0 0 1em; }
   .f3 { grid-template-columns: 1fr 1fr; }
   .f3 label:last-child { grid-column: 1 / -1; }
   .f2 { grid-template-columns: 1fr; }
-  .ftr__grid { grid-template-columns: 1fr; gap: 28px; padding-top: 44px; }
-  .chat-fab span { display: none; }
-  .chat-fab { width: 52px; padding: 0; justify-content: center; }
   .nl { flex-direction: column; }
   .nl .btn { width: 100%; }
   .buy__row .qty { height: 52px; }
@@ -532,4 +528,91 @@ p { margin: 0 0 1em; }
   .thumb { width: 64px; height: 64px; flex: none; }
   .line { grid-template-columns: 64px 1fr auto; }
   .line img { width: 64px; height: 64px; }
+}
+
+/* ---------- phones (≤600px): slim top, swipe rows, bigger tap targets ---------- */
+.gallery__dots, .cart-bar { display: none; }
+@media (max-width: 600px) {
+  /* top of the page: demo bar + announcement + header used ~140px, now ~115px */
+  .demo-bar { font-size: 12px; }
+  .demo-bar__in { min-height: 34px; padding-top: 3px; padding-bottom: 3px; }
+  .demo-bar__links { width: 100%; justify-content: space-between; gap: 10px; }
+  .demo-bar__links a { padding: 6px 0; }
+  .demo-bar__cta { padding: 6px 12px !important; }
+  .announce { font-size: .76rem; }
+  .announce p { padding: 6px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .hdr__in { min-height: 54px; }
+  .hdr .logo__txt { font-size: 1.2rem; }
+
+  /* section titles: "Shop all →" sits beside a short title instead of under it */
+  .sec__head { flex-direction: row; flex-wrap: wrap; align-items: flex-end; gap: 6px 16px; margin-bottom: 18px; }
+  .sec__head > div { flex: 1 1 auto; min-width: 0; }
+  .sec__sub { font-size: .92rem; }
+  .link-arrow { padding: 8px 0; }
+  .eyebrow { font-size: .76rem; }
+
+  /* product rows on the home page + "you may also like": swipe sideways, two cards and a peek */
+  .grid--rail, .steps { display: flex; gap: 12px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter); margin-inline: calc(var(--gutter) * -1); padding: 2px var(--gutter) 10px; scrollbar-width: none; }
+  .grid--rail::-webkit-scrollbar, .steps::-webkit-scrollbar, .chips::-webkit-scrollbar { display: none; }
+  .grid--rail > .card { flex: 0 0 46%; scroll-snap-align: start; }
+  .steps > .step { flex: 0 0 84%; scroll-snap-align: start; padding: 20px; }
+  .step__n { width: 34px; height: 34px; margin-bottom: 12px; }
+  .card__cat { font-size: .76rem; }
+  .badge { font-size: .74rem; top: 8px; left: 8px; padding: 4px 8px; }
+
+  /* category tiles: an odd last tile fills the row instead of sitting alone */
+  .cats--tiles .cat:last-child:nth-child(odd) { grid-column: 1 / -1; aspect-ratio: 16 / 9; }
+
+  /* features: two columns, smaller icons */
+  .feats { grid-template-columns: 1fr 1fr; gap: 26px 16px; }
+  .feats--n3 .feat:last-child { grid-column: 1 / -1; }
+  .feat .i { width: 28px; height: 28px; margin-bottom: 8px; }
+  .feat h3 { font-size: 1rem; margin-bottom: .35em; }
+  .feat p { font-size: .87rem; line-height: 1.5; }
+
+  /* shop page: category chips in one swipeable line */
+  .page-head { padding: 22px 0 16px; }
+  .shop__bar { flex-direction: column; align-items: stretch; gap: 10px; margin-bottom: 20px; }
+  .chips { flex-wrap: nowrap; overflow-x: auto; margin-inline: calc(var(--gutter) * -1); padding: 0 var(--gutter) 4px; scrollbar-width: none; }
+  .chip { flex: none; padding: 9px 16px; }
+  .sort { justify-content: flex-end; }
+
+  /* product page: photo edge to edge, swipe for more photos (dots instead of thumbnails) */
+  .pdp { padding-top: 8px; }
+  .pdp .crumbs { margin-bottom: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .gallery { margin-inline: calc(var(--gutter) * -1); }
+  .gallery__main { border-radius: 0; max-height: 60vh; touch-action: pan-y; }
+  .gallery__thumbs { display: none; }
+  .gallery__dots { display: flex; position: absolute; left: 0; right: 0; bottom: 12px; z-index: 2; justify-content: center; gap: 6px; pointer-events: none; }
+  .gallery__dots i { width: 7px; height: 7px; border-radius: 4px; background: rgba(255,255,255,.55); box-shadow: 0 0 0 1px rgba(0,0,0,.12); transition: width .2s, background .2s; }
+  .gallery__dots i.is-on { width: 20px; background: #fff; }
+  .pdp__info h1 { font-size: clamp(1.6rem, 7vw, 2rem); }
+  .related .sec__head { margin-bottom: 14px; }
+
+  /* cart: total + checkout pinned to the bottom */
+  .cart-bar:not([hidden]) { display: block; position: fixed; left: 0; right: 0; bottom: 0; z-index: 44; background: var(--bg); border-top: 1px solid var(--line); box-shadow: 0 -8px 24px rgba(0,0,0,.08); transition: transform .25s; padding-bottom: env(safe-area-inset-bottom); }
+  .cart-bar.is-away { transform: translateY(110%); }
+  .cart-bar__in { display: flex; align-items: center; justify-content: space-between; gap: 14px; min-height: 72px; }
+  .cart-bar__sum { display: grid; line-height: 1.2; }
+  .cart-bar__sum small { color: var(--muted); font-size: .8rem; }
+  .cart-bar__sum strong { font-size: 1.2rem; }
+  .cart-bar .btn { flex: 1; max-width: 220px; }
+  body.page-cart { padding-bottom: 72px; }
+  body.page-cart .toast { bottom: 92px; }
+
+  /* chat button: smaller, and out of the way while paying */
+  .chat-fab { width: 48px; height: 48px; right: 14px; bottom: 14px; padding: 0; justify-content: center; }
+  .chat-fab span { display: none; }
+  .has-sticky .chat-fab { bottom: 86px; }
+  .page-cart .chat-fab, .page-checkout .chat-fab { display: none; }
+
+  /* footer: two columns instead of one long list */
+  .ftr__grid { grid-template-columns: 1fr 1fr; gap: 26px 20px; padding-top: 40px; padding-bottom: 30px; }
+  .ftr__brand, .ftr__grid > div:last-child { grid-column: 1 / -1; }
+  .ftr ul { gap: 0; }
+  .ftr ul a { display: inline-block; padding: 7px 0; }
+  .ftr__social { gap: 6px 18px; }
+  .ftr__social a { padding: 6px 0; }
+  .ftr h4 { margin-bottom: 8px; }
+  .ftr__bottom { flex-direction: column; gap: 8px; }
 }

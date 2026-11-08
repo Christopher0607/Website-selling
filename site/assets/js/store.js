@@ -238,11 +238,30 @@
     form.addEventListener('submit', (ev) => { ev.preventDefault(); add(id, sel(), parseInt(qty.value, 10) || 1); });
     const now = $('[data-buy-now]');
     if (now) now.addEventListener('click', () => { add(id, sel(), parseInt(qty.value, 10) || 1, true); location.href = SP + 'checkout.html'; });
-    $$('.thumb').forEach((t) => t.addEventListener('click', () => {
-      $$('.thumb').forEach((x) => x.classList.remove('is-on'));
-      t.classList.add('is-on');
-      mainImg.src = t.getAttribute('data-img');
-    }));
+    const thumbs = $$('.thumb');
+    const dots = $$('.gallery__dots i');
+    let cur = 0;
+    const show = (i, dir) => {
+      if (!thumbs.length) return;
+      cur = (i + thumbs.length) % thumbs.length;
+      thumbs.forEach((x, k) => x.classList.toggle('is-on', k === cur));
+      dots.forEach((x, k) => x.classList.toggle('is-on', k === cur));
+      mainImg.src = thumbs[cur].getAttribute('data-img');
+      if (dir && mainImg.animate) mainImg.animate([{ opacity: 0.35, transform: 'translateX(' + (dir * 28) + 'px)' }, { opacity: 1, transform: 'none' }], { duration: 240, easing: 'ease-out' });
+    };
+    thumbs.forEach((t, k) => t.addEventListener('click', () => show(k)));
+    // phones: swipe the big image left / right to see the other photos
+    const gal = $('.gallery__main');
+    if (gal && thumbs.length > 1) {
+      let x0 = null, y0 = 0;
+      gal.addEventListener('touchstart', (ev) => { x0 = ev.touches[0].clientX; y0 = ev.touches[0].clientY; }, { passive: true });
+      gal.addEventListener('touchend', (ev) => {
+        if (x0 === null) return;
+        const dx = ev.changedTouches[0].clientX - x0, dy = ev.changedTouches[0].clientY - y0;
+        x0 = null;
+        if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.2) show(cur + (dx < 0 ? 1 : -1), dx < 0 ? 1 : -1);
+      }, { passive: true });
+    }
     // sticky add-to-cart on phones once the main button scrolls away
     const sticky = $('[data-sticky-atc]');
     const atc = $('[data-atc]');
@@ -275,6 +294,15 @@
     const dr = $('[data-sum-disc-row]');
     dr.hidden = !t.disc;
     $('[data-sum-disc]').textContent = '−' + rm(t.disc) + ' (' + coupon()?.code + ')';
+    // phones: total + checkout pinned to the bottom of the screen
+    const bar = $('[data-cart-bar]');
+    if (bar) { bar.hidden = !c.length; $('[data-bar-total]', bar).textContent = rm(t.total); }
+  }
+  const cbar = $('[data-cart-bar]');
+  const cbtn = $('[data-checkout-btn]');
+  if (cbar && cbtn && 'IntersectionObserver' in window) {
+    // hide the pinned bar while the summary's own checkout button is on screen
+    new IntersectionObserver((ents) => cbar.classList.toggle('is-away', ents[0].isIntersecting)).observe(cbtn);
   }
   $$('input[name="zone"]').forEach((r) => r.addEventListener('change', render));
   const cform = $('[data-coupon]');

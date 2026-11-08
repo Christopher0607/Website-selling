@@ -410,7 +410,9 @@ if(h===window.__pvHash){try{localStorage.setItem('pv_'+h,'1');}catch(e){}documen
             grid = "".join(self.card(p, sp) for p in items)
             link = ("shop.html", s.get("link", "Shop all"))
             layout = s.get("layout", "grid")
-            return f'<section class="{cls}"><div class="wrap">{self.sec_head(s, sp, link)}<div class="grid grid--{s.get("cols", 4)} grid--{layout}">{grid}</div></div></section>'
+            # phones: a swipeable row instead of a tall 2-column stack ("mobile": "grid" keeps the stack)
+            rail = " grid--rail" if s.get("mobile", "rail") == "rail" and len(items) > 2 else ""
+            return f'<section class="{cls}"><div class="wrap">{self.sec_head(s, sp, link)}<div class="grid grid--{s.get("cols", 4)} grid--{layout}{rail}">{grid}</div></div></section>'
         if typ == "split":
             bullets = "".join(f"<li>{icon('check')}{e(b)}</li>" for b in s.get("bullets", []))
             bullets = f'<ul class="ticks">{bullets}</ul>' if bullets else ""
@@ -505,6 +507,7 @@ if(h===window.__pvHash){try{localStorage.setItem('pv_'+h,'1');}catch(e){}documen
         cat = self.cats.get(p["cat"], {}).get("name", "")
         imgs = p["imgs"]
         thumbs = "".join(f'<button type="button" class="thumb{" is-on" if i == 0 else ""}" data-img="{sp}img/{im}" aria-label="Image {i + 1}"><img src="{sp}img/{im}" alt="" width="120" height="120"></button>' for i, im in enumerate(imgs))
+        dots = ('<span class="gallery__dots" aria-hidden="true">' + "".join('<i class="is-on"></i>' if i == 0 else "<i></i>" for i in range(len(imgs))) + "</span>") if len(imgs) > 1 else ""
         opts = ""
         for oi, o in enumerate(p["options"]):
             vals = ""
@@ -528,7 +531,7 @@ if(h===window.__pvHash){try{localStorage.setItem('pv_'+h,'1');}catch(e){}documen
         return f"""<div class="wrap pdp" data-product="{e(p['id'])}">
   <p class="crumbs"><a href="{sp}index.html">Home</a> / <a href="{sp}shop.html?cat={p['cat']}">{e(cat)}</a> / <span>{e(p['name'])}</span></p>
   <div class="pdp__grid">
-    <div class="gallery"><div class="gallery__main">{self.badge(p)}<img data-main-img src="{sp}img/{imgs[0]}" alt="{e(p['name'])}" width="1200" height="1200"></div>
+    <div class="gallery"><div class="gallery__main">{self.badge(p)}<img data-main-img src="{sp}img/{imgs[0]}" alt="{e(p['name'])}" width="1200" height="1200">{dots}</div>
       {f'<div class="gallery__thumbs">{thumbs}</div>' if len(imgs) > 1 else ''}</div>
     <div class="pdp__info">
       <p class="pdp__cat">{e(cat)}</p>
@@ -557,7 +560,7 @@ if(h===window.__pvHash){try{localStorage.setItem('pv_'+h,'1');}catch(e){}documen
     </div>
   </div>
   <section class="reviews"><h2>Reviews</h2><p class="muted">No reviews yet. In a real store, customers who bought this product can leave a review here — we never add made-up reviews.</p></section>
-  <section class="related"><div class="sec__head"><div><h2>You may also like</h2></div></div><div class="grid grid--4">{rel}</div></section>
+  <section class="related"><div class="sec__head"><div><h2>You may also like</h2></div></div><div class="grid grid--4 grid--rail">{rel}</div></section>
 </div>
 <div class="sticky-atc" data-sticky-atc aria-hidden="true"><div class="wrap sticky-atc__in"><img src="{sp}img/{imgs[0]}" alt="" width="48" height="48"><div class="sticky-atc__txt"><strong>{e(p['name'])}</strong><span data-sticky-price>{rm(p.get('sale') or p['price'])}</span></div><button class="btn" type="button" data-sticky-add>Add to cart</button></div></div>
 """
@@ -582,7 +585,8 @@ if(h===window.__pvHash){try{localStorage.setItem('pv_'+h,'1');}catch(e){}documen
       <p class="pay-note">{icon('shield')} FPX · Cards · E-wallets</p>
     </aside>
   </div>
-</div>"""
+</div>
+<div class="cart-bar" data-cart-bar hidden><div class="wrap cart-bar__in"><span class="cart-bar__sum"><small>Total</small><strong data-bar-total>RM0.00</strong></span><a class="btn btn--lg" href="checkout.html">Checkout</a></div></div>"""
 
     def checkout_body(self, root, sp):
         states = "".join(f'<option>{s}</option>' for s in STATES)
