@@ -139,6 +139,8 @@ class Store:
 
     def price_html(self, p):
         base = p["price"]
+        if base is None:  # mockups: price not published → never invent one
+            return '<span class="ask">Ask for price</span>'
         sale = p.get("sale")
         has_from = any(v.get("add") for o in p["options"] for v in o["values"])
         pre = '<span class="from">from </span>' if has_from else ""
@@ -148,7 +150,7 @@ class Store:
 
     def badge(self, p):
         b = p.get("badge")
-        if not b and p.get("sale"):
+        if not b and p.get("sale") and p.get("price") is not None:
             b = "Save " + rm0(p["price"] - p["sale"])
         return f'<span class="badge">{e(b)}</span>' if b else ""
 
@@ -169,12 +171,14 @@ class Store:
             if o["style"] == "swatch":
                 dots = "".join(f'<span class="dot" style="--sw:{e(v.get("hex", "#ccc"))}" title="{e(v["v"])}"></span>' for v in o["values"])
                 sw = f'<p class="card__swatches">{dots}</p>'
-        if p["options"]:
+        if p["price"] is None:
+            btn = f'<a class="btn btn--sm btn--ghost card__add" href="{url}">Ask for price</a>'
+        elif p["options"]:
             btn = f'<a class="btn btn--sm card__add" href="{url}">Choose options</a>'
         else:
             btn = f'<button class="btn btn--sm card__add" type="button" data-add="{e(p["id"])}">Add to cart</button>'
         return (
-            f'<article class="card" data-cat="{e(p["cat"])}" data-price="{p.get("sale") or p["price"]}">'
+            f'<article class="card" data-cat="{e(p["cat"])}" data-price="{p.get("sale") or p["price"] or 0}">'
             f'<a class="card__media" href="{url}" tabindex="-1">'
             f'<img src="{sp}img/{imgs[0]}" alt="{e(p["name"])}" loading="lazy" width="600" height="600">{alt}{self.badge(p)}</a>'
             f'<div class="card__body"><p class="card__cat">{e(cat)}</p>'
@@ -428,7 +432,7 @@ if(h===window.__pvHash){try{localStorage.setItem('pv_'+h,'1');}catch(e){}documen
                 link = ""
                 if st.get("product"):
                     p = self.by_id[st["product"]]
-                    link = f'<a class="step__prod" href="{sp}p/{p["id"]}.html"><img src="{sp}img/{p["imgs"][0]}" alt="" loading="lazy" width="120" height="120"><span>{e(p["name"])}<b>{rm(p.get("sale") or p["price"])}</b></span></a>'
+                    link = f'<a class="step__prod" href="{sp}p/{p["id"]}.html"><img src="{sp}img/{p["imgs"][0]}" alt="" loading="lazy" width="120" height="120"><span>{e(p["name"])}<b>{rm(p.get("sale") or p["price"]) if p["price"] is not None else "Ask for price"}</b></span></a>'
                 items += f'<li class="step"><span class="step__n">{st.get("n", i + 1)}</span><h3>{e(st["title"])}</h3><p>{e(st["text"])}</p>{link}</li>'
             return f'<section class="{cls}"><div class="wrap">{self.sec_head(s, sp)}<ol class="steps steps--n{len(s["items"])}">{items}</ol></div></section>'
         if typ == "features":
@@ -529,6 +533,9 @@ if(h===window.__pvHash){try{localStorage.setItem('pv_'+h,'1');}catch(e){}documen
         related += [x for x in self.products if x["cat"] != p["cat"]]
         rel = "".join(self.card(x, sp) for x in related[:4])
         size_note = f'<p class="pdp__note">{icon("ruler")}{e(p["size_note"])}</p>' if p.get("size_note") else ""
+        ask = p["price"] is None
+        ask_html = (f'<a class="btn btn--lg btn--block" href="#" data-demo="In your store this opens WhatsApp with \'{e(p["name"])}\' already typed in, so customers can ask for the price.">'
+                    f'{icon("chat")} Ask for price on WhatsApp</a>') if ask else ""
         return f"""<div class="wrap pdp" data-product="{e(p['id'])}">
   <p class="crumbs"><a href="{sp}index.html">Home</a> / <a href="{sp}shop.html?cat={p['cat']}">{e(cat)}</a> / <span>{e(p['name'])}</span></p>
   <div class="pdp__grid">
@@ -537,10 +544,10 @@ if(h===window.__pvHash){try{localStorage.setItem('pv_'+h,'1');}catch(e){}documen
     <div class="pdp__info">
       <p class="pdp__cat">{e(cat)}</p>
       <h1>{e(p['name'])}</h1>
-      <p class="price price--lg" data-pdp-price>{self.price_html(p).replace('<span class="from">from </span>', '')}</p>
+      <p class="price price--lg"{'' if ask else ' data-pdp-price'}>{self.price_html(p).replace('<span class="from">from </span>', '')}</p>
       <p class="pdp__short">{e(p.get('short', ''))}</p>
       {notes}{roast}
-      <form class="buy" data-buy>
+      {ask_html}<form class="buy" data-buy{' hidden' if ask else ''}>
         {opts}{size_note}
         <div class="buy__row">
           <div class="qty"><button type="button" data-step="-1" aria-label="Less">{icon('minus')}</button><input name="qty" value="1" inputmode="numeric" aria-label="Quantity"><button type="button" data-step="1" aria-label="More">{icon('plus')}</button></div>
@@ -563,7 +570,7 @@ if(h===window.__pvHash){try{localStorage.setItem('pv_'+h,'1');}catch(e){}documen
   <section class="reviews"><h2>Reviews</h2><p class="muted">No reviews yet. In a real store, customers who bought this product can leave a review here — we never add made-up reviews.</p></section>
   <section class="related"><div class="sec__head"><div><h2>You may also like</h2></div></div><div class="grid grid--4 grid--rail">{rel}</div></section>
 </div>
-<div class="sticky-atc" data-sticky-atc aria-hidden="true"><div class="wrap sticky-atc__in"><img src="{sp}img/{imgs[0]}" alt="" width="48" height="48"><div class="sticky-atc__txt"><strong>{e(p['name'])}</strong><span data-sticky-price>{rm(p.get('sale') or p['price'])}</span></div><button class="btn" type="button" data-sticky-add>Add to cart</button></div></div>
+{'' if ask else f'''<div class="sticky-atc" data-sticky-atc aria-hidden="true"><div class="wrap sticky-atc__in"><img src="{sp}img/{imgs[0]}" alt="" width="48" height="48"><div class="sticky-atc__txt"><strong>{e(p['name'])}</strong><span data-sticky-price>{rm(p.get('sale') or p['price'])}</span></div><button class="btn" type="button" data-sticky-add>Add to cart</button></div></div>'''}
 """
 
     def cart_body(self, root, sp):
@@ -693,6 +700,13 @@ def apply_preview(t, pv):
     ship = t.get("shipping", {"west": 8, "east": 15, "free_min": 150})
     t["announcement"] = b.get("announcement") or [f"Free shipping in Malaysia over RM{ship['free_min']}", "Pay with FPX online banking, cards or e-wallets"]
     cats, products = [], []
+    def price_of(item):
+        v = item.get("price")
+        if v in (None, "", "ask"):
+            return None
+        if not isinstance(v, (int, float)) or v <= 0:
+            sys.exit(f"产品 {item.get('name')!r} 的 price 要是数字（查不到价钱就不要写 price，样板会显示 Ask for price）")
+        return v
     for i, item in enumerate(pv["products"]):
         cname = item.get("category", "Shop")
         cid = slugify(cname)
@@ -700,7 +714,7 @@ def apply_preview(t, pv):
         if cid not in [c["id"] for c in cats]:
             cats.append({"id": cid, "name": cname, "img": imgs[0], "blurb": ""})
         products.append({
-            "id": slugify(item["name"])[:50], "name": item["name"], "cat": cid, "price": item["price"], "sale": item.get("sale"),
+            "id": slugify(item["name"])[:50], "name": item["name"], "cat": cid, "price": price_of(item), "sale": item.get("sale") if price_of(item) is not None else None,
             "imgs": imgs, "short": item.get("short", ""), "desc": item.get("desc", [item.get("short", "")] if item.get("short") else []),
             "details": item.get("details", []), "options": item.get("options", []), "tags": ["featured"] if i < 4 else [],
             "badge": item.get("badge"),

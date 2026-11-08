@@ -99,7 +99,7 @@
 **每次做样板：**
 1. 电话里对方说「可以」→ 在工作台按「可以发样板」。
 2. 跟 Claude Code 说「帮我做 <店名> 的样板」（附上对方的 IG 或报道链接）。Claude Code 会：
-   - 建 `clients/<代号>/preview/preview.json`（模板、品牌名和颜色、4–8 个主打产品、密码、删除日期 = 今天 + 14 天），只用对方**公开的**资料和照片（照片只放在这个私人样板）；
+   - 建 `clients/<代号>/preview/preview.json`（模板、品牌名、3–8 个招牌产品、密码、删除日期 = 今天 + 14 天），只用查得到的**真实**资料；**查不到价钱的产品不写 `price`，样板会显示「Ask for price」（不编价钱）**；照片用 Pexels 示意图（`photos: "placeholder"`，样板顶部会写明），对方给了照片才换成他们的；
    - 跑 `python3 site/build.py --preview clients/<代号>/preview/preview.json`；
    - 跑 `node scripts/local/preview-publish.js publish <代号>`（加密 + push 到 `previews` 分支，约 1 分钟后上线；preview.json 有 `lead_id` / `instagram` 时，会把网址和加密的密码写进 `sales/leads/previews.json`）；再跑 `python3 site/build.py`，把 `sales/leads/previews.json` 和 `sales/leads/inbox.json` 一起 commit 到 `leads` 分支——工作台那张卡就会出现网址、密码和写好的「附样板的信息」；
    - 给你**网址、密码、删除日期**。（`clients/*/preview/` 不进 git。）
