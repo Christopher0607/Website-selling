@@ -534,7 +534,7 @@ if(h===window.__pvHash){try{localStorage.setItem('pv_'+h,'1');}catch(e){}documen
         rel = "".join(self.card(x, sp) for x in related[:4])
         size_note = f'<p class="pdp__note">{icon("ruler")}{e(p["size_note"])}</p>' if p.get("size_note") else ""
         ask = p["price"] is None
-        ask_html = (f'<a class="btn btn--lg btn--block" href="#" data-demo="In your store this opens WhatsApp with \'{e(p["name"])}\' already typed in, so customers can ask for the price.">'
+        ask_html = (f'<a class="btn btn--lg btn--block" href="#" data-ask data-demo="In your store this opens WhatsApp with \'{e(p["name"])}\' already typed in, so customers can ask for the price.">'
                     f'{icon("chat")} Ask for price on WhatsApp</a>') if ask else ""
         return f"""<div class="wrap pdp" data-product="{e(p['id'])}">
   <p class="crumbs"><a href="{sp}index.html">Home</a> / <a href="{sp}shop.html?cat={p['cat']}">{e(cat)}</a> / <span>{e(p['name'])}</span></p>
