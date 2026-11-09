@@ -7,7 +7,7 @@
 ## 当前状态
 
 - 当前阶段：**Phase 4.1 找客户**（网站 https://cartsmith.netlify.app 已上线；俊宇 2026-11-07 说开始找客户）
-- 下一个任务：**俊宇：① 平日 14:30–17:00 打电话；5 家已有样板（Hideaway、Contour、Ome、Dreamz、Floccus Floccus）→ 卡片上的「附样板的信息」按 WhatsApp 发；Floccus Floccus 要先在「新商家」按「全部加入」 ② 另外 5 家（Blue Dahlia、Baba Beng、Secawan Tepung、Monét、Haruki）打电话时问 4–6 个招牌产品和价钱（或请对方传菜单照片），拿到后 15 分钟做好样板 ③ 2026-11-23 前删除这批样板（工作台会提醒）。Claude Code：每天 07:45 检查早上那一轮；之后每天做约 10 个样板**
+- 下一个任务：**俊宇：① Yi Jia Pastry 那张卡按「记录进度 →对方已经有网站」（网址 yijiapastry.com），这一家结束 ② 在 Meta Business Suite 把 Instagram 即时回复换成 docs/10 的新版本（不推销、没有名字和表情符号） ③ 以后贴回复时，你自己在 IG / WhatsApp 回过的话也贴进下面那格 ④ 平日 14:30–17:00 打电话、发样板。Claude Code：每天 07:45 检查早上的任务**
 - 卡住的事：没有（DigitalOcean 服务器、域名、SSM 都等第一个客户说「好」再做；SSM 一定要在收订金前完成）
 
 ---
@@ -110,6 +110,7 @@
 
 | 日期 | 任务 | 结果 | 网址 / 文件 | 未解决的问题 |
 |---|---|---|---|---|
+| 2026-11-09 | 4.1s 对话记录不完整导致 AI 判断错（俊宇：Yi Jia 回了，但工作室的记录不准确，AI 的答案也不准） | 原因：Yi Jia 先说「目前我们已有网店」，俊宇自己在 IG 礼貌结束，对方回「好的」；工作台只知道最后一句，AI 以为对方有兴趣、叫俊宇要 Shopee 链接。另外 Instagram 即时回复（旧版：表情符号、Junyu、叫对方回 MOCKUP）在对方说有网店时也照样推销。修正：贴回复时可以一起贴「你自己回过的话」，两边都按顺序记下；工作台发的信息记全文；AI 分析回复和 AI 助手都看整段对话 + 研究资料，对方已有网站 / 没兴趣就不推销，我们已经结束、对方只回「好的」就判定「不用再回」；新增「对方已经有网站」「没成交」按钮。docs/10 即时回复改成只说收到、会回复（不推销、不写名字、不用表情符号），关键字回复去掉表情符号。测试 87 项全通过（新 5 项，用 Yi Jia 的情况重演） | `site/netlify/functions/desk/index.mjs`、`site/desk/desk.js`、`docs/10-instagram-auto-replies.md`、`docs/11-sales-desk.md` | Yi Jia 的卡要俊宇按「对方已经有网站」；Instagram 即时回复要俊宇在 Meta Business Suite 换 |
 | 2026-11-09 | 4.1r 工作台样板表（俊宇：在工作台做一个表，整齐地查看他们的网站、密码和所有内容） | 「名单 → 样板表」：店名（固定在左边）、状态、电话（拨号 / WhatsApp）、样板（打开）、密码（复制）、删除日期（到期变红）、地区、最后联系、下一步、跳到卡片；显示全部商家；复制整张表（Tab 分隔，可以贴到 Google Sheets）；CSV 备份加样板密码。测试 82 项全通过（新 6 项）。同一次部署也上线研究会话修的样板 / 模板手机版问题（订阅框、聊天按钮、分类按钮、Ask for price 按钮）和餐厅样板的信任栏 / 页尾选项 | `site/desk/desk.js`、`site/desk/desk.css`、`site/netlify/functions/desk/index.mjs`、`docs/11-sales-desk.md` | — |
 | 2026-11-09 | 修样板手机版（俊宇：手机上顶部提示条挤在左边、颜色看不到、全部跑位） | 找到 5 个原因并修好：① 加密版在「已记住密码」时把店铺写进密码页里面（密码页的置中网格把整页挤歪、往右跑）→ 等密码页载入完才替换；② 手机版顶部短提示被按钮挤成一个字宽 → 左字右按钮；③ 品牌色套在深色模板上字看不到 → build 自动检查对比度，看不清的颜色不用、太浅的品牌色自动调深；④ 6 个模板手机版的 Email 输入框被压扁成 22px → 恢复 44px；⑤ 聊天按钮挡住「加入购物车」/ 结账栏位 → 产品页按钮在画面上时先隐藏、结账页不显示、手提电脑改圆形小按钮。新增 `site/tools/check-preview.js` 端到端检查（5 种萤幕 × 每一页：跑位、顶部提示、对比度、文字被切、照片、压扁的输入框、浮动按钮挡住按钮、JS 错误、购物流程），先确认它能抓到旧版的问题，再用它测 5 个样板的本机版、本机加密版和线上网址，全部通过；6 个模板购物流程照样通过 | `scripts/local/preview-publish.js`、`site/build.py`、`site/assets/css/store.css`、`site/assets/js/store.js`、`site/templates/chili-pantry/theme.css`、`site/tools/check-preview.js`、`docs/09-netlify-guide.md` | 公开的模板展示站要等下一次正式部署才会有 ④⑤ 的修正（这次 commit 用 [skip netlify]，不扣点数） |
 | 2026-11-09 | 4.1q 每一家客户的 AI 助手（俊宇：工作台给我一个 AI，绑定 DeepSeek，随时针对顾客的 WhatsApp 问问题，每个顾客隔离、不会失忆） | 卡片上的「AI」按钮打开这一家的对话：贴上对方的回复或直接问，AI 用中文回答，并把可以直接发的信息放在框里（复制 / WhatsApp / Email）；快捷问题（贴上回复、下一步、写跟进、问价钱、说要考虑）。对话存在那一家的资料里（Netlify Blobs），每次只给 AI 这一家的资料（研究资料、联系记录、样板、草稿）和最近 24 条对话；满 30 条自动整理「AI 记住的重点」；名单读取不带对话（打开才读）；「下载完整备份（含 AI 对话）」。测试 76 项全通过（新加 11 项：分开保存、第二个问题带上前面的对话、另一家从空白开始、重新整理后还在、备份有对话、名单不带对话）。也修了工作台几个颜色变数（电话按钮、样板框、对话气泡）。旧的 40 家定时任务已停用 | `site/netlify/functions/desk/index.mjs`、`site/desk/`、`docs/11-sales-desk.md`、`docs/00-decisions.md` #28 | DeepSeek 会有一点费用（每次很少）；AI 的建议还是要俊宇看过再发 |

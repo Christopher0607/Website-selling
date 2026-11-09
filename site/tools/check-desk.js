@@ -379,6 +379,40 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
     await p.click('[data-tab="today"]');
   }
 
+  // whole conversation (2026-11-09): what we sent, what they said, what the owner replied himself; "already has a website"
+  {
+    const sentP001 = (JSON.parse(fs.readFileSync(STORE, 'utf8')).items.find((x) => x.id === 'p001').history || []).filter((h) => h.e === 'sent');
+    ok(sentP001.length > 0 && sentP001.some((h) => (h.n || '').length > 20), 'sent messages are recorded with their text, not just "sent"');
+    const d4 = JSON.parse(fs.readFileSync(STORE, 'utf8'));
+    d4.items.unshift({ id: 'p903', created: '2026-11-08', business_name: 'Yi Test Pastry', platform: 'shopee', store_url: '', instagram: 'yitest', whatsapp: '', email: '', niche: 'mooncakes', input: 'Mooncakes and CNY cookies', observation: 'Shopee mooncake picks 2026', notes: '', brand_clear: true, sales_signal: true, active_social: true, no_or_weak_website: true, budget_signal: false, score: 4, fit: 'good', template: 'chili-pantry', language: 'zh', status: 'contacted', touches: 1, first_contact_date: '2026-11-08', last_contact_date: '2026-11-08', next_followup_date: '2099-01-01', message: '你好 Yi Test', history: [{ d: '2026-11-08', e: 'sent', n: 'ig: 你好 Yi Test Pastry，我们是 Cartsmith Studio，想免费帮你们做一个首页样板' }] });
+    fs.writeFileSync(STORE, JSON.stringify(d4));
+    await p.reload();
+    await p.click('[data-tab="list"]');
+    await p.click('[data-filter="all"]');
+    await p.click('[data-expand="p903"]');
+    await p.click('#l-p903 [data-act="reply"]');
+    await p.waitForSelector('[data-reply-ours]');
+    await p.fill('[data-reply-text]', '目前我们已有网店喔\n好的👌');
+    await p.fill('[data-reply-ours]', '谢谢你这么快回复，也恭喜你们已经有自己的网站了。那我们就不打扰了。祝生意兴隆。');
+    await p.click('[data-act="reply-go"]');
+    await p.waitForSelector('[data-sheet]', { state: 'hidden' });
+    const hist = JSON.parse(fs.readFileSync(STORE, 'utf8')).items.find((x) => x.id === 'p903').history.map((h) => h.e);
+    ok(hist.indexOf('we_replied') > hist.indexOf('sent') && hist.indexOf('their_reply') > hist.indexOf('we_replied'), 'desk records both sides in order: our message, my own reply, their reply');
+    const calls = await (await fetch('http://localhost:9920/__calls')).json();
+    const full = (calls.filter((c) => c.full).pop() || {}).full || '';
+    ok(/工作台发的）：ig: 你好 Yi Test Pastry/.test(full) && /自己在 IG \/ WhatsApp 回的）：谢谢你这么快回复/.test(full) && /目前我们已有网店喔/.test(full), 'AI gets the whole conversation, not only the last line');
+    ok(/already have a website/.test(full) && /only acknowledges it/.test(full), 'AI is told not to pitch when they have a website, and that an "ok" after our close needs no reply');
+    // close it: they already have a website
+    await p.click('[data-tab="list"]');
+    if (!(await p.$('#l-p903'))) await p.click('[data-expand="p903"]');
+    await p.click('#l-p903 [data-act="more"]');
+    await p.click('[data-sheet-panel] [data-act="has-site"]');
+    await p.waitForTimeout(600);
+    const y = JSON.parse(fs.readFileSync(STORE, 'utf8')).items.find((x) => x.id === 'p903');
+    ok(y.status === 'lost' && y.lost_reason === '已有网站' && !y.next_followup_date && y.no_or_weak_website === false, '"对方已经有网站" closes the lead: no more follow-ups, score updated');
+    await p.click('[data-tab="today"]');
+  }
+
   // no emoji anywhere in the interface (message boxes excluded: their text comes from the AI)
   const uiText = await p.evaluate(() => { const c = document.body.cloneNode(true); c.querySelectorAll('textarea').forEach((t) => t.remove()); return c.innerText; });
   ok(!/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u.test(uiText), 'no emoji in the desk interface');

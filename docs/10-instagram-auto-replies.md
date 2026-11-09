@@ -36,15 +36,12 @@
 
 ### A. 即时回复（Instant reply）→ 开启 → 贴上：
 
+> **2026-11-09 改过**：即时回复会发给**每一个第一次私信我们的人**——包括回我们开场白的商家。旧版本（有表情符号、写「Junyu 会亲自回复」、叫对方回 MOCKUP）在商家说「我们已经有网店」时也照样推销，很尴尬。新版本只说收到了、会回复，不推销、不写名字、不用表情符号。
+
 ```
-Hi there 👋 Thanks for messaging Cartsmith Studio! We build online stores for Shopee & TikTok brands in Malaysia.
+Thanks for your message. This is Cartsmith Studio. We will reply here within 1 working day.
 
-👉 Try our 6 store templates: https://cartsmith.netlify.app/templates.html
-👉 Free homepage mockup: reply MOCKUP
-
-Junyu will reply personally within 1 working day.
-
-你好！谢谢联系 Cartsmith Studio 😊 回复 MOCKUP 就可以申请免费首页样板，俊宇会在 1 个工作天内亲自回复你。
+谢谢你的信息，这里是 Cartsmith Studio，我们会在 1 个工作天内在这里回复你。
 ```
 
 ### B. 常见问题（Frequently asked questions）→ 加 5 个：
@@ -52,7 +49,7 @@ Junyu will reply personally within 1 working day.
 | 问题（按钮上显示） | 自动回答 |
 |---|---|
 | How much does a website cost? 网站多少钱？ | One-time setup: Starter RM2,800 (up to 20 products) · Catalog RM3,500 · Growth RM4,800 (up to 80 products). Monthly Care from RM150 — the first month after launch is free. Full list: https://cartsmith.netlify.app/pricing.html |
-| Can I see it before paying? 可以先看样板吗？ | Yes! We make a free, private homepage mockup with your own products in 1–2 working days. Send us your shop link + the template you like (https://cartsmith.netlify.app/templates.html). No obligation. |
+| Can I see it before paying? 可以先看样板吗？ | Yes. We make a free, private homepage mockup with your own products in 1–2 working days. Send us your shop link + the template you like (https://cartsmith.netlify.app/templates.html). No obligation. |
 | How long does it take? 要多久？ | About 10 working days for Starter, 12 for Catalog and 15 for Growth — counted from when we have your deposit and all your content (logo, products, photos). |
 | Do I need to leave Shopee? 要离开 Shopee 吗？ | No. Keep Shopee / TikTok for new customers. Your own website is for repeat customers, wholesale and ads — no marketplace commission, and the customer list is yours. |
 | Who owns the website? 网站是谁的？ | You do, once it's fully paid. Your domain and payment gateway are opened in your own name, and you get a full backup if you ever leave. |
@@ -62,13 +59,14 @@ Junyu will reply personally within 1 working day.
 **第 1 组**　关键字（一个一个加，**大小写要完全一样**才会触发）：`MOCKUP`、`mockup`、`Mockup`、`样板`、`sample`
 
 ```
-Great! 🙌 For your free homepage mockup, please send us:
+Thank you. For your free homepage mockup, please send us:
 1) your Shopee / TikTok / IG shop link
 2) the template you like: https://cartsmith.netlify.app/templates.html
 
 Or fill in this 1-minute form: https://cartsmith.netlify.app/start.html
 
-好的！请发给我们：店铺链接 + 喜欢的模板，我们 1–2 个工作天做好样板给你 🙂
+好的，请发给我们：店铺链接 + 喜欢的模板，我们 1–2 个工作天做好样板给你。
+— Cartsmith Studio
 ```
 
 **第 2 组**　关键字：`PRICE`、`price`、`Price`、`价钱`、`harga`
@@ -80,7 +78,8 @@ Our prices are fixed and written down:
 • Growth RM4,800 (up to 80 products)
 Monthly Care from RM150 — first month free after launch.
 Details: https://cartsmith.netlify.app/pricing.html
-Want a free homepage mockup first? Reply MOCKUP 🙂
+Want a free homepage mockup first? Reply MOCKUP.
+— Cartsmith Studio
 ```
 
 > 注意（Meta 说明，2026-11-08 查）：关键字要**完全符合、分大小写**；一个关键字只能用在一组回复；同时触发时，常见问题的回复优先；关键字回复会在对话**闲置一段时间后**才发出（可以在设定里调）。

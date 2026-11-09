@@ -176,7 +176,8 @@
         body += msgBox(p, 'draft_reply', 'AI 起草的回信（看过再发）') + sendRow(p, 'draft_reply');
         body += `<div class="btnrow btnrow--end"><button class="btn btn--ghost btn--sm" data-act="replied-more" data-id="${p.id}">记录进度</button>${moreBtn}</div>`;
       } else {
-        body += `<div class="btnrow"><button class="btn btn--sm" data-act="reply" data-id="${p.id}">${svg('reply', 16)}贴上对方的回复，起草回信</button>${moreBtn}</div>`;
+        if (p.reply_summary) body += `<div class="draft"><b>对方意思：</b>${esc(p.reply_summary)}<br><b>下一步：</b>${esc(p.reply_next || '')}${p.reply_intent === 'closed' ? '<br><b>不用再回。</b>' : ''}</div>`;
+        body += `<div class="btnrow">${p.reply_summary ? `<button class="btn btn--sm" data-act="replied-more" data-id="${p.id}">记录进度</button>` : ''}<button class="btn ${p.reply_summary ? 'btn--ghost ' : ''}btn--sm" data-act="reply" data-id="${p.id}">${svg('reply', 16)}贴上对方的回复，起草回信</button>${moreBtn}</div>`;
       }
     } else if (['contacted', 'preview_sent', 'proposal_sent', 'call_booked'].includes(p.status) && (due || mode === 'full')) {
       if (p.followup) {
@@ -437,6 +438,7 @@
         ${row('preview', 'image', '样板已发（填网址）', p.id)}
         ${row('mark', 'phone', '约了通话', p.id, ' data-ev="call_booked"')}
         ${row('mark', 'file', '报价已发', p.id, ' data-ev="proposal_sent"')}
+        ${row('has-site', 'file', '对方已经有网站（结束）', p.id)}
         ${row('mark', 'star', '成交', p.id, ' data-ev="won"')}
         ${row('mark', 'x', '没成交', p.id, ' data-ev="lost"')}
         ${row('dnc', 'ban', '对方说不要（永远不再联系）', p.id)}
@@ -455,12 +457,17 @@
         ${row('preview', 'image', '样板已发', p.id)}
         ${row('mark', 'phone', '约了通话', p.id, ' data-ev="call_booked"')}
         ${row('mark', 'file', '报价已发', p.id, ' data-ev="proposal_sent"')}
-        ${row('dnc', 'ban', '对方说不要', p.id)}
+        ${row('has-site', 'file', '对方已经有网站（结束，不再提醒）', p.id)}
+        ${row('mark', 'x', '没成交（对方没兴趣）', p.id, ' data-ev="lost"')}
+        ${row('dnc', 'ban', '对方说不要再联系', p.id)}
       </div>`);
   }
   function replySheet(p) {
-    sheet(`<div class="sheet__head"><h3>${esc(p.business_name)} 回了什么？</h3>${closeBtn}</div><p class="hint">把对方在 Instagram / WhatsApp / Email 的回复复制贴上。AI 会判断对方的意思，写好回信给你看。</p>
-      <textarea rows="6" data-reply-text maxlength="2000" placeholder="贴上对方的回复"></textarea>
+    sheet(`<div class="sheet__head"><h3>${esc(p.business_name)} 回了什么？</h3>${closeBtn}</div><p class="hint">AI 会看整段对话（工作台记录的 + 你在这里贴的）再判断，所以中间的话都贴上来会比较准。</p>
+      <label class="sheet__label">对方说了什么（可以贴好几条，旧的在上面）</label>
+      <textarea rows="5" data-reply-text maxlength="2000" placeholder="例：目前我们已有网店喔"></textarea>
+      <label class="sheet__label">你自己在 IG / WhatsApp 已经回过的话（不是用工作台发的才要贴，选填）</label>
+      <textarea rows="4" data-reply-ours maxlength="2000" placeholder="例：谢谢你这么快回复……祝生意兴隆。"></textarea>
       <div class="btnrow"><button class="btn" data-act="reply-go" data-id="${p.id}">起草回信</button><button class="btn btn--ghost" data-sheet-close>取消</button></div>`);
   }
   function editSheet(p) {
@@ -565,6 +572,12 @@
       if (act === 'tbl-all') { S.tableAll = !S.tableAll; renderList(); return; }
       if (act === 'tbl-copy') { copy(tableText()); toast('整张表已复制（可以贴到 Notes 或 Google Sheets）。'); return; }
       if (act === 'open-card') { S.filter = 'all'; S.open[p.id] = true; renderList(); const el = document.getElementById('l-' + p.id); if (el) el.scrollIntoView({ block: 'start' }); return; }
+      if (act === 'has-site') {
+        const url = prompt(`${p.business_name} 的网站网址（知道的话填，不知道就直接按确定）：`, 'https://');
+        if (url === null) return;
+        const j = await api('mark', { id: p.id, event: 'has_site', url: /^https?:\/\/\S+\.\S+/.test(url) ? url : '' });
+        upsert(j.item); closeSheet(); render(); toast('已记录：对方已有网站，这一家结束，不会再提醒跟进。'); return;
+      }
       if (act === 'more') { moreSheet(p); return; }
       if (act === 'ai') { await aiSheet(p); return; }
       if (act === 'ai-quick') { const ta = $('[data-ai-text]'); ta.value = t.dataset.q; ta.focus(); return; }
@@ -607,7 +620,7 @@
       else if (act === 'mark') { j = await api('mark', { id: p.id, event: t.dataset.ev }); toast('已记录。'); }
       else if (act === 'followup') j = await api('followup', { id: p.id });
       else if (act === 'rewrite') j = await api('rewrite', { id: p.id, language: t.dataset.lang || '', hint: t.dataset.hint || '' });
-      else if (act === 'reply-go') { const text = $('[data-reply-text]').value; j = await api('reply', { id: p.id, text }); }
+      else if (act === 'reply-go') { const text = $('[data-reply-text]').value; const oursEl = $('[data-reply-ours]'); j = await api('reply', { id: p.id, text, ours: oursEl ? oursEl.value : '' }); }
       else if (act === 'edit-save') {
         const fields = {};
         $$('[data-e]').forEach((el) => { fields[el.dataset.e] = el.type === 'checkbox' ? el.checked : el.value; });

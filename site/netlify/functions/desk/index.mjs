@@ -21,7 +21,7 @@ const DOC = 'prospects-v1';
 const MAX_INPUT = 3000;
 const TEMPLATES = ['dewlane', 'plainfold', 'chili-pantry', 'lowlight', 'tailmate', 'voltnest'];
 const CRITERIA = ['brand_clear', 'sales_signal', 'active_social', 'no_or_weak_website', 'budget_signal'];
-const EVENTS = ['sent', 'replied', 'preview_sent', 'call_booked', 'proposal_sent', 'won', 'lost', 'no_response', 'dnc', 'reopen', 'preview_deleted'];
+const EVENTS = ['sent', 'replied', 'preview_sent', 'call_booked', 'proposal_sent', 'won', 'lost', 'has_site', 'no_response', 'dnc', 'reopen', 'preview_deleted'];
 
 function env(k) {
   try { if (globalThis.Netlify && globalThis.Netlify.env) { const v = globalThis.Netlify.env.get(k); if (v) return v; } } catch (e) { /* local */ }
@@ -134,7 +134,7 @@ const ANALYZE = {
 };
 const MESSAGE = { message: '' };
 const REPLY = {
-  intent: ['interested', 'question', 'objection', 'not_now', 'not_interested', 'other'], summary_zh: '', reply: '', next_step_zh: '',
+  intent: ['interested', 'question', 'objection', 'not_now', 'not_interested', 'closed', 'other'], summary_zh: '', reply: '', next_step_zh: '',
   suggested_event: ['replied', 'call_booked', 'preview_sent', 'lost', 'dnc', 'none']
 };
 const LANG = { zh: 'Simplified Chinese (简体中文)', en: 'English', ms: 'Bahasa Malaysia' };
@@ -152,10 +152,19 @@ You are now the studio owner's private assistant for ONE customer only (the file
 - When the owner pastes the customer's message (WhatsApp / IG / email) or asks for a reply or follow-up, write the message he can send, in the customer's language, between a line 【可以直接发的信息】 and a line 【结束】. Sign it "Cartsmith Studio"; never use a personal name; no emojis. Only one such block per answer unless he asks for options.
 - Use only facts from the knowledge base, the approved scripts and this customer's file. If a price, policy or detail is not there, say you are not sure and suggest he confirms. Never invent results, clients, reviews or guarantees (no "guaranteed sales", no "first page of Google").
 - Remember what was agreed earlier in this conversation and in the summary, and point out the next step (call, send mockup, follow-up date, proposal).
-- If the customer says they are not interested or asks not to be contacted, tell the owner to mark "不需要 / 不再联系" and do not draft another pitch.`;
+- If the customer says they are not interested or asks not to be contacted, tell the owner to mark "不需要 / 不再联系" and do not draft another pitch.
+- If they already have a website / online store, do not pitch a new site; suggest marking "对方已经有网站" (and only offer help later if they ask).
+- Read the whole conversation so far before answering; the owner may have replied himself outside the desk.`;
+
+// the conversation as far as the desk knows it: what we sent (with text), what they said, calls
+function thread(p) {
+  const who = { sent: '我们（工作台发的）', we_replied: '我们（自己在 IG / WhatsApp 回的）', their_reply: '对方', call: '电话', preview_sent: '我们发了样板', has_site: '记录：对方已有网站', lost: '记录：没成交', dnc: '记录：不再联系' };
+  return (p.history || []).filter((h) => who[h.e]).slice(-30).map((h) => `${h.d} ${who[h.e]}${h.n ? '：' + String(h.n).slice(0, 800) : ''}`).join('\n');
+}
 
 function customerFile(p) {
-  const hist = (p.history || []).slice(-20).map((h) => `${h.d} ${h.e}${h.n ? ': ' + String(h.n).slice(0, 200) : ''}`).join('\n');
+  const hist = (p.history || []).slice(-30).map((h) => `${h.d} ${h.e}${h.n ? ': ' + String(h.n).slice(0, 200) : ''}`).join('\n');
+  const convo = thread(p);
   const parts = [
     profile(p),
     `Status: ${p.status}; first contact ${p.first_contact_date || '-'}; last contact ${p.last_contact_date || '-'}; next follow-up ${p.next_followup_date || '-'}; channels used: ${(p.channels || []).join(', ') || '-'}`,
@@ -164,6 +173,8 @@ function customerFile(p) {
     p.input ? `Research notes:\n${String(p.input).slice(0, 2500)}` : '',
     p.followup ? `Our latest follow-up draft: ${p.followup}` : '',
     p.reply_summary ? `Their last reply (summary): ${p.reply_summary}` : '',
+    convo ? `Conversation so far (oldest first):\n${convo}` : '',
+    p.lost_reason ? `Closed: ${p.lost_reason}` : '',
     hist ? `History:\n${hist}` : '',
     p.ai_summary ? `Summary of our earlier conversation about this customer:\n${p.ai_summary}` : '',
   ];
@@ -235,6 +246,7 @@ function log(p, event, note) { (p.history = p.history || []).push({ d: myDate(),
 
 function mark(p, ev, url, channel) {
   const today = myDate();
+  const sentText = ev === 'sent' ? String((p.status === 'replied' ? p.draft_reply : ((p.touches || 0) === 0 ? p.message : p.followup)) || '') : '';
   if (ev === 'sent' && CHANNELS.includes(channel)) { p.last_channel = channel; (p.channels = p.channels || []).includes(channel) || p.channels.push(channel); }
   if (ev === 'sent' && p.status === 'replied') {
     // we answered their reply → back to the earlier stage, check again in 3 days
@@ -261,7 +273,12 @@ function mark(p, ev, url, channel) {
   else if (ev === 'reopen') { p.status = p.touches ? 'contacted' : 'new'; }
   else if (ev === 'preview_deleted') { p.preview_delete_by = ''; }
   else { p.status = ev; if (['won', 'lost', 'no_response'].includes(ev)) p.next_followup_date = ''; }
-  log(p, ev, url || (ev === 'sent' && CHANNELS.includes(channel) ? channel : ''));
+  if (ev === 'has_site') {
+    p.status = 'lost'; p.lost_reason = '已有网站'; p.no_or_weak_website = false; p.score = CRITERIA.filter((c) => p[c]).length;
+    p.next_followup_date = ''; p.next_call_date = '';
+    if (url) p.notes = [p.notes, '已有网站：' + String(url).slice(0, 200)].filter(Boolean).join('\n');
+  }
+  log(p, ev, url || (ev === 'sent' ? [CHANNELS.includes(channel) ? channel : '', sentText.slice(0, 1200)].filter(Boolean).join(': ') : ''));
 }
 
 const CSV_FIELDS = ['id', 'business_name', 'niche', 'platform', 'store_url', 'social_url', 'contact_channel', 'contact_handle', 'whatsapp', 'email', 'phone', 'area', 'address', 'language', ...CRITERIA, 'score', 'observation', 'opening_line', 'status', 'first_contact_date', 'last_contact_date', 'next_followup_date', 'preview_url', 'preview_password', 'preview_delete_by', 'notes', 'touches'];
@@ -571,8 +588,22 @@ async function handle(action, b, doc) {
     case 'reply': {
       const p = find(doc, b.id);
       const text = String(b.text || '').trim().slice(0, 2000);
+      const ours = String(b.ours || '').trim().slice(0, 2000);
       if (!text) throw Object.assign(new Error('请贴上对方的回复'), { code: 'bad_input' });
-      const out = await ask(`The prospect replied to our message. Classify their intent and draft our reply (use the objection-handling section when relevant; reply in the same language they used; if they are interested, move towards the free homepage mockup and ask for their shop link / favourite template).\n${profile(p)}\n<their_reply>\n${text}\n</their_reply>`, REPLY);
+      if (ours) log(p, 'we_replied', ours);
+      const out = await ask(`The prospect replied. Read the WHOLE conversation (oldest first) and the research notes before deciding; their latest message is only part of it.
+Rules:
+- If they said they already have a website / online store, or are not interested: intent not_interested, suggested_event lost (dnc only if they ask us to stop contacting them). Do NOT ask for a shop link or push a mockup. Reply with a short polite close only if we have not already closed the conversation.
+- If our last message already closed the conversation politely and their latest message only acknowledges it (e.g. "ok", "好的", "thanks", an emoji): intent closed, reply "" (no reply needed), suggested_event lost, and say so in next_step_zh.
+- Otherwise classify their intent and draft our reply (objection-handling section when relevant; same language they used); if they are interested, move towards the free homepage mockup.
+${profile(p)}
+Research notes: ${String(p.input || '').slice(0, 1500)}
+<conversation_so_far>
+${thread(p) || '(nothing recorded before this)'}
+</conversation_so_far>
+<their_latest_reply>
+${text}
+</their_latest_reply>`, REPLY);
       log(p, 'their_reply', text);
       if (['new', 'contacted', 'preview_sent', 'proposal_sent', 'call_booked', 'no_response'].includes(p.status)) { p.prev_status = p.status; p.status = 'replied'; p.next_followup_date = ''; }
       p.draft_reply = out.reply; p.reply_intent = out.intent; p.reply_summary = out.summary_zh; p.reply_next = out.next_step_zh; p.reply_event = out.suggested_event;
