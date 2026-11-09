@@ -251,11 +251,46 @@
   function sect(title, n, inner, emptyMsg) {
     return `<section class="sect"><div class="sect__head"><h2>${esc(title)}</h2><small>${n}</small></div>${inner || (emptyMsg ? `<div class="empty">${esc(emptyMsg)}</div>` : '')}</section>`;
   }
-  const FILTERS = [['all', '全部'], ['visit', '拜访清单'], ['new', '未联系'], ['contacted', '已联系'], ['replied', '有回复'], ['preview_sent', '样板'], ['won', '成交'], ['low', '低分'], ['do_not_contact', '不再联系']];
+  const FILTERS = [['all', '全部'], ['table', '样板表'], ['visit', '拜访清单'], ['new', '未联系'], ['contacted', '已联系'], ['replied', '有回复'], ['preview_sent', '样板'], ['won', '成交'], ['low', '低分'], ['do_not_contact', '不再联系']];
+  // ------------------------------------------------------------ mockup table (2026-11-09): every merchant's mockup, password and details in one place
+  const ST_ORDER = ['new', 'contacted', 'replied', 'preview_sent', 'call_booked', 'proposal_sent', 'won', 'no_response', 'lost', 'do_not_contact'];
+  function tableRows(q) {
+    return S.items
+      .filter((p) => (S.tableAll || p.preview_url) && (!q || [p.business_name, p.instagram, p.area, p.whatsapp, p.phone, p.preview_url].join(' ').toLowerCase().includes(q)))
+      .sort((a, b) => ST_ORDER.indexOf(a.status) - ST_ORDER.indexOf(b.status) || String(a.business_name).localeCompare(String(b.business_name)));
+  }
+  const nextStep = (p) => p.next_call_date ? '打电话 ' + p.next_call_date : (p.next_followup_date ? '跟进 ' + p.next_followup_date : (p.status === 'new' ? (callNo(p) ? '打电话' : '发开场白') : ''));
+  function pvTable(q) {
+    const rows = tableRows(q);
+    const withPv = S.items.filter((p) => p.preview_url).length;
+    const head = `<div class="tbl-bar"><span>${S.tableAll ? `全部商家 ${rows.length} 家` : `有样板的 ${rows.length} 家`}</span><button class="chip" data-act="tbl-all">${S.tableAll ? '只看有样板的' : '显示全部商家'}</button><button class="chip" data-act="tbl-copy">复制整张表</button></div>`;
+    if (!rows.length) return head + `<div class="empty">${withPv ? '没有符合的商家' : '还没有样板。每天早上的任务做好样板后会出现在这里。'}</div>`;
+    const tr = rows.map((p) => {
+      const no = callNo(p);
+      const tel = no ? `<a href="tel:+${esc(no)}">${esc(fmtPhone(no))}</a>${p.whatsapp ? ` <a class="tbl-wa" href="https://wa.me/${esc(p.whatsapp)}" target="_blank" rel="noopener" aria-label="WhatsApp">${svg('wa', 14)}</a>` : ''}` : '<span class="muted">—</span>';
+      const pv = p.preview_url ? `<a href="${esc(p.preview_url)}" target="_blank" rel="noopener">打开</a>` : '<span class="muted">还没做</span>';
+      const pw = p.preview_password ? `<code>${esc(p.preview_password)}</code> <button class="linkbtn" data-act="copy-pv" data-id="${p.id}">复制</button>` : '<span class="muted">—</span>';
+      const late = p.preview_delete_by && p.preview_delete_by <= S.today && p.status !== 'won';
+      return `<tr data-row="${p.id}"><th scope="row"><b>${esc(p.business_name)}</b>${p.instagram ? `<small>@${esc(p.instagram)}</small>` : ''}</th>
+        <td><span class="tag tag--status s-${esc(p.status)}">${esc(STATUS[p.status] || p.status)}</span></td><td class="nowrap">${tel}</td><td>${pv}</td><td class="nowrap">${pw}</td>
+        <td class="nowrap${late ? ' late' : ''}">${esc(p.preview_delete_by || '—')}</td><td>${esc(p.area || '—')}</td><td class="nowrap">${esc(p.last_contact_date || '—')}</td><td class="nowrap">${esc(nextStep(p) || '—')}</td>
+        <td><button class="linkbtn" data-act="open-card" data-id="${p.id}">卡片</button></td></tr>`;
+    }).join('');
+    return head + `<div class="tbl-wrap"><table class="pvtbl"><thead><tr><th>店名</th><th>状态</th><th>电话</th><th>样板</th><th>密码</th><th>删除日期</th><th>地区</th><th>最后联系</th><th>下一步</th><th></th></tr></thead><tbody>${tr}</tbody></table></div>`
+      + '<p class="hint">表格可以左右滑。删除日期变红 = 已到期，跟 Claude Code 说删除那个样板。</p>';
+  }
+  function tableText() {
+    const rows = tableRows(S.q.trim().toLowerCase());
+    const cols = ['店名', '状态', '电话', 'WhatsApp', '样板网址', '密码', '删除日期', '地区', '地址', '最后联系', '下一步', 'Instagram'];
+    const line = (p) => [p.business_name, STATUS[p.status] || p.status, fmtPhone(callNo(p)), p.whatsapp ? fmtWa(p.whatsapp) : '', p.preview_url || '', p.preview_password || '', p.preview_delete_by || '', p.area || '', p.address || '', p.last_contact_date || '', nextStep(p), p.instagram ? '@' + p.instagram : ''].map((x) => String(x || '').replace(/[\t\n]/g, ' ')).join('\t');
+    return [cols.join('\t'), ...rows.map(line)].join('\n');
+  }
+
   function renderList() {
     $('[data-filters]').innerHTML = FILTERS.map(([k, l]) => `<button class="chip${S.filter === k ? ' is-on' : ''}" data-filter="${k}">${l}</button>`).join('');
     const q = S.q.trim().toLowerCase();
     if (S.filter === 'visit') { $('[data-all-list]').innerHTML = visitList(q); return; }
+    if (S.filter === 'table') { $('[data-all-list]').innerHTML = pvTable(q); return; }
     const items = S.items.filter((p) => {
       if (S.filter === 'low') { if (!(p.score < 3 || p.fit === 'skip')) return false; } else if (S.filter !== 'all' && p.status !== S.filter) return false;
       return !q || [p.business_name, p.instagram, p.niche, p.id, p.email, p.whatsapp].join(' ').toLowerCase().includes(q);
@@ -527,6 +562,9 @@
         toast(failed.length ? `加入了 ${done} 家；${failed.length} 家失败，可以再按一次。` : `加入了 ${done} 家，开场白都写好了。`);
         return;
       }
+      if (act === 'tbl-all') { S.tableAll = !S.tableAll; renderList(); return; }
+      if (act === 'tbl-copy') { copy(tableText()); toast('整张表已复制（可以贴到 Notes 或 Google Sheets）。'); return; }
+      if (act === 'open-card') { S.filter = 'all'; S.open[p.id] = true; renderList(); const el = document.getElementById('l-' + p.id); if (el) el.scrollIntoView({ block: 'start' }); return; }
       if (act === 'more') { moreSheet(p); return; }
       if (act === 'ai') { await aiSheet(p); return; }
       if (act === 'ai-quick') { const ta = $('[data-ai-text]'); ta.value = t.dataset.q; ta.focus(); return; }

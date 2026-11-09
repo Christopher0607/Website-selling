@@ -349,6 +349,36 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
     await p.click('[data-tab="today"]');
   }
 
+  // mockup table (2026-11-09): mockups, passwords and details in one table
+  {
+    const d3 = JSON.parse(fs.readFileSync(STORE, 'utf8'));
+    const cc = d3.items.find((x) => x.id === 'p902');
+    Object.assign(cc, { preview_url: 'https://previews--cartsmith.netlify.app/m-callback-cafe-1234abcd/', preview_password: 'cafe1234', preview_delete_by: '2000-01-01', preview_slug: 'm-callback-cafe-1234abcd' });
+    fs.writeFileSync(STORE, JSON.stringify(d3));
+    await p.reload();
+    await p.click('[data-tab="list"]');
+    await p.click('[data-filter="table"]');
+    await p.waitForSelector('.pvtbl');
+    const rows = await p.$$eval('.pvtbl tbody tr', (rs) => rs.map((r) => r.getAttribute('data-row')));
+    const total = JSON.parse(fs.readFileSync(STORE, 'utf8')).items.filter((x) => x.preview_url).length;
+    ok(rows.length === total && rows.includes('p902'), `table lists every merchant with a mockup (${rows.length})`);
+    const rowText = await p.textContent('.pvtbl tr[data-row="p902"]');
+    ok(/cafe1234/.test(rowText) && /打开/.test(rowText) && /PJ SS2/.test(rowText), 'row shows mockup link, password and area');
+    ok((await p.$('.pvtbl tr[data-row="p902"] td.late')) !== null, 'expired delete date is shown in red');
+    await shot('table');
+    await p.click('[data-act="tbl-all"]');
+    const allRows = await p.$$eval('.pvtbl tbody tr', (rs) => rs.length);
+    ok(allRows === JSON.parse(fs.readFileSync(STORE, 'utf8')).items.length, 'toggle shows all merchants');
+    await p.click('[data-act="tbl-all"]');
+    await p.click('[data-act="tbl-copy"]');
+    const tsv = await p.evaluate(() => navigator.clipboard.readText());
+    ok(/样板网址\t密码/.test(tsv) && /cafe1234/.test(tsv) && tsv.split('\n').length === total + 1, 'copy table: header + one line per merchant, with passwords');
+    await p.click('.pvtbl tr[data-row="p902"] [data-act="open-card"]');
+    await p.waitForSelector('#l-p902');
+    ok(await p.isVisible('#l-p902'), '卡片 button opens that merchant\'s card');
+    await p.click('[data-tab="today"]');
+  }
+
   // no emoji anywhere in the interface (message boxes excluded: their text comes from the AI)
   const uiText = await p.evaluate(() => { const c = document.body.cloneNode(true); c.querySelectorAll('textarea').forEach((t) => t.remove()); return c.innerText; });
   ok(!/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u.test(uiText), 'no emoji in the desk interface');

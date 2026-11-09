@@ -238,3 +238,21 @@ input[type=file] { display: block; width: 100%; margin-top: 6px; font: 400 .88re
 .ai__quick .chip { flex: none; }
 .ai__sum { font-size: .85rem; margin: 6px 0; }
 .ai__sum summary { cursor: pointer; color: var(--muted); font-weight: 600; }
+
+/* mockup table (2026-11-09) */
+.tbl-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 4px 0 10px; font-size: .88rem; color: var(--muted); }
+.tbl-bar span { margin-right: auto; font-weight: 600; color: var(--ink); }
+.tbl-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--card); -webkit-overflow-scrolling: touch; }
+.pvtbl { border-collapse: separate; border-spacing: 0; min-width: 900px; width: 100%; font-size: .86rem; }
+.pvtbl th, .pvtbl td { text-align: left; vertical-align: top; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+.pvtbl thead th { font-size: .74rem; font-weight: 700; color: var(--muted); background: var(--soft); position: sticky; top: 0; }
+.pvtbl tbody th, .pvtbl thead th:first-child { position: sticky; left: 0; z-index: 1; background: var(--card); min-width: 150px; max-width: 190px; box-shadow: 1px 0 0 var(--line); }
+.pvtbl thead th:first-child { background: var(--soft); z-index: 2; }
+.pvtbl tbody th small { display: block; color: var(--muted); font-weight: 400; font-size: .76rem; }
+.pvtbl code { font-size: .86rem; background: var(--soft); padding: 1px 6px; border-radius: 5px; }
+.pvtbl td { white-space: nowrap; }
+.pvtbl .tag { white-space: nowrap; }
+.pvtbl .late { color: var(--bad); font-weight: 700; }
+.pvtbl .muted { color: var(--muted); }
+.pvtbl tr:last-child th, .pvtbl tr:last-child td { border-bottom: 0; }
+.tbl-wa { color: var(--wa); vertical-align: middle; }

@@ -264,7 +264,7 @@ function mark(p, ev, url, channel) {
   log(p, ev, url || (ev === 'sent' && CHANNELS.includes(channel) ? channel : ''));
 }
 
-const CSV_FIELDS = ['id', 'business_name', 'niche', 'platform', 'store_url', 'social_url', 'contact_channel', 'contact_handle', 'whatsapp', 'email', 'phone', 'area', 'address', 'language', ...CRITERIA, 'score', 'observation', 'opening_line', 'status', 'first_contact_date', 'last_contact_date', 'next_followup_date', 'preview_url', 'preview_delete_by', 'notes', 'touches'];
+const CSV_FIELDS = ['id', 'business_name', 'niche', 'platform', 'store_url', 'social_url', 'contact_channel', 'contact_handle', 'whatsapp', 'email', 'phone', 'area', 'address', 'language', ...CRITERIA, 'score', 'observation', 'opening_line', 'status', 'first_contact_date', 'last_contact_date', 'next_followup_date', 'preview_url', 'preview_password', 'preview_delete_by', 'notes', 'touches'];
 function toCsv(items) {
   const q = (v) => { const s = String(v == null ? '' : v); return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
   const rows = items.map((p) => ({ ...p, social_url: p.instagram ? 'https://instagram.com/' + p.instagram : '', contact_channel: ({ ig: 'instagram', wa: 'whatsapp', email: 'email' })[p.last_channel] || 'instagram', contact_handle: p.instagram ? '@' + p.instagram : '', opening_line: p.message, ...Object.fromEntries(CRITERIA.map((c) => [c, p[c] ? 1 : 0])) }));
@@ -494,7 +494,7 @@ function restoreRows(doc, rows) {
       ...Object.fromEntries(CRITERIA.map((c) => [c, r[c] === '1' || r[c] === 'true'])), criteria_note: '', fit: 'good', fit_reason: '', template: '',
       message: (r.opening_line || r.message || '').slice(0, 3000), status: STATUSES.includes(r.status) ? r.status : 'new', touches: Math.max(0, parseInt(r.touches, 10) || 0),
       first_contact_date: isDate(r.first_contact_date), last_contact_date: isDate(r.last_contact_date), next_followup_date: isDate(r.next_followup_date),
-      preview_url: (r.preview_url || '').slice(0, 300), preview_delete_by: isDate(r.preview_delete_by), history: [{ d: myDate(), e: 'restored', n: 'CSV backup' }]
+      preview_url: (r.preview_url || '').slice(0, 300), preview_password: (r.preview_password || '').slice(0, 80), preview_delete_by: isDate(r.preview_delete_by), history: [{ d: myDate(), e: 'restored', n: 'CSV backup' }]
     };
     p.score = CRITERIA.filter((c) => p[c]).length;
     doc.items.push(p); ids.add(id); if (ig) igs.add(ig); added++;
