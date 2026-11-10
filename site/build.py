@@ -1339,7 +1339,9 @@ def load_previews():
                          "name": str(pv.get("name", ""))[:120], "delete_by": str(pv.get("delete_by", ""))[:10], "photos": str(pv.get("photos", ""))[:20],
                          # what the desk's call script says about the mockup, and when it last passed check-preview.js
                          "checked": str(pv.get("checked", ""))[:10] if re.match(r"^\d{4}-\d{2}-\d{2}$", str(pv.get("checked", ""))) else "",
-                         "pitch": {"mode": str(pitch.get("mode", ""))[:10], "items": [str(x)[:60] for x in pitch.get("items", [])][:3]}}
+                         "pitch": {"mode": str(pitch.get("mode", ""))[:10], "items": [str(x)[:60] for x in pitch.get("items", [])][:3]},
+                         # what is on the mockup (public info only: products, prices + source, address, hours, FAQ) so the desk AI answers from it
+                         "facts": pv.get("facts") if isinstance(pv.get("facts"), dict) and len(json.dumps(pv.get("facts"), ensure_ascii=False)) < 12000 else {}}
     return list(out.values())
 
 
@@ -1358,8 +1360,12 @@ def build_knowledge():
     previews = load_previews()
     scripts_src = os.path.join(HERE, "..", "sales", "scripts.md")
     scripts = open(scripts_src, encoding="utf-8").read() if os.path.exists(scripts_src) else ""
+    brief_src = os.path.join(HERE, "..", "sales", "agent", "desk-brief.md")
+    brief = open(brief_src, encoding="utf-8").read() if os.path.exists(brief_src) else ""
     outputs = {
         dst: content,
+        os.path.join(HERE, "netlify", "functions", "desk", "brief.mjs"):
+            "// 自动产生 —— 不要手动改。改 sales/agent/desk-brief.md，然后跑 python3 site/build.py\nexport const BRIEF = " + json.dumps(brief, ensure_ascii=False) + ";\n",
         os.path.join(HERE, "netlify", "functions", "desk", "scripts.mjs"):
             "// 自动产生 —— 不要手动改。改 sales/scripts.md，然后跑 python3 site/build.py\nexport const SCRIPTS = " + json.dumps(scripts, ensure_ascii=False) + ";\n",
         os.path.join(HERE, "netlify", "functions", "desk", "inbox.mjs"):

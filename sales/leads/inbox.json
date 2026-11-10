@@ -932,6 +932,137 @@
      "Tuna Croinigiri",
      "Matcha Tart"
     ]
+   },
+   "facts": {
+    "mode": "pickup",
+    "place": "55, Jalan 1/12, PJ Old Town",
+    "hours": "Pick up at the café, daily 8am–6pm.",
+    "delivery": "courier, Malaysia-wide (coffee beans)",
+    "products": [
+     {
+      "n": "Strawberry Daifuku Croissant",
+      "p": 16,
+      "per": "",
+      "cat": "Pastries",
+      "ex": false,
+      "set": "",
+      "src": "From TheSmartLocal (Aug 2025). Your current prices go here."
+     },
+     {
+      "n": "Tuna Croinigiri",
+      "p": 15,
+      "per": "",
+      "cat": "Pastries",
+      "ex": false,
+      "set": "",
+      "src": "From TheSmartLocal (Aug 2025). Your current prices go here."
+     },
+     {
+      "n": "Matcha Tart",
+      "p": 12,
+      "per": "",
+      "cat": "Pastries",
+      "ex": false,
+      "set": "",
+      "src": "From TheSmartLocal (Aug 2025). Your current prices go here."
+     },
+     {
+      "n": "Classic Croissant",
+      "p": 11,
+      "per": "",
+      "cat": "Pastries",
+      "ex": false,
+      "set": "",
+      "src": "From a 2026 menu listing. Your current prices go here."
+     },
+     {
+      "n": "Pistachio Croissant",
+      "p": 19,
+      "per": "",
+      "cat": "Pastries",
+      "ex": false,
+      "set": "",
+      "src": "From a 2026 menu listing. Your current prices go here."
+     },
+     {
+      "n": "Matcha Strawberry",
+      "p": 21,
+      "per": "",
+      "cat": "Drinks",
+      "ex": false,
+      "set": "",
+      "src": "From TheSmartLocal (Aug 2025). Your current prices go here."
+     },
+     {
+      "n": "Hot White",
+      "p": 16,
+      "per": "",
+      "cat": "Drinks",
+      "ex": false,
+      "set": "",
+      "src": "From TheSmartLocal (Aug 2025). Your current prices go here."
+     },
+     {
+      "n": "Walnut Black Sesame Danish",
+      "p": null,
+      "per": "",
+      "cat": "Pastries",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Morning Bun",
+      "p": null,
+      "per": "",
+      "cat": "Breads",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Sourdough Loaf",
+      "p": null,
+      "per": "",
+      "cat": "Breads",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Coffee Beans",
+      "p": null,
+      "per": "",
+      "cat": "Coffee beans",
+      "ex": false,
+      "set": "",
+      "src": ""
+     }
+    ],
+    "faq": [
+     [
+      "When are you open?",
+      "Daily, 8am to 6pm."
+     ],
+     [
+      "Where are you?",
+      "55, Jalan 1/12, PJ Old Town, 46000 Petaling Jaya."
+     ],
+     [
+      "Can I order pastries ahead?",
+      "Yes. Add them to your cart and choose a pick-up date at checkout, or call 011-1673 5503."
+     ],
+     [
+      "Do you sell your coffee beans?",
+      "Yes, at the café and on Shopee. Beans can also go by courier anywhere in Malaysia."
+     ],
+     [
+      "Is it pork-free?",
+      "Yes, no pork and no alcohol."
+     ]
+    ],
+    "contact": "Call or WhatsApp 011-1673 5503, or message @contour.pj on Instagram.",
+    "sources": "Checked 2026-11-10: TheSmartLocal 'Contour' (31 Aug 2025; prices, 8am-6pm daily, next-door expansion) https://thesmartlocal.my/contour-pj/ ; 2026 menu listing (croissant RM11, pistachio RM19) https://menuzmy.com/contour-petaling-jaya-menu-malaysia/ ; Malay Mail launch Oct 2023 and TikTok (Jason Loo, Malaysia Barista Champion; no pork, no alcohol); Time Out (beans in-store / Shopee)."
    }
   },
   {
@@ -951,6 +1082,137 @@
      "Cempedak Pandan Cake",
      "Durian Pandan Cake"
     ]
+   },
+   "facts": {
+    "mode": "pickup",
+    "place": "32-1, The Strand, Kota Damansara",
+    "hours": "Pick up at the café, Wed–Mon from 12pm.",
+    "delivery": "",
+    "products": [
+     {
+      "n": "Strawberry Shortcake",
+      "p": 22,
+      "per": "slice",
+      "cat": "Cakes",
+      "ex": false,
+      "set": "",
+      "src": "Per slice, from TheSmartLocal (Feb 2023). Your current prices go here."
+     },
+     {
+      "n": "Cempedak Pandan Cake",
+      "p": 18.5,
+      "per": "slice",
+      "cat": "Cakes",
+      "ex": false,
+      "set": "",
+      "src": "Per slice, from TheSmartLocal (Feb 2023). Your current prices go here."
+     },
+     {
+      "n": "Durian Pandan Cake",
+      "p": 18.5,
+      "per": "slice",
+      "cat": "Cakes",
+      "ex": false,
+      "set": "",
+      "src": "Per slice, from TheSmartLocal (Feb 2023). Your current prices go here."
+     },
+     {
+      "n": "Jasmine Black Forest",
+      "p": 17,
+      "per": "slice",
+      "cat": "Cakes",
+      "ex": false,
+      "set": "",
+      "src": "Per slice, from TheSmartLocal (Feb 2023). Your current prices go here."
+     },
+     {
+      "n": "Strawberry Vanilla Checkerboard Cake",
+      "p": null,
+      "per": "",
+      "cat": "Cakes",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Red Velvet Chocolate Checker Cake",
+      "p": null,
+      "per": "",
+      "cat": "Cakes",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Matcha Tiramisu Cake",
+      "p": null,
+      "per": "",
+      "cat": "Cakes",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Mango Oolong Shortcake",
+      "p": null,
+      "per": "",
+      "cat": "Cakes",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Whole Birthday Cake",
+      "p": null,
+      "per": "",
+      "cat": "Whole cakes",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Lemon Chicken",
+      "p": null,
+      "per": "",
+      "cat": "Café food",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Smoked Duck Pasta",
+      "p": null,
+      "per": "",
+      "cat": "Café food",
+      "ex": false,
+      "set": "",
+      "src": ""
+     }
+    ],
+    "faq": [
+     [
+      "Can I order a whole cake?",
+      "Yes. Tap 'Ask for price' on the Whole Birthday Cake and tell us the flavour, size and message, or call 012-200 3441."
+     ],
+     [
+      "When are you open?",
+      "Wednesday to Monday from 12pm. Closed on Tuesdays. Hours can change, so check with us before a late visit."
+     ],
+     [
+      "Where are you?",
+      "32-1, The Strand, Jalan PJU 5/20D, Kota Damansara, 47810 Petaling Jaya."
+     ],
+     [
+      "Are the prices per slice?",
+      "Yes, cake prices shown are per slice."
+     ],
+     [
+      "Do cakes sell out?",
+      "The popular ones often do by evening. Order ahead and pick up when it suits you."
+     ]
+    ],
+    "contact": "Call or WhatsApp 012-200 3441, or message @dreamzbakery on Instagram.",
+    "sources": "Checked 2026-11-10: TheSmartLocal PJ dessert cafés (25 Feb 2023; prices, Wed-Mon 12pm-7pm closed Tue) https://thesmartlocal.my/pj-dessert-cafes/ ; Wanderlog / Lemon8 reviews (checkerboard cakes, matcha tiramisu, mango oolong, lemon chicken, smoked duck pasta); Time Out kids' birthday cakes. Hours differ between sources: confirm by phone."
    }
   },
   {
@@ -966,7 +1228,8 @@
    "pitch": {
     "mode": "",
     "items": []
-   }
+   },
+   "facts": {}
   },
   {
    "slug": "m-hideaway-cafe-a8cef8fc",
@@ -985,6 +1248,115 @@
      "Victoria Sponge",
      "Lemon Drizzle"
     ]
+   },
+   "facts": {
+    "mode": "pickup",
+    "place": "AG7, Block A, Happy Mansion, Section 17, PJ",
+    "hours": "Pick up at the café: Wed, Thu & Sun 11am–7pm, Fri & Sat 11am–10pm.",
+    "delivery": "",
+    "products": [
+     {
+      "n": "Classic Butter Cake",
+      "p": 9,
+      "per": "slice",
+      "cat": "Butter cakes",
+      "ex": false,
+      "set": "",
+      "src": "Per slice, from a 2018 review. Your current prices go here."
+     },
+     {
+      "n": "Victoria Sponge",
+      "p": 10,
+      "per": "slice",
+      "cat": "Butter cakes",
+      "ex": false,
+      "set": "",
+      "src": "Per slice, from a 2018 review. Your current prices go here."
+     },
+     {
+      "n": "Lemon Drizzle",
+      "p": null,
+      "per": "",
+      "cat": "Butter cakes",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Pandan Gula Melaka Butter Cake",
+      "p": null,
+      "per": "",
+      "cat": "Butter cakes",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Banana Pecan Raisin Loaf",
+      "p": null,
+      "per": "",
+      "cat": "Butter cakes",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Scones with Homemade Jam",
+      "p": null,
+      "per": "",
+      "cat": "Scones",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Chicken Sambal Pasta",
+      "p": null,
+      "per": "",
+      "cat": "Café food",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Sundried Tomato Pasta",
+      "p": null,
+      "per": "",
+      "cat": "Café food",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Whole Butter Cake (pre-order)",
+      "p": null,
+      "per": "",
+      "cat": "Whole cakes",
+      "ex": true,
+      "set": "",
+      "src": ""
+     }
+    ],
+    "faq": [
+     [
+      "When are you open?",
+      "Wednesday, Thursday and Sunday 11am–7pm; Friday and Saturday 11am–10pm. Closed on Mondays and Tuesdays."
+     ],
+     [
+      "Where are you?",
+      "AG7, Block A, Happy Mansion, Jalan 17/13, Section 17, 46400 Petaling Jaya."
+     ],
+     [
+      "Can I order a whole cake?",
+      "Ask us on WhatsApp (013-757 1237) with the flavour and the day you'd like to pick it up."
+     ],
+     [
+      "Are the prices per slice?",
+      "Yes, cake prices shown are per slice."
+     ]
+    ],
+    "contact": "Call or WhatsApp 013-757 1237, or message @hideaway_17 on Instagram.",
+    "sources": "Checked 2026-11-10: Malaysia Food and Travel via Newswav (11 Aug 2025; Doreen Thean, ex-Malaysia Airlines, ~10 cakes daily, lemon drizzle, pandan gula melaka, banana pecan raisin loaf, pastas; hours) ; FMT (8 May 2022; mother-daughter team, opened Oct 2018, scones with homemade jam, Victoria sponge) ; 2018 review (classic RM9, Victoria RM10 per slice)."
    }
   },
   {
@@ -1004,6 +1376,97 @@
      "olive oil zucchini loaf",
      "iced latte"
     ]
+   },
+   "facts": {
+    "mode": "pickup",
+    "place": "1, Lorong Toh Aka, George Town",
+    "hours": "Pick up at the bar during opening hours.",
+    "delivery": "courier, Malaysia-wide (coffee beans)",
+    "products": [
+     {
+      "n": "Ome Blend Coffee Beans (150 g)",
+      "p": 30,
+      "per": "",
+      "cat": "Coffee beans",
+      "ex": false,
+      "set": "",
+      "src": "From a 2020 article. Your current prices go here."
+     },
+     {
+      "n": "Single Origin Filter Beans (100 g)",
+      "p": 35,
+      "per": "",
+      "cat": "Coffee beans",
+      "ex": false,
+      "set": "",
+      "src": "From a 2020 article. Your current prices go here."
+     },
+     {
+      "n": "Olive Oil Zucchini Loaf",
+      "p": 13,
+      "per": "",
+      "cat": "Bakes",
+      "ex": false,
+      "set": "",
+      "src": "From Daniel Food Diary (May 2025). Your current prices go here."
+     },
+     {
+      "n": "Banana Rye Sesame Loaf",
+      "p": 10,
+      "per": "",
+      "cat": "Bakes",
+      "ex": false,
+      "set": "",
+      "src": "From Daniel Food Diary (May 2025). Your current prices go here."
+     },
+     {
+      "n": "Today's Brew",
+      "p": 12,
+      "per": "",
+      "cat": "Coffee",
+      "ex": false,
+      "set": "",
+      "src": "From Daniel Food Diary (May 2025). Your current prices go here."
+     },
+     {
+      "n": "Iced Latte",
+      "p": 17,
+      "per": "",
+      "cat": "Coffee",
+      "ex": false,
+      "set": "",
+      "src": "From Daniel Food Diary (May 2025). Your current prices go here."
+     },
+     {
+      "n": "Cold Nitro",
+      "p": 17,
+      "per": "",
+      "cat": "Coffee",
+      "ex": false,
+      "set": "",
+      "src": "From Daniel Food Diary (May 2025). Your current prices go here."
+     }
+    ],
+    "faq": [
+     [
+      "Can you send beans outside Penang?",
+      "Yes. Add beans to your cart and choose courier delivery at checkout (beans only), or pick up at the bar."
+     ],
+     [
+      "Where are you?",
+      "1, Lorong Toh Aka, 10100 George Town, Penang."
+     ],
+     [
+      "When are you open?",
+      "Mornings to mid-afternoon, closed on Wednesdays and Thursdays. Hours change now and then, so check our Instagram before you visit."
+     ],
+     [
+      "Is there a time limit?",
+      "When it's busy there's a one-hour seating limit: the bar only seats about 18."
+     ]
+    ],
+    "contact": "Call or WhatsApp 019-690 8259, or message @ome.space on Instagram.",
+    "sources": "Checked 2026-11-10: Daniel Food Diary (4 May 2025; menu prices, founders, World's 100 Best Coffee Shops No. 56, hours, ~18 seats) https://danielfooddiary.com/2025/05/04/omebyspacebarcoffee/ ; Vulcan Post / Time Out Asia (Feb-Apr 2025); bean prices from a 2020 article. Hours differ between listings: confirm by phone."
    }
   },
   {
@@ -1023,6 +1486,128 @@
      "Bentong Ginger Chocolate",
      "affogato"
     ]
+   },
+   "facts": {
+    "mode": "pickup",
+    "place": "37, Jalan 20/16, Taman Paramount",
+    "hours": "Pick up at the shop: Tue–Thu & Sun 12pm–10:30pm, Fri–Sat 12pm–11:30pm.",
+    "delivery": "",
+    "products": [
+     {
+      "n": "Medium Cup · Two Flavours",
+      "p": 20,
+      "per": "",
+      "cat": "Cups & treats",
+      "ex": false,
+      "set": "",
+      "src": "From a Chiefeater review (2026). Your current prices go here."
+     },
+     {
+      "n": "Affogato",
+      "p": null,
+      "per": "",
+      "cat": "Cups & treats",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Waffle with Gelato",
+      "p": null,
+      "per": "",
+      "cat": "Cups & treats",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Salted Pistachio",
+      "p": null,
+      "per": "",
+      "cat": "Flavours",
+      "ex": false,
+      "set": "Medium Cup · Two Flavours",
+      "src": ""
+     },
+     {
+      "n": "Bentong Ginger Chocolate",
+      "p": null,
+      "per": "",
+      "cat": "Flavours",
+      "ex": false,
+      "set": "Medium Cup · Two Flavours",
+      "src": ""
+     },
+     {
+      "n": "Tiramisu",
+      "p": null,
+      "per": "",
+      "cat": "Flavours",
+      "ex": false,
+      "set": "Medium Cup · Two Flavours",
+      "src": ""
+     },
+     {
+      "n": "Raspberry Vanilla",
+      "p": null,
+      "per": "",
+      "cat": "Flavours",
+      "ex": false,
+      "set": "Medium Cup · Two Flavours",
+      "src": ""
+     },
+     {
+      "n": "Chocolate Hazelnut",
+      "p": null,
+      "per": "",
+      "cat": "Flavours",
+      "ex": false,
+      "set": "Medium Cup · Two Flavours",
+      "src": ""
+     },
+     {
+      "n": "Blueberry Yoghurt",
+      "p": null,
+      "per": "",
+      "cat": "Flavours",
+      "ex": false,
+      "set": "Medium Cup · Two Flavours",
+      "src": ""
+     },
+     {
+      "n": "Take-Home Tub (example)",
+      "p": null,
+      "per": "",
+      "cat": "Cups & treats",
+      "ex": true,
+      "set": "",
+      "src": ""
+     }
+    ],
+    "faq": [
+     [
+      "When are you open?",
+      "Tuesday to Thursday and Sunday, 12pm to 10:30pm; Friday and Saturday, 12pm to 11:30pm. Closed on Mondays."
+     ],
+     [
+      "Where are you?",
+      "37, Jalan 20/16, Taman Paramount, 46300 Petaling Jaya."
+     ],
+     [
+      "How much is a cup?",
+      "A medium cup with two flavours is RM20."
+     ],
+     [
+      "Is it pork-free?",
+      "Yes."
+     ],
+     [
+      "Can I order ahead?",
+      "Yes. Pick your flavours, choose a pick-up date at checkout, or call 017-202 2162."
+     ]
+    ],
+    "contact": "Call 017-202 2162, or message @artigustogelato on Instagram.",
+    "sources": "Checked 2026-11-10: Malaysian Foodie (16 Mar 2025) https://www.malaysianfoodie.com/2025/03/artigusto-gelato-a-taste-of-authentic-italian-indulgence-in-taman-paramount.html ; Chiefeater review (medium cup two flavours RM20; hours) https://chiefeater.com/chiefeaters/artigusto-gelato-salted-pistachio-meets-blueberry-yoghurt/ ; foodpanda listing exists."
    }
   },
   {
@@ -1042,6 +1627,75 @@
      "Roast Chicken Set",
      "Kam Heong Chicken Sandwich"
     ]
+   },
+   "facts": {
+    "mode": "pickup",
+    "place": "AG-01, Block A, Happy Mansion, Section 17, PJ",
+    "hours": "We'll message you the pick-up time.",
+    "delivery": "",
+    "products": [
+     {
+      "n": "Christmas Sharing Feast",
+      "p": 149,
+      "per": "",
+      "cat": "Christmas",
+      "ex": false,
+      "set": "",
+      "src": "Christmas 2025 menu (TheSmartLocal, Dec 2025). This year's menu and prices go here."
+     },
+     {
+      "n": "Roast Chicken Set",
+      "p": 99,
+      "per": "",
+      "cat": "Christmas",
+      "ex": false,
+      "set": "",
+      "src": "Christmas 2025 menu (TheSmartLocal, Dec 2025). This year's menu and prices go here."
+     },
+     {
+      "n": "Kam Heong Chicken Sandwich",
+      "p": null,
+      "per": "",
+      "cat": "Everyday menu",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Rice Bowls",
+      "p": null,
+      "per": "",
+      "cat": "Everyday menu",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Pasta",
+      "p": null,
+      "per": "",
+      "cat": "Everyday menu",
+      "ex": false,
+      "set": "",
+      "src": ""
+     }
+    ],
+    "faq": [
+     [
+      "How do I pre-order a Christmas roast?",
+      "Add it to your cart and choose your pick-up date at checkout, or call or message 012-238 5212."
+     ],
+     [
+      "How many people does the Sharing Feast feed?",
+      "Up to 4."
+     ],
+     [
+      "Where do I pick up?",
+      "AG-01, Block A, Happy Mansion, Jalan 17/13, Section 17, Petaling Jaya."
+     ]
+    ],
+    "contact": "Call or message 012-238 5212, or DM @goodbluemen on Instagram.",
+    "sources": "Checked 2026-11-10: TheSmartLocal Christmas takeaways (13 Dec 2025; Sharing Feast RM149 feeds up to 4, Roast Chicken set RM99, order 15-31 Dec by phone 012-238 5212 or Instagram DM) https://thesmartlocal.my/christmas-takeaways/ ; Tatler Asia Happy Mansion guide; blog reviews since 2017."
    }
   },
   {
@@ -1061,6 +1715,70 @@
      "Lamb Ragout & Mango Chutney Pizza",
      "Coconut Lamb Skewers"
     ]
+   },
+   "facts": {
+    "mode": "pickup",
+    "place": "25, Jalan SS 15/5A, Subang Jaya",
+    "hours": "We'll message you the pick-up time.",
+    "delivery": "",
+    "products": [
+     {
+      "n": "Slow-Roasted NZ Leg of Lamb Set",
+      "p": 199,
+      "per": "kg",
+      "cat": "Christmas",
+      "ex": false,
+      "set": "",
+      "src": "Christmas 2025 menu (TheSmartLocal, Dec 2025). This year's menu and prices go here."
+     },
+     {
+      "n": "Lamb Ragout & Mango Chutney Pizza",
+      "p": null,
+      "per": "",
+      "cat": "Signatures",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Coconut Lamb Skewers",
+      "p": null,
+      "per": "",
+      "cat": "Signatures",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Spicy Lamb Linguine",
+      "p": null,
+      "per": "",
+      "cat": "Signatures",
+      "ex": false,
+      "set": "",
+      "src": ""
+     }
+    ],
+    "faq": [
+     [
+      "How do I pre-order the Christmas lamb?",
+      "Add it to your cart (RM199 per kg) and choose your pick-up date, or call or message 012-424 1194."
+     ],
+     [
+      "How many people does it feed?",
+      "The set feeds up to 4."
+     ],
+     [
+      "Where do I pick up?",
+      "25, Jalan SS 15/5A, Subang Jaya."
+     ],
+     [
+      "Can I book a table?",
+      "Yes, call or message 012-424 1194."
+     ]
+    ],
+    "contact": "Call or message 012-424 1194, or message @rata_subang on Instagram.",
+    "sources": "Checked 2026-11-10: TheSmartLocal Christmas takeaways (13 Dec 2025; NZ leg of lamb set RM199/kg feeds up to 4, sides; order from 24 Nov by phone 012-424 1194) https://thesmartlocal.my/christmas-takeaways/ ; The Star (Feb 2019) and Eat Drink KL (2018) for the menu; Tatler Subang Jaya guide."
    }
   },
   {
@@ -1080,6 +1798,151 @@
      "Abok-Abok",
      "Bingka Ubi"
     ]
+   },
+   "facts": {
+    "mode": "pickup",
+    "place": "601, Jalan 17/12, Section 17, PJ",
+    "hours": "Pick up at the café, daily 10:30am–6pm.",
+    "delivery": "",
+    "products": [
+     {
+      "n": "Kuih Koci",
+      "p": null,
+      "per": "",
+      "cat": "Kuih",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Abok-Abok",
+      "p": null,
+      "per": "",
+      "cat": "Kuih",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Bingka Ubi",
+      "p": null,
+      "per": "",
+      "cat": "Kuih",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Kuih Seri Muka",
+      "p": null,
+      "per": "",
+      "cat": "Kuih",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Kuih Ketayap",
+      "p": null,
+      "per": "",
+      "cat": "Kuih",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Kuih Talam",
+      "p": null,
+      "per": "",
+      "cat": "Kuih",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Pulut Panggang",
+      "p": null,
+      "per": "",
+      "cat": "Kuih",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Peanut Mochi",
+      "p": null,
+      "per": "",
+      "cat": "Kuih",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Pineapple Tarts",
+      "p": null,
+      "per": "",
+      "cat": "Tarts & cakes",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Butter Cake",
+      "p": null,
+      "per": "",
+      "cat": "Tarts & cakes",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Nyonya Laksa",
+      "p": null,
+      "per": "",
+      "cat": "Mains & desserts",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Cendol",
+      "p": null,
+      "per": "",
+      "cat": "Mains & desserts",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Festive Kuih Gift Box (example)",
+      "p": null,
+      "per": "",
+      "cat": "Gift boxes",
+      "ex": true,
+      "set": "",
+      "src": ""
+     }
+    ],
+    "faq": [
+     [
+      "When are you open?",
+      "Daily, 10:30am to 6pm."
+     ],
+     [
+      "Where are you?",
+      "601, Jalan 17/12, Section 17, 46400 Petaling Jaya, next to Big Leaf."
+     ],
+     [
+      "How do I order kuih ahead?",
+      "WhatsApp 011-2980 3362 with the kuih you'd like and when you'll pick up. On your own site, customers would order and choose a pick-up date right here."
+     ],
+     [
+      "Which kuih do you have today?",
+      "We make 18 to 20 kinds every morning. Message us to ask what's on today."
+     ]
+    ],
+    "contact": "WhatsApp 011-2980 3362, or message @bluedahliamy on Instagram.",
+    "sources": "Checked 2026-11-10: Malay Mail review (5 Apr 2025; owner's Melaka Peranakan mother's recipes; kuih koci and abok-abok; 10:30am-6pm daily) https://www.malaymail.com/news/eat-drink/2025/04/05/for-outstanding-melaka-peranakan-kuih-cakes-and-desserts-head-over-to-blue-dahlia-in-section-17-pj/171953 ; FMT (5 Feb 2026; Yugin Lee and Nina Yeoh, 18-20 kuih daily, seri muka, peanut mochi, Big Leaf next door) ; Buro247 kuih list (bingka ubi, koci, pulut panggang, talam, pineapple tarts)."
    }
   },
   {
@@ -1098,6 +1961,115 @@
      "Kuih Variety Set (33 pieces)",
      "Nyonya Kaya (Malaccan)"
     ]
+   },
+   "facts": {
+    "mode": "pickup",
+    "place": "14, Lorong Assunta A, Section 4, PJ",
+    "hours": "We'll WhatsApp you the pick-up time.",
+    "delivery": "courier, Malaysia-wide (kaya jars)",
+    "products": [
+     {
+      "n": "Kuih Variety Set (33 pieces)",
+      "p": 45,
+      "per": "",
+      "cat": "Kuih",
+      "ex": false,
+      "set": "",
+      "src": "From a 2022 Nyonya kuih guide. Your current prices go here."
+     },
+     {
+      "n": "Nyonya Kaya (Malaccan)",
+      "p": null,
+      "per": "",
+      "cat": "Kaya",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Kuih Kochi",
+      "p": null,
+      "per": "",
+      "cat": "Kuih",
+      "ex": false,
+      "set": "Kuih Variety Set (33 pieces)",
+      "src": ""
+     },
+     {
+      "n": "Pulut Tekan",
+      "p": null,
+      "per": "",
+      "cat": "Kuih",
+      "ex": false,
+      "set": "Kuih Variety Set (33 pieces)",
+      "src": ""
+     },
+     {
+      "n": "Kuih Lapis",
+      "p": null,
+      "per": "",
+      "cat": "Kuih",
+      "ex": false,
+      "set": "Kuih Variety Set (33 pieces)",
+      "src": ""
+     },
+     {
+      "n": "Kuih Ketayap",
+      "p": null,
+      "per": "",
+      "cat": "Kuih",
+      "ex": false,
+      "set": "Kuih Variety Set (33 pieces)",
+      "src": ""
+     },
+     {
+      "n": "Kuih Talam",
+      "p": null,
+      "per": "",
+      "cat": "Kuih",
+      "ex": false,
+      "set": "Kuih Variety Set (33 pieces)",
+      "src": ""
+     },
+     {
+      "n": "Pulut Panggang",
+      "p": null,
+      "per": "",
+      "cat": "Kuih",
+      "ex": false,
+      "set": "Kuih Variety Set (33 pieces)",
+      "src": ""
+     },
+     {
+      "n": "Festive Kuih Gift Box (example)",
+      "p": null,
+      "per": "",
+      "cat": "Gift boxes",
+      "ex": true,
+      "set": "",
+      "src": ""
+     }
+    ],
+    "faq": [
+     [
+      "How do I order?",
+      "Add to cart and choose a pick-up date at checkout, or WhatsApp 012-288 7449."
+     ],
+     [
+      "Can you send kaya outside the Klang Valley?",
+      "Yes, kaya jars can go by courier anywhere in Malaysia. Kuih is pick-up only."
+     ],
+     [
+      "What's in the variety set?",
+      "33 pieces of kuih: kuih kochi, pulut tekan, kuih lapis, kuih talam, pulut panggang and more."
+     ],
+     [
+      "Where do I pick up?",
+      "14, Lorong Assunta A, Section 4, 46050 Petaling Jaya. We'll WhatsApp you the time."
+     ]
+    ],
+    "contact": "WhatsApp 012-288 7449, or message @mybababeng on Instagram.",
+    "sources": "Checked 2026-11-10: Buro247 kuih list (updated Mar 2025; founder Quek Beng Chee, Malaccan kaya, WhatsApp) https://www.buro247.my/lifestyle/food-drink/10-best-places-to-order-your-favourite-malay-and-nyonya-kuih-in-the-klang-valley.html ; SAYS / TheSmartLocal Nyonya kuih guides (variety set 33 pieces RM45, 2021-2022); Malay Mail May 2020 (kaya on Shopee and Lazada, bazaars). Durian kaya removed: not found in sources."
    }
   },
   {
@@ -1117,6 +2089,142 @@
      "Lemon Meringue Tart",
      "Croissant"
     ]
+   },
+   "facts": {
+    "mode": "pickup",
+    "place": "310 Lebuh Pantai, George Town",
+    "hours": "Pick up at the shop, Fri–Tue 9am–6pm.",
+    "delivery": "",
+    "products": [
+     {
+      "n": "Fig Tart",
+      "p": 22,
+      "per": "",
+      "cat": "Tarts",
+      "ex": false,
+      "set": "",
+      "src": "From TheSmartLocal (Sep 2023). Your current prices go here."
+     },
+     {
+      "n": "Lemon Meringue Tart",
+      "p": 16,
+      "per": "",
+      "cat": "Tarts",
+      "ex": false,
+      "set": "",
+      "src": "From TheSmartLocal (Sep 2023). Your current prices go here."
+     },
+     {
+      "n": "Croissant",
+      "p": 7,
+      "per": "",
+      "cat": "Viennoiserie",
+      "ex": false,
+      "set": "",
+      "src": "From TheSmartLocal (Sep 2023). Your current prices go here."
+     },
+     {
+      "n": "Cranberry Scone",
+      "p": 8,
+      "per": "",
+      "cat": "Viennoiserie",
+      "ex": false,
+      "set": "",
+      "src": "From TheSmartLocal (Sep 2023). Your current prices go here."
+     },
+     {
+      "n": "Pistachio Tart",
+      "p": null,
+      "per": "",
+      "cat": "Tarts",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Almond Croissant",
+      "p": null,
+      "per": "",
+      "cat": "Viennoiserie",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Mushroom Danish",
+      "p": null,
+      "per": "",
+      "cat": "Viennoiserie",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Strawberry Shortcake",
+      "p": null,
+      "per": "",
+      "cat": "Cakes",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Bûche de Noël",
+      "p": null,
+      "per": "",
+      "cat": "Festive",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Madeleines",
+      "p": null,
+      "per": "",
+      "cat": "Petits fours",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Financiers",
+      "p": null,
+      "per": "",
+      "cat": "Petits fours",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Éclairs",
+      "p": null,
+      "per": "",
+      "cat": "Petits fours",
+      "ex": false,
+      "set": "",
+      "src": ""
+     }
+    ],
+    "faq": [
+     [
+      "How do I order?",
+      "Add to cart and choose your pick-up date at checkout, or call us on 016-409 3918."
+     ],
+     [
+      "Where do I pick up?",
+      "At the shop: 310, Lebuh Pantai, 10300 George Town, Penang."
+     ],
+     [
+      "When are you open?",
+      "Friday to Tuesday, 9am to 6pm. Closed on Wednesdays and Thursdays."
+     ],
+     [
+      "Can I order festive cakes?",
+      "Yes, festive cakes such as the Bûche de Noël are made to order. Choose your pick-up date at checkout, or call us on 016-409 3918."
+     ]
+    ],
+    "contact": "Call us on 016-409 3918, message @lepetitfourpatisserie on Instagram, or visit us at 310, Lebuh Pantai, George Town.",
+    "sources": "Public info only, checked 2026-11-10: TheSmartLocal Penang bakeries (updated 7 Sep 2023) https://thesmartlocal.my/bakeries-in-penang/ ; Gempak Christmas Penang (16 Dec 2021) https://gempak.com/rojakdaily/lifestyle/sugar-rush-9-places-get-your-christmas-cake-and-sweet-treats-penang-68939 ; Vulcan Post 2024 https://vulcanpost.com/876184/le-petit-four-patisserie-french-pastry-desserts-penang-malaysia . First version by the research session 2026-11-09."
    }
   },
   {
@@ -1132,7 +2240,8 @@
    "pitch": {
     "mode": "",
     "items": []
-   }
+   },
+   "facts": {}
   },
   {
    "slug": "m-le-dux-patisserie-125c4a33",
@@ -1147,7 +2256,8 @@
    "pitch": {
     "mode": "",
     "items": []
-   }
+   },
+   "facts": {}
   },
   {
    "slug": "m-siru-kl-8153c128",
@@ -1166,6 +2276,151 @@
      "Dubai Chocolate Chapssaltteok",
      "Magic Lemonade"
     ]
+   },
+   "facts": {
+    "mode": "pickup",
+    "place": "16-1, Jalan 24/70A, Desa Sri Hartamas",
+    "hours": "Pick up at the shop, 10:30am–9pm (closed Wednesdays).",
+    "delivery": "",
+    "products": [
+     {
+      "n": "Today Rice Cake Sampler",
+      "p": 35,
+      "per": "",
+      "cat": "Rice cakes",
+      "ex": false,
+      "set": "",
+      "src": "From TheSmartLocal (Feb 2026). Your current prices go here."
+     },
+     {
+      "n": "Dubai Chocolate Chapssaltteok",
+      "p": 13,
+      "per": "",
+      "cat": "Rice cakes",
+      "ex": false,
+      "set": "",
+      "src": "From TheSmartLocal (Feb 2026). Your current prices go here."
+     },
+     {
+      "n": "Magic Lemonade",
+      "p": 18,
+      "per": "",
+      "cat": "Drinks",
+      "ex": false,
+      "set": "",
+      "src": "From TheSmartLocal (Feb 2026). Your current prices go here."
+     },
+     {
+      "n": "Jeju Tangerine Blended Tea",
+      "p": 15,
+      "per": "",
+      "cat": "Drinks",
+      "ex": false,
+      "set": "",
+      "src": "From TheSmartLocal (Feb 2026). Your current prices go here."
+     },
+     {
+      "n": "Sikhye Rice Punch",
+      "p": 15,
+      "per": "",
+      "cat": "Drinks",
+      "ex": false,
+      "set": "",
+      "src": "From TheSmartLocal (Feb 2026). Your current prices go here."
+     },
+     {
+      "n": "Marbled Black Sesame Rice Cake",
+      "p": null,
+      "per": "",
+      "cat": "Rice cakes",
+      "ex": false,
+      "set": "Today Rice Cake Sampler",
+      "src": ""
+     },
+     {
+      "n": "Fig Seolgi",
+      "p": null,
+      "per": "",
+      "cat": "Rice cakes",
+      "ex": false,
+      "set": "Today Rice Cake Sampler",
+      "src": ""
+     },
+     {
+      "n": "Jeju Matcha Seolgi",
+      "p": null,
+      "per": "",
+      "cat": "Rice cakes",
+      "ex": false,
+      "set": "Today Rice Cake Sampler",
+      "src": ""
+     },
+     {
+      "n": "Red Bean Seolgi",
+      "p": null,
+      "per": "",
+      "cat": "Rice cakes",
+      "ex": false,
+      "set": "Today Rice Cake Sampler",
+      "src": ""
+     },
+     {
+      "n": "Pumpkin Castella Injeolmi",
+      "p": null,
+      "per": "",
+      "cat": "Rice cakes",
+      "ex": false,
+      "set": "Today Rice Cake Sampler",
+      "src": ""
+     },
+     {
+      "n": "Black Sesame Injeolmi",
+      "p": null,
+      "per": "",
+      "cat": "Rice cakes",
+      "ex": false,
+      "set": "Today Rice Cake Sampler",
+      "src": ""
+     },
+     {
+      "n": "Matcha Latte",
+      "p": null,
+      "per": "",
+      "cat": "Drinks",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Rice Cake Gift Box (pre-order)",
+      "p": null,
+      "per": "",
+      "cat": "Gift boxes",
+      "ex": true,
+      "set": "",
+      "src": ""
+     }
+    ],
+    "faq": [
+     [
+      "Which rice cakes do you have today?",
+      "Flavours rotate daily. The Today Rice Cake Sampler has six of them; message us to ask what's on today."
+     ],
+     [
+      "When are you open?",
+      "10:30am to 9pm, every day except Wednesday."
+     ],
+     [
+      "Where are you?",
+      "16-1, Jalan 24/70A, Desa Sri Hartamas, 50480 Kuala Lumpur."
+     ],
+     [
+      "How do I order ahead?",
+      "Add to cart and choose a pick-up date at checkout, or call or WhatsApp 017-870 4324."
+     ]
+    ],
+    "contact": "Call or WhatsApp 017-870 4324, or message @siru_kl on Instagram.",
+    "sources": "Checked 2026-11-10: TheSmartLocal 'Siru' (12 Feb 2026) https://thesmartlocal.my/siru-sri-hartamas/ (menu, prices, hours: 10:30am-9pm, closed Wednesdays)."
    }
   },
   {
@@ -1185,6 +2440,146 @@
      "Wagyu Beef Shabu-Shabu",
      "Chanko Nabe"
     ]
+   },
+   "facts": {
+    "mode": "booking",
+    "place": "38, Jalan SS 22/25, Damansara Jaya",
+    "hours": "Open Tue–Sun 5pm–11pm. Closed on Mondays.",
+    "delivery": "",
+    "products": [
+     {
+      "n": "7-Course Chanko Shabu-Shabu Set",
+      "p": 215,
+      "per": "",
+      "cat": "Kaiseki sets",
+      "ex": false,
+      "set": "",
+      "src": "From TheSmartLocal (2025). Your current prices and serving size go here."
+     },
+     {
+      "n": "Wagyu Beef Shabu-Shabu",
+      "p": null,
+      "per": "",
+      "cat": "Nabe",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Chanko Nabe",
+      "p": null,
+      "per": "",
+      "cat": "Nabe",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "4-Course Nabe Kaiseki Set",
+      "p": 165,
+      "per": "",
+      "cat": "Kaiseki sets",
+      "ex": false,
+      "set": "",
+      "src": "From TheSmartLocal (2025). Your current prices and serving size go here."
+     },
+     {
+      "n": "6-Course Nabe Kaiseki Set",
+      "p": null,
+      "per": "",
+      "cat": "Kaiseki sets",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Appetiser Quartet",
+      "p": null,
+      "per": "",
+      "cat": "In the 7-course set",
+      "ex": false,
+      "set": "7-Course Chanko Shabu-Shabu Set",
+      "src": ""
+     },
+     {
+      "n": "Sashimi",
+      "p": null,
+      "per": "",
+      "cat": "In the 7-course set",
+      "ex": false,
+      "set": "7-Course Chanko Shabu-Shabu Set",
+      "src": ""
+     },
+     {
+      "n": "Himonoyaki",
+      "p": null,
+      "per": "",
+      "cat": "In the 7-course set",
+      "ex": false,
+      "set": "7-Course Chanko Shabu-Shabu Set",
+      "src": ""
+     },
+     {
+      "n": "Vegetable Tempura & Karaage",
+      "p": null,
+      "per": "",
+      "cat": "In the 7-course set",
+      "ex": false,
+      "set": "7-Course Chanko Shabu-Shabu Set",
+      "src": ""
+     },
+     {
+      "n": "Donabe Rice with Flounder & Oysters",
+      "p": null,
+      "per": "",
+      "cat": "In the 7-course set",
+      "ex": false,
+      "set": "7-Course Chanko Shabu-Shabu Set",
+      "src": ""
+     },
+     {
+      "n": "Kombu Age Red Mullet Shioyaki",
+      "p": null,
+      "per": "",
+      "cat": "À la carte",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Hirame Himono Teriyaki",
+      "p": null,
+      "per": "",
+      "cat": "À la carte",
+      "ex": false,
+      "set": "",
+      "src": ""
+     }
+    ],
+    "faq": [
+     [
+      "How do I book?",
+      "Choose your set, add it to your cart and pick your date and time at checkout. Or call us on 017-720 0930."
+     ],
+     [
+      "When are you open?",
+      "Tuesday to Sunday, 5pm to 11pm. Closed on Mondays."
+     ],
+     [
+      "Where are you?",
+      "38, Jalan SS 22/25, Damansara Jaya, 47400 Petaling Jaya, behind Atria Shopping Gallery."
+     ],
+     [
+      "Which nabe can I choose?",
+      "Our nabe pots include the Wagyu beef shabu-shabu and the chanko nabe. Ask us what's on today."
+     ],
+     [
+      "What is in the seven-course set?",
+      "Appetisers, sashimi, grilled seasonal fish, tempura and karaage, the chanko nabe, and donabe rice with flounder and oysters."
+     ]
+    ],
+    "contact": "Call us on 017-720 0930, message @haruki_nabe_kaiseki on Instagram, or visit us at 38, Jalan SS 22/25, Damansara Jaya.",
+    "sources": "Public info only, checked 2026-11-10: TheSmartLocal new restaurants KL 2025 (5 Aug 2025) https://thesmartlocal.my/cafes-restaurants-kl-2025/ ; Malaysian Foodie (12 Oct 2025) https://www.malaysianfoodie.com/2025/10/haruki-nabe-kaiseki-the-soulful-elegance-of-japanese-dining-in-damansara-jaya.html . First version by the research session 2026-11-09. ; Buro247 new restaurants May 2025 (5 May 2025) https://www.buro247.my/lifestyle/food-drink/new-restaurants-cafes-bars-kl-pj-may-2025.html"
    }
   },
   {
@@ -1204,6 +2599,160 @@
      "braised pork rice",
      "lamb chops with shacha sauce"
     ]
+   },
+   "facts": {
+    "mode": "booking",
+    "place": "11, Jalan Sin Chew Kee, Bukit Bintang",
+    "hours": "Dinner Tue–Sun 5:30pm–10pm. Closed on Mondays.",
+    "delivery": "",
+    "products": [
+     {
+      "n": "San Bei Ji (Three-Cup Chicken)",
+      "p": 39,
+      "per": "",
+      "cat": "Mains",
+      "ex": false,
+      "set": "",
+      "src": "From Malay Mail (Nov 2025). Your current prices go here."
+     },
+     {
+      "n": "Braised Pork Rice",
+      "p": 33,
+      "per": "",
+      "cat": "Mains",
+      "ex": false,
+      "set": "",
+      "src": "From Malay Mail (Nov 2025). Your current prices go here."
+     },
+     {
+      "n": "Grilled Lamb Chops with Shacha Sauce",
+      "p": 63,
+      "per": "",
+      "cat": "Mains",
+      "ex": false,
+      "set": "",
+      "src": "From Malay Mail (Nov 2025). Your current prices go here."
+     },
+     {
+      "n": "Shaoxing Wine Chicken Liver Pâté",
+      "p": 29,
+      "per": "",
+      "cat": "Small plates",
+      "ex": false,
+      "set": "",
+      "src": "From Malay Mail (Nov 2025). Your current prices go here."
+     },
+     {
+      "n": "Deep-Fried Baby Pomfret",
+      "p": 33,
+      "per": "",
+      "cat": "Small plates",
+      "ex": false,
+      "set": "",
+      "src": "From Malay Mail (Nov 2025). Your current prices go here."
+     },
+     {
+      "n": "Pegaga Salad",
+      "p": 27,
+      "per": "",
+      "cat": "Small plates",
+      "ex": false,
+      "set": "",
+      "src": "From Malay Mail (Nov 2025). Your current prices go here."
+     },
+     {
+      "n": "Stir-Fried Baby Chives with Century Egg",
+      "p": 33,
+      "per": "",
+      "cat": "Vegetables",
+      "ex": false,
+      "set": "",
+      "src": "From Malay Mail (Nov 2025). Your current prices go here."
+     },
+     {
+      "n": "Stir-Fried Bitter Gourd with Salted Egg",
+      "p": 33,
+      "per": "",
+      "cat": "Vegetables",
+      "ex": false,
+      "set": "",
+      "src": "From Malay Mail (Nov 2025). Your current prices go here."
+     },
+     {
+      "n": "Truffle Cream Poulet Grillé",
+      "p": 59,
+      "per": "",
+      "cat": "Mains",
+      "ex": false,
+      "set": "",
+      "src": "From TheSmartLocal (May 2026). Your current prices go here."
+     },
+     {
+      "n": "Seafood Risotto with Sun-Dried Tomato",
+      "p": 79,
+      "per": "",
+      "cat": "Mains",
+      "ex": false,
+      "set": "",
+      "src": "From TheSmartLocal (May 2026). Your current prices go here."
+     },
+     {
+      "n": "Oyster Omelette",
+      "p": null,
+      "per": "",
+      "cat": "Small plates",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Seven-Day Dry-Aged Jade Perch",
+      "p": null,
+      "per": "",
+      "cat": "Mains",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Chinese Tea Ice Cream",
+      "p": null,
+      "per": "",
+      "cat": "Desserts",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "The Red Room (table for eight)",
+      "p": null,
+      "per": "",
+      "cat": "Private dining",
+      "ex": false,
+      "set": "",
+      "src": ""
+     }
+    ],
+    "faq": [
+     [
+      "How do I book a table?",
+      "Pick a date and time at checkout (you can pre-order dishes too), or call 012-206 5655."
+     ],
+     [
+      "When are you open?",
+      "Dinner, Tuesday to Sunday, 5:30pm to 10pm. Closed on Mondays."
+     ],
+     [
+      "Where are you?",
+      "11, Jalan Sin Chew Kee, Bukit Bintang, 50150 Kuala Lumpur."
+     ],
+     [
+      "Can I book the red room?",
+      "Yes, the red room seats eight. Message us with your date and number of guests."
+     ]
+    ],
+    "contact": "Call 012-206 5655, or message @gongsi_11 on Instagram.",
+    "sources": "Checked 2026-11-10: Malay Mail 'Bukit Bintang's most exciting new opening, GONGSI' (7 Nov 2025, via Yahoo) https://malaysia.news.yahoo.com/bukit-bintang-most-exciting-opening-022523002.html ; TheSmartLocal Jalan Sin Chew Kee food (13 May 2026) https://thesmartlocal.my/jalan-sin-chew-kee-food/ ."
    }
   },
   {
@@ -1223,6 +2772,83 @@
      "Matcha Tiramisu",
      "White Coffee"
     ]
+   },
+   "facts": {
+    "mode": "pickup",
+    "place": "62, Lorong 1/77a, Pudu",
+    "hours": "Pick up at the café, daily 10am–10pm.",
+    "delivery": "",
+    "products": [
+     {
+      "n": "Classic Tiramisu",
+      "p": null,
+      "per": "",
+      "cat": "Tiramisu",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Matcha Tiramisu",
+      "p": null,
+      "per": "",
+      "cat": "Tiramisu",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Whole Tiramisu Tray (pre-order)",
+      "p": null,
+      "per": "",
+      "cat": "Tiramisu",
+      "ex": true,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "White Coffee",
+      "p": null,
+      "per": "",
+      "cat": "Coffee",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Pour-Over Coffee",
+      "p": null,
+      "per": "",
+      "cat": "Coffee",
+      "ex": false,
+      "set": "",
+      "src": ""
+     }
+    ],
+    "faq": [
+     [
+      "Is the tiramisu available every day?",
+      "It sells out quickly and isn't on the counter every day. Message us to check, or pre-order a tray."
+     ],
+     [
+      "Where are you?",
+      "62, Lorong 1/77a, Jalan Changkat Thambi Dollah, Pudu, Kuala Lumpur, near LaLaport Bukit Bintang."
+     ],
+     [
+      "When are you open?",
+      "Daily, 10am to 10pm."
+     ],
+     [
+      "What coffee do you use?",
+      "Arkib-roasted beans, for white coffee and pour-overs."
+     ],
+     [
+      "Is there parking?",
+      "Parking around Changkat Thambi Dollah can be hard to find, so give yourself a few extra minutes."
+     ]
+    ],
+    "contact": "Call or WhatsApp 017-567 1757, or message @monetcoffeeatelier on Instagram.",
+    "sources": "Checked 2026-11-10: Malaysian Flavours (13 Jul 2025) https://www.malaysianflavours.com/2025/07/monet-atelier-pudu-kl.html ; LifestyleAsia via Newswav (Jun/Jul 2025, open daily 10am-10pm); TheSmartLocal tiramisu guide (tiramisu not always on the menu). The earlier RM21 price was another shop's, removed."
    }
   },
   {
@@ -1242,6 +2868,155 @@
      "Cempedak Crumble",
      "Onde-Onde Cake"
     ]
+   },
+   "facts": {
+    "mode": "pickup",
+    "place": "23, Jalan A.S Mansoor, George Town",
+    "hours": "Pick up at the café, Thu–Mon 11:30am–9pm.",
+    "delivery": "",
+    "products": [
+     {
+      "n": "Cempedak Cake",
+      "p": 15,
+      "per": "slice",
+      "cat": "Signature cakes",
+      "ex": false,
+      "set": "",
+      "src": "Per slice, from TheSmartLocal (Feb 2024). Your current prices go here."
+     },
+     {
+      "n": "Cempedak Crumble",
+      "p": 19,
+      "per": "slice",
+      "cat": "Signature cakes",
+      "ex": false,
+      "set": "",
+      "src": "Per slice, from TheSmartLocal (Feb 2024). Your current prices go here."
+     },
+     {
+      "n": "Onde-Onde Cake",
+      "p": 18,
+      "per": "slice",
+      "cat": "Signature cakes",
+      "ex": false,
+      "set": "",
+      "src": "Per slice, from TheSmartLocal (Feb 2024). Your current prices go here."
+     },
+     {
+      "n": "Mango Cheesecake",
+      "p": 20,
+      "per": "slice",
+      "cat": "Cheesecakes",
+      "ex": false,
+      "set": "",
+      "src": "Per slice, from TheSmartLocal (Feb 2024). Your current prices go here."
+     },
+     {
+      "n": "Banana Crumble",
+      "p": 15,
+      "per": "slice",
+      "cat": "Cakes",
+      "ex": false,
+      "set": "",
+      "src": "Per slice, from TheSmartLocal (Feb 2024). Your current prices go here."
+     },
+     {
+      "n": "Black Forest",
+      "p": 20,
+      "per": "slice",
+      "cat": "Cakes",
+      "ex": false,
+      "set": "",
+      "src": "Per slice, from TheSmartLocal (Feb 2024). Your current prices go here."
+     },
+     {
+      "n": "Durian Mud Pie",
+      "p": 20,
+      "per": "slice",
+      "cat": "Signature cakes",
+      "ex": false,
+      "set": "",
+      "src": "Per slice, from TheSmartLocal (Sep 2023). Your current prices go here."
+     },
+     {
+      "n": "Pandan Kaya Fresh Cream",
+      "p": 18,
+      "per": "slice",
+      "cat": "Cakes",
+      "ex": false,
+      "set": "",
+      "src": "Per slice, from TheSmartLocal (Sep 2023). Your current prices go here."
+     },
+     {
+      "n": "Coffee Almond",
+      "p": 18,
+      "per": "slice",
+      "cat": "Cakes",
+      "ex": false,
+      "set": "",
+      "src": "Per slice, from TheSmartLocal (Sep 2023). Your current prices go here."
+     },
+     {
+      "n": "Durian Cheesecake",
+      "p": null,
+      "per": "",
+      "cat": "Cheesecakes",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Strawberry Rose Cheesecake",
+      "p": null,
+      "per": "",
+      "cat": "Cheesecakes",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Banana Loaf",
+      "p": null,
+      "per": "",
+      "cat": "Cakes",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Chocolate Moist Cake",
+      "p": null,
+      "per": "",
+      "cat": "Cakes",
+      "ex": false,
+      "set": "",
+      "src": ""
+     }
+    ],
+    "faq": [
+     [
+      "How do I order?",
+      "Add cakes to your cart and choose a pick-up date at checkout, or call us on 016-443 1336."
+     ],
+     [
+      "Where do I pick up?",
+      "At the café: 23, Jalan A.S Mansoor, 10050 George Town, Penang."
+     ],
+     [
+      "When are you open?",
+      "Thursday to Monday, 11:30am to 9pm. Closed on Tuesdays and Wednesdays."
+     ],
+     [
+      "Are the prices per slice?",
+      "Yes, the prices shown are per slice."
+     ],
+     [
+      "Can I order a whole cake?",
+      "Yes, for birthdays and celebrations. Call us on 016-443 1336, or write it in the order note at checkout."
+     ]
+    ],
+    "contact": "Call us on 016-443 1336, message @passionheartcafe on Instagram, or visit us at 23, Jalan A.S Mansoor, George Town.",
+    "sources": "Public info only, checked 2026-11-10: TheSmartLocal 'Nely's Passion Heart' (6 Feb 2024) https://thesmartlocal.my/nelys-passion-heart/ ; TheSmartLocal Penang bakeries (Sep 2023) https://thesmartlocal.my/bakeries-in-penang/ . First version by the research session 2026-11-09."
    }
   },
   {
@@ -1261,6 +3036,115 @@
      "scallop and prawn pumpkin risotto",
      "buttermilk waffles"
     ]
+   },
+   "facts": {
+    "mode": "pickup",
+    "place": "13, Gat Lebuh Gereja, George Town",
+    "hours": "Pick up at the café, 9am–7pm (closed Wednesdays).",
+    "delivery": "courier, Malaysia-wide (coffee beans)",
+    "products": [
+     {
+      "n": "House Roast Coffee Beans",
+      "p": null,
+      "per": "",
+      "cat": "Coffee beans",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Bean Subscription (example)",
+      "p": null,
+      "per": "",
+      "cat": "Coffee beans",
+      "ex": true,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Scallop & Prawn Pumpkin Risotto",
+      "p": null,
+      "per": "",
+      "cat": "Brunch",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Smoked Chili Jam Scrambled Eggs",
+      "p": null,
+      "per": "",
+      "cat": "Brunch",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Conchiglie with Seasonal Mushrooms",
+      "p": null,
+      "per": "",
+      "cat": "Brunch",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Norm Baked Eggs",
+      "p": null,
+      "per": "",
+      "cat": "Brunch",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "24-Hour Buttermilk Waffle",
+      "p": null,
+      "per": "",
+      "cat": "Brunch",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Tiramisu",
+      "p": null,
+      "per": "",
+      "cat": "Desserts & drinks",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Hot Chocolate",
+      "p": null,
+      "per": "",
+      "cat": "Desserts & drinks",
+      "ex": false,
+      "set": "",
+      "src": ""
+     }
+    ],
+    "faq": [
+     [
+      "Can I buy your beans online?",
+      "Yes. Message us for this week's roast and price, then pick it up at the café or have the beans sent by courier."
+     ],
+     [
+      "Where are you?",
+      "13, Gat Lebuh Gereja, 10300 George Town, Penang, off Weld Quay. Look for the big white door."
+     ],
+     [
+      "When are you open?",
+      "9am to 7pm, closed on Wednesdays. Please check with us on public holidays."
+     ],
+     [
+      "Do you have brunch?",
+      "Yes: the scallop and prawn pumpkin risotto, smoked chili jam scrambled eggs, baked eggs and buttermilk waffles."
+     ]
+    ],
+    "contact": "Call or WhatsApp 016-527 6273, or message @norm.micro.roastery on Instagram.",
+    "sources": "Checked 2026-11-10: nickblitzz review (6 Jul 2024; hours 9am-7pm, closed Wednesday; risotto, scrambled eggs, conchiglie) http://www.nickblitzz.sg/2024/07/review-good-industry-vibe-cafe-in.html ; Tatler Asia listing https://www.tatlerasia.com/dining/norm-micro-roastery ; Cafe Culture (phone); blog reviews (baked eggs, buttermilk waffle, refurbished warehouse). Hours differ between sources: confirm by phone."
    }
   },
   {
@@ -1280,6 +3164,168 @@
      "Kuih Lapis",
      "Angku"
     ]
+   },
+   "facts": {
+    "mode": "pickup",
+    "place": "South Bangsar, KL",
+    "hours": "We'll WhatsApp you the exact pick-up point and time.",
+    "delivery": "Grab or Lalamove",
+    "products": [
+     {
+      "n": "Kuih Talam (22 types)",
+      "p": 85,
+      "per": "100 pcs",
+      "cat": "Kuih",
+      "ex": false,
+      "set": "",
+      "src": "RM85 per 100 pieces, from a SAYS guide (March 2024: RM85–RM90 per 100 pieces). Your current prices go here."
+     },
+     {
+      "n": "Kuih Lapis",
+      "p": 85,
+      "per": "100 pcs",
+      "cat": "Kuih",
+      "ex": false,
+      "set": "",
+      "src": "RM85 per 100 pieces, from a SAYS guide (March 2024: RM85–RM90 per 100 pieces). Your current prices go here."
+     },
+     {
+      "n": "Angku",
+      "p": 85,
+      "per": "100 pcs",
+      "cat": "Kuih",
+      "ex": false,
+      "set": "",
+      "src": "RM85 per 100 pieces, from a SAYS guide (March 2024: RM85–RM90 per 100 pieces). Your current prices go here."
+     },
+     {
+      "n": "Bingka Ubi",
+      "p": 85,
+      "per": "100 pcs",
+      "cat": "Kuih",
+      "ex": false,
+      "set": "",
+      "src": "RM85 per 100 pieces, from a SAYS guide (March 2024: RM85–RM90 per 100 pieces). Your current prices go here."
+     },
+     {
+      "n": "Catering for Parties & Open Houses",
+      "p": null,
+      "per": "",
+      "cat": "Catering",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Talam Cendol",
+      "p": 85,
+      "per": "100 pcs",
+      "cat": "Kuih",
+      "ex": false,
+      "set": "",
+      "src": "RM85 per 100 pieces, from a SAYS guide (March 2024: RM85–RM90 per 100 pieces). Your current prices go here."
+     },
+     {
+      "n": "Talam Jagung",
+      "p": 85,
+      "per": "100 pcs",
+      "cat": "Kuih",
+      "ex": false,
+      "set": "",
+      "src": "RM85 per 100 pieces, from a SAYS guide (March 2024: RM85–RM90 per 100 pieces). Your current prices go here."
+     },
+     {
+      "n": "Kasui Gula Merah",
+      "p": 85,
+      "per": "100 pcs",
+      "cat": "Kuih",
+      "ex": false,
+      "set": "",
+      "src": "RM85 per 100 pieces, from a SAYS guide (March 2024: RM85–RM90 per 100 pieces). Your current prices go here."
+     },
+     {
+      "n": "Butter Cake",
+      "p": null,
+      "per": "",
+      "cat": "Cakes & desserts",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Cheesecake",
+      "p": null,
+      "per": "",
+      "cat": "Cakes & desserts",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Brownies",
+      "p": null,
+      "per": "",
+      "cat": "Cakes & desserts",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Cream Puffs",
+      "p": null,
+      "per": "",
+      "cat": "Cakes & desserts",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Pannacotta",
+      "p": null,
+      "per": "",
+      "cat": "Cakes & desserts",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Raya Cookies",
+      "p": null,
+      "per": "",
+      "cat": "Raya cookies",
+      "ex": false,
+      "set": "",
+      "src": ""
+     }
+    ],
+    "faq": [
+     [
+      "How do I order?",
+      "Add the kuih to your cart and choose a pick-up or delivery date at checkout. You can also order on WhatsApp (011-1165 5688) or on Instagram (@secawantepung)."
+     ],
+     [
+      "Where is pick-up?",
+      "South Bangsar, Kuala Lumpur. We'll WhatsApp you the exact pick-up point and time after you order."
+     ],
+     [
+      "Do you deliver?",
+      "Yes, by Grab or Lalamove. The fee depends on the distance and is confirmed with you before delivery."
+     ],
+     [
+      "How is the kuih sold?",
+      "Per 100 pieces. Choose from 22 types of kuih talam, kuih lapis, angku, bingka ubi and more, sweet and savoury. WhatsApp us for the full list."
+     ],
+     [
+      "Can you cater for a party or open house?",
+      "Yes. Send us the date and the number of guests on WhatsApp and we'll send you a quote."
+     ],
+     [
+      "Do you have Raya cookies?",
+      "Yes, for the Raya season. Ask us what's available this year."
+     ]
+    ],
+    "contact": "WhatsApp 011-1165 5688, or message @secawantepung on Instagram.",
+    "sources": "Public info only, checked 2026-11-10: SAYS 'Where to buy kuih muih' (26 Mar 2024) https://says.com/my/makan/where-to-buy-kuih-muih ; Buro247 '10 best places to order kuih in the Klang Valley' (updated 17 Mar 2025) https://www.buro247.my/lifestyle/food-drink/10-best-places-to-order-your-favourite-malay-and-nyonya-kuih-in-the-klang-valley.html . Photos: Pexels placeholders (image-sources.md)."
    }
   }
  ]
