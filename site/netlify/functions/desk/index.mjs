@@ -75,7 +75,8 @@ Rules:
 - Use ONLY facts from the knowledge base and the notes you are given. Never invent facts about the prospect (sales numbers, reviews, followers) — if it isn't in the notes, treat it as unknown.
 - Cartsmith is new and has no clients yet: never claim or imply past clients, results or numbers.
 - Messages: warm, short (max ~70 words, mockup link messages a little longer), sound like a real person writing to another business owner, no fake urgency, no guarantees. Do not describe their own shop back to them; one specific detail is enough.
-- If this customer's free mockup is ready and not sent yet, the message carries the mockup link and password (see "How our system works"). If there is no mockup yet, end with ONE simple yes/no question: may we make them a free sample website with their own name and menu? Do not pitch packages or prices in a first message.
+- NO QUESTIONS in messages to customers — not at the end, not anywhere (no "?" and no "？"). "Can we…?", "Would you like…?", "Are you interested?", "Did you have a chance…?" make "no" the easy answer. Write statements with one easy next step instead: "We've made a free sample website for you: <link>", "Just reply here and we'll…", "Send us a few photos and we'll put them in for free". (Questions to the OWNER in Chinese are fine; this rule is for customer messages.)
+- If this customer's free mockup is ready and not sent yet, the message carries the mockup link and password (see "How our system works"). If there is no mockup yet, offer it as a statement: we'd be happy to make them a free sample website with their name and menu; just reply here and we'll send it within 1–2 working days. Do not pitch packages or prices in a first message.
 - Questions about the mockup (products, prices, photos, hours, "Example" items) are answered ONLY from "What is on their mockup" in the customer file; prices there carry their source and year.
 - Voice and sign-off: write as "we" (the studio) and sign off as "Cartsmith Studio". NEVER use a personal name (no "Junyu", no "俊宇", no "[Your name]").
 - No emojis or emoticons at all, no hashtags, no exclamation-mark streaks. Plain, professional, friendly.
@@ -133,6 +134,19 @@ async function ask(task, schema, { thinking = false } = {}) {
   throw Object.assign(new Error(last), { code: 'ai_failed' });
 }
 
+// 2026-11-10: no questions in customer messages (a yes/no question makes "no" the easy answer).
+// Anything the AI writes for a customer goes through this: one rewrite if it still asks something, then a plain clean-up.
+const hasQuestion = (t) => /[?？]/.test(String(t || '').replace(/https?:\/\/\S+/g, ''));
+async function noQuestions(text) {
+  if (!hasQuestion(text)) return text;
+  try {
+    const out = await ask(`Rewrite this customer message so it contains NO questions at all (no "?" and no "？"). Turn each question into a statement with one easy next step (e.g. "Just reply here and we'll…", "Send us … and we'll …"). Keep the same language, facts, links, password and sign-off, and about the same length.\n<message>\n${text}\n</message>`, MESSAGE);
+    if (out.message && !hasQuestion(out.message)) return out.message;
+    if (out.message) text = out.message;
+  } catch (e) { /* keep the text and clean it below */ }
+  return String(text).replace(/(https?:\/\/\S+)|[?？]/g, (m, url) => url || (m === '？' ? '。' : '.'));
+}
+
 const ANALYZE = {
   business_name: '', platform: ['shopee', 'tiktok', 'instagram', 'website', 'other'], store_url: '', instagram: '', whatsapp: '', email: '', niche: '',
   language: ['zh', 'en', 'ms'], brand_clear: false, sales_signal: false, active_social: false, no_or_weak_website: false, budget_signal: false,
@@ -155,6 +169,7 @@ const CHAT_RULES = `
 === CUSTOMER ASSISTANT ===
 You are now the studio owner's private assistant for ONE customer only (the file below). Everything in this conversation is about this customer.
 - Talk to the owner in Simplified Chinese: short, practical, step by step.
+- The message for the customer (inside 【可以直接发的信息】) has NO questions: statements and one easy next step only.
 - When the owner pastes the customer's message (WhatsApp / IG / email) or asks for a reply or follow-up, write the message he can send, in the customer's language, between a line 【可以直接发的信息】 and a line 【结束】. Sign it "Cartsmith Studio"; never use a personal name; no emojis. Only one such block per answer unless he asks for options.
 - Use only facts from the knowledge base, the approved scripts and this customer's file. If a price, policy or detail is not there, say you are not sure and suggest he confirms. Never invent results, clients, reviews or guarantees (no "guaranteed sales", no "first page of Google").
 - Remember what was agreed earlier in this conversation and in the summary, and point out the next step (call, send mockup, follow-up date, proposal).
@@ -235,7 +250,9 @@ async function chatInto(p, text) {
   chat.push({ r: 'u', t: q, d: myDate() });
   const sys = SYSTEM + CHAT_RULES + '\n\n=== THIS CUSTOMER ===\n' + customerFile(p);
   const msgs = [{ role: 'system', content: sys }, ...chat.slice(-CHAT_SEND).map((m) => ({ role: m.r === 'u' ? 'user' : 'assistant', content: m.t }))];
-  const answer = await chatAsk(msgs);
+  let answer = await chatAsk(msgs);
+  const blk = answer.match(/【可以直接发的信息】\n?([\s\S]*?)\n?【结束】/);
+  if (blk && hasQuestion(blk[1])) answer = answer.replace(blk[1], await noQuestions(blk[1].trim()));
   chat.push({ r: 'a', t: answer.slice(0, 6000), d: myDate() });
   // running summary so long conversations keep the important facts
   if (chat.length - (p.ai_sum_at || 0) >= CHAT_SUM_EVERY) {
@@ -290,7 +307,7 @@ function mark(p, ev, url, channel) {
   else if (ev === 'preview_sent') {
     p.status = 'preview_sent'; p.preview_delete_by = p.preview_delete_by || myDate(14); p.next_followup_date = myDate(2); if (url) p.preview_url = url.slice(0, 300);
     p.call_ok = '';
-    if (p.preview_url && p.preview_password) p.followup = pvFollow(p);
+    if (p.preview_url && p.preview_password) { p.followup = pvFollow(p); p.followup_v = PVFOLLOW_V; }
     if (CHANNELS.includes(channel)) { p.last_channel = channel; (p.channels = p.channels || []).includes(channel) || p.channels.push(channel); }
     if (!p.first_contact_date) { p.first_contact_date = today; p.touches = (p.touches || 0) + 1; }
     p.last_contact_date = today;
@@ -321,7 +338,7 @@ async function analyzeInto(doc, input, lang, lead) {
       ? 'Analyse this potential client from research notes Claude Code collected from public articles and a direct check of their website domains (the owner glances at their Instagram before sending). '
       : 'Analyse this potential client from the notes the owner pasted (shop link, bio text, his observations). ') +
     'Score each criterion strictly from the notes (unknown = false). Copy a WhatsApp / phone number and an email ONLY if they appear in the notes (else leave empty). ' +
-    'Pick the best-matching template. Write the FIRST message (script 1A / 1C). ' + (lang ? `Write it in ${LANG[lang]}. ` : 'Use the language the prospect most likely uses (from the notes); default English. ') +
+    'Pick the best-matching template. Write the FIRST message (script 1A / 1C, but with NO questions: statements and one easy next step). ' + (lang ? `Write it in ${LANG[lang]}. ` : 'Use the language the prospect most likely uses (from the notes); default English. ') +
     '\n<prospect_info>\n' + input + '\n</prospect_info>', ANALYZE);
   const p = {
     id: 'p' + String(doc.next).padStart(3, '0'), created: myDate(),
@@ -329,7 +346,7 @@ async function analyzeInto(doc, input, lang, lead) {
     whatsapp: waOf(out.whatsapp), email: emailOf(out.email),
     niche: out.niche, language: lang || out.language, observation: out.observation, notes: '', input,
     ...Object.fromEntries(CRITERIA.map((c) => [c, out[c]])), criteria_note: out.criteria_note_zh, fit: out.fit, fit_reason: out.fit_reason_zh,
-    template: out.template, message: out.message, status: 'new', touches: 0, history: []
+    template: out.template, message: await noQuestions(out.message), status: 'new', touches: 0, history: []
   };
   if (lead) {
     // facts Claude Code already checked win over the AI's reading of the notes
@@ -413,10 +430,11 @@ const PVMSG_AGAIN = {
   ms: (n, u, pw, d) => `Hai, ini Cartsmith Studio. Kami ada hantar mesej di Instagram beberapa hari lepas. Kami sudah siapkan contoh laman web percuma untuk ${n}:\n${u}\nKata laluan: ${pw}\n\nBuka di telefon untuk tengok; gambar hanya contoh. Ia hanya untuk anda dan akan dipadam pada ${d}. Tiada bayaran, tiada komitmen. Balas sahaja di sini kalau berminat.\n\nTentang kami: ${STUDIO_URL}\n— Cartsmith Studio`,
 };
 // two days after the mockup went out: a short nudge, no AI needed
+const PVFOLLOW_V = 2;
 const PVFOLLOW = {
-  zh: (n, u, pw) => `你好，我是 Cartsmith Studio。想问问 ${n} 的样板网站你有空打开看了吗？\n${u}\n密码：${pw}\n\n如果传几张你们自己的照片和现在的价钱给我们，我们会免费帮你换上去，看起来就是你们自己的网站。\n\n— Cartsmith Studio`,
-  en: (n, u, pw) => `Hi, Cartsmith Studio here. Just checking if you had a chance to open the sample website for ${n}:\n${u}\nPassword: ${pw}\n\nIf you send us a few of your own photos and your current prices, we'll put them in for free, so it looks like your own site.\n\n— Cartsmith Studio`,
-  ms: (n, u, pw) => `Hai, Cartsmith Studio di sini. Nak tanya kalau anda sempat buka contoh laman web untuk ${n}:\n${u}\nKata laluan: ${pw}\n\nKalau anda hantar beberapa gambar sendiri dan harga terkini, kami akan masukkan secara percuma, supaya ia nampak macam laman web anda sendiri.\n\n— Cartsmith Studio`,
+  zh: (n, u, pw) => `你好，我是 Cartsmith Studio。再发一次 ${n} 的样板网站给你，方便你有空时打开：\n${u}\n密码：${pw}\n\n传几张你们自己的照片和现在的价钱给我们，我们会免费帮你换上去，看起来就是你们自己的网站。\n\n— Cartsmith Studio`,
+  en: (n, u, pw) => `Hi, Cartsmith Studio here. Here's the sample website for ${n} again, so it's easy to find when you have a moment:\n${u}\nPassword: ${pw}\n\nSend us a few of your own photos and your current prices, and we'll put them in for free, so it looks like your own site.\n\n— Cartsmith Studio`,
+  ms: (n, u, pw) => `Hai, Cartsmith Studio di sini. Ini contoh laman web untuk ${n} sekali lagi, supaya senang dibuka bila ada masa:\n${u}\nKata laluan: ${pw}\n\nHantar beberapa gambar sendiri dan harga terkini, dan kami akan masukkan secara percuma, supaya ia nampak macam laman web anda sendiri.\n\n— Cartsmith Studio`,
 };
 const PVMSG = {
   zh: (n, u, pw, d) => `你好，我们是 Cartsmith Studio，帮本地餐饮和品牌做网站。我们已经帮 ${n} 做好了一个免费的样板网站：\n${u}\n密码：${pw}\n\n用手机打开就可以看，照片是示意图。样板只给你看，${d} 会删除；不用钱，也不用马上决定，有兴趣回复这里就好。\n\n我们的网站：${STUDIO_URL}\n— Cartsmith Studio`,
@@ -436,8 +454,8 @@ function refreshPreviewMsgs(doc) {
       p.preview_msg = pvMsg(p); p.preview_msg_v = PVMSG_V; changed = true;
     }
     // mockup already sent: the follow-up is the "did you have a look?" nudge with the link again
-    if (p.status === 'preview_sent' && p.preview_url && p.preview_password && !String(p.followup || '').includes(p.preview_url)) {
-      p.followup = pvFollow(p); changed = true;
+    if (p.status === 'preview_sent' && p.preview_url && p.preview_password && (!String(p.followup || '').includes(p.preview_url) || (p.followup_v || 1) < PVFOLLOW_V)) {
+      p.followup = pvFollow(p); p.followup_v = PVFOLLOW_V; changed = true;
     }
   }
   return changed;
@@ -650,7 +668,7 @@ async function handle(action, b, doc) {
       const p = find(doc, b.id);
       const lang = ['zh', 'en', 'ms'].includes(b.language) ? b.language : p.language;
       const out = await ask(`Rewrite the FIRST message for this prospect in ${LANG[lang]}. ${b.hint ? 'The owner asks: ' + String(b.hint).slice(0, 300) + '. ' : ''}\n${customerFile({ ...p, language: lang })}`, MESSAGE);
-      p.message = out.message; p.language = lang;
+      p.message = await noQuestions(out.message); p.language = lang;
       return { item: p, saved: true };
     }
 
@@ -658,14 +676,14 @@ async function handle(action, b, doc) {
       const p = find(doc, b.id);
       const hasPv = !!(p.preview_url && p.preview_password);
       const kind = p.status === 'preview_sent' && (p.touches || 0) <= 2
-        ? 'follow-up two days after we sent the free mockup: ask if they had a chance to open it, give the link and password again, offer to put their own photos and current prices in for free'
+        ? 'follow-up two days after we sent the free mockup: send the link and password again so it is easy to find, and say we can put their own photos and current prices in for free (statements only, no questions)'
         : hasPv && p.status !== 'preview_sent'
           ? 'they did not answer our earlier message; the free mockup is ready: send it now (link and password), say briefly that we wrote before'
           : (p.touches || 0) <= 1
-            ? 'gentle follow-up: one short, useful point for a food business (e.g. taking pre-orders or bookings without answering every DM), then the yes/no question about a free sample website'
+            ? 'gentle follow-up: one short, useful point for a food business (e.g. taking pre-orders or bookings without answering every DM), then offer a free sample website as a statement with an easy next step (no questions)'
             : 'last polite message: short, no pressure, door open';
       const out = await ask(`Write the next message for this prospect: ${kind}.\n${customerFile(p)}`, MESSAGE);
-      p.followup = out.message;
+      p.followup = await noQuestions(out.message);
       return { item: p, saved: true };
     }
 
@@ -692,7 +710,7 @@ ${text}
       log(p, 'their_reply', text);
       p.call_ok = '';
       if (['new', 'contacted', 'preview_sent', 'proposal_sent', 'call_booked', 'no_response'].includes(p.status)) { p.prev_status = p.status; p.status = 'replied'; p.next_followup_date = ''; }
-      p.draft_reply = out.reply; p.reply_intent = out.intent; p.reply_summary = out.summary_zh; p.reply_next = out.next_step_zh; p.reply_event = out.suggested_event;
+      p.draft_reply = out.reply ? await noQuestions(out.reply) : ''; p.reply_intent = out.intent; p.reply_summary = out.summary_zh; p.reply_next = out.next_step_zh; p.reply_event = out.suggested_event;
       return { item: p, saved: true };
     }
 

@@ -158,13 +158,13 @@
         ms: `Saya (nama anda) dari Cartsmith Studio. Kami buat laman web untuk perniagaan makanan tempatan. Kami nak buatkan contoh laman web percuma untuk ${n}, dengan nama dan menu anda.`,
       },
       ask: has ? {
-        en: "It's free, and there's no obligation. Can I WhatsApp you the link now so you can have a look?",
-        zh: '不用钱，也不用马上决定。我现在用 WhatsApp 发给你看看，可以吗？',
-        ms: 'Percuma, tiada komitmen. Boleh saya WhatsApp pautannya sekarang untuk anda tengok?',
+        en: "It's free, and there's no obligation. I'll WhatsApp you the link right after this call, so you can have a look when you're free.",
+        zh: '不用钱，也不用马上决定。我挂了电话就用 WhatsApp 发给你，你有空再看。',
+        ms: 'Percuma, tiada komitmen. Saya WhatsApp pautannya sebaik habis panggilan ini, anda tengok bila senang.',
       } : {
-        en: "It's free, and there's no obligation. Can I WhatsApp it to you when it's ready, in one or two working days?",
-        zh: '不用钱，也不用马上决定。做好了（一两个工作天）我用 WhatsApp 发给你看看，可以吗？',
-        ms: 'Percuma, tiada komitmen. Boleh saya WhatsApp bila siap, dalam satu atau dua hari bekerja?',
+        en: "It's free, and there's no obligation. We'll make it and WhatsApp it to you in one or two working days.",
+        zh: '不用钱，也不用马上决定。我们做好了（一两个工作天）就用 WhatsApp 发给你。',
+        ms: 'Percuma, tiada komitmen. Kami siapkan dan WhatsApp kepada anda dalam satu atau dua hari bekerja.',
       },
       close: has ? {
         en: "Great, thank you! Is this number on WhatsApp? And may I know your name? I'll send it right after this call.",
@@ -176,10 +176,10 @@
         ms: 'Baik, terima kasih! Nombor ini ada WhatsApp? Boleh saya tahu nama? Kami hantar dalam satu atau dua hari bekerja.',
       },
     };
-    const steps = [['1 找老板', T.owner], ['2 介绍（15 秒）', T.intro], ['3 请求', T.ask], ['4 对方说可以，收尾', T.close]];
+    const steps = [['1 找老板', T.owner], ['2 介绍（15 秒）', T.intro], ['3 说下一步（不用问「可以吗」）', T.ask], ['4 对方没反对，收尾', T.close]];
     const objs = [
       ['老板不在 / 员工接的', { en: 'No problem. What time is the owner usually in? I\'ll call back then.', zh: '没关系。老板通常几点比较方便？我那个时候再打。', ms: 'Tak apa. Pukul berapa pemilik biasanya ada? Saya telefon semula nanti.' }, 'callback'],
-      ['现在很忙', { en: 'Sorry to catch you at a busy time. Shall I just WhatsApp you the link so you can look later?', zh: '不好意思打扰。我先 WhatsApp 发给你，你有空再看，可以吗？', ms: 'Maaf ganggu waktu sibuk. Boleh saya WhatsApp pautannya, anda tengok bila senang?' }, 'ok'],
+      ['现在很忙', { en: "Sorry to catch you at a busy time. I'll WhatsApp you the link, so you can look later.", zh: '不好意思打扰。我先 WhatsApp 发给你，你有空再看。', ms: 'Maaf ganggu waktu sibuk. Saya WhatsApp pautannya, anda tengok bila senang.' }, 'ok'],
       ['多少钱？', { en: `The sample is free. If you'd like your own website, it starts from ${STUDIO_PRICE}, a fixed price written down. I'll send the details together with the link.`, zh: `样板是免费的。如果要做正式的网站，从 ${STUDIO_PRICE} 起，价钱固定、写清楚。我把详细资料跟样板一起发给你。`, ms: `Contoh ini percuma. Kalau nak laman web sendiri, harga bermula ${STUDIO_PRICE}, harga tetap dan bertulis. Saya hantar butiran bersama pautan.` }, ''],
       ['我们已经有 Shopee / Instagram / foodpanda', { en: "That's fine, keep them. This gives your regulars one link to order from you directly, without paying commission on every order.", zh: '没关系，那些照样用。这个是让熟客有一个链接直接跟你订，不用每一单都给平台抽佣。', ms: 'Tak apa, teruskan. Ini beri pelanggan tetap satu pautan untuk tempah terus dengan anda, tanpa komisen setiap pesanan.' }, ''],
       ['我们已经有网站', { en: "Oh, that's great. Sorry to bother you, and have a good day!", zh: '哦，那很好。不好意思打扰了，祝生意兴隆！', ms: 'Oh, bagus. Maaf mengganggu, selamat maju jaya!' }, 'has_site'],
