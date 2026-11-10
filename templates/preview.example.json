@@ -32,7 +32,17 @@
     "eyebrow": "Over 2,000 reviews on Shopee",
     "title": "Simple skincare for Malaysian weather",
     "text": "Gentle formulas, honest ingredients, delivered to your door.",
-    "image": "hero.jpg"
+    "image": "hero.jpg",
+    "buttons": [
+      {
+        "label": "Shop serums",
+        "href": "shop.html?cat=serums"
+      },
+      {
+        "label": "Our story",
+        "href": "about.html"
+      }
+    ]
   },
   "products": [
     {
@@ -106,5 +116,37 @@
   "social": [
     "instagram",
     "whatsapp"
-  ]
+  ],
+  "_食物预订自取": "kuih / 蛋糕 / 饼干 / catering 这类要预订、自取或叫 Grab / Lalamove 的店：把下面 _order 改名成 order（mode 一定是 pickup；没有送货就不写 delivery）。结账变成选自取或送货 + 日期，购物车、产品页、帮助页、订单页都不再写运费。按份卖的产品加 \"per\": \"100 pcs\"（价钱后面显示「/ 100 pcs」）。_about / _faq / _newsletter（写 false = 拿掉订阅框）/ _contact 也一样，改名拿掉 _ 才会生效，内容只写查得到的真实资料。hero 可以加 buttons。真实例子：clients/m-secawan-tepung（不在 git）。",
+  "_order": {
+    "mode": "pickup",
+    "pickup": "South Bangsar, KL",
+    "pickup_note": "We'll WhatsApp you the exact pick-up point and time.",
+    "delivery": "Grab or Lalamove"
+  },
+  "_about": {
+    "image": "about.jpg",
+    "lead": "一句话介绍（只写查得到的）",
+    "paras": [
+      "第二段"
+    ],
+    "values": [
+      [
+        "map",
+        "South Bangsar",
+        "Pick-up, or delivery by Grab / Lalamove"
+      ]
+    ]
+  },
+  "_faq": [
+    [
+      "How do I order?",
+      "Add to cart and choose a pick-up or delivery date at checkout, or WhatsApp us."
+    ]
+  ],
+  "_newsletter": {
+    "title": "Raya and festive orders",
+    "text": "Hear first about Raya cookies and festive orders."
+  },
+  "_contact": "WhatsApp 011-000 0000, or message @example on Instagram."
 }

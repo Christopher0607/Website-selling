@@ -246,10 +246,16 @@ async function scan(page, url, vp, shotDir) {
       await page.fill('input[name=email]', 'test@example.com');
       await page.fill('input[name=phone]', '012-345 6789');
       await page.fill('input[name=name]', 'Aisyah Tan');
-      await page.fill('input[name=addr1]', '12 Jalan Contoh');
-      await page.fill('input[name=postcode]', '47400');
-      await page.fill('input[name=city]', 'Petaling Jaya');
-      await page.selectOption('select[name=state]', 'Selangor');
+      const pickup = await page.$('input[name=method]'); // food shops: pick-up / local delivery on a date ("order": {"mode": "pickup"})
+      if (pickup) {
+        ok(await page.isHidden('input[name=addr1]'), 'pick-up checkout: no address needed for pick-up');
+        await page.fill('input[name=date]', await page.getAttribute('input[name=date]', 'min'));
+      } else {
+        await page.fill('input[name=addr1]', '12 Jalan Contoh');
+        await page.fill('input[name=postcode]', '47400');
+        await page.fill('input[name=city]', 'Petaling Jaya');
+        await page.selectOption('select[name=state]', 'Selangor');
+      }
       await page.click('[data-checkout] button[type=submit]');
       await page.waitForURL(/order\.html/, { timeout: 15000 }).catch(() => {});
       await unlock(page);
