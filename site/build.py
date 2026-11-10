@@ -145,7 +145,7 @@ class Store:
     def price_html(self, p):
         base = p["price"]
         if base is None:  # mockups: price not published → never invent one
-            return '<span class="ask">Ask for price</span>'
+            return f'<span class="ask">{e(p["info"])}</span>' if p.get("info") else '<span class="ask">Ask for price</span>'
         sale = p.get("sale")
         has_from = any(v.get("add") for o in p["options"] for v in o["values"])
         pre = '<span class="from">from </span>' if has_from else ""
@@ -178,7 +178,9 @@ class Store:
                 dots = "".join(f'<span class="dot" style="--sw:{e(v.get("hex", "#ccc"))}" title="{e(v["v"])}"></span>' for v in o["values"])
                 sw = f'<p class="card__swatches">{dots}</p>'
         if p["price"] is None:
-            btn = f'<a class="btn btn--sm btn--ghost card__add" href="{url}">Ask for price</a>'
+            # mockups: a dish that is part of a set links to the set instead of "Ask for price"
+            btn = (f'<a class="btn btn--sm btn--ghost card__add" href="{sp}p/{p["info_link"]}.html">{e(p.get("info_button") or "See the set")}</a>' if p.get("info_link")
+                   else f'<a class="btn btn--sm btn--ghost card__add" href="{url}">Ask for price</a>')
         elif p["options"]:
             btn = f'<a class="btn btn--sm card__add" href="{url}">Choose options</a>'
         else:
@@ -578,6 +580,8 @@ if(h===window.__pvHash){try{localStorage.setItem('pv_'+h,'1');}catch(e){}documen
         ask = p["price"] is None
         ask_html = (f'<a class="btn btn--lg btn--block" href="#" data-ask data-demo="In your store this opens WhatsApp with \'{e(p["name"])}\' already typed in, so customers can ask for the price.">'
                     f'{icon("chat")} Ask for price on WhatsApp</a>') if ask else ""
+        if ask and p.get("info_link"):
+            ask_html = f'<a class="btn btn--lg btn--block" href="{sp}p/{p["info_link"]}.html" data-ask>{e(p.get("info_button") or "See the set")} {icon("arrow")}</a>'
         return f"""<div class="wrap pdp" data-product="{e(p['id'])}">
   <p class="crumbs"><a href="{sp}index.html">Home</a> / <a href="{sp}shop.html?cat={p['cat']}">{e(cat)}</a> / <span>{e(p['name'])}</span></p>
   <div class="pdp__grid">
@@ -824,10 +828,16 @@ def apply_preview(t, pv):
             "imgs": imgs, "short": item.get("short", ""), "desc": item.get("desc", [item.get("short", "")] if item.get("short") else []),
             "details": item.get("details", []), "options": item.get("options", []), "tags": ["featured"] if i < 4 else [],
             "badge": item.get("badge"), "per": item.get("per"),
+            "info": item.get("info") if price_of(item) is None else None, "info_button": item.get("info_button"),
+            "info_link": slugify(item["info_link"])[:50] if item.get("info_link") and price_of(item) is None else None,
         })
     for c in cats:
         n = len([p for p in products if p["cat"] == c["id"]])
         c["blurb"] = f"{n} product" + ("" if n == 1 else "s")
+    ids = {x["id"] for x in products}
+    for x in products:
+        if x["info_link"] and x["info_link"] not in ids:
+            sys.exit(f"产品 {x['name']!r} 的 info_link 要写成同一个样板里另一个产品的名字")
     t["categories"], t["products"] = cats, products
     hero_tpl = next((s for s in t["home"] if s["type"] == "hero"), {"type": "hero", "layout": "split"})
     hero = dict(hero_tpl)

@@ -117,7 +117,7 @@
     "instagram",
     "whatsapp"
   ],
-  "_食物预订自取": "kuih / 蛋糕 / 饼干 / catering 这类要预订、自取或叫 Grab / Lalamove 的店：把下面 _order 改名成 order（mode 一定是 pickup；没有送货就不写 delivery）。结账变成选自取或送货 + 日期，购物车、产品页、帮助页、订单页都不再写运费。按份卖的产品加 \"per\": \"100 pcs\"（价钱后面显示「/ 100 pcs」）。_about / _faq / _newsletter（写 false = 拿掉订阅框）/ _contact 也一样，改名拿掉 _ 才会生效，内容只写查得到的真实资料。hero 可以加 buttons。真实例子：clients/m-secawan-tepung（不在 git）。 餐厅要订位的：mode 写 booking（pickup 写餐厅地址，pickup_note 写营业时间），结账变成订位日期 + 时间。结账备注的提示字可以用 note_hint 改。",
+  "_食物预订自取": "kuih / 蛋糕 / 饼干 / catering 这类要预订、自取或叫 Grab / Lalamove 的店：把下面 _order 改名成 order（mode 一定是 pickup；没有送货就不写 delivery）。结账变成选自取或送货 + 日期，购物车、产品页、帮助页、订单页都不再写运费。按份卖的产品加 \"per\": \"100 pcs\"（价钱后面显示「/ 100 pcs」）。_about / _faq / _newsletter（写 false = 拿掉订阅框）/ _contact 也一样，改名拿掉 _ 才会生效，内容只写查得到的真实资料。hero 可以加 buttons。真实例子：clients/m-secawan-tepung（不在 git）。 餐厅要订位的：mode 写 booking（pickup 写餐厅地址，pickup_note 写营业时间），结账变成订位日期 + 时间。结账备注的提示字可以用 note_hint 改。 套餐里的菜想展示但不单卖：产品不写 price，写 \"info\": \"Part of the 7-course set\"、\"info_link\": \"套餐的产品名\"、\"info_button\": \"See the set\"（按钮字要短）。",
   "_order": {
     "mode": "pickup",
     "pickup": "South Bangsar, KL",
