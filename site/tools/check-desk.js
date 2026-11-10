@@ -379,6 +379,49 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
     await p.click('[data-tab="today"]');
   }
 
+  // mockup ready before the first contact (2026-11-10): one short message with link + password + our site, straight to their WhatsApp
+  {
+    const d5 = JSON.parse(fs.readFileSync(STORE, 'utf8'));
+    const pv = { preview_url: 'https://previews--cartsmith.netlify.app/m-kopi-test-1234abcd/', preview_password: 'kopi5678', preview_delete_by: '2099-01-01', preview_slug: 'm-kopi-test-1234abcd' };
+    const base5 = { created: '2026-11-10', platform: 'other', store_url: '', instagram: '', whatsapp: '', email: '', niche: 'cafe', input: 'x', notes: '', brand_clear: true, sales_signal: true, active_social: true, no_or_weak_website: true, budget_signal: true, score: 5, fit: 'good', template: 'chili-pantry', status: 'new', touches: 0, history: [], language: 'en' };
+    d5.items.unshift({ ...base5, ...pv, id: 'p904', business_name: 'Kopi Test', phone: '60178704324', observation: 'Their kuih sells out every single afternoon', message: 'Hi Kopi Test, we saw that your kuih sells out every single afternoon and your regulars love the pandan ones... may we send you a free mockup?', preview_msg: 'Hi, old long message with shipping placeholders' });
+    d5.items.unshift({ ...base5, ...pv, id: 'p905', business_name: 'Roti Test', phone: '60191234567', preview_url: 'https://previews--cartsmith.netlify.app/m-roti-test-1234abcd/', preview_password: 'roti4321', preview_slug: 'm-roti-test-1234abcd', preview_msg: 'old' });
+    fs.writeFileSync(STORE, JSON.stringify(d5));
+    await p.reload();
+    await p.evaluate(() => { window.DESK_NOW = '2026-11-10T07:00:00Z'; }); // 15:00 in Malaysia
+    await p.click('[data-tab="today"]');
+    await p.waitForSelector('#c-p904 textarea[data-field="preview_msg"]');
+    const k = JSON.parse(fs.readFileSync(STORE, 'utf8')).items.find((x) => x.id === 'p904');
+    ok(k.preview_msg_v === 2 && k.preview_msg.includes(pv.preview_url) && k.preview_msg.includes('kopi5678') && k.preview_msg.includes('cartsmith.netlify.app') && !/sells out|shipping/.test(k.preview_msg), 'old mockup messages are replaced: short, with link, password and our own site, no shop description');
+    ok(/we've made a free sample website for Kopi Test/.test(k.preview_msg) && k.preview_msg.split(/\s+/).length < 80, 'message says the website is already made, under 80 words');
+    ok(!(await p.$('#c-p904 textarea[data-field="message"]')), 'card with a mockup shows only the mockup message (no long opener next to it)');
+    ok(/We've already made a free sample website/.test(await p.textContent('#c-p904 .cue')), 'phone opener says the website is already made');
+    const waBtn = await p.textContent('#c-p904 [data-act="wa"]');
+    ok(/\+60 17-870 4324/.test(waBtn), 'WhatsApp button shows the number it will open (taken from the phone number)');
+    const [waPop5] = await Promise.all([p.waitForEvent('popup'), p.click('#c-p904 [data-act="wa"]')]);
+    const waUrl5 = decodeURIComponent(waPop5.url());
+    ok(waUrl5.startsWith('https://wa.me/60178704324') && waUrl5.includes('kopi5678') || /whatsapp\.com/.test(waUrl5), 'WhatsApp opens that number with the mockup message filled in');
+    await waPop5.close();
+    await p.click('[data-sentbar] [data-act="sentbar-no"]').catch(() => {});
+    await p.click('#c-p904 [data-act="pv-sent"]');
+    await p.waitForFunction(() => !document.querySelector('#c-p904 textarea[data-field="preview_msg"]'));
+    const k2 = JSON.parse(fs.readFileSync(STORE, 'utf8')).items.find((x) => x.id === 'p904');
+    ok(k2.status === 'preview_sent' && !!k2.next_followup_date, '已发样板 records the mockup as sent and sets a follow-up');
+    // yes on the phone when the mockup is ready: the message already has the link and password
+    await p.click('[data-tab="list"]');
+    await p.click('[data-filter="all"]');
+    if (!(await p.$('#l-p905'))) await p.click('[data-expand="p905"]');
+    ok((await p.getAttribute('#l-p905 .send__btns button:first-child', 'data-act')) === 'call', 'card with a mockup still has the call button first');
+    await p.click('#l-p905 [data-act="call"]');
+    await p.waitForSelector('#l-p905 [data-callout]');
+    await p.click('#l-p905 [data-act="call-out"][data-out="ok"]');
+    await p.waitForSelector('#l-p905 textarea[data-field="draft_reply"]');
+    const r5 = JSON.parse(fs.readFileSync(STORE, 'utf8')).items.find((x) => x.id === 'p905');
+    ok(r5.draft_reply.includes('m-roti-test-1234abcd') && r5.draft_reply.includes('roti4321') && r5.draft_reply.includes('cartsmith.netlify.app') && !/\[mockup link\]/.test(r5.draft_reply), 'after a good call the message has the link and password filled in');
+    await shot('pv-first');
+    await p.click('[data-tab="today"]');
+  }
+
   // whole conversation (2026-11-09): what we sent, what they said, what the owner replied himself; "already has a website"
   {
     const sentP001 = (JSON.parse(fs.readFileSync(STORE, 'utf8')).items.find((x) => x.id === 'p001').history || []).filter((h) => h.e === 'sent');

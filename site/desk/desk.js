@@ -83,6 +83,7 @@
 
   // ------------------------------------------------------------ phone calls + good hours (2026-11-09)
   const callNo = (p) => p.phone || p.whatsapp || '';
+  const waNo = (p) => p.whatsapp || (/^601\d{7,9}$/.test(p.phone || '') ? p.phone : '');
   const fmtPhone = (n) => !n ? '' : /^601/.test(n) ? fmtWa(n) : '+' + n.replace(/^(60)([2-9])(\d{3,4})(\d{4})$/, '$1 $2-$3 $4');
   const callBtn = (p) => `<button class="btn btn--sm ch ch--call" data-act="call" data-id="${p.id}">${svg('phone', 16)}打电话</button>`;
   const callDue = (p) => !!p.next_call_date && p.next_call_date <= S.today && ['new', 'contacted'].includes(p.status) && !!callNo(p);
@@ -100,6 +101,11 @@
     const t = nowMY();
     return confirm(`现在是 ${String(Math.floor(t / 60)).padStart(2, '0')}:${String(t % 60).padStart(2, '0')}（${why}），餐厅和店家多数在忙，常常不会理。建议：餐厅 14:30–17:00、卖产品的 10:00–12:00。\n\n还是要现在${what}吗？`);
   }
+  const OPENER_PV = {
+    zh: (n) => `你好，我是 Cartsmith Studio 的，我们帮本地的餐厅和品牌做网上接单的网站。想跟老板讲 30 秒，方便吗？……我们已经用 ${n} 的店名和菜单，做好了一个免费的样板网站，不用钱，也不用马上决定。我现在用 WhatsApp 发给你看看，可以吗？`,
+    en: (n) => `Hi, this is Cartsmith Studio — we build online-ordering websites for local food businesses. Could I have 30 seconds with the owner? … We've already made a free sample website for ${n}, with your name and menu — no cost, no commitment. Can I WhatsApp you the link now?`,
+    ms: (n) => `Hai, saya dari Cartsmith Studio — kami buat laman web tempahan online untuk perniagaan makanan tempatan. Boleh saya cakap dengan pemilik sekejap? … Kami sudah siapkan contoh laman web percuma untuk ${n}, dengan nama dan menu anda — tiada bayaran, tiada komitmen. Boleh saya WhatsApp pautannya sekarang?`,
+  };
   const OPENER = {
     zh: (n) => `你好，我是 Cartsmith Studio 的，我们帮本地的餐厅和品牌做网上接单的网站。想跟老板讲 30 秒，方便吗？……我们在网上看到 ${n}，想帮你们做一个免费的网上订购首页样板，用你们的店名和产品，不用钱，也不用马上决定。我 WhatsApp 发给你看看，可以吗？`,
     en: (n) => `Hi, this is Cartsmith Studio — we build online-ordering websites for local food businesses and brands. Could I have 30 seconds with the owner? … We came across ${n} and would like to make you a free sample homepage with your name and menu — no cost, no commitment. Can I WhatsApp it to you to have a look?`,
@@ -119,7 +125,7 @@
     if (callDue(p) && p.status !== 'new') h += `<div class="send"><span class="send__label">今天再打</span><div class="send__btns">${callBtn(p)}</div></div>`;
     if (callNo(p) && (p.status === 'new' || callDue(p))) {
       const tries = p.call_misses ? `（已经打过 ${p.call_misses} 次没接）` : '';
-      h += `<details class="cue"><summary>${svg('phone', 14)}电话开场（照着念）${tries}</summary><p>${esc((OPENER[p.language] || OPENER.en)(p.business_name))}</p>${p.observation ? `<p class="hint">可以提的一点：${esc(p.observation)}</p>` : ''}<p><a href="call-script.html" target="_blank" rel="noopener">完整电话脚本和各种回话 →</a></p></details>`;
+      h += `<details class="cue"><summary>${svg('phone', 14)}电话开场（照着念）${tries}</summary><p>${esc((((p.preview_url && p.preview_password) ? OPENER_PV : OPENER)[p.language] || OPENER.en)(p.business_name))}</p>${p.observation ? `<p class="hint">可以提的一点：${esc(p.observation)}</p>` : ''}<p><a href="call-script.html" target="_blank" rel="noopener">完整电话脚本和各种回话 →</a></p></details>`;
     }
     return h;
   }
@@ -134,10 +140,14 @@
   }
 
   // ------------------------------------------------------------ finished mockup on the card (2026-11-09)
+  const hasPv = (p) => !!(p.preview_url && p.preview_password && p.preview_msg && p.status !== 'preview_sent');
   function pvBlock(p) {
     if (!p.preview_url || !p.preview_password || ['do_not_contact', 'won', 'lost'].includes(p.status)) return '';
     let h = `<div class="pvbox" data-pvbox><div class="pvbox__row"><b>样板</b><a href="${esc(p.preview_url)}" target="_blank" rel="noopener">打开看看</a><span>密码 <code>${esc(p.preview_password)}</code></span><button class="linkbtn" data-act="copy-pv" data-id="${p.id}">复制网址和密码</button></div><small>${esc(p.preview_delete_by)} 删除${p.status === 'preview_sent' ? ' · 已经发给对方' : ''}</small></div>`;
-    if (p.status !== 'preview_sent' && p.preview_msg && !(p.status === 'replied' && p.draft_reply)) h += msgBox(p, 'preview_msg', '附样板的信息（打完电话或直接发）') + sendRow(p, 'preview_msg');
+    if (p.status !== 'preview_sent' && p.preview_msg && !(p.status === 'replied' && p.draft_reply)) {
+      h += msgBox(p, 'preview_msg', '发给对方的信息（已附上样板网址和密码，可以直接改）') + sendRow(p, 'preview_msg');
+      h += `<div class="btnrow btnrow--end"><button class="btn btn--ghost btn--sm" data-act="pv-sent" data-id="${p.id}">${svg('check', 16)}已发样板</button></div>`;
+    }
     return h;
   }
 
@@ -167,7 +177,9 @@
     body += pvBlock(p);
     body += callBlock(p);
 
-    if (p.status === 'new') {
+    if (p.status === 'new' && hasPv(p)) {
+      body += `<div class="btnrow btnrow--end">${moreBtn}</div>`;
+    } else if (p.status === 'new') {
       body += msgBox(p, 'message', '开场白（可以直接改）') + sendRow(p, 'message');
       body += `<div class="btnrow btnrow--end">${sentBtn}${moreBtn}</div>`;
     } else if (p.status === 'replied') {
@@ -204,8 +216,8 @@
   function msgBox(p, field, label) { return `<div class="msg"><label>${esc(label)}</label><textarea data-field="${field}" data-id="${p.id}">${esc(p[field] || '')}</textarea></div>`; }
   function sendRow(p, field) {
     const b = [];
-    if (callNo(p) && (field === 'message' || field === 'followup')) b.push(['call', callBtn(p)]);
-    if (p.whatsapp) b.push(['wa', `<button class="btn btn--sm ch ch--wa" data-act="wa" data-field="${field}" data-id="${p.id}">${svg('wa', 16)}WhatsApp</button>`]);
+    if (callNo(p) && (field === 'message' || field === 'followup' || (field === 'preview_msg' && ['new', 'contacted'].includes(p.status)))) b.push(['call', callBtn(p)]);
+    if (waNo(p)) b.push(['wa', `<button class="btn btn--sm ch ch--wa" data-act="wa" data-field="${field}" data-id="${p.id}">${svg('wa', 16)}WhatsApp ${esc(fmtPhone(waNo(p)))}</button>`]);
     if (p.email) b.push(['email', `<button class="btn btn--sm ch ch--mail" data-act="email" data-field="${field}" data-id="${p.id}">${svg('mail', 16)}Email</button>`]);
     if (p.instagram) b.push(['ig', `<button class="btn btn--sm ch ch--ig" data-act="copyopen" data-field="${field}" data-id="${p.id}">${svg('ig', 16)}Instagram</button>`]);
     if (!b.length) b.push(['', `<button class="btn btn--sm" data-act="copyonly" data-field="${field}" data-id="${p.id}">复制信息</button>`]);
@@ -349,7 +361,7 @@
   function hideSentbar() { S.pending = ''; $('[data-sentbar]').hidden = true; const y = $('[data-sentbar-yes]'); y.disabled = false; y.innerHTML = svg('check', 16) + '已发送'; delete y.dataset.label; }
 
   // ------------------------------------------------------------ rapid manual sending (one lead at a time; a person presses send in each app)
-  const hasDirect = (p) => (p.whatsapp || p.email ? 1 : 0);
+  const hasDirect = (p) => (waNo(p) || p.email ? 1 : 0);
   function queueList() {
     const left = Math.max(0, (S.settings.dailyLimit || 10) - sentToday());
     return S.items.filter((p) => p.status === 'new' && p.score >= 3 && p.fit !== 'skip' && !p.duplicate_of && !p.next_call_date)
@@ -372,8 +384,8 @@
         ${p.observation ? `<p class="obs">${esc(p.observation)}</p>` : ''}
         ${p.verify ? `<p class="verify">${svg('pin', 14)}<span>发之前看一眼：${esc(p.verify)}</span></p>` : ''}
         ${contacts(p)}
-        ${msgBox(p, 'message', '开场白（可以直接改）')}
-        ${sendRow(p, 'message')}
+        ${hasPv(p) ? msgBox(p, 'preview_msg', '发给对方的信息（已附上样板网址和密码）') : msgBox(p, 'message', '开场白（可以直接改）')}
+        ${sendRow(p, hasPv(p) ? 'preview_msg' : 'message')}
         <div class="btnrow"><button class="btn" data-act="q-sent" data-id="${p.id}">${svg('check', 16)}已发送，下一家</button><button class="btn btn--ghost" data-act="q-skip">跳过</button></div>
         <p class="hint">先按上面其中一个发送方式，在 App 里看一遍再按发送，回来按「已发送，下一家」。按「跳过」不会记录，这家之后还会出现。</p>
       </div>`);
@@ -405,7 +417,7 @@
       if (i % 2 === 1) {
         const k = S.aiDrafts.push(seg.trim()) - 1;
         const p = S.items.find((x) => x.id === S.ai.id) || {};
-        return `<div class="ai__draft"><div class="ai__draftlabel">可以直接发的信息</div><div class="ai__drafttext">${esc(seg.trim())}</div><div class="btnrow"><button class="btn btn--sm" data-act="ai-copy" data-k="${k}" data-id="${S.ai.id}">复制</button>${p.whatsapp ? `<button class="btn btn--sm ch ch--wa" data-act="ai-wa" data-k="${k}" data-id="${S.ai.id}">${svg('wa', 16)}WhatsApp</button>` : ''}${p.email ? `<button class="btn btn--sm ch ch--mail" data-act="ai-email" data-k="${k}" data-id="${S.ai.id}">${svg('mail', 16)}Email</button>` : ''}</div></div>`;
+        return `<div class="ai__draft"><div class="ai__draftlabel">可以直接发的信息</div><div class="ai__drafttext">${esc(seg.trim())}</div><div class="btnrow"><button class="btn btn--sm" data-act="ai-copy" data-k="${k}" data-id="${S.ai.id}">复制</button>${waNo(p) ? `<button class="btn btn--sm ch ch--wa" data-act="ai-wa" data-k="${k}" data-id="${S.ai.id}">${svg('wa', 16)}WhatsApp</button>` : ''}${p.email ? `<button class="btn btn--sm ch ch--mail" data-act="ai-email" data-k="${k}" data-id="${S.ai.id}">${svg('mail', 16)}Email</button>` : ''}</div></div>`;
       }
       return seg.trim() ? `<p>${esc(seg.trim()).replace(/\n/g, '<br>')}</p>` : '';
     }).join('');
@@ -512,7 +524,7 @@
       if (act === 'copy-pv') { copy(`${p.preview_url}\n密码：${p.preview_password}`); toast('网址和密码已复制。'); return; }
       if (act === 'wa') {
         if (!okNow('发 WhatsApp')) return;
-        window.open(waLink(p.whatsapp, textOf(t, p)), '_blank', 'noopener');
+        window.open(waLink(waNo(p), textOf(t, p)), '_blank', 'noopener');
         toast('WhatsApp 已打开，信息已经填好，看一遍再发送。');
         if (S.queueOn) S.qch = 'wa'; else showSentbar(p, 'wa');
         return;
@@ -545,7 +557,7 @@
       if (act === 'q-skip') { S.qi++; renderQueue(); return; }
       if (act === 'q-sent') {
         busy(t, true, '记录中…');
-        const j = await api('mark', { id: p.id, event: 'sent', channel: S.qch });
+        const j = hasPv(p) ? await api('mark', { id: p.id, event: 'preview_sent', url: p.preview_url, channel: S.qch }) : await api('mark', { id: p.id, event: 'sent', channel: S.qch });
         upsert(j.item); S.qsent++; S.qi++; renderQueue();
         return;
       }
@@ -592,7 +604,7 @@
       if (act === 'ai-copy' || act === 'ai-wa' || act === 'ai-email') {
         const text = (S.aiDrafts || [])[+t.dataset.k] || '';
         if (act === 'ai-copy') { copy(text); toast('已复制，可以贴到 WhatsApp / IG / Email。'); return; }
-        if (act === 'ai-wa') { if (!okNow('发 WhatsApp')) return; window.open(waLink(p.whatsapp, text), '_blank', 'noopener'); toast('WhatsApp 已打开，信息已经填好，看一遍再发送。'); return; }
+        if (act === 'ai-wa') { if (!okNow('发 WhatsApp')) return; window.open(waLink(waNo(p), text), '_blank', 'noopener'); toast('WhatsApp 已打开，信息已经填好，看一遍再发送。'); return; }
         const a = document.createElement('a'); a.href = mailLink(p, text); a.rel = 'noopener'; document.body.appendChild(a); a.click(); a.remove(); toast('邮件已经填好，看一遍再发送。'); return;
       }
       if (act === 'replied-more') { repliedSheet(p); return; }
@@ -615,7 +627,8 @@
       if (act === 'purged') { const j = await api('mark', { id: p.id, event: 'preview_deleted' }); upsert(j.item); render(); toast('已记录：样板删除了。'); return; }
       busy(t, true, act === 'reply-go' || act === 'followup' || act === 'rewrite' ? 'AI 写作中…' : '保存中…');
       let j;
-      if (act === 'sent' && S.pending === p.id && S.pendingField === 'preview_msg') { j = await api('mark', { id: p.id, event: 'preview_sent', url: p.preview_url, channel: t.dataset.ch || '' }); hideSentbar(); toast(`已记录发了样板，${j.item.next_followup_date} 提醒你跟进；${j.item.preview_delete_by} 要删除样板。`); }
+      if (act === 'pv-sent') { busy(t, true, '记录中…'); const j2 = await api('mark', { id: p.id, event: 'preview_sent', url: p.preview_url }); upsert(j2.item); render(); toast(`已记录发了样板，${j2.item.next_followup_date} 提醒你跟进。`); return; }
+      if (act === 'sent' && S.pending === p.id && (S.pendingField === 'preview_msg' || (S.pendingField === 'draft_reply' && p.preview_url && String(p.draft_reply || '').includes(p.preview_url)))) { j = await api('mark', { id: p.id, event: 'preview_sent', url: p.preview_url, channel: t.dataset.ch || '' }); hideSentbar(); toast(`已记录发了样板，${j.item.next_followup_date} 提醒你跟进；${j.item.preview_delete_by} 要删除样板。`); }
       else if (act === 'sent') { j = await api('mark', { id: p.id, event: 'sent', channel: t.dataset.ch || '' }); if (S.pending === p.id) hideSentbar(); toast(j.item.next_followup_date ? `已记录，${j.item.next_followup_date} 会提醒你跟进。` : '已记录。'); }
       else if (act === 'mark') { j = await api('mark', { id: p.id, event: t.dataset.ev }); toast('已记录。'); }
       else if (act === 'followup') j = await api('followup', { id: p.id });

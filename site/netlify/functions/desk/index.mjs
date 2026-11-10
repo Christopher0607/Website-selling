@@ -375,11 +375,26 @@ function allPreviews() {
   for (const x of (env('LEADS_URL') === 'off' ? [] : (leadsCache.previews || []))) bySlug.set(x.slug, x);
   return [...bySlug.values()];
 }
+// 2026-11-10: short and to the point — who we are, the site is already made (link + password), our own site at the end.
+// No description of their shop (they know it); Junyu sends it himself from WhatsApp / Email.
+const STUDIO_URL = 'https://cartsmith.netlify.app/';
+const PVMSG_V = 2;
 const PVMSG = {
-  zh: (n, u, pw, d) => `你好，我是 Cartsmith Studio。我们在网上看到 ${n}，用你们的店名和产品做了一个免费的网上订购首页样板，给你参考：\n${u}\n密码：${pw}\n\n用手机打开就可以看。照片和运费等细节是示意，正式网站会照你们的照片和做法改。样板只给你看，${d} 会删除；不用钱，也不用马上决定。有兴趣的话回复这里就好。\n\n— Cartsmith Studio`,
-  en: (n, u, pw, d) => `Hi, this is Cartsmith Studio. We came across ${n} and made a free sample online-ordering homepage with your name and products:\n${u}\nPassword: ${pw}\n\nIt opens best on your phone. Photos and details like shipping are placeholders; a real site would use your own photos and policies. It's private to you and will be deleted on ${d}, with no cost and no obligation. If you'd like to talk about it, just reply here.\n\n— Cartsmith Studio`,
-  ms: (n, u, pw, d) => `Hai, ini Cartsmith Studio. Kami nampak ${n} dan buatkan contoh laman utama tempahan online percuma dengan nama dan produk anda:\n${u}\nKata laluan: ${pw}\n\nBuka di telefon untuk tengok. Gambar dan butiran seperti penghantaran hanya contoh; laman sebenar akan ikut gambar dan cara anda. Ia hanya untuk anda dan akan dipadam pada ${d}, tiada bayaran dan tiada komitmen. Kalau berminat, balas sahaja di sini.\n\n— Cartsmith Studio`,
+  zh: (n, u, pw, d) => `你好，我们是 Cartsmith Studio，帮本地餐饮和品牌做网站。我们已经帮 ${n} 做好了一个免费的样板网站：\n${u}\n密码：${pw}\n\n用手机打开就可以看，照片是示意图。样板只给你看，${d} 会删除；不用钱，也不用马上决定，有兴趣回复这里就好。\n\n我们的网站：${STUDIO_URL}\n— Cartsmith Studio`,
+  en: (n, u, pw, d) => `Hi, this is Cartsmith Studio. We build websites for local food businesses, and we've made a free sample website for ${n}:\n${u}\nPassword: ${pw}\n\nIt opens best on your phone; the photos are placeholders. It's private to you and will be deleted on ${d}. No cost, no obligation. Just reply here if you'd like to talk.\n\nAbout us: ${STUDIO_URL}\n— Cartsmith Studio`,
+  ms: (n, u, pw, d) => `Hai, ini Cartsmith Studio. Kami buat laman web untuk perniagaan makanan tempatan, dan kami sudah siapkan contoh laman web percuma untuk ${n}:\n${u}\nKata laluan: ${pw}\n\nBuka di telefon untuk tengok; gambar hanya contoh. Ia hanya untuk anda dan akan dipadam pada ${d}. Tiada bayaran, tiada komitmen. Balas sahaja di sini kalau berminat.\n\nTentang kami: ${STUDIO_URL}\n— Cartsmith Studio`,
 };
+const pvMsg = (p) => (PVMSG[p.language] || PVMSG.en)(p.business_name, p.preview_url, p.preview_password, p.preview_delete_by);
+// cards made with the old, longer message get the new one (unless the mockup was already sent)
+function refreshPreviewMsgs(doc) {
+  let changed = false;
+  for (const p of doc.items) {
+    if (p.preview_url && p.preview_password && (p.preview_msg_v || 1) < PVMSG_V && p.status !== 'preview_sent') {
+      p.preview_msg = pvMsg(p); p.preview_msg_v = PVMSG_V; changed = true;
+    }
+  }
+  return changed;
+}
 async function applyPreviews(doc, list) {
   if (!list.length) return false;
   let keys = null, changed = false;
@@ -396,7 +411,7 @@ async function applyPreviews(doc, list) {
     if (!pw) continue;
     p.preview_slug = pv.slug; p.preview_url = String(pv.url).slice(0, 300); p.preview_password = pw;
     p.preview_delete_by = /^\d{4}-\d{2}-\d{2}$/.test(pv.delete_by || '') ? pv.delete_by : (p.preview_delete_by || myDate(14));
-    p.preview_msg = (PVMSG[p.language] || PVMSG.en)(p.business_name, p.preview_url, pw, p.preview_delete_by);
+    p.preview_msg = pvMsg(p); p.preview_msg_v = PVMSG_V;
     if (p.draft_reply) p.draft_reply = p.draft_reply.replace(/\[(样板网址|mockup link|pautan contoh)\]/g, p.preview_url).replace(/\[(密码|password|kata laluan)\]/g, pw);
     log(p, 'preview_made', p.preview_url);
     changed = true;
@@ -429,9 +444,9 @@ function refreshContacts(doc, LEADS) {
 // ---------------------------------------------------------------- phone calls (2026-11-09: calling is the first step)
 const CALL_OUTCOMES = ['no_answer', 'ok', 'callback', 'no'];
 const POSTCALL = {
-  zh: (n) => `你好，我是 Cartsmith Studio，刚刚跟你通过电话，谢谢你抽时间。\n\n这是我们帮 ${n} 做的免费首页样板：[样板网址]\n密码：[密码]\n\n用手机打开就可以看。样板只给你看，14 天后会删除。看了有什么想法，直接回复这里就好，不喜欢也没关系。\n\n— Cartsmith Studio`,
-  en: (n) => `Hi, this is Cartsmith Studio — thanks for taking our call just now.\n\nHere's the free sample homepage we made for ${n}: [mockup link]\nPassword: [password]\n\nIt opens best on your phone. It's private to you and will be deleted in 14 days. Any thoughts, just reply here — and no worries if it's not for you.\n\n— Cartsmith Studio`,
-  ms: (n) => `Hai, ini Cartsmith Studio — terima kasih kerana sudi bercakap dengan kami tadi.\n\nIni contoh laman utama percuma yang kami buat untuk ${n}: [pautan contoh]\nKata laluan: [kata laluan]\n\nBuka di telefon untuk tengok. Ia hanya untuk anda dan akan dipadam dalam 14 hari. Kalau ada pendapat, balas sahaja di sini — tiada masalah kalau tak berminat.\n\n— Cartsmith Studio`,
+  zh: (n, u, pw) => `你好，我是 Cartsmith Studio，刚刚跟你通过电话，谢谢你抽时间。\n\n这是我们帮 ${n} 做好的免费样板网站：\n${u || '[样板网址]'}\n密码：${pw || '[密码]'}\n\n用手机打开就可以看，照片是示意图。样板只给你看，14 天内会删除。看了有什么想法，直接回复这里就好，不喜欢也没关系。\n\n我们的网站：${STUDIO_URL}\n— Cartsmith Studio`,
+  en: (n, u, pw) => `Hi, this is Cartsmith Studio. Thanks for taking our call just now.\n\nHere's the free sample website we made for ${n}:\n${u || '[mockup link]'}\nPassword: ${pw || '[password]'}\n\nIt opens best on your phone; the photos are placeholders. It's private to you and will be deleted within 14 days. Any thoughts, just reply here, and no worries if it's not for you.\n\nAbout us: ${STUDIO_URL}\n— Cartsmith Studio`,
+  ms: (n, u, pw) => `Hai, ini Cartsmith Studio. Terima kasih kerana sudi bercakap dengan kami tadi.\n\nIni contoh laman web percuma yang kami buat untuk ${n}:\n${u || '[pautan contoh]'}\nKata laluan: ${pw || '[kata laluan]'}\n\nBuka di telefon untuk tengok; gambar hanya contoh. Ia hanya untuk anda dan akan dipadam dalam 14 hari. Kalau ada pendapat, balas sahaja di sini, tiada masalah kalau tak berminat.\n\nTentang kami: ${STUDIO_URL}\n— Cartsmith Studio`,
 };
 function callInto(p, outcome, date) {
   if (!CALL_OUTCOMES.includes(outcome)) throw Object.assign(new Error('电话结果不对'), { code: 'bad_input' });
@@ -455,8 +470,10 @@ function callInto(p, outcome, date) {
     p.next_call_date = '';
     p.next_followup_date = '';
     p.reply_summary = '电话：对方说可以，发样板给他看。';
-    p.reply_next = '做样板（跟 Claude Code 说「帮我做 ' + p.business_name + ' 的样板」），把网址和密码贴进下面的信息，再用 WhatsApp / Email 发出去。';
-    p.draft_reply = (POSTCALL[p.language] || POSTCALL.en)(p.business_name);
+    p.reply_next = p.preview_url && p.preview_password
+      ? '样板已经做好，网址和密码已经填进下面的信息：按 WhatsApp 发给他，看一遍再按发送。'
+      : '做样板（跟 Claude Code 说「帮我做 ' + p.business_name + ' 的样板」），把网址和密码贴进下面的信息，再用 WhatsApp / Email 发出去。';
+    p.draft_reply = (POSTCALL[p.language] || POSTCALL.en)(p.business_name, p.preview_url, p.preview_password);
     log(p, 'call', '可以发样板');
   } else if (outcome === 'callback') {
     const d = /^\d{4}-\d{2}-\d{2}$/.test(date || '') && date >= today ? date : myDate(1);
@@ -527,6 +544,7 @@ async function handle(action, b, doc) {
       const LEADS = await allLeads();
       let changed = refreshContacts(doc, LEADS);
       if (await applyPreviews(doc, allPreviews())) changed = true;
+      if (refreshPreviewMsgs(doc)) changed = true;
       return { items: doc.items.map(slimItem), settings: doc.settings, today: myDate(), inbox: pendingInbox(doc, LEADS), saved: changed };
     }
 
