@@ -9,6 +9,7 @@
   const CKEY = 'cs_coupon_' + S.slug;
   const OKEY = 'cs_order_' + S.slug;
   const EAST = ['Sabah', 'Sarawak', 'Labuan'];
+  const PK = S.order && S.order.mode === 'pickup' ? S.order : null; // mockups for food shops: pick-up / local delivery on a date
   const mem = {};
 
   // ---------- storage (falls back to memory when storage is blocked) ----------
@@ -39,7 +40,7 @@
     (p.o || []).forEach((o, i) => { const v = o.v.find((x) => x[0] === l.sel[i]); if (v && v[2]) img = v[2]; });
     return SP + 'img/' + img;
   }
-  const lineVar = (l) => (S.products[l.id].o || []).map((o, i) => o.n + ': ' + l.sel[i]).join(' · ');
+  const lineVar = (l) => (S.products[l.id].o || []).map((o, i) => o.n + ': ' + l.sel[i]).join(' · ') || (S.products[l.id].u ? 'Per ' + S.products[l.id].u : '');
 
   // ---------- cart ----------
   function cart() { return load('localStorage', KEY, []).filter((l) => S.products[l.id]); }
@@ -52,7 +53,8 @@
     const cp = coupon();
     const disc = cp ? Math.round(sub * cp.pct) / 100 : 0;
     let ship = null;
-    if (zone) ship = sub >= S.ship.free_min ? 0 : (zone === 'east' ? S.ship.east : S.ship.west);
+    if (PK) ship = zone === 'delivery' ? null : 0; // delivery by Grab / Lalamove etc.: fee confirmed with the customer
+    else if (zone) ship = sub >= S.ship.free_min ? 0 : (zone === 'east' ? S.ship.east : S.ship.west);
     if (!c.length) ship = 0;
     return { sub, disc, ship, total: sub - disc + (ship || 0) };
   }
@@ -88,7 +90,7 @@
   const emptyHTML = () => '<div class="empty"><p>Your cart is empty.</p><a class="btn" href="' + SP + 'shop.html">Start shopping</a></div>';
 
   function shipbarHTML(sub) {
-    if (sub <= 0) return '';
+    if (PK || sub <= 0) return '';
     const left = S.ship.free_min - sub;
     const pct = Math.min(100, (sub / S.ship.free_min) * 100);
     const msg = left > 0 ? 'Spend <b>' + rm(left) + '</b> more for <b>free shipping</b>' : '<b>You’ve unlocked free shipping!</b>';
@@ -218,7 +220,7 @@
     const update = () => {
       const s = sel();
       const u = unit(id, s);
-      let html = '<span class="now">' + rm(u) + '</span>';
+      let html = '<span class="now">' + rm(u) + '</span>' + (p.u ? ' <span class="per">/ ' + esc(p.u) + '</span>' : '');
       if (p.s) html += ' <s class="was">' + rm(u - p.s + p.p) + '</s>';
       if (priceEl) priceEl.innerHTML = html;
       if (stickyPrice) stickyPrice.textContent = rm(u);
@@ -296,7 +298,7 @@
     if (sum) sum.hidden = !c.length;
     const t = totals(c, zoneNow());
     $('[data-sum-subtotal]').textContent = rm(t.sub);
-    $('[data-sum-ship]').textContent = t.ship === 0 ? 'Free' : rm(t.ship);
+    $('[data-sum-ship]').textContent = PK ? 'Choose at checkout' : (t.ship === 0 ? 'Free' : rm(t.ship));
     $('[data-sum-total]').textContent = rm(t.total);
     const dr = $('[data-sum-disc-row]');
     dr.hidden = !t.disc;
@@ -325,7 +327,9 @@
 
   // ---------- checkout ----------
   const co = $('[data-checkout]');
+  function coMethod() { const r = co && co.querySelector('input[name="method"]:checked'); return r ? r.value : 'pickup'; }
   function coZone() {
+    if (PK) return coMethod();
     const st = co && co.elements.state.value;
     return st ? (EAST.indexOf(st) >= 0 ? 'east' : 'west') : null;
   }
@@ -337,34 +341,44 @@
     const z = coZone();
     const t = totals(c, z);
     $('[data-co-subtotal]').textContent = rm(t.sub);
-    $('[data-co-ship]').textContent = t.ship === null ? 'Choose state' : (t.ship === 0 ? 'Free' : rm(t.ship));
+    $('[data-co-ship]').textContent = PK ? (z === 'delivery' ? 'Confirmed with you' : 'Free') : (t.ship === null ? 'Choose state' : (t.ship === 0 ? 'Free' : rm(t.ship)));
     $('[data-co-total]').textContent = rm(t.total);
     $('[data-co-disc-row]').hidden = !t.disc;
     $('[data-co-disc]').textContent = '−' + rm(t.disc);
     const opt = $('[data-ship-opt]');
-    if (opt) {
+    if (opt && PK) {
+      const dl = $('[data-delivery-only]');
+      if (dl) dl.hidden = z !== 'delivery';
+      opt.innerHTML = z === 'delivery'
+        ? '<p><b>Delivery by ' + esc(PK.delivery) + '</b> — fee depends on distance, confirmed with you' + (PK.delivery_note ? '<br><span class="muted small">' + esc(PK.delivery_note) + '</span>' : '') + '</p>'
+        : '<p><b>Pick-up in ' + esc(PK.pickup) + '</b> — free' + (PK.pickup_note ? '<br><span class="muted small">' + esc(PK.pickup_note) + '</span>' : '') + '</p>';
+    } else if (opt) {
       if (!z) opt.innerHTML = '<p class="muted">Choose your state to see the shipping fee.</p>';
       else opt.innerHTML = '<p><b>' + (z === 'east' ? 'East Malaysia' : 'West Malaysia') + ' standard delivery</b> — ' + (t.ship === 0 ? 'Free' : rm(t.ship)) + '<br><span class="muted small">' + (z === 'east' ? '4–7' : '2–4') + ' working days · tracking number sent when it ships</span></p>';
     }
   }
   if (co) {
     co.elements.state.addEventListener('change', render);
+    $$('input[name="method"]', co).forEach((r) => r.addEventListener('change', render));
+    const dayISO = (n) => { const d = new Date(); d.setDate(d.getDate() + n); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
+    if (co.elements.date) co.elements.date.min = dayISO(1);
     co.addEventListener('submit', (ev) => {
       ev.preventDefault();
       const c = cart();
       const err = $('[data-form-error]');
       const f = co.elements;
       const bad = [];
-      const need = ['email', 'phone', 'name', 'addr1', 'postcode', 'city', 'state'];
+      const need = PK ? ['email', 'phone', 'name', 'date'].concat(coMethod() === 'delivery' ? ['addr1', 'postcode', 'city', 'state'] : []) : ['email', 'phone', 'name', 'addr1', 'postcode', 'city', 'state'];
       need.forEach((n) => { f[n].classList.remove('is-bad'); if (!f[n].value.trim()) bad.push(n); });
       if (f.email.value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email.value.trim())) bad.push('email');
       const digits = f.phone.value.replace(/\D/g, '');
       if (f.phone.value && !/^(0|60)1\d{7,9}$/.test(digits)) bad.push('phone');
-      if (f.postcode.value && !/^\d{5}$/.test(f.postcode.value.trim())) bad.push('postcode');
+      if (f.postcode.value && need.indexOf('postcode') >= 0 && !/^\d{5}$/.test(f.postcode.value.trim())) bad.push('postcode');
+      if (PK && f.date.value && f.date.value < f.date.min) bad.push('date');
       if (!c.length) { err.textContent = 'Your cart is empty.'; err.hidden = false; return; }
       if (bad.length) {
         bad.forEach((n) => f[n].classList.add('is-bad'));
-        err.textContent = 'Please check: ' + Array.from(new Set(bad)).map((n) => ({ email: 'email', phone: 'phone number (e.g. 012-345 6789)', name: 'name', addr1: 'address', postcode: '5-digit postcode', city: 'city', state: 'state' }[n])).join(', ') + '.';
+        err.textContent = 'Please check: ' + Array.from(new Set(bad)).map((n) => ({ email: 'email', phone: 'phone number (e.g. 012-345 6789)', name: 'name', addr1: 'address', postcode: '5-digit postcode', city: 'city', state: 'state', date: 'pick-up / delivery date (from tomorrow)' }[n])).join(', ') + '.';
         err.hidden = false;
         f[bad[0]].focus();
         return;
@@ -378,7 +392,8 @@
         lines: c.map((l) => ({ n: S.products[l.id].n, v: lineVar(l), q: l.q, t: unit(l.id, l.sel) * l.q, img: lineImg(l) })),
         sub: t.sub, disc: t.disc, ship: t.ship, total: t.total,
         pay: (co.querySelector('input[name="pay"]:checked') || {}).value,
-        to: f.city.value.trim() + ', ' + f.state.value
+        to: PK ? (coMethod() === 'delivery' ? 'Delivery to ' + f.city.value.trim() + ', ' + f.state.value : 'Pick-up in ' + PK.pickup) : f.city.value.trim() + ', ' + f.state.value,
+        method: PK ? coMethod() : '', date: PK ? f.date.value : ''
       };
       save('sessionStorage', OKEY, order);
       drop('localStorage', KEY);
@@ -396,8 +411,9 @@
       $('[data-order-name]').textContent = o.name ? ', ' + o.name : '';
       $('[data-order-box]').innerHTML = o.lines.map((l) => '<div class="co-line"><span class="co-line__img"><img src="' + esc(l.img) + '" alt=""><span class="co-line__q">' + l.q + '</span></span><span>' + esc(l.n) + (l.v ? '<small>' + esc(l.v) + '</small>' : '') + '</span><span>' + rm(l.t) + '</span></div>').join('') +
         '<p class="row"><span>Subtotal</span><span>' + rm(o.sub) + '</span></p>' + (o.disc ? '<p class="row"><span>Discount</span><span>−' + rm(o.disc) + '</span></p>' : '') +
-        '<p class="row"><span>Shipping</span><span>' + (o.ship ? rm(o.ship) : 'Free') + '</span></p><p class="row row--total"><span>Total</span><strong>' + rm(o.total) + '</strong></p>' +
-        '<p class="muted small">Ship to ' + esc(o.to) + ' · Payment: ' + esc(o.pay || '') + ' (demo — not charged)</p>';
+        (o.method ? '<p class="row"><span>' + (o.method === 'delivery' ? 'Delivery' : 'Pick-up') + '</span><span>' + (o.method === 'delivery' ? 'Confirmed with you' : 'Free') + '</span></p>'
+          : '<p class="row"><span>Shipping</span><span>' + (o.ship ? rm(o.ship) : 'Free') + '</span></p>') + '<p class="row row--total"><span>Total</span><strong>' + rm(o.total) + '</strong></p>' +
+        '<p class="muted small">' + (o.method ? esc(o.to) + (o.date ? ' · ' + esc(new Date(o.date + 'T00:00').toLocaleDateString('en-MY', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })) : '') : 'Ship to ' + esc(o.to)) + ' · Payment: ' + esc(o.pay || '') + ' (demo — not charged)</p>';
     }
   }
 
