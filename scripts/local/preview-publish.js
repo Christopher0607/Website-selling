@@ -193,7 +193,7 @@ async function deskNote(code) {
   doc.previews = (doc.previews || []).filter((x) => x.slug !== rec.slug && x.code !== code);
   // pitch: what the desk's call script says is on their mockup (mode + up to 3 real products, no "Example" items);
   // checked: empty until check-preview.js passes and `checked <code>` is run (the mockup just changed)
-  doc.previews.push({ code, slug: rec.slug, url: rec.url, delete_by: rec.delete_by || p.cfg.delete_by || '', lead_id: p.cfg.lead_id || '', instagram: String(p.cfg.instagram || '').replace(/^@/, ''), name: (p.cfg.brand && p.cfg.brand.name) || '', photos: p.cfg.photos || '', enc, pitch: pitchOf(p.cfg), checked: '' });
+  doc.previews.push({ code, slug: rec.slug, url: rec.url, delete_by: rec.delete_by || p.cfg.delete_by || '', lead_id: p.cfg.lead_id || '', instagram: String(p.cfg.instagram || '').replace(/^@/, ''), name: (p.cfg.brand && p.cfg.brand.name) || '', photos: p.cfg.photos || '', enc, pitch: pitchOf(p.cfg), facts: factsOf(p.cfg), checked: '' });
   fs.writeFileSync(NOTES, JSON.stringify(doc, null, 1) + '\n');
   console.log(`工作台备注写好了：sales/leads/previews.json（${code}）。接着跑 python3 site/build.py（工作台从 inbox.json 读样板），把 sales/leads/previews.json 和 sales/leads/inbox.json 一起 commit + push 到 leads 分支，工作台 5 分钟内在那张卡显示网址和密码。`);
 }
@@ -203,6 +203,18 @@ function pitchOf(cfg) {
   const items = (cfg.products || []).filter((x) => x && x.name && !/example/i.test(String(x.badge || '')) && !/\(example\)/i.test(x.name) && !x.info).slice(0, 3).map((x) => String(x.name).slice(0, 60));
   return { mode: (cfg.order && cfg.order.mode) || 'shop', items };
 }
+// everything the desk AI needs to answer questions about the mockup (public info only — the password is never in here)
+function factsOf(cfg) {
+  const o = cfg.order || {};
+  const products = (cfg.products || []).slice(0, 24).map((x) => {
+    const det = (x.details || []).find((d) => /price/i.test(String(d[0])));
+    return { n: String(x.name).slice(0, 80), p: typeof x.price === 'number' ? x.price : null, per: String(x.per || ''), cat: String(x.category || ''),
+      ex: /example/i.test(String(x.badge || '')) || /\(example\)/i.test(String(x.name)), set: x.info ? String(x.info_link || '') : '', src: det ? String(det[1]).slice(0, 140) : '' };
+  });
+  return { mode: o.mode || 'shop', place: String(o.pickup || ''), hours: String(o.pickup_note || ''), delivery: String(o.delivery || ''), products,
+    faq: (cfg.faq || []).slice(0, 8).map((q) => [String(q[0]).slice(0, 120), String(q[1]).slice(0, 320)]),
+    contact: String(cfg.contact || '').slice(0, 200), sources: String(cfg._sources || '').slice(0, 700) };
+}
 function markChecked(code) {
   if (!fs.existsSync(NOTES)) die('还没有 sales/leads/previews.json');
   const doc = JSON.parse(fs.readFileSync(NOTES, 'utf8'));
@@ -210,7 +222,7 @@ function markChecked(code) {
   if (!e) die(`sales/leads/previews.json 里没有 ${code}`);
   e.checked = new Date(Date.now() + 8 * 3600e3).toISOString().slice(0, 10);
   const cfgPath = path.join(ROOT, 'clients', code, 'preview', 'preview.json');
-  if (fs.existsSync(cfgPath)) e.pitch = pitchOf(JSON.parse(fs.readFileSync(cfgPath, 'utf8')));
+  if (fs.existsSync(cfgPath)) { const cfg = JSON.parse(fs.readFileSync(cfgPath, 'utf8')); e.pitch = pitchOf(cfg); e.facts = factsOf(cfg); }
   fs.writeFileSync(NOTES, JSON.stringify(doc, null, 1) + '\n');
   console.log(`${code}：已标记「样板已检查 ${e.checked}」。跑 python3 site/build.py，再 commit sales/leads/previews.json + inbox.json 到 leads 分支。`);
 }

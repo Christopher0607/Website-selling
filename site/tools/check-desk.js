@@ -427,7 +427,8 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
     const d6 = JSON.parse(fs.readFileSync(STORE, 'utf8'));
     const base6 = { created: '2026-11-10', platform: 'other', store_url: '', instagram: '', whatsapp: '', email: '', niche: 'gelato', input: 'x', notes: '', brand_clear: true, sales_signal: true, active_social: true, no_or_weak_website: true, budget_signal: true, score: 5, fit: 'good', template: 'chili-pantry', touches: 0, history: [], language: 'en', observation: 'Opened late 2024' };
     d6.items.unshift({ ...base6, id: 'p907', business_name: 'Gelato Test', status: 'contacted', touches: 1, last_channel: 'ig', channels: ['ig'], first_contact_date: '2026-11-08', last_contact_date: '2026-11-08', next_followup_date: '2099-01-01', next_call_date: '2000-01-01', phone: '60172022162',
-      preview_url: 'https://previews--cartsmith.netlify.app/m-gelato-test-1234abcd/', preview_password: 'gelato5523', preview_delete_by: '2099-01-01', preview_slug: 'm-gelato-test-1234abcd', preview_msg: 'old', preview_checked: '2026-11-10', preview_pitch: { mode: 'pickup', items: ['Salted Pistachio', 'Affogato'] } });
+      preview_url: 'https://previews--cartsmith.netlify.app/m-gelato-test-1234abcd/', preview_password: 'gelato5523', preview_delete_by: '2099-01-01', preview_slug: 'm-gelato-test-1234abcd', preview_msg: 'old', preview_checked: '2026-11-10', preview_pitch: { mode: 'pickup', items: ['Salted Pistachio', 'Affogato'] },
+      preview_facts: { mode: 'pickup', place: '37, Jalan 20/16, Taman Paramount', hours: 'Tue-Sun from 12pm', delivery: '', products: [{ n: 'Medium Cup · Two Flavours', p: 20, per: '', cat: 'Cups', ex: false, set: '', src: 'From a Chiefeater review (2026)' }, { n: 'Take-Home Tub (example)', p: null, per: '', cat: 'Cups', ex: true, set: '', src: '' }], faq: [['Is it pork-free?', 'Yes.']], contact: '', sources: 'Malaysian Foodie (Mar 2025)' } });
     d6.items.unshift({ ...base6, id: 'p908', business_name: 'Nyonya Test', status: 'preview_sent', touches: 1, phone: '60122887449', next_followup_date: '2000-01-01',
       preview_url: 'https://previews--cartsmith.netlify.app/m-nyonya-test-1234abcd/', preview_password: 'beng6840', preview_delete_by: '2099-01-01', preview_slug: 'm-nyonya-test-1234abcd', followup: '' });
     fs.writeFileSync(STORE, JSON.stringify(d6));
@@ -469,6 +470,21 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
     await shot('call-session');
     await p.click('.sheet__head [data-sheet-close]');
     await p.waitForFunction(() => document.querySelector('[data-sheet]').hidden);
+    // the desk AI sees how our system works and what is on this customer's mockup
+    await p.click('[data-tab="list"]');
+    await p.click('[data-filter="all"]');
+    if (!(await p.$('#l-p907'))) await p.click('[data-expand="p907"]');
+    await p.click('#l-p907 [data-act="ai"]');
+    await p.waitForSelector('[data-ai-text]');
+    await p.fill('[data-ai-text]', '对方问杯装多少钱，有没有外带一桶的？');
+    await p.click('[data-act="ai-send"]');
+    await p.waitForSelector('.ai__msg--ai');
+    const calls7 = await (await fetch('http://localhost:9920/__calls')).json();
+    const last7 = calls7[calls7.length - 1];
+    ok(last7.brief && last7.facts, "AI gets 'how our system works' and the products / prices / Example items on this customer's mockup");
+    ok(calls7.length > 0 && calls7.every((c) => c.brief), 'every AI task (analyse, follow-up, reply, assistant) gets the system brief');
+    await p.click('[data-sheet-panel] [data-sheet-close]');
+    await p.click('[data-tab="today"]');
   }
 
   // whole conversation (2026-11-09): what we sent, what they said, what the owner replied himself; "already has a website"
