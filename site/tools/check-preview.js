@@ -53,7 +53,8 @@ function audit() {
   const ratio = (a, b) => { const x = lum(a), y = lum(b); return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05); };
   const over = (top, bottom) => { const a = top[3]; return [0, 1, 2].map((i) => top[i] * a + bottom[i] * (1 - a)).concat(1); };
   const visible = (el) => { const cs = getComputedStyle(el); return cs.visibility !== 'hidden' && cs.display !== 'none' && +cs.opacity > 0.05; };
-  const clippedX = (el) => { for (let a = el.parentElement; a; a = a.parentElement) { const ox = getComputedStyle(a).overflowX; if (ox !== 'visible') return a; } return null; };
+  // starts at the element itself: a name with its own overflow:hidden + ellipsis (sticky add-to-cart bar) ends in “…”, not cut off
+  const clippedX = (el) => { for (let a = el; a; a = a.parentElement) { const ox = getComputedStyle(a).overflowX; if (ox !== 'visible') return a; } return null; };
 
   // top note
   const bar = document.querySelector('.demo-bar');
