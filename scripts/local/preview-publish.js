@@ -13,6 +13,7 @@
 //   node scripts/local/preview-publish.js delete p012         # 删除（14 天内一定要删）
 //   node scripts/local/preview-publish.js encrypt p012 <资料夹>  # 只加密到本机资料夹（测试用，不 push）
 //   node scripts/local/preview-publish.js desk-note p012      # 把网址 + 加密的密码写进 sales/leads/previews.json（publish 会自动做）
+//   node scripts/local/preview-publish.js checked p012        # check-preview.js 全部 ✅ 之后跑：工作台卡片显示「样板已检查 <日期>」
 // 工作台备注：密码用工作台的公钥（/api/desk?pubkey=1）加密后才写进 repo，只有工作台解得开；
 // preview.json 要有 lead_id（新商家 id）或 instagram，工作台才知道是哪一家。commit sales/leads/previews.json 到 leads 分支。
 const fs = require('fs');
@@ -190,9 +191,26 @@ async function deskNote(code) {
   const enc = crypto.publicEncrypt({ key: pubkey, padding: crypto.constants.RSA_PKCS1_OAEP_PADDING, oaepHash: 'sha256' }, Buffer.from(JSON.stringify({ password: p.pw }))).toString('base64');
   const doc = fs.existsSync(NOTES) ? JSON.parse(fs.readFileSync(NOTES, 'utf8')) : { note: '做好的免费样板。网址公开，密码用工作台的公钥加密（只有工作台解得开）。scripts/local/preview-publish.js 自动写。', previews: [] };
   doc.previews = (doc.previews || []).filter((x) => x.slug !== rec.slug && x.code !== code);
-  doc.previews.push({ code, slug: rec.slug, url: rec.url, delete_by: rec.delete_by || p.cfg.delete_by || '', lead_id: p.cfg.lead_id || '', instagram: String(p.cfg.instagram || '').replace(/^@/, ''), name: (p.cfg.brand && p.cfg.brand.name) || '', photos: p.cfg.photos || '', enc });
+  // pitch: what the desk's call script says is on their mockup (mode + up to 3 real products, no "Example" items);
+  // checked: empty until check-preview.js passes and `checked <code>` is run (the mockup just changed)
+  doc.previews.push({ code, slug: rec.slug, url: rec.url, delete_by: rec.delete_by || p.cfg.delete_by || '', lead_id: p.cfg.lead_id || '', instagram: String(p.cfg.instagram || '').replace(/^@/, ''), name: (p.cfg.brand && p.cfg.brand.name) || '', photos: p.cfg.photos || '', enc, pitch: pitchOf(p.cfg), checked: '' });
   fs.writeFileSync(NOTES, JSON.stringify(doc, null, 1) + '\n');
   console.log(`工作台备注写好了：sales/leads/previews.json（${code}）。接着跑 python3 site/build.py（工作台从 inbox.json 读样板），把 sales/leads/previews.json 和 sales/leads/inbox.json 一起 commit + push 到 leads 分支，工作台 5 分钟内在那张卡显示网址和密码。`);
+}
+function pitchOf(cfg) {
+  const items = (cfg.products || []).filter((x) => x && x.name && !/example/i.test(String(x.badge || '')) && !/\(example\)/i.test(x.name) && !x.info).slice(0, 3).map((x) => String(x.name).slice(0, 60));
+  return { mode: (cfg.order && cfg.order.mode) || 'shop', items };
+}
+function markChecked(code) {
+  if (!fs.existsSync(NOTES)) die('还没有 sales/leads/previews.json');
+  const doc = JSON.parse(fs.readFileSync(NOTES, 'utf8'));
+  const e = (doc.previews || []).find((x) => x.code === code);
+  if (!e) die(`sales/leads/previews.json 里没有 ${code}`);
+  e.checked = new Date(Date.now() + 8 * 3600e3).toISOString().slice(0, 10);
+  const cfgPath = path.join(ROOT, 'clients', code, 'preview', 'preview.json');
+  if (fs.existsSync(cfgPath)) e.pitch = pitchOf(JSON.parse(fs.readFileSync(cfgPath, 'utf8')));
+  fs.writeFileSync(NOTES, JSON.stringify(doc, null, 1) + '\n');
+  console.log(`${code}：已标记「样板已检查 ${e.checked}」。跑 python3 site/build.py，再 commit sales/leads/previews.json + inbox.json 到 leads 分支。`);
 }
 function dropNote(code) {
   if (!fs.existsSync(NOTES)) return;
@@ -207,6 +225,8 @@ const [cmd, code, extra] = process.argv.slice(2);
 (async () => {
 if (cmd === 'desk-note') {
   await deskNote(code);
+} else if (cmd === 'checked') {
+  markChecked(code);
 } else if (cmd === 'encrypt') {
   const p = previewOf(code);
   const out = path.resolve(extra || path.join(os.tmpdir(), 'pv-' + p.slug));

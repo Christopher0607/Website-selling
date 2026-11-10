@@ -1334,8 +1334,12 @@ def load_previews():
                 raise SystemExit("sales/leads/%s: preview %r needs slug, https url and enc" % (name, slug))
             if not (pv.get("lead_id") or pv.get("instagram")):
                 raise SystemExit("sales/leads/%s: preview %s needs lead_id or instagram" % (name, slug))
+            pitch = pv.get("pitch") if isinstance(pv.get("pitch"), dict) else {}
             out[slug] = {"slug": slug, "url": url, "enc": enc, "lead_id": str(pv.get("lead_id", "")), "instagram": str(pv.get("instagram", "")).lstrip("@"),
-                         "name": str(pv.get("name", ""))[:120], "delete_by": str(pv.get("delete_by", ""))[:10], "photos": str(pv.get("photos", ""))[:20]}
+                         "name": str(pv.get("name", ""))[:120], "delete_by": str(pv.get("delete_by", ""))[:10], "photos": str(pv.get("photos", ""))[:20],
+                         # what the desk's call script says about the mockup, and when it last passed check-preview.js
+                         "checked": str(pv.get("checked", ""))[:10] if re.match(r"^\d{4}-\d{2}-\d{2}$", str(pv.get("checked", ""))) else "",
+                         "pitch": {"mode": str(pitch.get("mode", ""))[:10], "items": [str(x)[:60] for x in pitch.get("items", [])][:3]}}
     return list(out.values())
 
 

@@ -264,6 +264,8 @@ function mark(p, ev, url, channel) {
   } else if (ev === 'dnc') { p.status = 'do_not_contact'; p.next_followup_date = ''; }
   else if (ev === 'preview_sent') {
     p.status = 'preview_sent'; p.preview_delete_by = p.preview_delete_by || myDate(14); p.next_followup_date = myDate(2); if (url) p.preview_url = url.slice(0, 300);
+    p.call_ok = '';
+    if (p.preview_url && p.preview_password) p.followup = pvFollow(p);
     if (CHANNELS.includes(channel)) { p.last_channel = channel; (p.channels = p.channels || []).includes(channel) || p.channels.push(channel); }
     if (!p.first_contact_date) { p.first_contact_date = today; p.touches = (p.touches || 0) + 1; }
     p.last_contact_date = today;
@@ -378,19 +380,39 @@ function allPreviews() {
 // 2026-11-10: short and to the point — who we are, the site is already made (link + password), our own site at the end.
 // No description of their shop (they know it); Junyu sends it himself from WhatsApp / Email.
 const STUDIO_URL = 'https://cartsmith.netlify.app/';
-const PVMSG_V = 2;
+const PVMSG_V = 3;
+// already contacted (usually on Instagram) before the mockup was ready: say so, then the link
+const PVMSG_AGAIN = {
+  zh: (n, u, pw, d) => `你好，我们是 Cartsmith Studio，之前在 Instagram 跟你们打过招呼。我们已经帮 ${n} 做好了一个免费的样板网站：\n${u}\n密码：${pw}\n\n用手机打开就可以看，照片是示意图。样板只给你看，${d} 会删除；不用钱，也不用马上决定，有兴趣回复这里就好。\n\n我们的网站：${STUDIO_URL}\n— Cartsmith Studio`,
+  en: (n, u, pw, d) => `Hi, this is Cartsmith Studio. We messaged you on Instagram a few days ago. We've now made a free sample website for ${n}:\n${u}\nPassword: ${pw}\n\nIt opens best on your phone; the photos are placeholders. It's private to you and will be deleted on ${d}. No cost, no obligation. Just reply here if you'd like to talk.\n\nAbout us: ${STUDIO_URL}\n— Cartsmith Studio`,
+  ms: (n, u, pw, d) => `Hai, ini Cartsmith Studio. Kami ada hantar mesej di Instagram beberapa hari lepas. Kami sudah siapkan contoh laman web percuma untuk ${n}:\n${u}\nKata laluan: ${pw}\n\nBuka di telefon untuk tengok; gambar hanya contoh. Ia hanya untuk anda dan akan dipadam pada ${d}. Tiada bayaran, tiada komitmen. Balas sahaja di sini kalau berminat.\n\nTentang kami: ${STUDIO_URL}\n— Cartsmith Studio`,
+};
+// two days after the mockup went out: a short nudge, no AI needed
+const PVFOLLOW = {
+  zh: (n, u, pw) => `你好，我是 Cartsmith Studio。想问问 ${n} 的样板网站你有空打开看了吗？\n${u}\n密码：${pw}\n\n如果传几张你们自己的照片和现在的价钱给我们，我们会免费帮你换上去，看起来就是你们自己的网站。\n\n— Cartsmith Studio`,
+  en: (n, u, pw) => `Hi, Cartsmith Studio here. Just checking if you had a chance to open the sample website for ${n}:\n${u}\nPassword: ${pw}\n\nIf you send us a few of your own photos and your current prices, we'll put them in for free, so it looks like your own site.\n\n— Cartsmith Studio`,
+  ms: (n, u, pw) => `Hai, Cartsmith Studio di sini. Nak tanya kalau anda sempat buka contoh laman web untuk ${n}:\n${u}\nKata laluan: ${pw}\n\nKalau anda hantar beberapa gambar sendiri dan harga terkini, kami akan masukkan secara percuma, supaya ia nampak macam laman web anda sendiri.\n\n— Cartsmith Studio`,
+};
 const PVMSG = {
   zh: (n, u, pw, d) => `你好，我们是 Cartsmith Studio，帮本地餐饮和品牌做网站。我们已经帮 ${n} 做好了一个免费的样板网站：\n${u}\n密码：${pw}\n\n用手机打开就可以看，照片是示意图。样板只给你看，${d} 会删除；不用钱，也不用马上决定，有兴趣回复这里就好。\n\n我们的网站：${STUDIO_URL}\n— Cartsmith Studio`,
   en: (n, u, pw, d) => `Hi, this is Cartsmith Studio. We build websites for local food businesses, and we've made a free sample website for ${n}:\n${u}\nPassword: ${pw}\n\nIt opens best on your phone; the photos are placeholders. It's private to you and will be deleted on ${d}. No cost, no obligation. Just reply here if you'd like to talk.\n\nAbout us: ${STUDIO_URL}\n— Cartsmith Studio`,
   ms: (n, u, pw, d) => `Hai, ini Cartsmith Studio. Kami buat laman web untuk perniagaan makanan tempatan, dan kami sudah siapkan contoh laman web percuma untuk ${n}:\n${u}\nKata laluan: ${pw}\n\nBuka di telefon untuk tengok; gambar hanya contoh. Ia hanya untuk anda dan akan dipadam pada ${d}. Tiada bayaran, tiada komitmen. Balas sahaja di sini kalau berminat.\n\nTentang kami: ${STUDIO_URL}\n— Cartsmith Studio`,
 };
-const pvMsg = (p) => (PVMSG[p.language] || PVMSG.en)(p.business_name, p.preview_url, p.preview_password, p.preview_delete_by);
+const pvMsg = (p) => {
+  const T = (p.touches || 0) > 0 || p.status === 'contacted' ? PVMSG_AGAIN : PVMSG;
+  return (T[p.language] || T.en)(p.business_name, p.preview_url, p.preview_password, p.preview_delete_by);
+};
+const pvFollow = (p) => (PVFOLLOW[p.language] || PVFOLLOW.en)(p.business_name, p.preview_url, p.preview_password);
 // cards made with the old, longer message get the new one (unless the mockup was already sent)
 function refreshPreviewMsgs(doc) {
   let changed = false;
   for (const p of doc.items) {
     if (p.preview_url && p.preview_password && (p.preview_msg_v || 1) < PVMSG_V && p.status !== 'preview_sent') {
       p.preview_msg = pvMsg(p); p.preview_msg_v = PVMSG_V; changed = true;
+    }
+    // mockup already sent: the follow-up is the "did you have a look?" nudge with the link again
+    if (p.status === 'preview_sent' && p.preview_url && p.preview_password && !String(p.followup || '').includes(p.preview_url)) {
+      p.followup = pvFollow(p); changed = true;
     }
   }
   return changed;
@@ -401,7 +423,14 @@ async function applyPreviews(doc, list) {
   for (const pv of list) {
     const ig = handleOf(pv.instagram || '');
     const p = doc.items.find((x) => (pv.lead_id && x.lead_id === pv.lead_id) || (ig && x.instagram === ig));
-    if (!p || p.preview_slug === pv.slug || ['do_not_contact', 'won', 'lost'].includes(p.status)) continue;
+    if (p && p.preview_slug === pv.slug) {
+      const pitch = pv.pitch && Array.isArray(pv.pitch.items) ? { mode: String(pv.pitch.mode || '').slice(0, 10), items: pv.pitch.items.slice(0, 3).map((x) => String(x).slice(0, 60)) } : null;
+      if ((pv.checked || '') !== (p.preview_checked || '') || JSON.stringify(pitch) !== JSON.stringify(p.preview_pitch || null)) {
+        p.preview_checked = pv.checked || ''; p.preview_pitch = pitch; changed = true;
+      }
+      continue;
+    }
+    if (!p || ['do_not_contact', 'won', 'lost'].includes(p.status)) continue;
     let secret;
     try {
       keys = keys || await previewKeys();
@@ -410,6 +439,8 @@ async function applyPreviews(doc, list) {
     const pw = String(secret.password || '').slice(0, 80);
     if (!pw) continue;
     p.preview_slug = pv.slug; p.preview_url = String(pv.url).slice(0, 300); p.preview_password = pw;
+    p.preview_checked = pv.checked || '';
+    p.preview_pitch = pv.pitch && Array.isArray(pv.pitch.items) ? { mode: String(pv.pitch.mode || '').slice(0, 10), items: pv.pitch.items.slice(0, 3).map((x) => String(x).slice(0, 60)) } : null;
     p.preview_delete_by = /^\d{4}-\d{2}-\d{2}$/.test(pv.delete_by || '') ? pv.delete_by : (p.preview_delete_by || myDate(14));
     p.preview_msg = pvMsg(p); p.preview_msg_v = PVMSG_V;
     if (p.draft_reply) p.draft_reply = p.draft_reply.replace(/\[(样板网址|mockup link|pautan contoh)\]/g, p.preview_url).replace(/\[(密码|password|kata laluan)\]/g, pw);
@@ -469,6 +500,7 @@ function callInto(p, outcome, date) {
     p.status = 'replied';
     p.next_call_date = '';
     p.next_followup_date = '';
+    p.call_ok = today;
     p.reply_summary = '电话：对方说可以，发样板给他看。';
     p.reply_next = p.preview_url && p.preview_password
       ? '样板已经做好，网址和密码已经填进下面的信息：按 WhatsApp 发给他，看一遍再按发送。'
@@ -623,6 +655,7 @@ ${thread(p) || '(nothing recorded before this)'}
 ${text}
 </their_latest_reply>`, REPLY);
       log(p, 'their_reply', text);
+      p.call_ok = '';
       if (['new', 'contacted', 'preview_sent', 'proposal_sent', 'call_booked', 'no_response'].includes(p.status)) { p.prev_status = p.status; p.status = 'replied'; p.next_followup_date = ''; }
       p.draft_reply = out.reply; p.reply_intent = out.intent; p.reply_summary = out.summary_zh; p.reply_next = out.next_step_zh; p.reply_event = out.suggested_event;
       return { item: p, saved: true };
