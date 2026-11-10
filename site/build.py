@@ -123,6 +123,9 @@ class Store:
             apply_preview(self.t, preview)
         t = self.t
         self.ship = t.get("shipping", {"west": 8, "east": 15, "free_min": 150})
+        # mockups for food / made-to-order shops: pick-up or local delivery on a chosen date instead of parcel shipping
+        o = preview.get("order") if preview else None
+        self.pickup = o if isinstance(o, dict) and o.get("mode") == "pickup" and o.get("pickup") else None
         self.cats = {c["id"]: c for c in t["categories"]}
         self.products = t["products"]
         for p in self.products:
@@ -144,9 +147,10 @@ class Store:
         sale = p.get("sale")
         has_from = any(v.get("add") for o in p["options"] for v in o["values"])
         pre = '<span class="from">from </span>' if has_from else ""
+        per = f' <span class="per">/ {e(p["per"])}</span>' if p.get("per") else ""  # mockups: e.g. "/ 100 pcs"
         if sale:
-            return f'{pre}<span class="now">{rm(sale)}</span> <s class="was">{rm(base)}</s>'
-        return f'{pre}<span class="now">{rm(base)}</span>'
+            return f'{pre}<span class="now">{rm(sale)}</span>{per} <s class="was">{rm(base)}</s>'
+        return f'{pre}<span class="now">{rm(base)}</span>{per}'
 
     def badge(self, p):
         b = p.get("badge")
@@ -260,7 +264,8 @@ class Store:
                 nav.append((f'{sp}shop.html?cat={c["id"]}', c["name"]))
         nav += [(f"{sp}about.html", t.get("about_nav", "Our story"))]
         links = "".join(f'<a href="{u}">{e(n)}</a>' for u, n in nav)
-        mlinks = links + f'<a href="{sp}help.html">Help &amp; shipping</a>'
+        help_lbl = "Help &amp; pick-up" if self.pickup else "Help &amp; shipping"
+        mlinks = links + f'<a href="{sp}help.html">{help_lbl}</a>'
         logo = self.logo(sp)
         return f"""{ann}
 <header class="hdr hdr--{t.get('header', 'left')}">
@@ -305,13 +310,17 @@ class Store:
     def footer(self, root, sp):
         t = self.t
         shop = "".join(f'<li><a href="{sp}shop.html?cat={c["id"]}">{e(c["name"])}</a></li>' for c in t["categories"])
+        pk = self.pickup
+        ship_lbl = "Pick-up &amp; delivery" if pk else "Shipping"
+        ret_lbl = "Changes &amp; refunds" if pk else "Returns &amp; exchanges"
+        drawer_note = (f"Pick-up in {e(pk['pickup'])}" + (f" or delivery by {e(pk['delivery'])}" if pk.get("delivery") else "") + " — choose at checkout.") if pk else "Shipping is calculated at checkout."
         return f"""</main>
 <footer class="ftr">
   <div class="wrap ftr__grid">
     <div class="ftr__brand">{self.logo(sp)}<p>{e(t['footer_blurb'])}</p>
       {self.social_links()}</div>
     <div><h4>Shop</h4><ul><li><a href="{sp}shop.html">Shop all</a></li>{shop}</ul></div>
-    <div><h4>Help</h4><ul><li><a href="{sp}help.html#faq">FAQ</a></li><li><a href="{sp}help.html#shipping">Shipping</a></li><li><a href="{sp}help.html#returns">Returns &amp; exchanges</a></li><li><a href="{sp}about.html">{e(t.get('about_nav', 'Our story'))}</a></li></ul></div>
+    <div><h4>Help</h4><ul><li><a href="{sp}help.html#faq">FAQ</a></li><li><a href="{sp}help.html#shipping">{ship_lbl}</a></li><li><a href="{sp}help.html#returns">{ret_lbl}</a></li><li><a href="{sp}about.html">{e(t.get('about_nav', 'Our story'))}</a></li></ul></div>
     <div><h4>{e(t.get('newsletter_title', 'Get first dibs'))}</h4><p>{e(t.get('newsletter_text', 'New drops and restocks, once or twice a month.'))}</p>
       <form class="nl" data-demo-form><label class="sr" for="nl-email">Email</label><input id="nl-email" type="email" placeholder="Email address" required><button class="btn btn--sm" type="submit">Sign up</button></form></div>
   </div>
@@ -325,7 +334,7 @@ class Store:
     <div class="drawer__body" data-cart-lines></div>
     <div class="drawer__foot" data-cart-foot>
       <p class="row"><span>Subtotal</span><strong data-cart-subtotal>RM0.00</strong></p>
-      <p class="muted small">Shipping is calculated at checkout.</p>
+      <p class="muted small">{drawer_note}</p>
       <a class="btn btn--block" href="{sp}checkout.html">Checkout</a>
       <a class="btn btn--ghost btn--block" href="{sp}cart.html">View cart</a>
     </div>
@@ -495,9 +504,13 @@ if(h===window.__pvHash){try{localStorage.setItem('pv_'+h,'1');}catch(e){}documen
             "slug": self.slug, "name": t["name"], "prefix": t.get("order_prefix", t["name"][:2].upper()),
             "ship": self.ship, "coupon": t.get("coupon", {"code": "WELCOME10", "pct": 10}),
             "products": {p["id"]: {"n": p["name"], "p": p["price"], "s": p.get("sale"), "img": p["imgs"][0],
-                                   "o": [{"n": o["name"], "v": [[v["v"], v.get("add", 0), v.get("img", "")] for v in o["values"]]} for o in p["options"]]}
+                                   "o": [{"n": o["name"], "v": [[v["v"], v.get("add", 0), v.get("img", "")] for v in o["values"]]} for o in p["options"]],
+                                   **({"u": p["per"]} if p.get("per") else {})}
                          for p in self.products},
         }
+        if self.pickup:
+            data["order"] = {"mode": "pickup", "pickup": self.pickup["pickup"], "pickup_note": self.pickup.get("pickup_note", ""),
+                             "delivery": self.pickup.get("delivery", ""), "delivery_note": self.pickup.get("delivery_note", "")}
         write(f"{pre}data.js", "window.STORE=" + json.dumps(data, ensure_ascii=False, separators=(",", ":")) + ";\n", self.out)
 
         name = t["name"]
@@ -545,6 +558,14 @@ if(h===window.__pvHash){try{localStorage.setItem('pv_'+h,'1');}catch(e){}documen
         notes = f'<p class="pdp__notes">{"".join(f"<span>{e(n)}</span>" for n in p["notes"])}</p>' if p.get("notes") else ""
         roast = self.roast_meter(p["roast"]) if p.get("roast") else ""
         ship = self.ship
+        pk = self.pickup
+        if pk:
+            ship_li = (f'<li>{icon("map")}<span><b>Pick-up in {e(pk["pickup"])}.</b>'
+                       + (f' Or delivery by {e(pk["delivery"])}.' if pk.get("delivery") else "") + ' Choose the date at checkout.</span></li>')
+            ship_acc, ship_link = "Pick-up, delivery &amp; changes", "Pick-up &amp; delivery details"
+        else:
+            ship_li = f"<li>{icon('truck')}<span><b>Ships in 1–2 working days.</b> West Malaysia {rm0(ship['west'])}, East Malaysia {rm0(ship['east'])} — free over {rm0(ship['free_min'])}.</span></li>"
+            ship_acc, ship_link = "Shipping &amp; returns", "Full shipping &amp; returns policy"
         related = [x for x in self.products if x["cat"] == p["cat"] and x["id"] != p["id"]]
         related += [x for x in self.products if x["cat"] != p["cat"]]
         rel = "".join(self.card(x, sp) for x in related[:4])
@@ -572,14 +593,14 @@ if(h===window.__pvHash){try{localStorage.setItem('pv_'+h,'1');}catch(e){}documen
         <button class="btn btn--ghost btn--block" type="button" data-buy-now>Buy it now</button>
       </form>
       <ul class="pdp__trust">
-        <li>{icon('truck')}<span><b>Ships in 1–2 working days.</b> West Malaysia {rm0(ship['west'])}, East Malaysia {rm0(ship['east'])} — free over {rm0(ship['free_min'])}.</span></li>
+        {ship_li}
         <li>{icon('shield')}<span><b>Secure checkout</b> with FPX online banking, cards or e-wallets.</span></li>
         <li>{icon('chat')}<span><b>Questions?</b> <a href="#" data-demo="In your store this opens WhatsApp or Instagram with '{e(p['name'])}' already typed in.">Chat with us</a> — we reply fast.</span></li>
       </ul>
       <div class="acc">
         <details open><summary>Description{icon('plus')}</summary><div>{desc}</div></details>
         {f'<details><summary>Details{icon("plus")}</summary><div>{details}</div></details>' if details else ''}
-        <details><summary>Shipping &amp; returns{icon('plus')}</summary><div><p>{e(t['returns_short'])}</p><p><a href="{sp}help.html#shipping">Full shipping &amp; returns policy</a></p></div></details>
+        <details><summary>{ship_acc}{icon('plus')}</summary><div><p>{e(t['returns_short'])}</p><p><a href="{sp}help.html#shipping">{ship_link}</a></p></div></details>
       </div>
     </div>
   </div>
@@ -590,6 +611,16 @@ if(h===window.__pvHash){try{localStorage.setItem('pv_'+h,'1');}catch(e){}documen
 """
 
     def cart_body(self, root, sp):
+        pk = self.pickup
+        if pk:
+            zone = (f'<p class="small muted">Pick-up in {e(pk["pickup"])} is free.'
+                    + (f' Delivery by {e(pk["delivery"])}: the fee is confirmed with you.' if pk.get("delivery") else "") + '</p>')
+            ship_row = "Pick-up / delivery"
+        else:
+            zone = """<div class="zone"><p class="small muted">Shipping to</p>
+        <label class="radio"><input type="radio" name="zone" value="west" checked> West Malaysia</label>
+        <label class="radio"><input type="radio" name="zone" value="east"> Sabah, Sarawak &amp; Labuan</label></div>"""
+            ship_row = "Shipping"
         return f"""<div class="wrap cartpage">
   <header class="page-head"><h1>Your cart</h1></header>
   <div class="cartpage__grid">
@@ -597,10 +628,8 @@ if(h===window.__pvHash){try{localStorage.setItem('pv_'+h,'1');}catch(e){}documen
     <aside class="summary" data-cart-summary>
       <h2>Order summary</h2>
       <p class="row"><span>Subtotal</span><span data-sum-subtotal>RM0.00</span></p>
-      <div class="zone"><p class="small muted">Shipping to</p>
-        <label class="radio"><input type="radio" name="zone" value="west" checked> West Malaysia</label>
-        <label class="radio"><input type="radio" name="zone" value="east"> Sabah, Sarawak &amp; Labuan</label></div>
-      <p class="row"><span>Shipping</span><span data-sum-ship>–</span></p>
+      {zone}
+      <p class="row"><span>{ship_row}</span><span data-sum-ship>–</span></p>
       <form class="coupon" data-coupon><label class="sr" for="cpn">Discount code</label><input id="cpn" placeholder="Discount code"><button class="btn btn--ghost btn--sm" type="submit">Apply</button></form>
       <p class="small muted">Demo code: <b>{e(self.t.get('coupon', {}).get('code', 'WELCOME10'))}</b></p>
       <p class="row" data-sum-disc-row hidden><span>Discount</span><span data-sum-disc></span></p>
@@ -614,6 +643,31 @@ if(h===window.__pvHash){try{localStorage.setItem('pv_'+h,'1');}catch(e){}documen
 
     def checkout_body(self, root, sp):
         states = "".join(f'<option>{s}</option>' for s in STATES)
+        pk = self.pickup
+        addr = f"""<label>Address<input name="addr1" autocomplete="address-line1" required></label>
+        <label>Apartment, unit, etc. (optional)<input name="addr2" autocomplete="address-line2"></label>
+        <div class="f3"><label>Postcode<input name="postcode" inputmode="numeric" maxlength="5" autocomplete="postal-code" required></label>
+        <label>City<input name="city" autocomplete="address-level2" required></label>
+        <label>State<select name="state" required><option value="">Choose…</option>{states}</select></label></div>"""
+        if pk:
+            deliv = (f'<label class="pay"><input type="radio" name="method" value="delivery"><span><b>Delivery by {e(pk["delivery"])}</b><small>Fee depends on distance, confirmed with you</small></span></label>'
+                     if pk.get("delivery") else "")
+            fulfil = f"""<fieldset><legend>Pick-up or delivery</legend>
+        <label class="pay"><input type="radio" name="method" value="pickup" checked><span><b>Pick-up in {e(pk['pickup'])}</b><small>Free</small></span></label>
+        {deliv}
+        <div class="f2"><label>Full name<input name="name" autocomplete="name" required></label>
+        <label>Pick-up / delivery date<input name="date" type="date" required></label></div>
+        <div data-delivery-only hidden>{addr}</div>
+        <label>Order note (optional)<input name="note" placeholder="e.g. which kuih, number of pieces, time you prefer"></label>
+        <div class="ship-opt" data-ship-opt></div></fieldset>"""
+            ship_row = "Pick-up / delivery"
+        else:
+            fulfil = f"""<fieldset><legend>Delivery</legend>
+        <label>Full name<input name="name" autocomplete="name" required></label>
+        {addr}
+        <label>Delivery note (optional)<input name="note" placeholder="e.g. leave with the guard"></label></fieldset>
+      <fieldset><legend>Shipping</legend><div class="ship-opt" data-ship-opt><p class="muted">Choose your state to see the shipping fee.</p></div></fieldset>"""
+            ship_row = "Shipping"
         return f"""<div class="wrap checkout">
   <header class="page-head"><p class="crumbs"><a href="cart.html">Cart</a> / Checkout</p><h1>Checkout</h1></header>
   <div class="demo-note">{icon('shield')}<p><b>This is a demo checkout.</b> Nothing is charged and nothing is sent — fill it in to see how the order flow works. In your real store, payment goes through a Malaysian payment gateway opened in your own company's name.</p></div>
@@ -622,15 +676,7 @@ if(h===window.__pvHash){try{localStorage.setItem('pv_'+h,'1');}catch(e){}documen
       <fieldset><legend>Contact</legend>
         <div class="f2"><label>Email<input name="email" type="email" autocomplete="email" required></label>
         <label>Phone<input name="phone" type="tel" inputmode="tel" placeholder="012-345 6789" autocomplete="tel" required></label></div></fieldset>
-      <fieldset><legend>Delivery</legend>
-        <label>Full name<input name="name" autocomplete="name" required></label>
-        <label>Address<input name="addr1" autocomplete="address-line1" required></label>
-        <label>Apartment, unit, etc. (optional)<input name="addr2" autocomplete="address-line2"></label>
-        <div class="f3"><label>Postcode<input name="postcode" inputmode="numeric" maxlength="5" autocomplete="postal-code" required></label>
-        <label>City<input name="city" autocomplete="address-level2" required></label>
-        <label>State<select name="state" required><option value="">Choose…</option>{states}</select></label></div>
-        <label>Delivery note (optional)<input name="note" placeholder="e.g. leave with the guard"></label></fieldset>
-      <fieldset><legend>Shipping</legend><div class="ship-opt" data-ship-opt><p class="muted">Choose your state to see the shipping fee.</p></div></fieldset>
+      {fulfil}
       <fieldset><legend>Payment</legend>
         <label class="pay"><input type="radio" name="pay" value="FPX online banking" checked><span><b>FPX online banking</b><small>All major Malaysian banks</small></span></label>
         <label class="pay"><input type="radio" name="pay" value="Credit / debit card"><span><b>Credit / debit card</b><small>Visa, Mastercard</small></span></label>
@@ -641,20 +687,26 @@ if(h===window.__pvHash){try{localStorage.setItem('pv_'+h,'1');}catch(e){}documen
     </form>
     <aside class="summary summary--co"><h2>Your order</h2><div data-co-lines></div>
       <p class="row"><span>Subtotal</span><span data-co-subtotal></span></p>
-      <p class="row"><span>Shipping</span><span data-co-ship>–</span></p>
+      <p class="row"><span>{ship_row}</span><span data-co-ship>–</span></p>
       <p class="row" data-co-disc-row hidden><span>Discount</span><span data-co-disc></span></p>
       <p class="row row--total"><span>Total</span><strong data-co-total></strong></p></aside>
   </div>
 </div>"""
 
     def order_body(self, root, sp):
+        if self.pickup:
+            ticks = (f"<li>{icon('check')}An order confirmation email with the receipt</li><li>{icon('check')}A WhatsApp message confirming the pick-up time and place (or the rider details for delivery)</li>"
+                     f"<li>{icon('check')}The order in the seller's dashboard with its pick-up date, ready to prepare</li>")
+        else:
+            ticks = (f"<li>{icon('check')}An order confirmation email with the receipt</li><li>{icon('check')}A WhatsApp or Instagram update when it ships, with the tracking number</li>"
+                     f"<li>{icon('check')}The order in the seller's dashboard, ready to pack</li>")
         return f"""<div class="wrap wrap--narrow orderpage" data-order>
   <div class="order-ok">{icon('check')}</div>
   <h1>Thank you<span data-order-name></span>!</h1>
   <p class="lead">Order <b data-order-no>—</b> received <span class="tag">demo</span></p>
   <div class="order-box" data-order-box><p class="muted">No recent demo order found. <a href="shop.html">Go shopping</a>.</p></div>
   <div class="next"><h2>In a real store, the customer would now get:</h2>
-    <ul class="ticks"><li>{icon('check')}An order confirmation email with the receipt</li><li>{icon('check')}A WhatsApp or Instagram update when it ships, with the tracking number</li><li>{icon('check')}The order in the seller's dashboard, ready to pack</li></ul></div>
+    <ul class="ticks">{ticks}</ul></div>
   <div class="btns center"><a class="btn btn--lg" href="index.html">Back to the store</a><a class="btn btn--lg btn--ghost" href="{e(self.studio_link(root, "start.html?template=" + self.slug))}">I want a store like this</a></div>
 </div>"""
 
@@ -664,23 +716,36 @@ if(h===window.__pvHash){try{localStorage.setItem('pv_'+h,'1');}catch(e){}documen
         vals = "".join(f'<li class="feat">{icon(v[0])}<h3>{e(v[1])}</h3><p>{e(v[2])}</p></li>' for v in a.get("values", []))
         return f"""<section class="about-hero"><img src="{sp}img/{a['img']}" alt="" width="1920" height="1080"><div class="wrap"><h1>{e(a['title'])}</h1></div></section>
 <div class="wrap wrap--narrow about"><p class="lead">{e(a['lead'])}</p>{paras}
-<p class="demo-inline">{"Mockup note: we'll write this page with you — your real story, photos and team go here." if self.pv else "Demo note: " + e(self.t["name"]) + " is a fictional brand created to show this template. Your real story, photos and team go here."}</p></div>
+<p class="demo-inline">{("Mockup note: written from what has been published about " + e(self.t["name"]) + ". We'll rewrite it with you, in your own words and with your own photos.") if self.pv and self.pv.get("about") else "Mockup note: we'll write this page with you — your real story, photos and team go here." if self.pv else "Demo note: " + e(self.t["name"]) + " is a fictional brand created to show this template. Your real story, photos and team go here."}</p></div>
 {f'<section class="sec"><div class="wrap"><ul class="feats feats--n{len(a.get("values", []))}">{vals}</ul></div></section>' if vals else ''}"""
 
     def help_body(self, root, sp):
         t = self.t
         s = self.ship
         faq = "".join(f'<details class="qa"><summary>{e(q)}{icon("plus")}</summary><p>{e(a)}</p></details>' for q, a in t["faq"])
-        return f"""<div class="wrap wrap--narrow help">
-  <header class="page-head"><h1>Help centre</h1><p class="muted">Shipping, returns and common questions.</p></header>
-  <h2 id="faq">Frequently asked questions</h2><div class="qas">{faq}</div>
-  <h2 id="shipping">Shipping</h2>
-  <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Where</th><th>Fee</th><th>Delivery time</th></tr></thead><tbody>
+        pk = self.pickup
+        if pk:
+            drow = (f'<tr><th scope="row">Delivery</th><td>{e(pk["delivery"])}</td><td>Depends on distance, confirmed with you{(" · " + e(pk["delivery_note"])) if pk.get("delivery_note") else ""}</td></tr>'
+                    if pk.get("delivery") else "")
+            sub, ship_h, ret_h = "Pick-up, delivery and common questions.", "Pick-up &amp; delivery", "Changes &amp; refunds"
+            ship_sec = f"""<div class="tbl-wrap"><table class="tbl"><thead><tr><th>How</th><th>Where</th><th>Fee</th></tr></thead><tbody>
+    <tr><th scope="row">Pick-up</th><td>{e(pk['pickup'])}</td><td>Free{(" · " + e(pk["pickup_note"])) if pk.get("pickup_note") else ""}</td></tr>
+    {drow}</tbody></table></div>
+  <p>Choose your pick-up or delivery date at checkout.</p>"""
+        else:
+            sub, ship_h, ret_h = "Shipping, returns and common questions.", "Shipping", "Returns &amp; exchanges"
+            ship_sec = f"""<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Where</th><th>Fee</th><th>Delivery time</th></tr></thead><tbody>
     <tr><th scope="row">West Malaysia</th><td>{rm(s['west'])} · free over {rm0(s['free_min'])}</td><td>2–4 working days</td></tr>
     <tr><th scope="row">Sabah, Sarawak &amp; Labuan</th><td>{rm(s['east'])} · free over {rm0(s['free_min'])}</td><td>4–7 working days</td></tr></tbody></table></div>
-  <p>Orders placed before 2pm on working days are packed the same day. You'll get a tracking number as soon as your parcel ships.</p>
-  <h2 id="returns">Returns &amp; exchanges</h2><p>{e(t['returns'])}</p>
-  <h2 id="contact">Contact</h2><p>Chat with us using the button at the bottom of the page, or message us on Instagram. We reply within one working day.</p>
+  <p>Orders placed before 2pm on working days are packed the same day. You'll get a tracking number as soon as your parcel ships.</p>"""
+        contact = e(self.pv["contact"]) if self.pv and self.pv.get("contact") else "Chat with us using the button at the bottom of the page, or message us on Instagram. We reply within one working day."
+        return f"""<div class="wrap wrap--narrow help">
+  <header class="page-head"><h1>Help centre</h1><p class="muted">{sub}</p></header>
+  <h2 id="faq">Frequently asked questions</h2><div class="qas">{faq}</div>
+  <h2 id="shipping">{ship_h}</h2>
+  {ship_sec}
+  <h2 id="returns">{ret_h}</h2><p>{e(t['returns'])}</p>
+  <h2 id="contact">Contact</h2><p>{contact}</p>
   <p class="demo-inline">Demo note: these policies are examples. Your store gets your own policies — and we draft them with you.</p>
 </div>"""
 
@@ -733,7 +798,7 @@ def apply_preview(t, pv):
             "id": slugify(item["name"])[:50], "name": item["name"], "cat": cid, "price": price_of(item), "sale": item.get("sale") if price_of(item) is not None else None,
             "imgs": imgs, "short": item.get("short", ""), "desc": item.get("desc", [item.get("short", "")] if item.get("short") else []),
             "details": item.get("details", []), "options": item.get("options", []), "tags": ["featured"] if i < 4 else [],
-            "badge": item.get("badge"),
+            "badge": item.get("badge"), "per": item.get("per"),
         })
     for c in cats:
         n = len([p for p in products if p["cat"] == c["id"]])
@@ -744,7 +809,7 @@ def apply_preview(t, pv):
     h = pv.get("hero", {})
     hero.update({"eyebrow": h.get("eyebrow", ""), "title": e(h.get("title", b["name"])), "text": h.get("text", b.get("tagline", "")),
                  "img": h.get("image", hero_tpl.get("img", "hero.jpg")), "alt": b["name"], "pos": h.get("pos", ""),
-                 "buttons": [{"label": "Shop now", "href": "shop.html"}, {"label": "Our story", "href": "about.html"}],
+                 "buttons": [x for x in h.get("buttons", []) if isinstance(x, dict) and x.get("label") and x.get("href")][:2] or [{"label": "Shop now", "href": "shop.html"}, {"label": "Our story", "href": "about.html"}],
                  "chips": pv_list(pv, "chips", [["truck", f"Free shipping RM{ship['free_min']}+"], ["shield", "Secure checkout"]], 2)})
     if "sticker" in pv:  # restaurants etc.: "" removes the free-shipping sticker
         hero["sticker"] = e(pv["sticker"])
@@ -760,13 +825,20 @@ def apply_preview(t, pv):
     home.append({"type": "products", "eyebrow": h.get("featured_eyebrow", "Start here"), "title": h.get("featured_title", "Our favourites"), "pick": {"tag": "featured", "limit": 4}})
     if len(products) > 4:
         home.append({"type": "products", "title": "More to love", "pick": {"ids": [p["id"] for p in products[4:12]]}})
-    home += [{"type": "newsletter", "title": f"Join the {b['name']} list", "text": "New launches, restocks and member-only vouchers.", "button": "Sign up"}]
+    nl = pv.get("newsletter", {})  # false removes the sign-up box; {"title", "text"} rewrites it
+    if nl is not False:
+        nl = nl if isinstance(nl, dict) else {}
+        home += [{"type": "newsletter", "title": nl.get("title", f"Join the {b['name']} list"), "text": nl.get("text", "New launches, restocks and member-only vouchers."), "button": nl.get("button", "Sign up")}]
+        if nl.get("title"):
+            t["newsletter_title"], t["newsletter_text"] = nl["title"], nl.get("text", "")
     t["home"] = home
     t["faq"] = pv.get("faq", GENERIC_FAQ)
     t["about_nav"] = "About"
-    t["about"] = {"img": h.get("image", "hero.jpg"), "title": f"About {b['name']}", "lead": b.get("story", b.get("tagline", "")), "paras": [], "values": []}
-    t["returns_short"] = "Returns and exchanges follow your own policy — we'll set it up with you."
-    t["returns"] = "Your own returns and exchange policy goes here. We'll draft it together during setup."
+    a = pv.get("about") if isinstance(pv.get("about"), dict) else {}
+    t["about"] = {"img": a.get("image", h.get("image", "hero.jpg")), "title": a.get("title", f"About {b['name']}"), "lead": a.get("lead", b.get("story", b.get("tagline", ""))),
+                  "paras": [str(x) for x in a.get("paras", []) if x], "values": pv_list(a, "values", [], 3)}
+    t["returns_short"] = pv.get("returns_short", "Returns and exchanges follow your own policy — we'll set it up with you.")
+    t["returns"] = pv.get("returns", "Your own returns and exchange policy goes here. We'll draft it together during setup.")
 
 
 def _lum(hexc):
