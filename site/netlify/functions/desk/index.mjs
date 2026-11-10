@@ -21,7 +21,7 @@ const DOC = 'prospects-v1';
 const MAX_INPUT = 3000;
 const TEMPLATES = ['dewlane', 'plainfold', 'chili-pantry', 'lowlight', 'tailmate', 'voltnest'];
 const CRITERIA = ['brand_clear', 'sales_signal', 'active_social', 'no_or_weak_website', 'budget_signal'];
-const EVENTS = ['sent', 'replied', 'preview_sent', 'call_booked', 'proposal_sent', 'won', 'lost', 'no_response', 'dnc', 'reopen', 'preview_deleted'];
+const EVENTS = ['sent', 'replied', 'preview_sent', 'call_booked', 'proposal_sent', 'won', 'lost', 'has_site', 'no_response', 'dnc', 'reopen', 'preview_deleted'];
 
 function env(k) {
   try { if (globalThis.Netlify && globalThis.Netlify.env) { const v = globalThis.Netlify.env.get(k); if (v) return v; } } catch (e) { /* local */ }
@@ -134,7 +134,7 @@ const ANALYZE = {
 };
 const MESSAGE = { message: '' };
 const REPLY = {
-  intent: ['interested', 'question', 'objection', 'not_now', 'not_interested', 'other'], summary_zh: '', reply: '', next_step_zh: '',
+  intent: ['interested', 'question', 'objection', 'not_now', 'not_interested', 'closed', 'other'], summary_zh: '', reply: '', next_step_zh: '',
   suggested_event: ['replied', 'call_booked', 'preview_sent', 'lost', 'dnc', 'none']
 };
 const LANG = { zh: 'Simplified Chinese (简体中文)', en: 'English', ms: 'Bahasa Malaysia' };
@@ -152,10 +152,19 @@ You are now the studio owner's private assistant for ONE customer only (the file
 - When the owner pastes the customer's message (WhatsApp / IG / email) or asks for a reply or follow-up, write the message he can send, in the customer's language, between a line 【可以直接发的信息】 and a line 【结束】. Sign it "Cartsmith Studio"; never use a personal name; no emojis. Only one such block per answer unless he asks for options.
 - Use only facts from the knowledge base, the approved scripts and this customer's file. If a price, policy or detail is not there, say you are not sure and suggest he confirms. Never invent results, clients, reviews or guarantees (no "guaranteed sales", no "first page of Google").
 - Remember what was agreed earlier in this conversation and in the summary, and point out the next step (call, send mockup, follow-up date, proposal).
-- If the customer says they are not interested or asks not to be contacted, tell the owner to mark "不需要 / 不再联系" and do not draft another pitch.`;
+- If the customer says they are not interested or asks not to be contacted, tell the owner to mark "不需要 / 不再联系" and do not draft another pitch.
+- If they already have a website / online store, do not pitch a new site; suggest marking "对方已经有网站" (and only offer help later if they ask).
+- Read the whole conversation so far before answering; the owner may have replied himself outside the desk.`;
+
+// the conversation as far as the desk knows it: what we sent (with text), what they said, calls
+function thread(p) {
+  const who = { sent: '我们（工作台发的）', we_replied: '我们（自己在 IG / WhatsApp 回的）', their_reply: '对方', call: '电话', preview_sent: '我们发了样板', has_site: '记录：对方已有网站', lost: '记录：没成交', dnc: '记录：不再联系' };
+  return (p.history || []).filter((h) => who[h.e]).slice(-30).map((h) => `${h.d} ${who[h.e]}${h.n ? '：' + String(h.n).slice(0, 800) : ''}`).join('\n');
+}
 
 function customerFile(p) {
-  const hist = (p.history || []).slice(-20).map((h) => `${h.d} ${h.e}${h.n ? ': ' + String(h.n).slice(0, 200) : ''}`).join('\n');
+  const hist = (p.history || []).slice(-30).map((h) => `${h.d} ${h.e}${h.n ? ': ' + String(h.n).slice(0, 200) : ''}`).join('\n');
+  const convo = thread(p);
   const parts = [
     profile(p),
     `Status: ${p.status}; first contact ${p.first_contact_date || '-'}; last contact ${p.last_contact_date || '-'}; next follow-up ${p.next_followup_date || '-'}; channels used: ${(p.channels || []).join(', ') || '-'}`,
@@ -164,6 +173,8 @@ function customerFile(p) {
     p.input ? `Research notes:\n${String(p.input).slice(0, 2500)}` : '',
     p.followup ? `Our latest follow-up draft: ${p.followup}` : '',
     p.reply_summary ? `Their last reply (summary): ${p.reply_summary}` : '',
+    convo ? `Conversation so far (oldest first):\n${convo}` : '',
+    p.lost_reason ? `Closed: ${p.lost_reason}` : '',
     hist ? `History:\n${hist}` : '',
     p.ai_summary ? `Summary of our earlier conversation about this customer:\n${p.ai_summary}` : '',
   ];
@@ -235,6 +246,7 @@ function log(p, event, note) { (p.history = p.history || []).push({ d: myDate(),
 
 function mark(p, ev, url, channel) {
   const today = myDate();
+  const sentText = ev === 'sent' ? String((p.status === 'replied' ? p.draft_reply : ((p.touches || 0) === 0 ? p.message : p.followup)) || '') : '';
   if (ev === 'sent' && CHANNELS.includes(channel)) { p.last_channel = channel; (p.channels = p.channels || []).includes(channel) || p.channels.push(channel); }
   if (ev === 'sent' && p.status === 'replied') {
     // we answered their reply → back to the earlier stage, check again in 3 days
@@ -252,6 +264,8 @@ function mark(p, ev, url, channel) {
   } else if (ev === 'dnc') { p.status = 'do_not_contact'; p.next_followup_date = ''; }
   else if (ev === 'preview_sent') {
     p.status = 'preview_sent'; p.preview_delete_by = p.preview_delete_by || myDate(14); p.next_followup_date = myDate(2); if (url) p.preview_url = url.slice(0, 300);
+    p.call_ok = '';
+    if (p.preview_url && p.preview_password) p.followup = pvFollow(p);
     if (CHANNELS.includes(channel)) { p.last_channel = channel; (p.channels = p.channels || []).includes(channel) || p.channels.push(channel); }
     if (!p.first_contact_date) { p.first_contact_date = today; p.touches = (p.touches || 0) + 1; }
     p.last_contact_date = today;
@@ -261,10 +275,15 @@ function mark(p, ev, url, channel) {
   else if (ev === 'reopen') { p.status = p.touches ? 'contacted' : 'new'; }
   else if (ev === 'preview_deleted') { p.preview_delete_by = ''; }
   else { p.status = ev; if (['won', 'lost', 'no_response'].includes(ev)) p.next_followup_date = ''; }
-  log(p, ev, url || (ev === 'sent' && CHANNELS.includes(channel) ? channel : ''));
+  if (ev === 'has_site') {
+    p.status = 'lost'; p.lost_reason = '已有网站'; p.no_or_weak_website = false; p.score = CRITERIA.filter((c) => p[c]).length;
+    p.next_followup_date = ''; p.next_call_date = '';
+    if (url) p.notes = [p.notes, '已有网站：' + String(url).slice(0, 200)].filter(Boolean).join('\n');
+  }
+  log(p, ev, url || (ev === 'sent' ? [CHANNELS.includes(channel) ? channel : '', sentText.slice(0, 1200)].filter(Boolean).join(': ') : ''));
 }
 
-const CSV_FIELDS = ['id', 'business_name', 'niche', 'platform', 'store_url', 'social_url', 'contact_channel', 'contact_handle', 'whatsapp', 'email', 'phone', 'area', 'address', 'language', ...CRITERIA, 'score', 'observation', 'opening_line', 'status', 'first_contact_date', 'last_contact_date', 'next_followup_date', 'preview_url', 'preview_delete_by', 'notes', 'touches'];
+const CSV_FIELDS = ['id', 'business_name', 'niche', 'platform', 'store_url', 'social_url', 'contact_channel', 'contact_handle', 'whatsapp', 'email', 'phone', 'area', 'address', 'language', ...CRITERIA, 'score', 'observation', 'opening_line', 'status', 'first_contact_date', 'last_contact_date', 'next_followup_date', 'preview_url', 'preview_password', 'preview_delete_by', 'notes', 'touches'];
 function toCsv(items) {
   const q = (v) => { const s = String(v == null ? '' : v); return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
   const rows = items.map((p) => ({ ...p, social_url: p.instagram ? 'https://instagram.com/' + p.instagram : '', contact_channel: ({ ig: 'instagram', wa: 'whatsapp', email: 'email' })[p.last_channel] || 'instagram', contact_handle: p.instagram ? '@' + p.instagram : '', opening_line: p.message, ...Object.fromEntries(CRITERIA.map((c) => [c, p[c] ? 1 : 0])) }));
@@ -358,18 +377,60 @@ function allPreviews() {
   for (const x of (env('LEADS_URL') === 'off' ? [] : (leadsCache.previews || []))) bySlug.set(x.slug, x);
   return [...bySlug.values()];
 }
-const PVMSG = {
-  zh: (n, u, pw, d) => `你好，我是 Cartsmith Studio。我们在网上看到 ${n}，用你们的店名和产品做了一个免费的网上订购首页样板，给你参考：\n${u}\n密码：${pw}\n\n用手机打开就可以看。照片和运费等细节是示意，正式网站会照你们的照片和做法改。样板只给你看，${d} 会删除；不用钱，也不用马上决定。有兴趣的话回复这里就好。\n\n— Cartsmith Studio`,
-  en: (n, u, pw, d) => `Hi, this is Cartsmith Studio. We came across ${n} and made a free sample online-ordering homepage with your name and products:\n${u}\nPassword: ${pw}\n\nIt opens best on your phone. Photos and details like shipping are placeholders; a real site would use your own photos and policies. It's private to you and will be deleted on ${d}, with no cost and no obligation. If you'd like to talk about it, just reply here.\n\n— Cartsmith Studio`,
-  ms: (n, u, pw, d) => `Hai, ini Cartsmith Studio. Kami nampak ${n} dan buatkan contoh laman utama tempahan online percuma dengan nama dan produk anda:\n${u}\nKata laluan: ${pw}\n\nBuka di telefon untuk tengok. Gambar dan butiran seperti penghantaran hanya contoh; laman sebenar akan ikut gambar dan cara anda. Ia hanya untuk anda dan akan dipadam pada ${d}, tiada bayaran dan tiada komitmen. Kalau berminat, balas sahaja di sini.\n\n— Cartsmith Studio`,
+// 2026-11-10: short and to the point — who we are, the site is already made (link + password), our own site at the end.
+// No description of their shop (they know it); Junyu sends it himself from WhatsApp / Email.
+const STUDIO_URL = 'https://cartsmith.netlify.app/';
+const PVMSG_V = 3;
+// already contacted (usually on Instagram) before the mockup was ready: say so, then the link
+const PVMSG_AGAIN = {
+  zh: (n, u, pw, d) => `你好，我们是 Cartsmith Studio，之前在 Instagram 跟你们打过招呼。我们已经帮 ${n} 做好了一个免费的样板网站：\n${u}\n密码：${pw}\n\n用手机打开就可以看，照片是示意图。样板只给你看，${d} 会删除；不用钱，也不用马上决定，有兴趣回复这里就好。\n\n我们的网站：${STUDIO_URL}\n— Cartsmith Studio`,
+  en: (n, u, pw, d) => `Hi, this is Cartsmith Studio. We messaged you on Instagram a few days ago. We've now made a free sample website for ${n}:\n${u}\nPassword: ${pw}\n\nIt opens best on your phone; the photos are placeholders. It's private to you and will be deleted on ${d}. No cost, no obligation. Just reply here if you'd like to talk.\n\nAbout us: ${STUDIO_URL}\n— Cartsmith Studio`,
+  ms: (n, u, pw, d) => `Hai, ini Cartsmith Studio. Kami ada hantar mesej di Instagram beberapa hari lepas. Kami sudah siapkan contoh laman web percuma untuk ${n}:\n${u}\nKata laluan: ${pw}\n\nBuka di telefon untuk tengok; gambar hanya contoh. Ia hanya untuk anda dan akan dipadam pada ${d}. Tiada bayaran, tiada komitmen. Balas sahaja di sini kalau berminat.\n\nTentang kami: ${STUDIO_URL}\n— Cartsmith Studio`,
 };
+// two days after the mockup went out: a short nudge, no AI needed
+const PVFOLLOW = {
+  zh: (n, u, pw) => `你好，我是 Cartsmith Studio。想问问 ${n} 的样板网站你有空打开看了吗？\n${u}\n密码：${pw}\n\n如果传几张你们自己的照片和现在的价钱给我们，我们会免费帮你换上去，看起来就是你们自己的网站。\n\n— Cartsmith Studio`,
+  en: (n, u, pw) => `Hi, Cartsmith Studio here. Just checking if you had a chance to open the sample website for ${n}:\n${u}\nPassword: ${pw}\n\nIf you send us a few of your own photos and your current prices, we'll put them in for free, so it looks like your own site.\n\n— Cartsmith Studio`,
+  ms: (n, u, pw) => `Hai, Cartsmith Studio di sini. Nak tanya kalau anda sempat buka contoh laman web untuk ${n}:\n${u}\nKata laluan: ${pw}\n\nKalau anda hantar beberapa gambar sendiri dan harga terkini, kami akan masukkan secara percuma, supaya ia nampak macam laman web anda sendiri.\n\n— Cartsmith Studio`,
+};
+const PVMSG = {
+  zh: (n, u, pw, d) => `你好，我们是 Cartsmith Studio，帮本地餐饮和品牌做网站。我们已经帮 ${n} 做好了一个免费的样板网站：\n${u}\n密码：${pw}\n\n用手机打开就可以看，照片是示意图。样板只给你看，${d} 会删除；不用钱，也不用马上决定，有兴趣回复这里就好。\n\n我们的网站：${STUDIO_URL}\n— Cartsmith Studio`,
+  en: (n, u, pw, d) => `Hi, this is Cartsmith Studio. We build websites for local food businesses, and we've made a free sample website for ${n}:\n${u}\nPassword: ${pw}\n\nIt opens best on your phone; the photos are placeholders. It's private to you and will be deleted on ${d}. No cost, no obligation. Just reply here if you'd like to talk.\n\nAbout us: ${STUDIO_URL}\n— Cartsmith Studio`,
+  ms: (n, u, pw, d) => `Hai, ini Cartsmith Studio. Kami buat laman web untuk perniagaan makanan tempatan, dan kami sudah siapkan contoh laman web percuma untuk ${n}:\n${u}\nKata laluan: ${pw}\n\nBuka di telefon untuk tengok; gambar hanya contoh. Ia hanya untuk anda dan akan dipadam pada ${d}. Tiada bayaran, tiada komitmen. Balas sahaja di sini kalau berminat.\n\nTentang kami: ${STUDIO_URL}\n— Cartsmith Studio`,
+};
+const pvMsg = (p) => {
+  const T = (p.touches || 0) > 0 || p.status === 'contacted' ? PVMSG_AGAIN : PVMSG;
+  return (T[p.language] || T.en)(p.business_name, p.preview_url, p.preview_password, p.preview_delete_by);
+};
+const pvFollow = (p) => (PVFOLLOW[p.language] || PVFOLLOW.en)(p.business_name, p.preview_url, p.preview_password);
+// cards made with the old, longer message get the new one (unless the mockup was already sent)
+function refreshPreviewMsgs(doc) {
+  let changed = false;
+  for (const p of doc.items) {
+    if (p.preview_url && p.preview_password && (p.preview_msg_v || 1) < PVMSG_V && p.status !== 'preview_sent') {
+      p.preview_msg = pvMsg(p); p.preview_msg_v = PVMSG_V; changed = true;
+    }
+    // mockup already sent: the follow-up is the "did you have a look?" nudge with the link again
+    if (p.status === 'preview_sent' && p.preview_url && p.preview_password && !String(p.followup || '').includes(p.preview_url)) {
+      p.followup = pvFollow(p); changed = true;
+    }
+  }
+  return changed;
+}
 async function applyPreviews(doc, list) {
   if (!list.length) return false;
   let keys = null, changed = false;
   for (const pv of list) {
     const ig = handleOf(pv.instagram || '');
     const p = doc.items.find((x) => (pv.lead_id && x.lead_id === pv.lead_id) || (ig && x.instagram === ig));
-    if (!p || p.preview_slug === pv.slug || ['do_not_contact', 'won', 'lost'].includes(p.status)) continue;
+    if (p && p.preview_slug === pv.slug) {
+      const pitch = pv.pitch && Array.isArray(pv.pitch.items) ? { mode: String(pv.pitch.mode || '').slice(0, 10), items: pv.pitch.items.slice(0, 3).map((x) => String(x).slice(0, 60)) } : null;
+      if ((pv.checked || '') !== (p.preview_checked || '') || JSON.stringify(pitch) !== JSON.stringify(p.preview_pitch || null)) {
+        p.preview_checked = pv.checked || ''; p.preview_pitch = pitch; changed = true;
+      }
+      continue;
+    }
+    if (!p || ['do_not_contact', 'won', 'lost'].includes(p.status)) continue;
     let secret;
     try {
       keys = keys || await previewKeys();
@@ -378,8 +439,10 @@ async function applyPreviews(doc, list) {
     const pw = String(secret.password || '').slice(0, 80);
     if (!pw) continue;
     p.preview_slug = pv.slug; p.preview_url = String(pv.url).slice(0, 300); p.preview_password = pw;
+    p.preview_checked = pv.checked || '';
+    p.preview_pitch = pv.pitch && Array.isArray(pv.pitch.items) ? { mode: String(pv.pitch.mode || '').slice(0, 10), items: pv.pitch.items.slice(0, 3).map((x) => String(x).slice(0, 60)) } : null;
     p.preview_delete_by = /^\d{4}-\d{2}-\d{2}$/.test(pv.delete_by || '') ? pv.delete_by : (p.preview_delete_by || myDate(14));
-    p.preview_msg = (PVMSG[p.language] || PVMSG.en)(p.business_name, p.preview_url, pw, p.preview_delete_by);
+    p.preview_msg = pvMsg(p); p.preview_msg_v = PVMSG_V;
     if (p.draft_reply) p.draft_reply = p.draft_reply.replace(/\[(样板网址|mockup link|pautan contoh)\]/g, p.preview_url).replace(/\[(密码|password|kata laluan)\]/g, pw);
     log(p, 'preview_made', p.preview_url);
     changed = true;
@@ -412,9 +475,9 @@ function refreshContacts(doc, LEADS) {
 // ---------------------------------------------------------------- phone calls (2026-11-09: calling is the first step)
 const CALL_OUTCOMES = ['no_answer', 'ok', 'callback', 'no'];
 const POSTCALL = {
-  zh: (n) => `你好，我是 Cartsmith Studio，刚刚跟你通过电话，谢谢你抽时间。\n\n这是我们帮 ${n} 做的免费首页样板：[样板网址]\n密码：[密码]\n\n用手机打开就可以看。样板只给你看，14 天后会删除。看了有什么想法，直接回复这里就好，不喜欢也没关系。\n\n— Cartsmith Studio`,
-  en: (n) => `Hi, this is Cartsmith Studio — thanks for taking our call just now.\n\nHere's the free sample homepage we made for ${n}: [mockup link]\nPassword: [password]\n\nIt opens best on your phone. It's private to you and will be deleted in 14 days. Any thoughts, just reply here — and no worries if it's not for you.\n\n— Cartsmith Studio`,
-  ms: (n) => `Hai, ini Cartsmith Studio — terima kasih kerana sudi bercakap dengan kami tadi.\n\nIni contoh laman utama percuma yang kami buat untuk ${n}: [pautan contoh]\nKata laluan: [kata laluan]\n\nBuka di telefon untuk tengok. Ia hanya untuk anda dan akan dipadam dalam 14 hari. Kalau ada pendapat, balas sahaja di sini — tiada masalah kalau tak berminat.\n\n— Cartsmith Studio`,
+  zh: (n, u, pw) => `你好，我是 Cartsmith Studio，刚刚跟你通过电话，谢谢你抽时间。\n\n这是我们帮 ${n} 做好的免费样板网站：\n${u || '[样板网址]'}\n密码：${pw || '[密码]'}\n\n用手机打开就可以看，照片是示意图。样板只给你看，14 天内会删除。看了有什么想法，直接回复这里就好，不喜欢也没关系。\n\n我们的网站：${STUDIO_URL}\n— Cartsmith Studio`,
+  en: (n, u, pw) => `Hi, this is Cartsmith Studio. Thanks for taking our call just now.\n\nHere's the free sample website we made for ${n}:\n${u || '[mockup link]'}\nPassword: ${pw || '[password]'}\n\nIt opens best on your phone; the photos are placeholders. It's private to you and will be deleted within 14 days. Any thoughts, just reply here, and no worries if it's not for you.\n\nAbout us: ${STUDIO_URL}\n— Cartsmith Studio`,
+  ms: (n, u, pw) => `Hai, ini Cartsmith Studio. Terima kasih kerana sudi bercakap dengan kami tadi.\n\nIni contoh laman web percuma yang kami buat untuk ${n}:\n${u || '[pautan contoh]'}\nKata laluan: ${pw || '[kata laluan]'}\n\nBuka di telefon untuk tengok; gambar hanya contoh. Ia hanya untuk anda dan akan dipadam dalam 14 hari. Kalau ada pendapat, balas sahaja di sini, tiada masalah kalau tak berminat.\n\nTentang kami: ${STUDIO_URL}\n— Cartsmith Studio`,
 };
 function callInto(p, outcome, date) {
   if (!CALL_OUTCOMES.includes(outcome)) throw Object.assign(new Error('电话结果不对'), { code: 'bad_input' });
@@ -437,9 +500,12 @@ function callInto(p, outcome, date) {
     p.status = 'replied';
     p.next_call_date = '';
     p.next_followup_date = '';
+    p.call_ok = today;
     p.reply_summary = '电话：对方说可以，发样板给他看。';
-    p.reply_next = '做样板（跟 Claude Code 说「帮我做 ' + p.business_name + ' 的样板」），把网址和密码贴进下面的信息，再用 WhatsApp / Email 发出去。';
-    p.draft_reply = (POSTCALL[p.language] || POSTCALL.en)(p.business_name);
+    p.reply_next = p.preview_url && p.preview_password
+      ? '样板已经做好，网址和密码已经填进下面的信息：按 WhatsApp 发给他，看一遍再按发送。'
+      : '做样板（跟 Claude Code 说「帮我做 ' + p.business_name + ' 的样板」），把网址和密码贴进下面的信息，再用 WhatsApp / Email 发出去。';
+    p.draft_reply = (POSTCALL[p.language] || POSTCALL.en)(p.business_name, p.preview_url, p.preview_password);
     log(p, 'call', '可以发样板');
   } else if (outcome === 'callback') {
     const d = /^\d{4}-\d{2}-\d{2}$/.test(date || '') && date >= today ? date : myDate(1);
@@ -494,7 +560,7 @@ function restoreRows(doc, rows) {
       ...Object.fromEntries(CRITERIA.map((c) => [c, r[c] === '1' || r[c] === 'true'])), criteria_note: '', fit: 'good', fit_reason: '', template: '',
       message: (r.opening_line || r.message || '').slice(0, 3000), status: STATUSES.includes(r.status) ? r.status : 'new', touches: Math.max(0, parseInt(r.touches, 10) || 0),
       first_contact_date: isDate(r.first_contact_date), last_contact_date: isDate(r.last_contact_date), next_followup_date: isDate(r.next_followup_date),
-      preview_url: (r.preview_url || '').slice(0, 300), preview_delete_by: isDate(r.preview_delete_by), history: [{ d: myDate(), e: 'restored', n: 'CSV backup' }]
+      preview_url: (r.preview_url || '').slice(0, 300), preview_password: (r.preview_password || '').slice(0, 80), preview_delete_by: isDate(r.preview_delete_by), history: [{ d: myDate(), e: 'restored', n: 'CSV backup' }]
     };
     p.score = CRITERIA.filter((c) => p[c]).length;
     doc.items.push(p); ids.add(id); if (ig) igs.add(ig); added++;
@@ -510,6 +576,7 @@ async function handle(action, b, doc) {
       const LEADS = await allLeads();
       let changed = refreshContacts(doc, LEADS);
       if (await applyPreviews(doc, allPreviews())) changed = true;
+      if (refreshPreviewMsgs(doc)) changed = true;
       return { items: doc.items.map(slimItem), settings: doc.settings, today: myDate(), inbox: pendingInbox(doc, LEADS), saved: changed };
     }
 
@@ -571,9 +638,24 @@ async function handle(action, b, doc) {
     case 'reply': {
       const p = find(doc, b.id);
       const text = String(b.text || '').trim().slice(0, 2000);
+      const ours = String(b.ours || '').trim().slice(0, 2000);
       if (!text) throw Object.assign(new Error('请贴上对方的回复'), { code: 'bad_input' });
-      const out = await ask(`The prospect replied to our message. Classify their intent and draft our reply (use the objection-handling section when relevant; reply in the same language they used; if they are interested, move towards the free homepage mockup and ask for their shop link / favourite template).\n${profile(p)}\n<their_reply>\n${text}\n</their_reply>`, REPLY);
+      if (ours) log(p, 'we_replied', ours);
+      const out = await ask(`The prospect replied. Read the WHOLE conversation (oldest first) and the research notes before deciding; their latest message is only part of it.
+Rules:
+- If they said they already have a website / online store, or are not interested: intent not_interested, suggested_event lost (dnc only if they ask us to stop contacting them). Do NOT ask for a shop link or push a mockup. Reply with a short polite close only if we have not already closed the conversation.
+- If our last message already closed the conversation politely and their latest message only acknowledges it (e.g. "ok", "好的", "thanks", an emoji): intent closed, reply "" (no reply needed), suggested_event lost, and say so in next_step_zh.
+- Otherwise classify their intent and draft our reply (objection-handling section when relevant; same language they used); if they are interested, move towards the free homepage mockup.
+${profile(p)}
+Research notes: ${String(p.input || '').slice(0, 1500)}
+<conversation_so_far>
+${thread(p) || '(nothing recorded before this)'}
+</conversation_so_far>
+<their_latest_reply>
+${text}
+</their_latest_reply>`, REPLY);
       log(p, 'their_reply', text);
+      p.call_ok = '';
       if (['new', 'contacted', 'preview_sent', 'proposal_sent', 'call_booked', 'no_response'].includes(p.status)) { p.prev_status = p.status; p.status = 'replied'; p.next_followup_date = ''; }
       p.draft_reply = out.reply; p.reply_intent = out.intent; p.reply_summary = out.summary_zh; p.reply_next = out.next_step_zh; p.reply_event = out.suggested_event;
       return { item: p, saved: true };

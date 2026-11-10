@@ -268,7 +268,7 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
     fs.writeFileSync(STORE, JSON.stringify(d1));
     await p.reload();
     await p.waitForSelector('#c-p901 [data-act="call"]');
-    ok(/今天要打电话/.test(await p.textContent('[data-today-list]')), 'due call appears under 今天要打电话');
+    ok(/今天要再打的电话/.test(await p.textContent('[data-today-list]')), 'due call appears under 今天要再打的电话');
     await p.click('#c-p901 [data-act="call"]');
     await p.waitForSelector('#c-p901 [data-callout]');
     await p.click('#c-p901 [data-act="call-out"][data-out="ok"]');
@@ -346,6 +346,162 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
     const [dl] = await Promise.all([p.waitForEvent('download'), p.click('[data-backup]')]);
     const bk = JSON.parse(fs.readFileSync(await dl.path(), 'utf8'));
     ok(bk.doc && (bk.doc.items.find((x) => x.id === 'p001').ai_chat || []).length === 4, 'full backup (JSON) includes the AI conversations');
+    await p.click('[data-tab="today"]');
+  }
+
+  // mockup table (2026-11-09): mockups, passwords and details in one table
+  {
+    const d3 = JSON.parse(fs.readFileSync(STORE, 'utf8'));
+    const cc = d3.items.find((x) => x.id === 'p902');
+    Object.assign(cc, { preview_url: 'https://previews--cartsmith.netlify.app/m-callback-cafe-1234abcd/', preview_password: 'cafe1234', preview_delete_by: '2000-01-01', preview_slug: 'm-callback-cafe-1234abcd' });
+    fs.writeFileSync(STORE, JSON.stringify(d3));
+    await p.reload();
+    await p.click('[data-tab="list"]');
+    await p.click('[data-filter="table"]');
+    await p.waitForSelector('.pvtbl');
+    const rows = await p.$$eval('.pvtbl tbody tr', (rs) => rs.map((r) => r.getAttribute('data-row')));
+    const total = JSON.parse(fs.readFileSync(STORE, 'utf8')).items.filter((x) => x.preview_url).length;
+    ok(rows.length === total && rows.includes('p902'), `table lists every merchant with a mockup (${rows.length})`);
+    const rowText = await p.textContent('.pvtbl tr[data-row="p902"]');
+    ok(/cafe1234/.test(rowText) && /打开/.test(rowText) && /PJ SS2/.test(rowText), 'row shows mockup link, password and area');
+    ok((await p.$('.pvtbl tr[data-row="p902"] td.late')) !== null, 'expired delete date is shown in red');
+    await shot('table');
+    await p.click('[data-act="tbl-all"]');
+    const allRows = await p.$$eval('.pvtbl tbody tr', (rs) => rs.length);
+    ok(allRows === JSON.parse(fs.readFileSync(STORE, 'utf8')).items.length, 'toggle shows all merchants');
+    await p.click('[data-act="tbl-all"]');
+    await p.click('[data-act="tbl-copy"]');
+    const tsv = await p.evaluate(() => navigator.clipboard.readText());
+    ok(/样板网址\t密码/.test(tsv) && /cafe1234/.test(tsv) && tsv.split('\n').length === total + 1, 'copy table: header + one line per merchant, with passwords');
+    await p.click('.pvtbl tr[data-row="p902"] [data-act="open-card"]');
+    await p.waitForSelector('#l-p902');
+    ok(await p.isVisible('#l-p902'), '卡片 button opens that merchant\'s card');
+    await p.click('[data-tab="today"]');
+  }
+
+  // mockup ready before the first contact (2026-11-10): one short message with link + password + our site, straight to their WhatsApp
+  {
+    const d5 = JSON.parse(fs.readFileSync(STORE, 'utf8'));
+    const pv = { preview_url: 'https://previews--cartsmith.netlify.app/m-kopi-test-1234abcd/', preview_password: 'kopi5678', preview_delete_by: '2099-01-01', preview_slug: 'm-kopi-test-1234abcd' };
+    const base5 = { created: '2026-11-10', platform: 'other', store_url: '', instagram: '', whatsapp: '', email: '', niche: 'cafe', input: 'x', notes: '', brand_clear: true, sales_signal: true, active_social: true, no_or_weak_website: true, budget_signal: true, score: 5, fit: 'good', template: 'chili-pantry', status: 'new', touches: 0, history: [], language: 'en' };
+    d5.items.unshift({ ...base5, ...pv, id: 'p904', business_name: 'Kopi Test', phone: '60178704324', observation: 'Their kuih sells out every single afternoon', message: 'Hi Kopi Test, we saw that your kuih sells out every single afternoon and your regulars love the pandan ones... may we send you a free mockup?', preview_msg: 'Hi, old long message with shipping placeholders' });
+    d5.items.unshift({ ...base5, ...pv, id: 'p905', business_name: 'Roti Test', phone: '60191234567', preview_url: 'https://previews--cartsmith.netlify.app/m-roti-test-1234abcd/', preview_password: 'roti4321', preview_slug: 'm-roti-test-1234abcd', preview_msg: 'old' });
+    fs.writeFileSync(STORE, JSON.stringify(d5));
+    await p.reload();
+    await p.evaluate(() => { window.DESK_NOW = '2026-11-10T07:00:00Z'; }); // 15:00 in Malaysia
+    await p.click('[data-tab="today"]');
+    await p.waitForSelector('#c-p904 textarea[data-field="preview_msg"]');
+    const k = JSON.parse(fs.readFileSync(STORE, 'utf8')).items.find((x) => x.id === 'p904');
+    ok(k.preview_msg_v >= 2 && k.preview_msg.includes(pv.preview_url) && k.preview_msg.includes('kopi5678') && k.preview_msg.includes('cartsmith.netlify.app') && !/sells out|shipping/.test(k.preview_msg), 'old mockup messages are replaced: short, with link, password and our own site, no shop description');
+    ok(/we've made a free sample website for Kopi Test/.test(k.preview_msg) && k.preview_msg.split(/\s+/).length < 80, 'message says the website is already made, under 80 words');
+    ok(!(await p.$('#c-p904 textarea[data-field="message"]')), 'card with a mockup shows only the mockup message (no long opener next to it)');
+    ok(/We've already made a free sample website/.test(await p.textContent('#c-p904 .cue')), 'phone opener says the website is already made');
+    const waBtn = await p.textContent('#c-p904 [data-act="wa"]');
+    ok(/\+60 17-870 4324/.test(waBtn), 'WhatsApp button shows the number it will open (taken from the phone number)');
+    const [waPop5] = await Promise.all([p.waitForEvent('popup'), p.click('#c-p904 [data-act="wa"]')]);
+    const waUrl5 = decodeURIComponent(waPop5.url());
+    ok(waUrl5.startsWith('https://wa.me/60178704324') && waUrl5.includes('kopi5678') || /whatsapp\.com/.test(waUrl5), 'WhatsApp opens that number with the mockup message filled in');
+    await waPop5.close();
+    await p.click('[data-sentbar] [data-act="sentbar-no"]').catch(() => {});
+    await p.click('#c-p904 [data-act="pv-sent"]');
+    await p.waitForFunction(() => !document.querySelector('#c-p904 textarea[data-field="preview_msg"]'));
+    const k2 = JSON.parse(fs.readFileSync(STORE, 'utf8')).items.find((x) => x.id === 'p904');
+    ok(k2.status === 'preview_sent' && !!k2.next_followup_date, '已发样板 records the mockup as sent and sets a follow-up');
+    // yes on the phone when the mockup is ready: the message already has the link and password
+    await p.click('[data-tab="list"]');
+    await p.click('[data-filter="all"]');
+    if (!(await p.$('#l-p905'))) await p.click('[data-expand="p905"]');
+    ok((await p.getAttribute('#l-p905 .send__btns button:first-child', 'data-act')) === 'call', 'card with a mockup still has the call button first');
+    await p.click('#l-p905 [data-act="call"]');
+    await p.waitForSelector('#l-p905 [data-callout]');
+    await p.click('#l-p905 [data-act="call-out"][data-out="ok"]');
+    await p.waitForSelector('#l-p905 textarea[data-field="draft_reply"]');
+    const r5 = JSON.parse(fs.readFileSync(STORE, 'utf8')).items.find((x) => x.id === 'p905');
+    ok(r5.draft_reply.includes('m-roti-test-1234abcd') && r5.draft_reply.includes('roti4321') && r5.draft_reply.includes('cartsmith.netlify.app') && !/\[mockup link\]/.test(r5.draft_reply), 'after a good call the message has the link and password filled in');
+    await shot('pv-first');
+    await p.click('[data-tab="today"]');
+  }
+
+  // today's plan + 连续打电话 (2026-11-10): dial, read the script in their language, outcome, send the mockup on WhatsApp, next
+  {
+    const d6 = JSON.parse(fs.readFileSync(STORE, 'utf8'));
+    const base6 = { created: '2026-11-10', platform: 'other', store_url: '', instagram: '', whatsapp: '', email: '', niche: 'gelato', input: 'x', notes: '', brand_clear: true, sales_signal: true, active_social: true, no_or_weak_website: true, budget_signal: true, score: 5, fit: 'good', template: 'chili-pantry', touches: 0, history: [], language: 'en', observation: 'Opened late 2024' };
+    d6.items.unshift({ ...base6, id: 'p907', business_name: 'Gelato Test', status: 'contacted', touches: 1, last_channel: 'ig', channels: ['ig'], first_contact_date: '2026-11-08', last_contact_date: '2026-11-08', next_followup_date: '2099-01-01', next_call_date: '2000-01-01', phone: '60172022162',
+      preview_url: 'https://previews--cartsmith.netlify.app/m-gelato-test-1234abcd/', preview_password: 'gelato5523', preview_delete_by: '2099-01-01', preview_slug: 'm-gelato-test-1234abcd', preview_msg: 'old', preview_checked: '2026-11-10', preview_pitch: { mode: 'pickup', items: ['Salted Pistachio', 'Affogato'] } });
+    d6.items.unshift({ ...base6, id: 'p908', business_name: 'Nyonya Test', status: 'preview_sent', touches: 1, phone: '60122887449', next_followup_date: '2000-01-01',
+      preview_url: 'https://previews--cartsmith.netlify.app/m-nyonya-test-1234abcd/', preview_password: 'beng6840', preview_delete_by: '2099-01-01', preview_slug: 'm-nyonya-test-1234abcd', followup: '' });
+    fs.writeFileSync(STORE, JSON.stringify(d6));
+    await p.reload();
+    await p.evaluate(() => { window.DESK_NOW = '2026-11-10T07:00:00Z'; }); // 15:00
+    await p.click('[data-tab="list"]'); await p.click('[data-tab="today"]');
+    await p.waitForSelector('[data-plan]');
+    const plan = await p.textContent('[data-plan]');
+    ok(/现在最适合打电话/.test(plan) && /开始连续打电话（\d+ 家）/.test(plan) && /今天已经：打了 \d+ 通电话/.test(plan), "today's plan: time advice, how many calls, what's done today");
+    const s6 = JSON.parse(fs.readFileSync(STORE, 'utf8')).items;
+    const g = s6.find((x) => x.id === 'p907'), ny = s6.find((x) => x.id === 'p908');
+    ok(/We messaged you on Instagram/.test(g.preview_msg) && g.preview_msg.includes('gelato5523'), 'shop already written to on Instagram: the mockup message says so');
+    ok(ny.followup.includes('m-nyonya-test-1234abcd') && ny.followup.includes('beng6840') && /had a chance to open/.test(ny.followup), 'mockup sent: the follow-up nudge is ready with the link (no AI needed)');
+    await p.click('[data-act="cs-start"]');
+    await p.waitForSelector('[data-cs="p907"]');
+    const cs = await p.textContent('[data-cs="p907"]');
+    ok(/连续打电话 · 1 \//.test(await p.textContent('[data-sheet-panel]')), 'call session starts with the callback that is due');
+    ok(/May I speak to the owner/.test(cs) && /with your Salted Pistachio, Affogato, where customers can order and choose a pick-up date online/.test(cs) && /意思：你好，请问老板在吗/.test(cs), 'script in their language, with what is in their mockup, and the Chinese meaning under each line');
+    ok(/多少钱/.test(cs) && /RM2,800/.test(cs) && /已经有网站/.test(cs) && /样板已检查 2026-11-10/.test(cs), 'usual answers (price, already have a website...) and the mockup-checked badge are on screen');
+    ok(/拨打 \+60 17-202 2162/.test(cs), 'big dial button with the number');
+    await p.click('[data-cs="p907"] .callout [data-act="cs-out"][data-out="ok"]');
+    await p.waitForSelector('[data-cs="p907"] [data-act="cs-wa"]');
+    const msg = await p.inputValue('[data-cs="p907"] textarea');
+    ok(msg.includes('m-gelato-test-1234abcd') && msg.includes('gelato5523') && msg.includes('cartsmith.netlify.app'), 'yes on the phone: the message to send has the link and password already');
+    const [csPop] = await Promise.all([p.waitForEvent('popup'), p.click('[data-cs="p907"] [data-act="cs-wa"]')]);
+    ok(decodeURIComponent(csPop.url()).startsWith('https://wa.me/60172022162') || /whatsapp\.com/.test(csPop.url()), 'WhatsApp opens their number from the call session');
+    await csPop.close();
+    await p.click('[data-cs="p907"] [data-act="cs-sent"]');
+    await p.waitForFunction(() => !document.querySelector('[data-cs="p907"]'));
+    const g2 = JSON.parse(fs.readFileSync(STORE, 'utf8')).items.find((x) => x.id === 'p907');
+    ok(g2.status === 'preview_sent' && g2.followup.includes('m-gelato-test-1234abcd') && !g2.call_ok, 'sent from the session: mockup recorded as sent, follow-up ready, then the next shop');
+    const nextId = await p.getAttribute('[data-cs]', 'data-cs').catch(() => null);
+    if (nextId) {
+      await p.click(`[data-cs="${nextId}"] .callout [data-act="cs-out"][data-out="no_answer"]`);
+      await p.waitForFunction((id) => !document.querySelector(`[data-cs="${id}"]`), nextId);
+      const nx = JSON.parse(fs.readFileSync(STORE, 'utf8')).items.find((x) => x.id === nextId);
+      ok(nx.call_misses >= 1 && nx.last_call_date, 'no answer in the session: recorded, moves on');
+    }
+    await shot('call-session');
+    await p.click('.sheet__head [data-sheet-close]');
+    await p.waitForFunction(() => document.querySelector('[data-sheet]').hidden);
+  }
+
+  // whole conversation (2026-11-09): what we sent, what they said, what the owner replied himself; "already has a website"
+  {
+    const sentP001 = (JSON.parse(fs.readFileSync(STORE, 'utf8')).items.find((x) => x.id === 'p001').history || []).filter((h) => h.e === 'sent');
+    ok(sentP001.length > 0 && sentP001.some((h) => (h.n || '').length > 20), 'sent messages are recorded with their text, not just "sent"');
+    const d4 = JSON.parse(fs.readFileSync(STORE, 'utf8'));
+    d4.items.unshift({ id: 'p903', created: '2026-11-08', business_name: 'Yi Test Pastry', platform: 'shopee', store_url: '', instagram: 'yitest', whatsapp: '', email: '', niche: 'mooncakes', input: 'Mooncakes and CNY cookies', observation: 'Shopee mooncake picks 2026', notes: '', brand_clear: true, sales_signal: true, active_social: true, no_or_weak_website: true, budget_signal: false, score: 4, fit: 'good', template: 'chili-pantry', language: 'zh', status: 'contacted', touches: 1, first_contact_date: '2026-11-08', last_contact_date: '2026-11-08', next_followup_date: '2099-01-01', message: '你好 Yi Test', history: [{ d: '2026-11-08', e: 'sent', n: 'ig: 你好 Yi Test Pastry，我们是 Cartsmith Studio，想免费帮你们做一个首页样板' }] });
+    fs.writeFileSync(STORE, JSON.stringify(d4));
+    await p.reload();
+    await p.click('[data-tab="list"]');
+    await p.click('[data-filter="all"]');
+    await p.click('[data-expand="p903"]');
+    await p.click('#l-p903 [data-act="reply"]');
+    await p.waitForSelector('[data-reply-ours]');
+    await p.fill('[data-reply-text]', '目前我们已有网店喔\n好的👌');
+    await p.fill('[data-reply-ours]', '谢谢你这么快回复，也恭喜你们已经有自己的网站了。那我们就不打扰了。祝生意兴隆。');
+    await p.click('[data-act="reply-go"]');
+    await p.waitForSelector('[data-sheet]', { state: 'hidden' });
+    const hist = JSON.parse(fs.readFileSync(STORE, 'utf8')).items.find((x) => x.id === 'p903').history.map((h) => h.e);
+    ok(hist.indexOf('we_replied') > hist.indexOf('sent') && hist.indexOf('their_reply') > hist.indexOf('we_replied'), 'desk records both sides in order: our message, my own reply, their reply');
+    const calls = await (await fetch('http://localhost:9920/__calls')).json();
+    const full = (calls.filter((c) => c.full).pop() || {}).full || '';
+    ok(/工作台发的）：ig: 你好 Yi Test Pastry/.test(full) && /自己在 IG \/ WhatsApp 回的）：谢谢你这么快回复/.test(full) && /目前我们已有网店喔/.test(full), 'AI gets the whole conversation, not only the last line');
+    ok(/already have a website/.test(full) && /only acknowledges it/.test(full), 'AI is told not to pitch when they have a website, and that an "ok" after our close needs no reply');
+    // close it: they already have a website
+    await p.click('[data-tab="list"]');
+    if (!(await p.$('#l-p903'))) await p.click('[data-expand="p903"]');
+    await p.click('#l-p903 [data-act="more"]');
+    await p.click('[data-sheet-panel] [data-act="has-site"]');
+    await p.waitForTimeout(600);
+    const y = JSON.parse(fs.readFileSync(STORE, 'utf8')).items.find((x) => x.id === 'p903');
+    ok(y.status === 'lost' && y.lost_reason === '已有网站' && !y.next_followup_date && y.no_or_weak_website === false, '"对方已经有网站" closes the lead: no more follow-ups, score updated');
     await p.click('[data-tab="today"]');
   }
 

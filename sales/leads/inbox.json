@@ -923,7 +923,16 @@
    "instagram": "contour.pj",
    "name": "Contour",
    "delete_by": "2026-11-23",
-   "photos": "placeholder"
+   "photos": "placeholder",
+   "checked": "2026-11-10",
+   "pitch": {
+    "mode": "pickup",
+    "items": [
+     "Strawberry Daifuku Croissant",
+     "Tuna Croinigiri",
+     "Matcha Tart"
+    ]
+   }
   },
   {
    "slug": "m-dreamz-bakery-6c2f69c2",
@@ -933,7 +942,16 @@
    "instagram": "dreamzbakery",
    "name": "Dreamz Bakery",
    "delete_by": "2026-11-23",
-   "photos": "placeholder"
+   "photos": "placeholder",
+   "checked": "2026-11-10",
+   "pitch": {
+    "mode": "pickup",
+    "items": [
+     "Strawberry Shortcake",
+     "Cempedak Pandan Cake",
+     "Durian Pandan Cake"
+    ]
+   }
   },
   {
    "slug": "m-floccus-floccus-660bccf8",
@@ -943,7 +961,12 @@
    "instagram": "floccusfloccus",
    "name": "Floccus Floccus",
    "delete_by": "2026-11-23",
-   "photos": "placeholder"
+   "photos": "placeholder",
+   "checked": "",
+   "pitch": {
+    "mode": "",
+    "items": []
+   }
   },
   {
    "slug": "m-hideaway-cafe-a8cef8fc",
@@ -953,7 +976,16 @@
    "instagram": "hideaway_17",
    "name": "Hideaway",
    "delete_by": "2026-11-23",
-   "photos": "placeholder"
+   "photos": "placeholder",
+   "checked": "2026-11-10",
+   "pitch": {
+    "mode": "pickup",
+    "items": [
+     "Classic Butter Cake",
+     "Victoria Sponge",
+     "Lemon Drizzle"
+    ]
+   }
   },
   {
    "slug": "m-ome-by-spacebar-c95e16d2",
@@ -963,7 +995,16 @@
    "instagram": "ome.space",
    "name": "Ome by Spacebar Coffee",
    "delete_by": "2026-11-23",
-   "photos": "placeholder"
+   "photos": "placeholder",
+   "checked": "2026-11-10",
+   "pitch": {
+    "mode": "pickup",
+    "items": [
+     "house blend beans",
+     "olive oil zucchini loaf",
+     "iced latte"
+    ]
+   }
   },
   {
    "slug": "m-artigusto-44efba81",
@@ -973,7 +1014,16 @@
    "instagram": "artigustogelato",
    "name": "Artigusto Gelato",
    "delete_by": "2026-11-23",
-   "photos": "placeholder"
+   "photos": "placeholder",
+   "checked": "2026-11-10",
+   "pitch": {
+    "mode": "pickup",
+    "items": [
+     "Salted Pistachio",
+     "Bentong Ginger Chocolate",
+     "affogato"
+    ]
+   }
   },
   {
    "slug": "m-good-blue-men-e20293dd",
@@ -983,7 +1033,16 @@
    "instagram": "goodbluemen",
    "name": "Good Blue Men",
    "delete_by": "2026-11-23",
-   "photos": "placeholder"
+   "photos": "placeholder",
+   "checked": "2026-11-10",
+   "pitch": {
+    "mode": "pickup",
+    "items": [
+     "Christmas Sharing Feast",
+     "Roast Chicken Set",
+     "Kam Heong Chicken Sandwich"
+    ]
+   }
   },
   {
    "slug": "m-rata-subang-20783d5e",
@@ -993,7 +1052,16 @@
    "instagram": "rata_subang",
    "name": "RATA Restaurant",
    "delete_by": "2026-11-23",
-   "photos": "placeholder"
+   "photos": "placeholder",
+   "checked": "2026-11-10",
+   "pitch": {
+    "mode": "pickup",
+    "items": [
+     "Slow-Roasted NZ Leg of Lamb Set",
+     "Lamb Ragout & Mango Chutney Pizza",
+     "Coconut Lamb Skewers"
+    ]
+   }
   },
   {
    "slug": "m-blue-dahlia-cd6d8a4f",
@@ -1003,7 +1071,16 @@
    "instagram": "bluedahliamy",
    "name": "Blue Dahlia",
    "delete_by": "2026-11-23",
-   "photos": "placeholder"
+   "photos": "placeholder",
+   "checked": "2026-11-10",
+   "pitch": {
+    "mode": "pickup",
+    "items": [
+     "Kuih Koci",
+     "Abok-Abok",
+     "Bingka Ubi"
+    ]
+   }
   },
   {
    "slug": "m-baba-beng-dae4523e",
@@ -1013,7 +1090,15 @@
    "instagram": "mybababeng",
    "name": "Baba Beng",
    "delete_by": "2026-11-23",
-   "photos": "placeholder"
+   "photos": "placeholder",
+   "checked": "2026-11-10",
+   "pitch": {
+    "mode": "pickup",
+    "items": [
+     "Kuih Variety Set (33 pieces)",
+     "Nyonya Kaya (Malaccan)"
+    ]
+   }
   },
   {
    "slug": "m-le-petit-four-2b77bdab",
@@ -1023,7 +1108,16 @@
    "instagram": "lepetitfourpatisserie",
    "name": "Le Petit Four Pâtisserie",
    "delete_by": "2026-11-23",
-   "photos": "placeholder"
+   "photos": "placeholder",
+   "checked": "2026-11-10",
+   "pitch": {
+    "mode": "pickup",
+    "items": [
+     "Fig Tart",
+     "Lemon Meringue Tart",
+     "Croissant"
+    ]
+   }
   },
   {
    "slug": "m-whisk-penang-cc0216d3",
@@ -1033,7 +1127,12 @@
    "instagram": "whisk.my",
    "name": "Whisk",
    "delete_by": "2026-11-23",
-   "photos": "placeholder"
+   "photos": "placeholder",
+   "checked": "",
+   "pitch": {
+    "mode": "",
+    "items": []
+   }
   },
   {
    "slug": "m-le-dux-patisserie-125c4a33",
@@ -1043,7 +1142,12 @@
    "instagram": "le_dux_patisserie",
    "name": "Le Dux Patisserie",
    "delete_by": "2026-11-23",
-   "photos": "placeholder"
+   "photos": "placeholder",
+   "checked": "",
+   "pitch": {
+    "mode": "",
+    "items": []
+   }
   },
   {
    "slug": "m-siru-kl-8153c128",
@@ -1053,7 +1157,16 @@
    "instagram": "siru_kl",
    "name": "Siru",
    "delete_by": "2026-11-23",
-   "photos": "placeholder"
+   "photos": "placeholder",
+   "checked": "2026-11-10",
+   "pitch": {
+    "mode": "pickup",
+    "items": [
+     "Today Rice Cake Sampler",
+     "Dubai Chocolate Chapssaltteok",
+     "Magic Lemonade"
+    ]
+   }
   },
   {
    "slug": "m-haruki-nabe-kaiseki-e1176b49",
@@ -1063,7 +1176,16 @@
    "instagram": "haruki_nabe_kaiseki",
    "name": "Haruki Nabe Kaiseki",
    "delete_by": "2026-11-23",
-   "photos": "placeholder"
+   "photos": "placeholder",
+   "checked": "2026-11-10",
+   "pitch": {
+    "mode": "booking",
+    "items": [
+     "7-Course Chanko Shabu-Shabu Set",
+     "Wagyu Beef Shabu-Shabu",
+     "Chanko Nabe"
+    ]
+   }
   },
   {
    "slug": "m-gongsi-e2aea6d7",
@@ -1073,7 +1195,16 @@
    "instagram": "gongsi_11",
    "name": "Gongsi 共肆",
    "delete_by": "2026-11-23",
-   "photos": "placeholder"
+   "photos": "placeholder",
+   "checked": "2026-11-10",
+   "pitch": {
+    "mode": "booking",
+    "items": [
+     "san bei ji",
+     "braised pork rice",
+     "lamb chops with shacha sauce"
+    ]
+   }
   },
   {
    "slug": "m-monet-coffee-atelier-b7e35471",
@@ -1083,7 +1214,16 @@
    "instagram": "monetcoffeeatelier",
    "name": "Monét Coffee Atelier",
    "delete_by": "2026-11-23",
-   "photos": "placeholder"
+   "photos": "placeholder",
+   "checked": "2026-11-10",
+   "pitch": {
+    "mode": "pickup",
+    "items": [
+     "Classic Tiramisu",
+     "Matcha Tiramisu",
+     "White Coffee"
+    ]
+   }
   },
   {
    "slug": "m-nelys-passion-heart-d187b7bc",
@@ -1093,7 +1233,16 @@
    "instagram": "passionheartcafe",
    "name": "Nely's Passion Heart",
    "delete_by": "2026-11-23",
-   "photos": "placeholder"
+   "photos": "placeholder",
+   "checked": "2026-11-10",
+   "pitch": {
+    "mode": "pickup",
+    "items": [
+     "Cempedak Cake",
+     "Cempedak Crumble",
+     "Onde-Onde Cake"
+    ]
+   }
   },
   {
    "slug": "m-norm-micro-roastery-84b7af50",
@@ -1103,7 +1252,16 @@
    "instagram": "norm.micro.roastery",
    "name": "Norm Micro Roastery",
    "delete_by": "2026-11-23",
-   "photos": "placeholder"
+   "photos": "placeholder",
+   "checked": "2026-11-10",
+   "pitch": {
+    "mode": "pickup",
+    "items": [
+     "house roast beans",
+     "scallop and prawn pumpkin risotto",
+     "buttermilk waffles"
+    ]
+   }
   },
   {
    "slug": "m-secawan-tepung-af131723",
@@ -1113,7 +1271,16 @@
    "instagram": "secawantepung",
    "name": "Secawan Tepung",
    "delete_by": "2026-11-23",
-   "photos": "placeholder"
+   "photos": "placeholder",
+   "checked": "2026-11-10",
+   "pitch": {
+    "mode": "pickup",
+    "items": [
+     "Kuih Talam (22 types)",
+     "Kuih Lapis",
+     "Angku"
+    ]
+   }
   }
  ]
 }
