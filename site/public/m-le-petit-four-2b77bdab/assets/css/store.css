@@ -198,6 +198,7 @@ p { margin: 0 0 1em; }
 .price .was { color: var(--muted); font-weight: 400; font-size: .9em; margin-left: 4px; }
 .price .from { font-weight: 400; color: var(--muted); font-size: .9em; }
 .price .per { font-weight: 400; color: var(--muted); font-size: .85em; }
+.card .card__add { white-space: normal; } /* a long label (e.g. mockup "See the set") must not widen the 2-column grid on phones */
 .price--lg { font-size: 1.45rem; }
 .card__add { margin-top: auto; width: 100%; }
 .card .btn--sm { min-height: 40px; }
