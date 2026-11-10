@@ -253,9 +253,9 @@ async function scan(page, url, vp, shotDir) {
       await page.fill('input[name=email]', 'test@example.com');
       await page.fill('input[name=phone]', '012-345 6789');
       await page.fill('input[name=name]', 'Aisyah Tan');
-      const pickup = await page.$('input[name=method]'); // food shops: pick-up / local delivery on a date ("order": {"mode": "pickup"})
+      const pickup = await page.$('input[name=date]'); // food shops / restaurants: pick-up, delivery or dine-in on a date ("order": {"mode": "pickup" | "booking"})
       if (pickup) {
-        ok(await page.isHidden('input[name=addr1]'), 'pick-up checkout: no address needed for pick-up');
+        ok(await page.isHidden('input[name=addr1]'), 'pick-up / booking checkout: no address needed');
         await page.fill('input[name=date]', await page.getAttribute('input[name=date]', 'min'));
       } else {
         await page.fill('input[name=addr1]', '12 Jalan Contoh');
