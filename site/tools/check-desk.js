@@ -441,7 +441,7 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
     const s6 = JSON.parse(fs.readFileSync(STORE, 'utf8')).items;
     const g = s6.find((x) => x.id === 'p907'), ny = s6.find((x) => x.id === 'p908');
     ok(/We messaged you on Instagram/.test(g.preview_msg) && g.preview_msg.includes('gelato5523'), 'shop already written to on Instagram: the mockup message says so');
-    ok(ny.followup.includes('m-nyonya-test-1234abcd') && ny.followup.includes('beng6840') && /had a chance to open/.test(ny.followup), 'mockup sent: the follow-up nudge is ready with the link (no AI needed)');
+    ok(ny.followup.includes('m-nyonya-test-1234abcd') && ny.followup.includes('beng6840') && /easy to find/.test(ny.followup) && !/[?？]/.test(ny.followup.replace(/https?:\/\/\S+/g, '')), 'mockup sent: the follow-up nudge is ready with the link (no AI needed)');
     await p.click('[data-act="cs-start"]');
     await p.waitForSelector('[data-cs="p907"]');
     const cs = await p.textContent('[data-cs="p907"]');
@@ -483,6 +483,11 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
     const last7 = calls7[calls7.length - 1];
     ok(last7.brief && last7.facts, "AI gets 'how our system works' and the products / prices / Example items on this customer's mockup");
     ok(calls7.length > 0 && calls7.every((c) => c.brief), 'every AI task (analyse, follow-up, reply, assistant) gets the system brief');
+    // no questions in customer messages (2026-11-10): the mock writes "…有没有想过…？", the desk rewrites / cleans it
+    const st8 = JSON.parse(fs.readFileSync(STORE, 'utf8')).items;
+    const aiMsgs = st8.filter((x) => x.lead_id || x.id === 'p001').map((x) => x.message).filter(Boolean);
+    ok(aiMsgs.length > 0 && aiMsgs.every((m) => !/[?？]/.test(m.replace(/https?:\/\/\S+/g, ''))), `AI-written messages have no questions (${aiMsgs.length} checked)`);
+    ok(calls7.some((c) => /^Rewrite this customer message so it contains NO questions/.test(c.task)), 'a message that still had a question was sent back to the AI to rewrite');
     await p.click('[data-sheet-panel] [data-sheet-close]');
     await p.click('[data-tab="today"]');
   }

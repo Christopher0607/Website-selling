@@ -23,14 +23,16 @@ Built into the desk by `python3 site/build.py` (file: `sales/agent/desk-brief.md
    beans / jars), "booking" (restaurants: choose a date and time to dine in), or a normal online shop with shipping.
    "样板已检查 <date>" = Claude Code checked it live on phone and desktop; it is ready to send.
 3. **Phone call first** (连续打电话): ask for the owner → 15-second intro saying the sample website is ALREADY made and
-   what is on it → ask "can I WhatsApp you the link now?" → if yes, confirm the WhatsApp number and their name.
+   what is on it → say "I'll WhatsApp you the link right after this call" (a statement, not "can I…?") → if they don't
+   object, confirm the WhatsApp number and their name.
    Outcomes: 说可以 (yes) / 没接 (no answer, try again tomorrow, 3 times max) / 改天再打 (call back on a date) /
    不需要 (no — never contact again) / 已经有网站 (they have a website — close politely, never pitch).
 4. **Send the mockup** by WhatsApp (or email) right after the call: short message = who we are, the sample website is
    already made for them, link + password, private and deleted on the date, no cost or obligation, our own site at the
    end (https://cartsmith.netlify.app/). If we wrote to them on Instagram before, the message says so.
-5. **Follow-up 2 days later**: ask if they had a chance to open it; offer to put THEIR own photos and current prices in
-   for free so it looks like their own site. One follow-up, then a last polite message later. Never chase more.
+5. **Follow-up 2 days later**: send the link and password again so it is easy to find, and say we can put THEIR own
+   photos and current prices in for free so it looks like their own site. One follow-up, then a last polite message
+   later. Never chase more.
 6. **Interested** → a 15-minute call → written quotation within 24 hours (valid 14 days) → 50% deposit → build →
    balance → launch. Prices and offers ONLY from the knowledge base (Starter RM2,800, Catalog RM3,500, Growth RM4,800;
    Care from RM150 / month; founding-client offer for the first 3 clients only).
@@ -46,8 +48,12 @@ lost · no_response · do_not_contact. "Next follow-up" and "next call" dates ar
   know their shop. One specific detail is enough.
 - Sign as "Cartsmith Studio", write as "we". Never a personal name. No emojis, no hashtags, no exclamation streaks.
 - Write in their language (English / 中文 / Bahasa Malaysia).
+- **No questions in customer messages** (no "?" / "？"): a yes/no question ("Can we…?", "Would you like…?", "Did you
+  have a chance…?") makes "no" the easy answer. Use statements and one easy next step ("Just reply here and we'll…",
+  "Send us a few photos and we'll put them in"). The desk rewrites any message that still has a question.
 - If the mockup is ready and not sent yet: the message carries the link and password (no need to ask permission
-  first). If no mockup yet: end with one yes/no question — may we make them a free sample website?
+  first). If no mockup yet: offer it as a statement — we'd be happy to make them a free sample website; just reply
+  here and we'll send it within 1–2 working days.
 - Never say the photos are theirs; say they are placeholders and we can put in theirs for free.
 - Never promise sales, rankings or delivery dates; never invent clients, reviews, numbers, prices or offers.
   If a price or detail is not in the files, say we will confirm.
@@ -56,7 +62,7 @@ lost · no_response · do_not_contact. "Next follow-up" and "next call" dates ar
 
 ## 5. Phone answers we use (keep consistent with the desk)
 - Owner not in → ask what time the owner is usually in, call back then.
-- Busy → offer to WhatsApp the link so they can look later.
+- Busy → "I'll WhatsApp you the link so you can look later." (a statement)
 - How much? → the sample is free; a full website starts from RM2,800, fixed and written down; details come with the link.
 - We already have Shopee / Instagram / foodpanda → keep them; this gives regulars one link to order directly, without
   paying commission on every order.
