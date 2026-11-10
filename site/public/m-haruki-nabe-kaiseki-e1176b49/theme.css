@@ -40,7 +40,7 @@ body { font-weight: 500; }
 .qa summary { font-weight: 800; }
 
 /* preview overrides */
-:root{--accent:#7a2e2e;--accent-fg:#ffffff;}
+:root{--accent:#8b3a2b;--accent-fg:#ffffff;}
 html.pv-locked body > *:not(.pv-gate){visibility:hidden}
 .pv-gate{display:none}
 html.pv-locked .pv-gate{display:grid;position:fixed;inset:0;z-index:999;place-items:center;background:var(--bg);visibility:visible}
