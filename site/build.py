@@ -125,7 +125,9 @@ class Store:
         self.ship = t.get("shipping", {"west": 8, "east": 15, "free_min": 150})
         # mockups for food / made-to-order shops: pick-up or local delivery on a chosen date instead of parcel shipping
         o = preview.get("order") if preview else None
-        self.pickup = o if isinstance(o, dict) and o.get("mode") == "pickup" and o.get("pickup") else None
+        # "booking": restaurants, dine-in on a chosen date (same flow, booking words)
+        self.pickup = o if isinstance(o, dict) and o.get("mode") in ("pickup", "booking") and o.get("pickup") else None
+        self.booking = bool(self.pickup and self.pickup.get("mode") == "booking")
         self.cats = {c["id"]: c for c in t["categories"]}
         self.products = t["products"]
         for p in self.products:
@@ -264,7 +266,7 @@ class Store:
                 nav.append((f'{sp}shop.html?cat={c["id"]}', c["name"]))
         nav += [(f"{sp}about.html", t.get("about_nav", "Our story"))]
         links = "".join(f'<a href="{u}">{e(n)}</a>' for u, n in nav)
-        help_lbl = "Help &amp; pick-up" if self.pickup else "Help &amp; shipping"
+        help_lbl = ("Help &amp; bookings" if self.booking else "Help &amp; pick-up") if self.pickup else "Help &amp; shipping"
         mlinks = links + f'<a href="{sp}help.html">{help_lbl}</a>'
         logo = self.logo(sp)
         return f"""{ann}
@@ -311,9 +313,9 @@ class Store:
         t = self.t
         shop = "".join(f'<li><a href="{sp}shop.html?cat={c["id"]}">{e(c["name"])}</a></li>' for c in t["categories"])
         pk = self.pickup
-        ship_lbl = "Pick-up &amp; delivery" if pk else "Shipping"
+        ship_lbl = ("Bookings" if self.booking else "Pick-up &amp; delivery") if pk else "Shipping"
         ret_lbl = "Changes &amp; refunds" if pk else "Returns &amp; exchanges"
-        drawer_note = (f"Pick-up in {e(pk['pickup'])}" + (f" or delivery by {e(pk['delivery'])}" if pk.get("delivery") else "") + " — choose at checkout.") if pk else "Shipping is calculated at checkout."
+        drawer_note = f"Dine-in at {e(pk['pickup'])} — choose your date at checkout." if self.booking else (f"Pick-up in {e(pk['pickup'])}" + (f" or delivery by {e(pk['delivery'])}" if pk.get("delivery") else "") + " — choose at checkout.") if pk else "Shipping is calculated at checkout."
         return f"""</main>
 <footer class="ftr">
   <div class="wrap ftr__grid">
@@ -509,7 +511,7 @@ if(h===window.__pvHash){try{localStorage.setItem('pv_'+h,'1');}catch(e){}documen
                          for p in self.products},
         }
         if self.pickup:
-            data["order"] = {"mode": "pickup", "pickup": self.pickup["pickup"], "pickup_note": self.pickup.get("pickup_note", ""),
+            data["order"] = {"mode": self.pickup["mode"], "pickup": self.pickup["pickup"], "pickup_note": self.pickup.get("pickup_note", ""),
                              "delivery": self.pickup.get("delivery", ""), "delivery_note": self.pickup.get("delivery_note", "")}
         write(f"{pre}data.js", "window.STORE=" + json.dumps(data, ensure_ascii=False, separators=(",", ":")) + ";\n", self.out)
 
@@ -559,7 +561,10 @@ if(h===window.__pvHash){try{localStorage.setItem('pv_'+h,'1');}catch(e){}documen
         roast = self.roast_meter(p["roast"]) if p.get("roast") else ""
         ship = self.ship
         pk = self.pickup
-        if pk:
+        if pk and self.booking:
+            ship_li = f'<li>{icon("map")}<span><b>Dine-in at {e(pk["pickup"])}.</b> Choose your date at checkout.</span></li>'
+            ship_acc, ship_link = "Booking &amp; changes", "Booking details"
+        elif pk:
             ship_li = (f'<li>{icon("map")}<span><b>Pick-up in {e(pk["pickup"])}.</b>'
                        + (f' Or delivery by {e(pk["delivery"])}.' if pk.get("delivery") else "") + ' Choose the date at checkout.</span></li>')
             ship_acc, ship_link = "Pick-up, delivery &amp; changes", "Pick-up &amp; delivery details"
@@ -612,7 +617,10 @@ if(h===window.__pvHash){try{localStorage.setItem('pv_'+h,'1');}catch(e){}documen
 
     def cart_body(self, root, sp):
         pk = self.pickup
-        if pk:
+        if pk and self.booking:
+            zone = f'<p class="small muted">Dine-in at {e(pk["pickup"])}. Choose your date and time at checkout.</p>'
+            ship_row = "Booking"
+        elif pk:
             zone = (f'<p class="small muted">Pick-up in {e(pk["pickup"])} is free.'
                     + (f' Delivery by {e(pk["delivery"])}: the fee is confirmed with you.' if pk.get("delivery") else "") + '</p>')
             ship_row = "Pick-up / delivery"
@@ -649,7 +657,16 @@ if(h===window.__pvHash){try{localStorage.setItem('pv_'+h,'1');}catch(e){}documen
         <div class="f3"><label>Postcode<input name="postcode" inputmode="numeric" maxlength="5" autocomplete="postal-code" required></label>
         <label>City<input name="city" autocomplete="address-level2" required></label>
         <label>State<select name="state" required><option value="">Choose…</option>{states}</select></label></div>"""
-        if pk:
+        if pk and self.booking:
+            fulfil = f"""<fieldset><legend>Your booking</legend>
+        <div class="f2"><label>Full name<input name="name" autocomplete="name" required></label>
+        <label>Booking date<input name="date" type="date" required></label></div>
+        <div data-delivery-only hidden>{addr}</div>
+        <label>Preferred time (optional)<input name="time" placeholder="e.g. 7:30pm"></label>
+        <label>Booking note (optional)<input name="note" placeholder="{e(pk.get('note_hint', 'e.g. number of guests, occasion, allergies'))}"></label>
+        <div class="ship-opt" data-ship-opt></div></fieldset>"""
+            ship_row = "Booking"
+        elif pk:
             deliv = (f'<label class="pay"><input type="radio" name="method" value="delivery"><span><b>Delivery by {e(pk["delivery"])}</b><small>Fee depends on distance, confirmed with you</small></span></label>'
                      if pk.get("delivery") else "")
             fulfil = f"""<fieldset><legend>Pick-up or delivery</legend>
@@ -658,7 +675,7 @@ if(h===window.__pvHash){try{localStorage.setItem('pv_'+h,'1');}catch(e){}documen
         <div class="f2"><label>Full name<input name="name" autocomplete="name" required></label>
         <label>Pick-up / delivery date<input name="date" type="date" required></label></div>
         <div data-delivery-only hidden>{addr}</div>
-        <label>Order note (optional)<input name="note" placeholder="e.g. which kuih, number of pieces, time you prefer"></label>
+        <label>Order note (optional)<input name="note" placeholder="{e(pk.get('note_hint', 'e.g. the time you prefer, anything we should know'))}"></label>
         <div class="ship-opt" data-ship-opt></div></fieldset>"""
             ship_row = "Pick-up / delivery"
         else:
@@ -694,7 +711,10 @@ if(h===window.__pvHash){try{localStorage.setItem('pv_'+h,'1');}catch(e){}documen
 </div>"""
 
     def order_body(self, root, sp):
-        if self.pickup:
+        if self.booking:
+            ticks = (f"<li>{icon('check')}A confirmation email with the receipt</li><li>{icon('check')}A WhatsApp message confirming the table, date and time</li>"
+                     f"<li>{icon('check')}The booking in the restaurant's dashboard, ready for the day</li>")
+        elif self.pickup:
             ticks = (f"<li>{icon('check')}An order confirmation email with the receipt</li><li>{icon('check')}A WhatsApp message confirming the pick-up time and place (or the rider details for delivery)</li>"
                      f"<li>{icon('check')}The order in the seller's dashboard with its pick-up date, ready to prepare</li>")
         else:
@@ -724,7 +744,12 @@ if(h===window.__pvHash){try{localStorage.setItem('pv_'+h,'1');}catch(e){}documen
         s = self.ship
         faq = "".join(f'<details class="qa"><summary>{e(q)}{icon("plus")}</summary><p>{e(a)}</p></details>' for q, a in t["faq"])
         pk = self.pickup
-        if pk:
+        if pk and self.booking:
+            sub, ship_h, ret_h = "Bookings and common questions.", "Bookings", "Changes &amp; refunds"
+            ship_sec = f"""<div class="tbl-wrap"><table class="tbl"><thead><tr><th>How</th><th>Where</th><th>Notes</th></tr></thead><tbody>
+    <tr><th scope="row">Dine-in</th><td>{e(pk['pickup'])}</td><td>{e(pk.get('pickup_note', ''))}</td></tr></tbody></table></div>
+  <p>Choose your date and preferred time at checkout.</p>"""
+        elif pk:
             drow = (f'<tr><th scope="row">Delivery</th><td>{e(pk["delivery"])}</td><td>Depends on distance, confirmed with you{(" · " + e(pk["delivery_note"])) if pk.get("delivery_note") else ""}</td></tr>'
                     if pk.get("delivery") else "")
             sub, ship_h, ret_h = "Pick-up, delivery and common questions.", "Pick-up &amp; delivery", "Changes &amp; refunds"

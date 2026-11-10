@@ -9,7 +9,8 @@
   const CKEY = 'cs_coupon_' + S.slug;
   const OKEY = 'cs_order_' + S.slug;
   const EAST = ['Sabah', 'Sarawak', 'Labuan'];
-  const PK = S.order && S.order.mode === 'pickup' ? S.order : null; // mockups for food shops: pick-up / local delivery on a date
+  const PK = S.order && (S.order.mode === 'pickup' || S.order.mode === 'booking') ? S.order : null; // mockups for food shops: pick-up / local delivery on a date
+  const BK = !!(PK && PK.mode === 'booking'); // restaurants: dine-in on a date
   const mem = {};
 
   // ---------- storage (falls back to memory when storage is blocked) ----------
@@ -341,7 +342,7 @@
     const z = coZone();
     const t = totals(c, z);
     $('[data-co-subtotal]').textContent = rm(t.sub);
-    $('[data-co-ship]').textContent = PK ? (z === 'delivery' ? 'Confirmed with you' : 'Free') : (t.ship === null ? 'Choose state' : (t.ship === 0 ? 'Free' : rm(t.ship)));
+    $('[data-co-ship]').textContent = PK ? (BK ? 'At the restaurant' : z === 'delivery' ? 'Confirmed with you' : 'Free') : (t.ship === null ? 'Choose state' : (t.ship === 0 ? 'Free' : rm(t.ship)));
     $('[data-co-total]').textContent = rm(t.total);
     $('[data-co-disc-row]').hidden = !t.disc;
     $('[data-co-disc]').textContent = '−' + rm(t.disc);
@@ -349,7 +350,8 @@
     if (opt && PK) {
       const dl = $('[data-delivery-only]');
       if (dl) dl.hidden = z !== 'delivery';
-      opt.innerHTML = z === 'delivery'
+      opt.innerHTML = BK ? '<p><b>Dine-in at ' + esc(PK.pickup) + '</b>' + (PK.pickup_note ? '<br><span class="muted small">' + esc(PK.pickup_note) + '</span>' : '') + '</p>'
+        : z === 'delivery'
         ? '<p><b>Delivery by ' + esc(PK.delivery) + '</b> — fee depends on distance, confirmed with you' + (PK.delivery_note ? '<br><span class="muted small">' + esc(PK.delivery_note) + '</span>' : '') + '</p>'
         : '<p><b>Pick-up in ' + esc(PK.pickup) + '</b> — free' + (PK.pickup_note ? '<br><span class="muted small">' + esc(PK.pickup_note) + '</span>' : '') + '</p>';
     } else if (opt) {
@@ -361,7 +363,7 @@
     co.elements.state.addEventListener('change', render);
     $$('input[name="method"]', co).forEach((r) => r.addEventListener('change', render));
     const dayISO = (n) => { const d = new Date(); d.setDate(d.getDate() + n); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
-    if (co.elements.date) co.elements.date.min = dayISO(1);
+    if (co.elements.date) co.elements.date.min = dayISO(BK ? 0 : 1);
     co.addEventListener('submit', (ev) => {
       ev.preventDefault();
       const c = cart();
@@ -378,7 +380,7 @@
       if (!c.length) { err.textContent = 'Your cart is empty.'; err.hidden = false; return; }
       if (bad.length) {
         bad.forEach((n) => f[n].classList.add('is-bad'));
-        err.textContent = 'Please check: ' + Array.from(new Set(bad)).map((n) => ({ email: 'email', phone: 'phone number (e.g. 012-345 6789)', name: 'name', addr1: 'address', postcode: '5-digit postcode', city: 'city', state: 'state', date: 'pick-up / delivery date (from tomorrow)' }[n])).join(', ') + '.';
+        err.textContent = 'Please check: ' + Array.from(new Set(bad)).map((n) => ({ email: 'email', phone: 'phone number (e.g. 012-345 6789)', name: 'name', addr1: 'address', postcode: '5-digit postcode', city: 'city', state: 'state', date: BK ? 'booking date (from today)' : 'pick-up / delivery date (from tomorrow)' }[n])).join(', ') + '.';
         err.hidden = false;
         f[bad[0]].focus();
         return;
@@ -392,8 +394,8 @@
         lines: c.map((l) => ({ n: S.products[l.id].n, v: lineVar(l), q: l.q, t: unit(l.id, l.sel) * l.q, img: lineImg(l) })),
         sub: t.sub, disc: t.disc, ship: t.ship, total: t.total,
         pay: (co.querySelector('input[name="pay"]:checked') || {}).value,
-        to: PK ? (coMethod() === 'delivery' ? 'Delivery to ' + f.city.value.trim() + ', ' + f.state.value : 'Pick-up in ' + PK.pickup) : f.city.value.trim() + ', ' + f.state.value,
-        method: PK ? coMethod() : '', date: PK ? f.date.value : ''
+        to: BK ? 'Dine-in at ' + PK.pickup : PK ? (coMethod() === 'delivery' ? 'Delivery to ' + f.city.value.trim() + ', ' + f.state.value : 'Pick-up in ' + PK.pickup) : f.city.value.trim() + ', ' + f.state.value,
+        method: PK ? coMethod() : '', date: PK ? f.date.value : '', bk: BK, time: f.time ? f.time.value.trim().slice(0, 40) : ''
       };
       save('sessionStorage', OKEY, order);
       drop('localStorage', KEY);
@@ -411,9 +413,9 @@
       $('[data-order-name]').textContent = o.name ? ', ' + o.name : '';
       $('[data-order-box]').innerHTML = o.lines.map((l) => '<div class="co-line"><span class="co-line__img"><img src="' + esc(l.img) + '" alt=""><span class="co-line__q">' + l.q + '</span></span><span>' + esc(l.n) + (l.v ? '<small>' + esc(l.v) + '</small>' : '') + '</span><span>' + rm(l.t) + '</span></div>').join('') +
         '<p class="row"><span>Subtotal</span><span>' + rm(o.sub) + '</span></p>' + (o.disc ? '<p class="row"><span>Discount</span><span>−' + rm(o.disc) + '</span></p>' : '') +
-        (o.method ? '<p class="row"><span>' + (o.method === 'delivery' ? 'Delivery' : 'Pick-up') + '</span><span>' + (o.method === 'delivery' ? 'Confirmed with you' : 'Free') + '</span></p>'
+        (o.method ? '<p class="row"><span>' + (o.bk ? 'Booking' : o.method === 'delivery' ? 'Delivery' : 'Pick-up') + '</span><span>' + (o.bk ? 'Dine-in' : o.method === 'delivery' ? 'Confirmed with you' : 'Free') + '</span></p>'
           : '<p class="row"><span>Shipping</span><span>' + (o.ship ? rm(o.ship) : 'Free') + '</span></p>') + '<p class="row row--total"><span>Total</span><strong>' + rm(o.total) + '</strong></p>' +
-        '<p class="muted small">' + (o.method ? esc(o.to) + (o.date ? ' · ' + esc(new Date(o.date + 'T00:00').toLocaleDateString('en-MY', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })) : '') : 'Ship to ' + esc(o.to)) + ' · Payment: ' + esc(o.pay || '') + ' (demo — not charged)</p>';
+        '<p class="muted small">' + (o.method ? esc(o.to) + (o.date ? ' · ' + esc(new Date(o.date + 'T00:00').toLocaleDateString('en-MY', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })) : '') + (o.time ? ' · ' + esc(o.time) : '') : 'Ship to ' + esc(o.to)) + ' · Payment: ' + esc(o.pay || '') + ' (demo — not charged)</p>';
     }
   }
 
