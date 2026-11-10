@@ -197,6 +197,8 @@ p { margin: 0 0 1em; }
 .price { margin: 0 0 12px; font-weight: 600; }
 .price .was { color: var(--muted); font-weight: 400; font-size: .9em; margin-left: 4px; }
 .price .from { font-weight: 400; color: var(--muted); font-size: .9em; }
+.price .per { font-weight: 400; color: var(--muted); font-size: .85em; }
+.card .card__add { white-space: normal; } /* a long label (e.g. mockup "See the set") must not widen the 2-column grid on phones */
 .price--lg { font-size: 1.45rem; }
 .card__add { margin-top: auto; width: 100%; }
 .card .btn--sm { min-height: 40px; }
@@ -589,7 +591,7 @@ p { margin: 0 0 1em; }
 
   /* shop page: category chips in one swipeable line */
   .page-head { padding: 22px 0 16px; }
-  .shop__bar { flex-direction: column; align-items: stretch; gap: 10px; margin-bottom: 20px; }
+  .shop__bar { flex-direction: column; flex-wrap: nowrap; align-items: stretch; gap: 10px; margin-bottom: 20px; } /* nowrap: a wrapping column grows to the chips' full width (page shifted sideways) */
   .chips { flex-wrap: nowrap; overflow-x: auto; margin-inline: calc(var(--gutter) * -1); padding: 0 var(--gutter) 4px; scrollbar-width: none; }
   .chip { flex: none; padding: 9px 16px; }
   .sort { justify-content: flex-end; }
