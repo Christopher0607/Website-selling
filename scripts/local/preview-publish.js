@@ -198,6 +198,8 @@ async function deskNote(code) {
   console.log(`工作台备注写好了：sales/leads/previews.json（${code}）。接着跑 python3 site/build.py（工作台从 inbox.json 读样板），把 sales/leads/previews.json 和 sales/leads/inbox.json 一起 commit + push 到 leads 分支，工作台 5 分钟内在那张卡显示网址和密码。`);
 }
 function pitchOf(cfg) {
+  // preview.json "pitch_items": what to say on the phone when product names read awkwardly (e.g. "Medium Cup · Two Flavours")
+  if (Array.isArray(cfg.pitch_items) && cfg.pitch_items.length) return { mode: (cfg.order && cfg.order.mode) || 'shop', items: cfg.pitch_items.slice(0, 3).map((x) => String(x).slice(0, 60)) };
   const items = (cfg.products || []).filter((x) => x && x.name && !/example/i.test(String(x.badge || '')) && !/\(example\)/i.test(x.name) && !x.info).slice(0, 3).map((x) => String(x.name).slice(0, 60));
   return { mode: (cfg.order && cfg.order.mode) || 'shop', items };
 }
