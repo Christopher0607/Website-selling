@@ -2862,13 +2862,13 @@
    "name": "Monét Coffee Atelier",
    "delete_by": "2026-11-23",
    "photos": "placeholder",
-   "checked": "2026-11-10",
+   "checked": "2026-11-11",
    "pitch": {
     "mode": "pickup",
     "items": [
-     "Classic Tiramisu",
-     "Matcha Tiramisu",
-     "White Coffee"
+     "classic and matcha tiramisu",
+     "hot macadamia latte",
+     "single-origin pour-over"
     ]
    },
    "facts": {
@@ -2879,12 +2879,12 @@
     "products": [
      {
       "n": "Classic Tiramisu",
-      "p": null,
-      "per": "",
+      "p": 21,
+      "per": "tub",
       "cat": "Tiramisu",
       "ex": false,
       "set": "",
-      "src": ""
+      "src": "Monét's in-house tiramisu is RM21 a tub at Monét Jalan J, Melawati (The Rakyat Post, Dec 2024) and Monét In The City, Ampang Park (The Rakya"
      },
      {
       "n": "Matcha Tiramisu",
@@ -2905,7 +2905,7 @@
       "src": ""
      },
      {
-      "n": "White Coffee",
+      "n": "White Coffee (Kopi Susu)",
       "p": null,
       "per": "",
       "cat": "Coffee",
@@ -2914,10 +2914,91 @@
       "src": ""
      },
      {
-      "n": "Pour-Over Coffee",
+      "n": "Hot Macadamia Latte",
       "p": null,
       "per": "",
       "cat": "Coffee",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Single-Origin Pour-Over",
+      "p": null,
+      "per": "",
+      "cat": "Coffee",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Almond Matcha",
+      "p": null,
+      "per": "",
+      "cat": "Matcha & more",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Strawberry Matcha Latte",
+      "p": null,
+      "per": "",
+      "cat": "Matcha & more",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Blueberry Matcha Latte",
+      "p": 18,
+      "per": "",
+      "cat": "Seasonal specials",
+      "ex": false,
+      "set": "",
+      "src": "Seasonal special at Monét In The City, Ampang Park (The Rakyat Post, Mar 2025). Your current specials and prices go here."
+     },
+     {
+      "n": "Onde-onde Latte",
+      "p": 18,
+      "per": "",
+      "cat": "Seasonal specials",
+      "ex": false,
+      "set": "",
+      "src": "Seasonal special at Monét In The City, Ampang Park (The Rakyat Post, Mar 2025). Your current specials and prices go here."
+     },
+     {
+      "n": "Fizzy Guava Espresso",
+      "p": 16,
+      "per": "",
+      "cat": "Seasonal specials",
+      "ex": false,
+      "set": "",
+      "src": "Seasonal special at Monét In The City, Ampang Park (The Rakyat Post, Mar 2025). Your current specials and prices go here."
+     },
+     {
+      "n": "Butter Croissant",
+      "p": null,
+      "per": "",
+      "cat": "Pastries",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Cinnamon Roll",
+      "p": null,
+      "per": "",
+      "cat": "Pastries",
+      "ex": false,
+      "set": "",
+      "src": ""
+     },
+     {
+      "n": "Fudgy Brownie",
+      "p": null,
+      "per": "",
+      "cat": "Pastries",
       "ex": false,
       "set": "",
       "src": ""
@@ -2925,12 +3006,16 @@
     ],
     "faq": [
      [
-      "Is the tiramisu available every day?",
-      "It sells out quickly and isn't on the counter every day. Message us to check, or pre-order a tray."
+      "When is the tiramisu available?",
+      "Thursday to Sunday, and it sells out quickly. Pre-order a tub (RM21 at our other outlets) or a tray to be sure."
+     ],
+     [
+      "Are these your current prices?",
+      "The tiramisu and seasonal drink prices are from Monét's other outlets (Jalan J and In The City, 2024–2025). Items without a price say Ask for price. Your Atelier prices go in as soon as you send them."
      ],
      [
       "Where are you?",
-      "62, Lorong 1/77a, Jalan Changkat Thambi Dollah, Pudu, Kuala Lumpur, near LaLaport Bukit Bintang."
+      "62, Lorong 1/77a, Jalan Changkat Thambi Dollah, Pudu, Kuala Lumpur, near LaLaport Bukit Bintang and Berjaya Times Square."
      ],
      [
       "When are you open?",
@@ -2938,7 +3023,11 @@
      ],
      [
       "What coffee do you use?",
-      "Arkib-roasted beans, for white coffee and pour-overs."
+      "Arkib-roasted beans: house blends like Abadi and Keiko, and seasonal single origins such as Argopuro and Bungi Lungi Estate on the brew bar."
+     ],
+     [
+      "Do you have plant-based drinks?",
+      "Yes: the Hot Macadamia Latte and the Almond Matcha are made with plant milk."
      ],
      [
       "Is there parking?",
@@ -2946,7 +3035,7 @@
      ]
     ],
     "contact": "Call or WhatsApp 017-567 1757, or message @monetcoffeeatelier on Instagram.",
-    "sources": "Checked 2026-11-10: Malaysian Flavours (13 Jul 2025) https://www.malaysianflavours.com/2025/07/monet-atelier-pudu-kl.html ; LifestyleAsia via Newswav (Jun/Jul 2025, open daily 10am-10pm); TheSmartLocal tiramisu guide (tiramisu not always on the menu). The earlier RM21 price was another shop's, removed."
+    "sources": "Checked 2026-11-11: Malaysian Flavours (13 Jul 2025; relocated from LaLaport, 10am-10pm, classic and matcha tiramisu, white coffee, pour-overs, Arkib beans) https://www.malaysianflavours.com/2025/07/monet-atelier-pudu-kl.html ; Arkib Kopi 'Serving Arkib: Monet Atelier' (19 Feb 2026; founder Afiq Ashman, third outlet after Monet Jalan J and Monet In The City, open everyday 10am-10pm, house Abadi / Keiko, single origins Argopuro, Bungi Lungi Estate) https://arkibkopi.my/blogs/cafe-partner/serving-arkib-monet-atelier ; The Rakyat Post (16 Mar 2025; Monét In The City: Blueberry Matcha Latte RM18, Onde-onde Latte RM18, Strawberry Chocolate Latte RM17, Fizzy Guava Espresso RM16, in-house tiramisu "
    }
   },
   {
