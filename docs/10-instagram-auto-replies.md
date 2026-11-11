@@ -48,8 +48,8 @@ Thanks for your message. This is Cartsmith Studio. We will reply here within 1 w
 
 | 问题（按钮上显示） | 自动回答 |
 |---|---|
-| How much does a website cost? 网站多少钱？ | One-time setup: Starter RM2,800 (up to 20 products) · Catalog RM3,500 · Growth RM4,800 (up to 80 products). Monthly Care from RM150 — the first month after launch is free. Full list: https://cartsmith.netlify.app/pricing.html |
-| Can I see it before paying? 可以先看样板吗？ | Yes. We make a free, private homepage mockup with your own products in 1–2 working days. Send us your shop link + the template you like (https://cartsmith.netlify.app/templates.html). No obligation. |
+| How much does a website cost? 网站多少钱？ | One-time setup: Starter RM2,800 (up to 20 products) · Catalog RM3,500 · Growth RM4,800 (up to 80 products). Monthly Care from RM150 — the first month after launch is free. Full list: https://cartsmithstudio.com/pricing.html |
+| Can I see it before paying? 可以先看样板吗？ | Yes. We make a free, private homepage mockup with your own products in 1–2 working days. Send us your shop link + the template you like (https://cartsmithstudio.com/templates.html). No obligation. |
 | How long does it take? 要多久？ | About 10 working days for Starter, 12 for Catalog and 15 for Growth — counted from when we have your deposit and all your content (logo, products, photos). |
 | Do I need to leave Shopee? 要离开 Shopee 吗？ | No. Keep Shopee / TikTok for new customers. Your own website is for repeat customers, wholesale and ads — no marketplace commission, and the customer list is yours. |
 | Who owns the website? 网站是谁的？ | You do, once it's fully paid. Your domain and payment gateway are opened in your own name, and you get a full backup if you ever leave. |
@@ -61,9 +61,9 @@ Thanks for your message. This is Cartsmith Studio. We will reply here within 1 w
 ```
 Thank you. For your free homepage mockup, please send us:
 1) your Shopee / TikTok / IG shop link
-2) the template you like: https://cartsmith.netlify.app/templates.html
+2) the template you like: https://cartsmithstudio.com/templates.html
 
-Or fill in this 1-minute form: https://cartsmith.netlify.app/start.html
+Or fill in this 1-minute form: https://cartsmithstudio.com/start.html
 
 好的，请发给我们：店铺链接 + 喜欢的模板，我们 1–2 个工作天做好样板给你。
 — Cartsmith Studio
@@ -77,7 +77,7 @@ Our prices are fixed and written down:
 • Catalog (B2B) RM3,500
 • Growth RM4,800 (up to 80 products)
 Monthly Care from RM150 — first month free after launch.
-Details: https://cartsmith.netlify.app/pricing.html
+Details: https://cartsmithstudio.com/pricing.html
 Want a free homepage mockup first? Reply MOCKUP.
 — Cartsmith Studio
 ```

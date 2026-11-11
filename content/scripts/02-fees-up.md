@@ -12,7 +12,7 @@
 | 15–23 秒 | 新闻标题截图（注明来源） | 列出今年的调整（只写查证过的日期和项目） |
 | 23–31 秒 | 计算器录屏 | 3 个应对：重新算定价、把回头客带到自己的渠道、减少无效优惠券 |
 | 31–39 秒 | 白板 3 点 | 自己的渠道不一定是网站——WhatsApp 名单也算，但网站可以自动收单收款 |
-| 结尾（行动呼吁） | 字幕 + Cartsmith logo | 留言「算」，我把 Shopee 费用计算器发给你（cartsmith.netlify.app/shopee-fee-calculator） |
+| 结尾（行动呼吁） | 字幕 + Cartsmith logo | 留言「算」，我把 Shopee 费用计算器发给你（cartsmithstudio.com/shopee-fee-calculator） |
 
 ## 重点内容
 - 列出今年的调整（只写查证过的日期和项目）
@@ -30,13 +30,13 @@
 ✅ 列出今年的调整（只写查证过的日期和项目）
 ✅ 3 个应对：重新算定价、把回头客带到自己的渠道、减少无效优惠券
 ✅ 自己的渠道不一定是网站——WhatsApp 名单也算，但网站可以自动收单收款
-👉 留言「算」，我把 Shopee 费用计算器发给你（cartsmith.netlify.app/shopee-fee-calculator）
+👉 留言「算」，我把 Shopee 费用计算器发给你（cartsmithstudio.com/shopee-fee-calculator）
 
 ## Hashtag
 #shopeemalaysia #shopeeseller #onlinebusinessmalaysia #peniagaonline
 
 ## 置顶留言
-留言「算」，我把 Shopee 费用计算器发给你（cartsmith.netlify.app/shopee-fee-calculator）
+留言「算」，我把 Shopee 费用计算器发给你（cartsmithstudio.com/shopee-fee-calculator）
 
 ## 备注
 - 费用调整日期拍摄前再查一次，附来源

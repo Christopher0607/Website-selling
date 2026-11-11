@@ -81,7 +81,7 @@
 
 ## 2. 跟进：给一个有用的资讯（第 2–3 天）
 
-先用 https://cartsmith.netlify.app/shopee-fee-calculator.html 按对方的售价算好。
+先用 https://cartsmithstudio.com/shopee-fee-calculator.html 按对方的售价算好。
 
 **中文**
 > 嗨 [名字]，不打扰太久～ 我用 Shopee 最新公布的费率大概算了一下：一张 RM[售价] 的 [品类] 订单，平台各种费用加起来大约 RM[金额]。如果每个月有 [X] 张回头客的单改在官网下，一年大约可以多留 RM[金额]（官网的付款手续费已经算进去了）。计算器在这里，你可以自己改数字：[链接]
@@ -152,10 +152,10 @@ Instagram（专业账号）→ **设定 → Business tools and controls → Save
 
 | 快捷键 | 内容 |
 |---|---|
-| `hi` | 你好，这里是 Cartsmith Studio。我们帮本地品牌做自己的网店，上线后每个月帮你维护。想先看我们的 6 个样板店吗？ cartsmith.netlify.app/templates.html |
-| `price` | 套餐：Starter RM2,800（20 款产品）、Growth RM4,800（80 款 + 广告追踪）。上线后第 1 个月维护免费，之后 RM150/月起。详细：cartsmith.netlify.app/pricing.html |
-| `mockup` | 可以免费帮你做首页样板，只给你看、不满意没关系。请给我：店铺链接 + 喜欢的模板（cartsmith.netlify.app/templates.html）+ 3–5 款主打产品 |
-| `calc` | 这是 Shopee 费用计算器，可以算你的单在 Shopee 和自己网站各留多少：cartsmith.netlify.app/shopee-fee-calculator.html |
+| `hi` | 你好，这里是 Cartsmith Studio。我们帮本地品牌做自己的网店，上线后每个月帮你维护。想先看我们的 6 个样板店吗？ cartsmithstudio.com/templates.html |
+| `price` | 套餐：Starter RM2,800（20 款产品）、Growth RM4,800（80 款 + 广告追踪）。上线后第 1 个月维护免费，之后 RM150/月起。详细：cartsmithstudio.com/pricing.html |
+| `mockup` | 可以免费帮你做首页样板，只给你看、不满意没关系。请给我：店铺链接 + 喜欢的模板（cartsmithstudio.com/templates.html）+ 3–5 款主打产品 |
+| `calc` | 这是 Shopee 费用计算器，可以算你的单在 Shopee 和自己网站各留多少：cartsmithstudio.com/shopee-fee-calculator.html |
 | `thanks` | 谢谢你的时间 有任何问题随时 DM 我，祝生意越来越好！ |
 
 **也要设：** 简介（Bio）和链接按 `docs/09-netlify-guide.md` 第 C 部分；Instagram 的「常见问题（FAQ）」可以放 3 个问题：多少钱？要多久？可以先看样板吗？

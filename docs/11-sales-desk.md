@@ -1,6 +1,6 @@
 # 11 — 销售工作台（找商家 → AI 写信息 → 你按发送 → 自动提醒跟进）
 
-> 网址：**https://cartsmith.netlify.app/desk/**（有密码，只有你能用；不会被 Google 收录）
+> 网址：**https://cartsmithstudio.com/desk/**（有密码，只有你能用；不会被 Google 收录）
 > AI 用的是已经放在 Netlify 的同一把 DeepSeek Key，**不用把 Key 给任何人**。
 
 ## 它帮你做什么
@@ -31,7 +31,7 @@ Claude Code 找资料只用搜索引擎和新闻报道，再直接试对方有�
    - Scopes：至少勾 **Functions**
    - 按 **Create variable**
 3. 左边菜单 **Deploys → Trigger deploy → Deploy project**，等变绿色（1–2 分钟）。
-4. 用手机打开 https://cartsmith.netlify.app/desk/ → 输入密码 → 进入。
+4. 用手机打开 https://cartsmithstudio.com/desk/ → 输入密码 → 进入。
 5. **放到手机主画面**（像 App 一样一按就开）：Chrome 右上角 ⋮ → **加到主画面（Add to Home screen）**。
 
 > 打开工作台显示「工作台密码还没设定」= 第 2–3 步还没做好。显示「密码不对」= 输入的跟 Netlify 里的不一样（注意大小写和空格）。

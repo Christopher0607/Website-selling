@@ -2,7 +2,7 @@
 
 > 这份是「照着做就可以」的完整流程。话术原文在 `sales/scripts.md`，价格在 `sales/packages.html`，AI 助理用法在 `sales/agent/README.md`。
 > 最重要的三件事：**每天联系 10–20 个（Instagram 私信）、24 小时内回复、成交后把第 1 个月做好让他继续付月费。**
-> 2026-11-07 更新：工作室联系方式只用 **Instagram @cartsmith.studio**（暂时不用 WhatsApp）；网站在 Netlify（`cartsmith.netlify.app`）；免费样板用 `site/build.py --preview` 做、放 Netlify Drop。
+> 2026-11-07 更新：工作室联系方式只用 **Instagram @cartsmith.studio**（暂时不用 WhatsApp）；网站在 Netlify（`cartsmithstudio.com`）；免费样板用 `site/build.py --preview` 做、放 Netlify Drop。
 
 ---
 

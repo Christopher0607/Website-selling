@@ -421,7 +421,12 @@ function allPreviews() {
 }
 // 2026-11-10: short and to the point — who we are, the site is already made (link + password), our own site at the end.
 // No description of their shop (they know it); Junyu sends it himself from WhatsApp / Email.
-const STUDIO_URL = 'https://cartsmith.netlify.app/';
+const STUDIO_URL = 'https://cartsmithstudio.com/';
+// 2026-11-11: own domain. Cards saved before keep links / drafts with the old Netlify addresses: swap them (they still open, but
+// the customer should only ever see cartsmithstudio.com). Messages the owner already sent (thread, history) are left as they were.
+const OLD_URLS = [['https://previews--cartsmith.netlify.app', 'https://previews.cartsmithstudio.com'], ['https://cartsmith.netlify.app', 'https://cartsmithstudio.com']];
+const DRAFT_FIELDS = ['preview_url', 'preview_msg', 'followup', 'draft_reply', 'message'];
+const newUrls = (s) => OLD_URLS.reduce((t, [a, b]) => t.split(a).join(b), String(s));
 const PVMSG_V = 3;
 // already contacted (usually on Instagram) before the mockup was ready: say so, then the link
 const PVMSG_AGAIN = {
@@ -450,6 +455,7 @@ const pvFollow = (p) => (PVFOLLOW[p.language] || PVFOLLOW.en)(p.business_name, p
 function refreshPreviewMsgs(doc) {
   let changed = false;
   for (const p of doc.items) {
+    for (const k of DRAFT_FIELDS) if (typeof p[k] === 'string' && p[k].includes('cartsmith.netlify.app')) { p[k] = newUrls(p[k]); changed = true; }
     if (p.preview_url && p.preview_password && (p.preview_msg_v || 1) < PVMSG_V && p.status !== 'preview_sent') {
       p.preview_msg = pvMsg(p); p.preview_msg_v = PVMSG_V; changed = true;
     }
@@ -469,6 +475,13 @@ async function applyPreviews(doc, list) {
     if (p && p.preview_slug === pv.slug) {
       const pitch = pv.pitch && Array.isArray(pv.pitch.items) ? { mode: String(pv.pitch.mode || '').slice(0, 10), items: pv.pitch.items.slice(0, 3).map((x) => String(x).slice(0, 60)) } : null;
       const facts = pv.facts && typeof pv.facts === 'object' && Object.keys(pv.facts).length ? pv.facts : null;
+      const url = newUrls(pv.url || '').slice(0, 300);
+      if (url && url !== p.preview_url) { // same mockup, new address (e.g. moved to our own domain): links in drafts follow
+        const old = p.preview_url || '';
+        p.preview_url = url;
+        if (old) for (const k of DRAFT_FIELDS.slice(1)) if (typeof p[k] === 'string') p[k] = p[k].split(old).join(url);
+        changed = true;
+      }
       if ((pv.checked || '') !== (p.preview_checked || '') || JSON.stringify(pitch) !== JSON.stringify(p.preview_pitch || null) || JSON.stringify(facts) !== JSON.stringify(p.preview_facts || null)) {
         p.preview_checked = pv.checked || ''; p.preview_pitch = pitch; p.preview_facts = facts; changed = true;
       }
@@ -482,7 +495,7 @@ async function applyPreviews(doc, list) {
     } catch (e) { console.error('preview decrypt', pv.slug, e.message); continue; }
     const pw = String(secret.password || '').slice(0, 80);
     if (!pw) continue;
-    p.preview_slug = pv.slug; p.preview_url = String(pv.url).slice(0, 300); p.preview_password = pw;
+    p.preview_slug = pv.slug; p.preview_url = newUrls(pv.url).slice(0, 300); p.preview_password = pw;
     p.preview_checked = pv.checked || '';
     p.preview_facts = pv.facts && typeof pv.facts === 'object' && Object.keys(pv.facts).length ? pv.facts : null;
     p.preview_pitch = pv.pitch && Array.isArray(pv.pitch.items) ? { mode: String(pv.pitch.mode || '').slice(0, 10), items: pv.pitch.items.slice(0, 3).map((x) => String(x).slice(0, 60)) } : null;

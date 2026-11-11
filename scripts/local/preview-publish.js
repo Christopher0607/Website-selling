@@ -26,8 +26,9 @@ const ROOT = path.resolve(__dirname, '..', '..');
 const BRANCH = 'previews';
 const ITER = 150000;
 const studio = JSON.parse(fs.readFileSync(path.join(ROOT, 'site', 'studio.json'), 'utf8'));
-const SITE_HOST = new URL(studio.site_url || 'https://cartsmith.netlify.app').host; // cartsmith.netlify.app
-const BASE_URL = `https://${BRANCH}--${SITE_HOST}`;
+const SITE_URL = (studio.site_url || 'https://cartsmithstudio.com').replace(/\/$/, '');
+// 2026-11-11: mockups live on our own domain (Netlify branch subdomain of the previews branch); before that previews--cartsmith.netlify.app
+const BASE_URL = (studio.previews_url || `https://${BRANCH}.${new URL(SITE_URL).host}`).replace(/\/$/, '');
 
 const die = (m) => { console.error(m); process.exit(1); };
 const git = (args, cwd = ROOT) => execFileSync('git', args, { cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
@@ -136,7 +137,7 @@ function encryptSite(p, out) {
 const BRANCH_FILES = {
   'netlify.toml': '# previews 分支：只放加密的免费样板（scripts/local/preview-publish.js）。分支部署不扣 Netlify 点数。\n[build]\n  base = "site"\n  publish = "public"\n  command = "echo previews"\n',
   'site/netlify.toml': '[build]\n  publish = "public"\n  command = "echo previews"\n',
-  'site/public/index.html': '<!doctype html><meta charset="utf-8"><meta name="robots" content="noindex,nofollow"><title>Cartsmith Studio</title><p style="font:16px system-ui;padding:24px">Nothing here. <a href="https://cartsmith.netlify.app/">Cartsmith Studio</a></p>\n',
+  'site/public/index.html': '<!doctype html><meta charset="utf-8"><meta name="robots" content="noindex,nofollow"><title>Cartsmith Studio</title><p style="font:16px system-ui;padding:24px">Nothing here. <a href="' + SITE_URL + '/">Cartsmith Studio</a></p>\n',
   'site/public/robots.txt': 'User-agent: *\nDisallow: /\n',
   'site/public/_headers': '/*\n  X-Robots-Tag: noindex, nofollow\n  Referrer-Policy: no-referrer\n',
   'README.md': '# previews 分支\n\n只放**加密**的免费样板，每个样板 14 天内删除。不要合并到其他分支。说明见 `scripts/local/preview-publish.js`（在 ccr 分支）。\n',
@@ -181,7 +182,7 @@ async function deskNote(code) {
   if (!fs.existsSync(p.recPath)) die(`${code} 还没发布：先跑 publish`);
   const rec = JSON.parse(fs.readFileSync(p.recPath, 'utf8'));
   if (!p.cfg.lead_id && !p.cfg.instagram) die('preview.json 要有 lead_id 或 instagram，工作台才知道是哪一家');
-  const deskUrl = (process.env.DESK_URL || studio.site_url || 'https://cartsmith.netlify.app').replace(/\/$/, '') + '/api/desk?pubkey=1';
+  const deskUrl = (process.env.DESK_URL || SITE_URL).replace(/\/$/, '') + '/api/desk?pubkey=1';
   let pubkey;
   for (const wait of [0, 3, 10, 20]) {
     if (wait) execFileSync('sleep', [String(wait)]);
