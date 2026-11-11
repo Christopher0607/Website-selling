@@ -28,6 +28,8 @@ const ITER = 150000;
 const studio = JSON.parse(fs.readFileSync(path.join(ROOT, 'site', 'studio.json'), 'utf8'));
 const SITE_URL = (studio.site_url || 'https://cartsmithstudio.com').replace(/\/$/, '');
 // 2026-11-11: mockups live on our own domain (Netlify branch subdomain of the previews branch); before that previews--cartsmith.netlify.app
+// 2026-11-11: the password page tells the desk when the mockup is opened (/api/track; no personal data, see desk index.mjs)
+const TRACK_URL = SITE_URL + '/api/track';
 const BASE_URL = (studio.previews_url || `https://${BRANCH}.${new URL(SITE_URL).host}`).replace(/\/$/, '');
 
 const die = (m) => { console.error(m); process.exit(1); };
@@ -75,24 +77,30 @@ function shell(slug, salt, iv, ct, title) {
 <style>body{margin:0;font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;background:#f4f2ee;color:#1b1b1b;display:grid;place-items:center;min-height:100vh}form{background:#fff;padding:28px 24px;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.08);width:min(340px,88vw)}h1{font-size:1.15rem;margin:0 0 6px}p{margin:0 0 16px;color:#666;font-size:.9rem}input{width:100%;box-sizing:border-box;height:46px;border:1.5px solid #ddd;border-radius:10px;padding:0 12px;font-size:1rem}button{margin-top:12px;width:100%;height:46px;border:0;border-radius:10px;background:#111;color:#fff;font-weight:600;font-size:1rem}.e{color:#b3261e;margin:10px 0 0}</style></head>
 <body><form id="f" hidden><h1>Private mockup</h1><p>Made by Cartsmith Studio for one business only. Enter the password you received. · 请输入收到的密码。</p><input id="pw" type="password" autocomplete="off" placeholder="Password · 密码" aria-label="Password"><button>Open · 打开</button><p class="e" id="e" hidden>Wrong password · 密码不对</p></form>
 <script>(function(){var S=${JSON.stringify(slug)},SALT=${JSON.stringify(b64(salt))},IV=${JSON.stringify(b64(iv))},CT=${JSON.stringify(b64(ct))},K='pvk:'+S,RT=${JSON.stringify(RUNTIME.replace('__SLUG__', JSON.stringify(slug)))};
+var T=${JSON.stringify(TRACK_URL)},PG=(location.pathname.split('/'+S+'/')[1]||'')||'index.html',G=0;
+function vid(){try{var v=localStorage.getItem('pv_vid');if(!v){v=Math.random().toString(36).slice(2,10);localStorage.setItem('pv_vid',v)}return v}catch(e){return''}}
+function tr(e,x){if(navigator.webdriver)return;try{var u=T+'?s='+encodeURIComponent(S)+'&e='+e+'&v='+vid()+'&p='+encodeURIComponent(PG)+(x||'');if(!(navigator.sendBeacon&&navigator.sendBeacon(u))){var i=new Image();i.src=u}}catch(e){}}
+function timer(){var since=Date.now(),vis=true;function flush(){if(!vis)return;var s=Math.round((Date.now()-since)/1000);since=Date.now();if(s>=2)tr('time','&sec='+Math.min(s,1800))}
+  addEventListener('pagehide',flush);document.addEventListener('visibilitychange',function(){if(document.visibilityState==='hidden'){flush();vis=false}else{vis=true;since=Date.now()}})}
 function u8(s){var b=atob(s),a=new Uint8Array(b.length);for(var i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return a}
 function s64(a){var s='';a=new Uint8Array(a);for(var i=0;i<a.length;i++)s+=String.fromCharCode(a[i]);return btoa(s)}
-function show(bad){var f=document.getElementById('f');f.hidden=false;document.getElementById('e').hidden=!bad;document.getElementById('pw').focus()}
-function open(raw){return crypto.subtle.importKey('raw',raw,'AES-GCM',false,['decrypt']).then(function(k){return crypto.subtle.decrypt({name:'AES-GCM',iv:u8(IV)},k,u8(CT))}).then(function(pt){
+function show(bad){if(!bad&&!G){G=1;tr('gate')}var f=document.getElementById('f');f.hidden=false;document.getElementById('e').hidden=!bad;document.getElementById('pw').focus()}
+function open(raw,how){return crypto.subtle.importKey('raw',raw,'AES-GCM',false,['decrypt']).then(function(k){return crypto.subtle.decrypt({name:'AES-GCM',iv:u8(IV)},k,u8(CT))}).then(function(pt){
   try{localStorage.setItem(K,s64(raw))}catch(e){}
+  tr('view','&h='+(how||'saved'));
   var h=new TextDecoder().decode(pt),m=h.match(/var H='([0-9a-f]+)'/);if(m){try{localStorage.setItem('pv_'+m[1],'1')}catch(e){}}
   h=h.replace(/<head([^>]*)>/i,'<head$1><style>img[data-pv-src]{visibility:hidden}</style><script>'+RT.replace(/<\\/script/gi,'<\\\\/script')+'<\\/script>');
   // only replace the password page once it has finished loading: if the saved key decrypts while the page is still
   // being read, document.open() does nothing and the store got written INSIDE the password page (its centred grid
   // squeezed the top bar and pushed the page sideways on phones)
-  return new Promise(function(done){function go(){document.open();document.write(h);document.close();done()}
+  return new Promise(function(done){function go(){document.open();document.write(h);document.close();timer();done()}
     if(document.readyState==='complete')go();else addEventListener('load',function(){setTimeout(go,0)},{once:true})})})}
 if(!window.crypto||!crypto.subtle){document.body.innerHTML='<p style="padding:24px">Please open this link in Chrome or Safari. · 请用 Chrome 或 Safari 打开。</p>';return}
 var saved;try{saved=localStorage.getItem(K)}catch(e){}
 if(saved)open(u8(saved)).catch(function(){try{localStorage.removeItem(K)}catch(e){}show(false)});else show(false);
 document.getElementById('f').addEventListener('submit',function(ev){ev.preventDefault();var pw=document.getElementById('pw').value;
   crypto.subtle.importKey('raw',new TextEncoder().encode(pw),'PBKDF2',false,['deriveBits']).then(function(k){return crypto.subtle.deriveBits({name:'PBKDF2',salt:u8(SALT),iterations:${ITER},hash:'SHA-256'},k,256)})
-  .then(function(bits){return open(new Uint8Array(bits))}).catch(function(){show(true)})});
+  .then(function(bits){return open(new Uint8Array(bits),'pw')}).catch(function(){show(true)})});
 })();</script></body></html>`;
 }
 

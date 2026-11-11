@@ -44,6 +44,15 @@ new = not contacted yet · contacted = we sent a message (often on Instagram) bu
 (or said yes on the phone: "call_ok") · preview_sent = mockup sent, waiting · call_booked · proposal_sent · won ·
 lost · no_response · do_not_contact. "Next follow-up" and "next call" dates are on the card.
 
+## 3b. Did they open the mockup? (2026-11-11)
+- The desk shows, per mockup, whether it was opened: how many visits, on which devices, which pages, about how many
+  minutes, and when. "Opened the link but did not enter the password" means they may have lost the password.
+- Use it ONLY for timing and for what to say next: if they looked in the last day or two, a short call or follow-up now
+  is well timed; if they never opened it, send the link and password again in the follow-up; if they never entered the
+  password, resend it.
+- **Never tell the customer we can see this** (no "I saw you opened it", no "you looked at the menu page"). Write as
+  if you don't know.
+
 ## 4. Writing rules (all messages)
 - Short and natural, like one business owner to another. No long description of their own shop back to them — they
   know their shop. One specific detail is enough.

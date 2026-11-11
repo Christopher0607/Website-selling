@@ -33,6 +33,91 @@ const json = (obj, status = 200) => new Response(JSON.stringify(obj), { status, 
 // Malaysia date (UTC+8), YYYY-MM-DD
 function myDate(offsetDays = 0) { return new Date(Date.now() + 8 * 3600e3 + offsetDays * 86400e3).toISOString().slice(0, 10); }
 
+// ------------------------------------------------------------------ mockup views (2026-11-11)
+// The mockup's password page sends a beacon to /api/track (scripts/local/preview-publish.js): gate = password page shown,
+// view = a page shown after the password (or the key saved in that browser), time = seconds on that page.
+// Stored per mockup in Netlify Blobs (store: mockup-views). No IP, name or cookie of the visitor: only a random id the
+// mockup keeps in that browser (to tell devices apart), the device kind and the page. Junyu's own opens (cookie cs_staff,
+// set when he opens the desk on cartsmithstudio.com) and automated browsers (our checks, link-preview bots) are not counted.
+const VIEW_SLUG = /^[a-z0-9][a-z0-9-]{2,80}$/;
+const BOT_UA = /Headless|bot\b|bot\/|crawl|spider|slurp|preview|facebookexternalhit|WhatsApp|Telegram|Slack|Discord|Twitterbot|LinkedIn|curl|wget|python|node-fetch|undici|axios|Playwright|Puppeteer|Lighthouse|PageSpeed/i;
+function viewStore() {
+  const file = env('DESK_LOCAL_FILE');
+  if (file) {
+    const vf = file + '.views.json';
+    const all = () => { try { return JSON.parse(fs.readFileSync(vf, 'utf8')); } catch (e) { return {}; } };
+    return { async get(s) { return all()[s] || null; }, async set(s, r) { const a = all(); a[s] = r; fs.writeFileSync(vf, JSON.stringify(a)); } };
+  }
+  const store = getStore({ name: 'mockup-views', consistency: 'strong' });
+  return { get: (s) => store.get(s, { type: 'json' }), set: (s, r) => store.setJSON(s, r) };
+}
+const deviceKind = (ua) => (/iPad|Tablet/i.test(ua) ? 'tablet' : /Mobi|Android|iPhone/i.test(ua) ? 'mobile' : 'desktop');
+const slugOf = (p) => p.preview_slug || (String(p.preview_url || '').match(/\/([a-z0-9][a-z0-9-]{2,80})\/?(?:index\.html)?$/) || [])[1] || '';
+async function track(req) {
+  const done = new Response(null, { status: 204, headers: { 'Cache-Control': 'no-store' } });
+  const q = new URL(req.url).searchParams;
+  const slug = String(q.get('s') || '').toLowerCase();
+  const e = String(q.get('e') || '');
+  const ua = req.headers.get('user-agent') || '';
+  if (!VIEW_SLUG.test(slug) || !['gate', 'view', 'time'].includes(e) || !ua || BOT_UA.test(ua)) return done;
+  try {
+    const vs = viewStore();
+    const now = new Date().toISOString();
+    const r = (await vs.get(slug)) || { slug, first: '', last: '', gates: 0, views: 0, visits: 0, secs: 0, devices: {}, pages: {}, log: [], staff: 0, staff_last: '' };
+    if (/(?:^|;\s*)cs_staff=1(?:;|$)/.test(req.headers.get('cookie') || '')) { // Junyu himself
+      if (e !== 'time') { r.staff = (r.staff || 0) + 1; r.staff_last = now; await vs.set(slug, r); }
+      return done;
+    }
+    const vid = String(q.get('v') || '').replace(/[^a-z0-9]/gi, '').slice(0, 16) || 'x';
+    const page = String(q.get('p') || 'index.html').replace(/[^\w./-]/g, '').slice(0, 80) || 'index.html';
+    let d = r.devices[vid];
+    if (!d) {
+      if (Object.keys(r.devices).length >= 20) return done;
+      d = r.devices[vid] = { kind: deviceKind(ua), first: now, last: '', visits: 0, views: 0, gates: 0, secs: 0 };
+    }
+    if (e === 'time') {
+      const sec = Math.max(0, Math.min(1800, parseInt(q.get('sec'), 10) || 0));
+      if (!sec || !d.last) return done;
+      d.secs += sec; r.secs += sec;
+    } else {
+      if (!d.last || Date.now() - Date.parse(d.last) > 30 * 60e3) { d.visits++; r.visits++; } // new visit after 30 min
+      d.last = now; r.last = now; r.first = r.first || now;
+      if (e === 'gate') { d.gates++; r.gates++; }
+      else { d.views++; r.views++; if (r.pages[page] || Object.keys(r.pages).length < 60) r.pages[page] = (r.pages[page] || 0) + 1; }
+      r.log = [...(r.log || []), { t: now, e, p: e === 'view' ? page : '', k: d.kind, v: vid.slice(0, 4), h: e === 'view' && q.get('h') === 'pw' ? 'pw' : '' }].slice(-40);
+    }
+    await vs.set(slug, r);
+  } catch (err) { console.error('track', err.message); }
+  return done;
+}
+function viewSummary(r) {
+  if (!r) return null;
+  const devs = Object.values(r.devices || {});
+  return {
+    first: r.first || '', last: r.last || '', visits: r.visits || 0, views: r.views || 0, gates: r.gates || 0, secs: r.secs || 0,
+    devices: devs.length, kinds: [...new Set(devs.map((d) => d.kind))], stuck: devs.filter((d) => d.gates && !d.views).length,
+    pages: Object.entries(r.pages || {}).sort((a, b) => b[1] - a[1]).slice(0, 6),
+    staff: r.staff || 0, staff_last: r.staff_last || '', recent: (r.log || []).slice(-8).reverse(),
+  };
+}
+async function viewsFor(items) {
+  const slugs = [...new Set(items.map(slugOf).filter(Boolean))];
+  if (!slugs.length) return new Map();
+  const vs = viewStore();
+  const got = await Promise.all(slugs.map((s) => Promise.resolve(vs.get(s)).catch(() => null)));
+  return new Map(slugs.map((s, i) => [s, viewSummary(got[i])]));
+}
+const AI_VIEWS = new Map(); // id -> summary, filled before an AI call so the customer file can mention it
+const myTime = (iso) => (iso ? new Date(Date.parse(iso) + 8 * 3600e3).toISOString().slice(0, 16).replace('T', ' ') : '-');
+function viewsLine(p) {
+  if (!slugOf(p) || !AI_VIEWS.has(p.id)) return '';
+  const v = AI_VIEWS.get(p.id);
+  const pre = 'Mockup views (our own tracker; NEVER tell the customer we can see this, use it only for timing): ';
+  if (!v || (!v.views && !v.gates)) return pre + 'not opened yet.';
+  if (!v.views) return pre + `opened the link but did not enter the password yet (last ${myTime(v.last)} Malaysia time).`;
+  return pre + `opened ${v.visits} time(s) on ${v.devices} device(s) (${v.kinds.join(', ')}), ${v.views} page(s), about ${Math.max(1, Math.round(v.secs / 60))} min; first ${myTime(v.first)}, last ${myTime(v.last)} Malaysia time; pages: ${v.pages.map(([pg]) => pg).join(', ')}.`;
+}
+
 // ------------------------------------------------------------------ storage
 async function storage() {
   const file = env('DESK_LOCAL_FILE');
@@ -208,6 +293,7 @@ function customerFile(p) {
     `Calls: ${p.calls || 0} (no answer ${p.call_misses || 0}); last call ${p.last_call_date || '-'}; next call ${p.next_call_date || '-'}`,
     `Contacts: WhatsApp ${fmtNo(p.whatsapp)}; phone ${fmtNo(p.phone)}; email ${p.email || '-'}; area ${p.area || '-'}; address ${p.address || '-'}`,
     mockupFile(p),
+    viewsLine(p),
     p.input ? `Research notes:\n${String(p.input).slice(0, 2500)}` : '',
     p.preview_msg && p.status !== 'preview_sent' ? `Mockup message ready on the card (not sent yet): ${short(p.preview_msg)}` : '',
     p.draft_reply ? `Draft reply ready on the card: ${short(p.draft_reply)}` : '',
@@ -629,13 +715,18 @@ function restoreRows(doc, rows) {
 }
 
 async function handle(action, b, doc) {
+  if (b.id && ['chat', 'rewrite', 'followup', 'reply', 'analyze_reply'].includes(action)) {
+    const it = doc.items.find((x) => x.id === b.id);
+    if (it && slugOf(it)) AI_VIEWS.set(it.id, (await viewsFor([it])).get(slugOf(it)) || null);
+  }
   switch (action) {
     case 'list': {
       const LEADS = await allLeads();
       let changed = refreshContacts(doc, LEADS);
       if (await applyPreviews(doc, allPreviews())) changed = true;
       if (refreshPreviewMsgs(doc)) changed = true;
-      return { items: doc.items.map(slimItem), settings: doc.settings, today: myDate(), inbox: pendingInbox(doc, LEADS), saved: changed };
+      const vm = await viewsFor(doc.items);
+      return { items: doc.items.map((p) => ({ ...slimItem(p), preview_views: vm.get(slugOf(p)) || null })), settings: doc.settings, today: myDate(), inbox: pendingInbox(doc, LEADS), saved: changed };
     }
 
     case 'analyze': {
@@ -786,6 +877,7 @@ ${text}
 }
 
 export default async (req, context) => {
+  if (new URL(req.url).pathname === '/api/track') return (req.method === 'POST' || req.method === 'GET') ? track(req) : new Response(null, { status: 405 });
   if (req.method === 'GET' && new URL(req.url).searchParams.has('pubkey')) {
     try { return json({ pubkey: (await previewKeys()).publicKey }); } catch (e) { console.error('pubkey', e); return json({ error: 'server_error' }, 500); }
   }
@@ -813,4 +905,4 @@ export default async (req, context) => {
   }
 };
 
-export const config = { path: '/api/desk' };
+export const config = { path: ['/api/desk', '/api/track'] };
