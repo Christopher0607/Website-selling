@@ -281,3 +281,18 @@ input[type=file] { display: block; width: 100%; margin-top: 6px; font: 400 .88re
 .pvtbl .muted { color: var(--muted); }
 .pvtbl tr:last-child th, .pvtbl tr:last-child td { border-bottom: 0; }
 .tbl-wa { color: var(--wa); vertical-align: middle; }
+
+/* mockup views (2026-11-11) */
+.views { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 6px; margin: 6px 0 2px; font-size: .82rem; line-height: 1.45; }
+.views .ic { flex: none; }
+.views small { flex-basis: 100%; color: var(--muted, #666); font-size: .78rem; }
+.views--yes { color: var(--ok, #1d7a46); }
+.views--yes b { font-weight: 700; }
+.views--stuck { color: var(--warn, #9a5b00); }
+.views--none { color: var(--muted, #666); }
+.views__self { font-style: italic; }
+.seen { display: inline-flex; align-items: center; gap: 3px; color: var(--ok, #1d7a46); font-weight: 600; }
+.seen--stuck { color: var(--warn, #9a5b00); }
+.card--mini { padding: 12px 14px; }
+.mini__head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.card--mini .btnrow { margin-top: 8px; }

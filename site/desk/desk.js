@@ -45,6 +45,7 @@
     refresh: '<path d="M20 11a8 8 0 0 0-14.5-4.5L4 8"/><path d="M4 4v4h4"/><path d="M4 13a8 8 0 0 0 14.5 4.5L20 16"/><path d="M20 20v-4h-4"/>',
     pen: '<path d="M4 20h16"/><path d="M14.5 5.5l3 3L9 17H6v-3z"/>',
     clock: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+    eye: '<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/>',
     chat: '<path d="M5 4.5h14a1.5 1.5 0 0 1 1.5 1.5v9a1.5 1.5 0 0 1-1.5 1.5h-8l-4.5 3.5V16.5H5A1.5 1.5 0 0 1 3.5 15V6A1.5 1.5 0 0 1 5 4.5z"/>',
     pin: '<path d="M12 21s-6.5-5.6-6.5-11A6.5 6.5 0 0 1 18.5 10c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/>'
   };
@@ -61,6 +62,7 @@
   }
   function upsert(item) {
     const i = S.items.findIndex((x) => x.id === item.id);
+    if (i >= 0 && item.preview_views === undefined) item.preview_views = S.items[i].preview_views;
     if (i >= 0) S.items[i] = item; else S.items.unshift(item);
   }
 
@@ -270,16 +272,49 @@
     const d = doneToday();
     const chip = (id, label, n) => n ? `<a class="plan__chip" href="#${id}">${esc(label)} <b>${n}</b></a>` : '';
     return `<section class="plan" data-plan><div class="plan__top"><div><b>${esc(h)}</b><small>${esc(tip)}</small></div></div>
-      <div class="plan__chips">${chip('s-send', '要发样板', c.send)}${chip('s-replied', '有回复', c.replied)}${chip('s-follow', '要跟进', c.follow)}${chip('s-fresh', '新联系', c.fresh)}</div>
+      <div class="plan__chips">${chip('s-send', '要发样板', c.send)}${chip('s-replied', '有回复', c.replied)}${chip('s-viewed', '刚看过样板', c.viewed)}${chip('s-follow', '要跟进', c.follow)}${chip('s-fresh', '新联系', c.fresh)}</div>
       ${c.calls ? `<button class="btn btn--block plan__go" data-act="cs-start">${svg('phone', 18)}开始连续打电话（${c.calls} 家）</button>` : ''}
       <p class="plan__done">今天已经：打了 ${d.calls} 通电话 · 发了 ${d.pv} 个样板 · 发了 ${d.sent} 条信息</p></section>`;
   }
+
+  // ------------------------------------------------------------ mockup views (2026-11-11): did they open it?
+  // From /api/track (the mockup's password page). Junyu's own opens on this device are not counted (cookie cs_staff below).
+  const nowMs = () => (window.DESK_NOW ? Date.parse(window.DESK_NOW) : Date.now());
+  const myClock = (iso) => { const m = new Date(Date.parse(iso) + 8 * 3600e3); return { d: m.toISOString().slice(0, 10), t: m.toISOString().slice(11, 16) }; };
+  function whenTxt(iso) {
+    if (!iso) return '';
+    const c = myClock(iso), today = myClock(new Date(nowMs()).toISOString()).d, yest = myClock(new Date(nowMs() - 86400e3).toISOString()).d;
+    return (c.d === today ? '今天 ' : c.d === yest ? '昨天 ' : c.d.slice(5) + ' ') + c.t;
+  }
+  const KIND = { mobile: '手机', desktop: '电脑', tablet: '平板' };
+  function pageName(pg) {
+    const m = { 'index.html': '首页', 'shop.html': '全部产品', 'about.html': '关于', 'help.html': '帮助', 'cart.html': '购物车', 'checkout.html': '结账', 'order.html': '下单完成', 'contact.html': '联络' }[pg];
+    if (m) return m;
+    const pm = pg.match(/^p\/(.+)\.html$/);
+    return pm ? pm[1].split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') : pg.replace(/\.html$/, '');
+  }
+  const viewedRecently = (p, hours) => { const v = p.preview_views; return !!(v && v.last && nowMs() - Date.parse(v.last) < hours * 3600e3); };
+  function viewsLine(p) {
+    const v = p.preview_views;
+    if (!p.preview_url) return '';
+    const self = v && v.staff ? `<small class="views__self">你自己看过 ${v.staff} 次（不算）</small>` : '';
+    if (!v || (!v.views && !v.gates)) return p.status === 'preview_sent' ? `<p class="views views--none">${svg('eye', 14)}对方还没打开过样板${self}</p>` : (self ? `<p class="views views--none">${svg('eye', 14)}还没有人打开过${self}</p>` : '');
+    if (!v.views) return `<p class="views views--stuck">${svg('eye', 14)}打开了链接，但还没输入密码 · 最后 ${esc(whenTxt(v.last))}<small>可能找不到密码：可以再发一次网址和密码。</small>${self}</p>`;
+    const mins = Math.max(1, Math.round(v.secs / 60));
+    const tried = v.pages.some(([pg]) => /^(cart|checkout|order)\.html$/.test(pg));
+    const pages = v.pages.map(([pg]) => esc(pageName(pg))).join('、');
+    return `<p class="views views--yes">${svg('eye', 14)}<b>看过样板 ${v.visits} 次</b> · ${v.devices} 部${esc(v.kinds.map((k) => KIND[k] || k).join(' / '))} · ${v.views} 页 · 约 ${mins} 分钟 · 最后 ${esc(whenTxt(v.last))}<small>看了：${pages}${tried ? ' · 还试了下单流程' : ''}</small>${self}</p>`;
+  }
+  // short row for the Today list (the full card is in its own section / the list, so it is not shown twice)
+  const viewedRow = (p) => `<div class="card card--mini" data-viewed="${p.id}"><div class="mini__head"><b>${esc(p.business_name)}</b><span class="tag tag--status s-${esc(p.status)}">${esc(STATUS[p.status] || p.status)}</span></div>${viewsLine(p)}<div class="btnrow">${callNo(p) ? `<a class="btn btn--sm" href="tel:+${esc(callNo(p))}">${svg('phone', 16)}打电话</a>` : ''}<button class="btn btn--ghost btn--sm" data-act="open-card" data-id="${p.id}">打开卡片</button></div></div>`;
+  // this device is Junyu's: his own opens of a mockup are not counted (same site: cartsmithstudio.com and previews.cartsmithstudio.com)
+  function markStaff() { try { document.cookie = 'cs_staff=1; Max-Age=31536000; Path=/; SameSite=Lax' + (location.protocol === 'https:' ? '; Secure' : ''); } catch (e) { /* ignore */ } }
 
   // ------------------------------------------------------------ finished mockup on the card (2026-11-09)
   const hasPv = (p) => !!(p.preview_url && p.preview_password && p.preview_msg && p.status !== 'preview_sent');
   function pvBlock(p) {
     if (!p.preview_url || !p.preview_password || ['do_not_contact', 'won', 'lost'].includes(p.status)) return '';
-    let h = `<div class="pvbox" data-pvbox><div class="pvbox__row"><b>样板</b><a href="${esc(p.preview_url)}" target="_blank" rel="noopener">打开看看</a><span>密码 <code>${esc(p.preview_password)}</code></span><button class="linkbtn" data-act="copy-pv" data-id="${p.id}">复制网址和密码</button></div>${p.status === 'preview_sent' ? '' : pvChecked(p)}<small>${esc(p.preview_delete_by)} 删除${p.status === 'preview_sent' ? ' · 已经发给对方' : ''}</small></div>`;
+    let h = `<div class="pvbox" data-pvbox><div class="pvbox__row"><b>样板</b><a href="${esc(p.preview_url)}" target="_blank" rel="noopener">打开看看</a><span>密码 <code>${esc(p.preview_password)}</code></span><button class="linkbtn" data-act="copy-pv" data-id="${p.id}">复制网址和密码</button></div>${p.status === 'preview_sent' ? '' : pvChecked(p)}<small>${esc(p.preview_delete_by)} 删除${p.status === 'preview_sent' ? ' · 已经发给对方' : ''}</small>${viewsLine(p)}</div>`;
     if (p.status !== 'preview_sent' && p.preview_msg && !(p.status === 'replied' && p.draft_reply)) {
       h += msgBox(p, 'preview_msg', '发给对方的信息（已附上样板网址和密码，可以直接改）') + sendRow(p, 'preview_msg');
       h += `<div class="btnrow btnrow--end"><button class="btn btn--ghost btn--sm" data-act="pv-sent" data-id="${p.id}">${svg('check', 16)}已发样板</button></div>`;
@@ -385,10 +420,12 @@
     const replied = S.items.filter((p) => p.status === 'replied' && !p.call_ok);
     const calls = S.items.filter((p) => callDue(p));
     const purge = S.items.filter((p) => p.preview_delete_by && p.preview_delete_by <= S.today && p.status !== 'won');
-    let h = planHTML({ calls: callQueue().length, send: sendNow.length, replied: replied.length, follow: follow.length, fresh: fresh.length });
+    const viewed = S.items.filter((p) => viewedRecently(p, 48) && !['won', 'lost', 'do_not_contact'].includes(p.status)).sort((a, b) => Date.parse(b.preview_views.last) - Date.parse(a.preview_views.last));
+    let h = planHTML({ calls: callQueue().length, send: sendNow.length, replied: replied.length, follow: follow.length, fresh: fresh.length, viewed: viewed.length });
     if (S.inbox.length) h += inboxSect();
     if (sendNow.length) h += sect('电话说可以，现在发样板', sendNow.length, sendNow.map((p) => card(p)).join(''), '', 's-send');
     if (replied.length) h += sect('有回复，等你回', replied.length, replied.map((p) => card(p)).join(''), '', 's-replied');
+    if (viewed.length) h += sect('刚看过样板（48 小时内）：趁现在跟进', viewed.length, viewed.map(viewedRow).join(''), '', 's-viewed');
     if (calls.length) h += sect('今天要再打的电话', calls.length, calls.map((p) => card(p)).join(''), '');
     if (follow.length) h += sect('今天要跟进', follow.length, follow.map((p) => card(p)).join(''), '', 's-follow');
     if (left && fresh.length) h += `<div class="queuebar"><div><b>连续发送</b><small>一家一家打开已经填好的 WhatsApp / Email / Instagram，你按发送，再按「下一家」。有 WhatsApp / Email 的排前面。</small></div><button class="btn btn--sm" data-act="queue-start">开始（${Math.min(left, fresh.length)} 家）</button></div>`;
@@ -426,12 +463,14 @@
       const pv = p.preview_url ? `<a href="${esc(p.preview_url)}" target="_blank" rel="noopener">打开</a>` : '<span class="muted">还没做</span>';
       const pw = p.preview_password ? `<code>${esc(p.preview_password)}</code> <button class="linkbtn" data-act="copy-pv" data-id="${p.id}">复制</button>` : '<span class="muted">—</span>';
       const late = p.preview_delete_by && p.preview_delete_by <= S.today && p.status !== 'won';
+      const vv = p.preview_views;
+      const seen = !p.preview_url ? '<span class="muted">—</span>' : vv && vv.views ? `<span class="seen">${svg('eye', 13)}${vv.visits} 次 · ${esc(whenTxt(vv.last))}</span>` : vv && vv.gates ? '<span class="seen seen--stuck">没输入密码</span>' : '<span class="muted">没打开</span>';
       return `<tr data-row="${p.id}"><th scope="row"><b>${esc(p.business_name)}</b>${p.instagram ? `<small>@${esc(p.instagram)}</small>` : ''}</th>
-        <td><span class="tag tag--status s-${esc(p.status)}">${esc(STATUS[p.status] || p.status)}</span></td><td class="nowrap">${tel}</td><td>${pv}</td><td class="nowrap">${pw}</td>
+        <td><span class="tag tag--status s-${esc(p.status)}">${esc(STATUS[p.status] || p.status)}</span></td><td class="nowrap">${tel}</td><td>${pv}</td><td class="nowrap">${seen}</td><td class="nowrap">${pw}</td>
         <td class="nowrap${late ? ' late' : ''}">${esc(p.preview_delete_by || '—')}</td><td>${esc(p.area || '—')}</td><td class="nowrap">${esc(p.last_contact_date || '—')}</td><td class="nowrap">${esc(nextStep(p) || '—')}</td>
         <td><button class="linkbtn" data-act="open-card" data-id="${p.id}">卡片</button></td></tr>`;
     }).join('');
-    return head + `<div class="tbl-wrap"><table class="pvtbl"><thead><tr><th>店名</th><th>状态</th><th>电话</th><th>样板</th><th>密码</th><th>删除日期</th><th>地区</th><th>最后联系</th><th>下一步</th><th></th></tr></thead><tbody>${tr}</tbody></table></div>`
+    return head + `<div class="tbl-wrap"><table class="pvtbl"><thead><tr><th>店名</th><th>状态</th><th>电话</th><th>样板</th><th>打开过</th><th>密码</th><th>删除日期</th><th>地区</th><th>最后联系</th><th>下一步</th><th></th></tr></thead><tbody>${tr}</tbody></table></div>`
       + '<p class="hint">表格可以左右滑。删除日期变红 = 已到期，跟 Claude Code 说删除那个样板。</p>';
   }
   function tableText() {
@@ -762,7 +801,7 @@
       }
       if (act === 'tbl-all') { S.tableAll = !S.tableAll; renderList(); return; }
       if (act === 'tbl-copy') { copy(tableText()); toast('整张表已复制（可以贴到 Notes 或 Google Sheets）。'); return; }
-      if (act === 'open-card') { S.filter = 'all'; S.open[p.id] = true; renderList(); const el = document.getElementById('l-' + p.id); if (el) el.scrollIntoView({ block: 'start' }); return; }
+      if (act === 'open-card') { if (S.tab !== 'list') { S.tab = 'list'; $$('[data-tab]').forEach((b) => b.classList.toggle('is-on', b.dataset.tab === 'list')); $$('[data-view]').forEach((v) => { v.hidden = v.dataset.view !== 'list'; }); } S.filter = 'all'; S.open[p.id] = true; renderList(); const el = document.getElementById('l-' + p.id); if (el) el.scrollIntoView({ block: 'start' }); return; }
       if (act === 'has-site') {
         const url = prompt(`${p.business_name} 的网站网址（知道的话填，不知道就直接按确定）：`, 'https://');
         if (url === null) return;
@@ -909,6 +948,7 @@
       const j = await api('list');
       S.items = j.items || []; S.inbox = j.inbox || []; S.settings = j.settings || S.settings; S.today = j.today;
       $('#login').hidden = true; $('#app').hidden = false;
+      markStaff();
       $$('[data-icon]').forEach((el) => { el.innerHTML = svg(el.dataset.icon, 22); });
       render();
     } catch (e) {

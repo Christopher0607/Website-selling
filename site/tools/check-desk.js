@@ -423,6 +423,49 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
     await p.click('[data-tab="today"]');
   }
 
+  // mockup views (2026-11-11): the mockup's password page reports opens to /api/track; the desk shows them
+  {
+    const UA_PHONE = 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1';
+    const t = (q, h) => fetch(`${BASE}/api/track?${q}`, { method: 'POST', headers: { 'user-agent': UA_PHONE, ...(h || {}) } });
+    const first = await t('s=m-kopi-test-1234abcd&e=gate&v=dev1&p=index.html');
+    await t('s=m-kopi-test-1234abcd&e=view&v=dev1&p=index.html&h=pw');
+    await t('s=m-kopi-test-1234abcd&e=view&v=dev1&p=shop.html&h=saved');
+    await t('s=m-kopi-test-1234abcd&e=view&v=dev1&p=p%2Fkaya-toast.html&h=saved');
+    await t('s=m-kopi-test-1234abcd&e=time&v=dev1&p=shop.html&sec=95');
+    await t('s=m-kopi-test-1234abcd&e=view&v=me&p=index.html', { cookie: 'cs_staff=1' }); // Junyu himself
+    await t('s=m-kopi-test-1234abcd&e=view&v=bot&p=index.html', { 'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/131.0 Safari/537.36' }); // our checks
+    await t('s=m-kopi-test-1234abcd&e=view&v=wa&p=index.html', { 'user-agent': 'WhatsApp/2.23.20.0 A' }); // link preview
+    await t('s=..%2F..%2Fetc&e=view&v=x'); // not a mockup name
+    await t('s=m-roti-test-1234abcd&e=gate&v=dev2&p=index.html'); // opened the link, no password yet
+    ok(first.status === 204, 'tracking beacon answers 204 (no content)');
+    const vf = JSON.parse(fs.readFileSync(STORE + '.views.json', 'utf8'));
+    const kv = vf['m-kopi-test-1234abcd'] || {};
+    ok(kv.views === 3 && kv.gates === 1 && kv.visits === 1 && kv.secs === 95 && kv.staff === 1 && Object.keys(kv.devices || {}).length === 1 && kv.devices.dev1.kind === 'mobile',
+      'opens recorded per mockup (1 visit, 3 pages, 95 s, phone); the owner, our automated checks and WhatsApp link previews are not counted');
+    ok(!Object.keys(vf).some((k) => /[/.]/.test(k)) && !JSON.stringify(vf).includes('127.0.0.1') && !/iPhone OS/.test(JSON.stringify(vf)), 'no IP address or full browser string stored; bad names ignored');
+    await p.reload();
+    await p.waitForSelector('[data-today-list] [data-plan]');
+    ok(/cs_staff=1/.test(await p.evaluate(() => document.cookie)), 'opening the desk marks this device as ours (its own mockup opens are not counted)');
+    ok(/刚看过样板/.test(await p.textContent('[data-plan]')), 'plan shows a "just viewed the mockup" chip');
+    const kopi = await p.textContent('#s-viewed [data-viewed="p904"]');
+    ok(/看过样板 1 次/.test(kopi) && /1 部手机/.test(kopi) && /3 页/.test(kopi) && /约 2 分钟/.test(kopi) && /首页、全部产品、Kaya Toast/.test(kopi) && /你自己看过 1 次（不算）/.test(kopi),
+      'Today, "just viewed": visits, device, pages, minutes, which pages (owner\'s own opens shown separately)');
+    const roti = await p.textContent('#s-viewed [data-viewed="p905"]');
+    ok(/打开了链接，但还没输入密码/.test(roti) && /再发一次网址和密码/.test(roti), 'opened the link but no password yet: says so, suggests resending the password');
+    await p.click('#s-viewed [data-viewed="p904"] [data-act="open-card"]');
+    await p.waitForSelector('#l-p904');
+    ok(!(await p.isHidden('[data-view="list"]')) && /看过样板 1 次/.test(await p.textContent('#l-p904')), '"Open card" goes to the full card, which shows the views too');
+    await p.click('[data-filter="table"]');
+    await p.waitForSelector('.pvtbl');
+    ok(/打开过/.test(await p.textContent('.pvtbl thead')) && /1 次/.test(await p.textContent('.pvtbl [data-row="p904"]')) && /没输入密码/.test(await p.textContent('.pvtbl [data-row="p905"]')), 'mockup table has an "opened" column');
+    await p.click('[data-filter="all"]');
+    const r = await fetch(`${BASE}/api/desk`, { method: 'POST', headers: { 'content-type': 'application/json', 'x-desk-key': KEY }, body: JSON.stringify({ action: 'chat', id: 'p904', text: '他们看了样板吗' }) });
+    const callsV = await (await fetch('http://localhost:9920/__calls')).json();
+    ok(r.ok && callsV[callsV.length - 1].views === true, 'the card\'s AI assistant knows whether they opened the mockup (and is told never to mention it to them)');
+    await shot('views');
+    await p.click('[data-tab="today"]');
+  }
+
   // today's plan + 连续打电话 (2026-11-10): dial, read the script in their language, outcome, send the mockup on WhatsApp, next
   {
     const d6 = JSON.parse(fs.readFileSync(STORE, 'utf8'));
