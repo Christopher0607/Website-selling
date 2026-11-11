@@ -7,7 +7,7 @@
 // 没有密码的人（包括看 GitHub 的人）只看到密码页和乱码。不需要任何金钥：用现有的 git push。
 // Netlify 要先在 Branch deploys 加上 previews 分支（docs/09-netlify-guide.md 第 D 部分）。
 //
-// 用法（先 python3 site/build.py --preview clients/<代号>/preview/preview.json）：
+// 用法（publish 会自动先跑 python3 site/build.py --preview clients/<代号>/preview/preview.json）：
 //   node scripts/local/preview-publish.js publish p012        # 加密 + push，印出网址和密码
 //   node scripts/local/preview-publish.js list                # 列出 previews 分支上的样板和删除日期
 //   node scripts/local/preview-publish.js delete p012         # 删除（14 天内一定要删）
@@ -248,6 +248,13 @@ if (cmd === 'desk-note') {
   const n = encryptSite(p, path.join(out, p.slug));
   console.log(`加密好了：${n.pages} 页、${n.imgs} 张照片 → ${path.join(out, p.slug)}（本机测试用，没有 push）`);
 } else if (cmd === 'publish') {
+  // always rebuild first, so what goes out matches preview.json and site/studio.json right now
+  // (2026-11-11: after the domain change a republish encrypted pages built earlier, still linking to the old address)
+  const cfgRel = path.join('clients', code || '', 'preview', 'preview.json');
+  if (/^[a-z0-9-]{2,40}$/.test(code || '') && fs.existsSync(path.join(ROOT, cfgRel))) {
+    try { execFileSync('python3', [path.join('site', 'build.py'), '--preview', cfgRel], { cwd: ROOT, stdio: ['ignore', 'ignore', 'pipe'] }); }
+    catch (e) { die(`build 失败：python3 site/build.py --preview ${cfgRel}\n${String(e.stderr || e.message).slice(-800)}`); }
+  }
   const p = previewOf(code);
   const today = new Date(Date.now() + 8 * 3600e3).toISOString().slice(0, 10);
   let n;
