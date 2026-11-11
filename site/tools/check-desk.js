@@ -353,7 +353,7 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
   {
     const d3 = JSON.parse(fs.readFileSync(STORE, 'utf8'));
     const cc = d3.items.find((x) => x.id === 'p902');
-    Object.assign(cc, { preview_url: 'https://previews--cartsmith.netlify.app/m-callback-cafe-1234abcd/', preview_password: 'cafe1234', preview_delete_by: '2000-01-01', preview_slug: 'm-callback-cafe-1234abcd' });
+    Object.assign(cc, { preview_url: 'https://previews.cartsmithstudio.com/m-callback-cafe-1234abcd/', preview_password: 'cafe1234', preview_delete_by: '2000-01-01', preview_slug: 'm-callback-cafe-1234abcd' });
     fs.writeFileSync(STORE, JSON.stringify(d3));
     await p.reload();
     await p.click('[data-tab="list"]');
@@ -392,7 +392,8 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
     await p.click('[data-tab="today"]');
     await p.waitForSelector('#c-p904 textarea[data-field="preview_msg"]');
     const k = JSON.parse(fs.readFileSync(STORE, 'utf8')).items.find((x) => x.id === 'p904');
-    ok(k.preview_msg_v >= 2 && k.preview_msg.includes(pv.preview_url) && k.preview_msg.includes('kopi5678') && k.preview_msg.includes('cartsmith.netlify.app') && !/sells out|shipping/.test(k.preview_msg), 'old mockup messages are replaced: short, with link, password and our own site, no shop description');
+    ok(k.preview_msg_v >= 2 && k.preview_msg.includes('https://previews.cartsmithstudio.com/m-kopi-test-1234abcd/') && k.preview_msg.includes('kopi5678') && k.preview_msg.includes('https://cartsmithstudio.com/') && !/sells out|shipping/.test(k.preview_msg), 'old mockup messages are replaced: short, with link, password and our own site, no shop description');
+    ok(k.preview_url === 'https://previews.cartsmithstudio.com/m-kopi-test-1234abcd/' && !/netlify\.app/.test(k.preview_msg + k.preview_url), 'cards saved with the old Netlify address move to our own domain (cartsmithstudio.com)');
     ok(/we've made a free sample website for Kopi Test/.test(k.preview_msg) && k.preview_msg.split(/\s+/).length < 80, 'message says the website is already made, under 80 words');
     ok(!(await p.$('#c-p904 textarea[data-field="message"]')), 'card with a mockup shows only the mockup message (no long opener next to it)');
     ok(/We've already made a free sample website/.test(await p.textContent('#c-p904 .cue')), 'phone opener says the website is already made');
@@ -417,7 +418,7 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
     await p.click('#l-p905 [data-act="call-out"][data-out="ok"]');
     await p.waitForSelector('#l-p905 textarea[data-field="draft_reply"]');
     const r5 = JSON.parse(fs.readFileSync(STORE, 'utf8')).items.find((x) => x.id === 'p905');
-    ok(r5.draft_reply.includes('m-roti-test-1234abcd') && r5.draft_reply.includes('roti4321') && r5.draft_reply.includes('cartsmith.netlify.app') && !/\[mockup link\]/.test(r5.draft_reply), 'after a good call the message has the link and password filled in');
+    ok(r5.draft_reply.includes('m-roti-test-1234abcd') && r5.draft_reply.includes('roti4321') && r5.draft_reply.includes('cartsmithstudio.com') && !r5.draft_reply.includes('netlify.app') && !/\[mockup link\]/.test(r5.draft_reply), 'after a good call the message has the link and password filled in');
     await shot('pv-first');
     await p.click('[data-tab="today"]');
   }
@@ -427,10 +428,10 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
     const d6 = JSON.parse(fs.readFileSync(STORE, 'utf8'));
     const base6 = { created: '2026-11-10', platform: 'other', store_url: '', instagram: '', whatsapp: '', email: '', niche: 'gelato', input: 'x', notes: '', brand_clear: true, sales_signal: true, active_social: true, no_or_weak_website: true, budget_signal: true, score: 5, fit: 'good', template: 'chili-pantry', touches: 0, history: [], language: 'en', observation: 'Opened late 2024' };
     d6.items.unshift({ ...base6, id: 'p907', business_name: 'Gelato Test', status: 'contacted', touches: 1, last_channel: 'ig', channels: ['ig'], first_contact_date: '2026-11-08', last_contact_date: '2026-11-08', next_followup_date: '2099-01-01', next_call_date: '2000-01-01', phone: '60172022162',
-      preview_url: 'https://previews--cartsmith.netlify.app/m-gelato-test-1234abcd/', preview_password: 'gelato5523', preview_delete_by: '2099-01-01', preview_slug: 'm-gelato-test-1234abcd', preview_msg: 'old', preview_checked: '2026-11-10', preview_pitch: { mode: 'pickup', items: ['Salted Pistachio', 'Affogato'] },
+      preview_url: 'https://previews.cartsmithstudio.com/m-gelato-test-1234abcd/', preview_password: 'gelato5523', preview_delete_by: '2099-01-01', preview_slug: 'm-gelato-test-1234abcd', preview_msg: 'old', preview_checked: '2026-11-10', preview_pitch: { mode: 'pickup', items: ['Salted Pistachio', 'Affogato'] },
       preview_facts: { mode: 'pickup', place: '37, Jalan 20/16, Taman Paramount', hours: 'Tue-Sun from 12pm', delivery: '', products: [{ n: 'Medium Cup · Two Flavours', p: 20, per: '', cat: 'Cups', ex: false, set: '', src: 'From a Chiefeater review (2026)' }, { n: 'Take-Home Tub (example)', p: null, per: '', cat: 'Cups', ex: true, set: '', src: '' }], faq: [['Is it pork-free?', 'Yes.']], contact: '', sources: 'Malaysian Foodie (Mar 2025)' } });
     d6.items.unshift({ ...base6, id: 'p908', business_name: 'Nyonya Test', status: 'preview_sent', touches: 1, phone: '60122887449', next_followup_date: '2000-01-01',
-      preview_url: 'https://previews--cartsmith.netlify.app/m-nyonya-test-1234abcd/', preview_password: 'beng6840', preview_delete_by: '2099-01-01', preview_slug: 'm-nyonya-test-1234abcd', followup: '' });
+      preview_url: 'https://previews.cartsmithstudio.com/m-nyonya-test-1234abcd/', preview_password: 'beng6840', preview_delete_by: '2099-01-01', preview_slug: 'm-nyonya-test-1234abcd', followup: '' });
     fs.writeFileSync(STORE, JSON.stringify(d6));
     await p.reload();
     await p.evaluate(() => { window.DESK_NOW = '2026-11-10T07:00:00Z'; }); // 15:00
@@ -452,7 +453,7 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
     await p.click('[data-cs="p907"] .callout [data-act="cs-out"][data-out="ok"]');
     await p.waitForSelector('[data-cs="p907"] [data-act="cs-wa"]');
     const msg = await p.inputValue('[data-cs="p907"] textarea');
-    ok(msg.includes('m-gelato-test-1234abcd') && msg.includes('gelato5523') && msg.includes('cartsmith.netlify.app'), 'yes on the phone: the message to send has the link and password already');
+    ok(msg.includes('m-gelato-test-1234abcd') && msg.includes('gelato5523') && msg.includes('https://cartsmithstudio.com/') && !msg.includes('netlify.app'), 'yes on the phone: the message to send has the link and password already');
     const [csPop] = await Promise.all([p.waitForEvent('popup'), p.click('[data-cs="p907"] [data-act="cs-wa"]')]);
     ok(decodeURIComponent(csPop.url()).startsWith('https://wa.me/60172022162') || /whatsapp\.com/.test(csPop.url()), 'WhatsApp opens their number from the call session');
     await csPop.close();

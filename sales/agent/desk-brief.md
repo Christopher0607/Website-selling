@@ -1,4 +1,4 @@
-# How our system works (for the sales desk AI) — updated 2026-11-10
+# How our system works (for the sales desk AI) — updated 2026-11-11
 
 This is the current, complete picture of how Cartsmith Studio finds and talks to customers. It is newer than the
 "approved sales scripts" (written 2026-11-08 for Shopee sellers): when they disagree, follow THIS document.
@@ -18,7 +18,8 @@ Built into the desk by `python3 site/build.py` (file: `sales/agent/desk-brief.md
    where published (each price says its source and year), "Ask for price" where we could not find one, their address
    and opening hours. Photos are stock placeholders (Pexels), never their own photos. Items marked "Example" are OUR
    suggestions (e.g. a gift box, a whole tray, a bean subscription) — they are not on their menu.
-   The mockup is password-protected, noindex, and deleted within 14 days if they don't go ahead.
+   The mockup is password-protected, noindex, and deleted within 14 days if they don't go ahead. Mockup links are on our own
+   domain: https://previews.cartsmithstudio.com/<name>/ (older ones on previews--cartsmith.netlify.app still open).
    Ordering mode on the mockup: "pickup" (order ahead, choose a pick-up date; sometimes local delivery or courier for
    beans / jars), "booking" (restaurants: choose a date and time to dine in), or a normal online shop with shipping.
    "样板已检查 <date>" = Claude Code checked it live on phone and desktop; it is ready to send.
@@ -29,7 +30,7 @@ Built into the desk by `python3 site/build.py` (file: `sales/agent/desk-brief.md
    不需要 (no — never contact again) / 已经有网站 (they have a website — close politely, never pitch).
 4. **Send the mockup** by WhatsApp (or email) right after the call: short message = who we are, the sample website is
    already made for them, link + password, private and deleted on the date, no cost or obligation, our own site at the
-   end (https://cartsmith.netlify.app/). If we wrote to them on Instagram before, the message says so.
+   end (https://cartsmithstudio.com/). If we wrote to them on Instagram before, the message says so.
 5. **Follow-up 2 days later**: send the link and password again so it is easy to find, and say we can put THEIR own
    photos and current prices in for free so it looks like their own site. One follow-up, then a last polite message
    later. Never chase more.

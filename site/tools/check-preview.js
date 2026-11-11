@@ -6,7 +6,7 @@
 //   python3 -m http.server 8770 --directory clients &
 //   node site/tools/check-preview.js http://localhost:8770/<代号>/preview/site/ <密码> [截图资料夹]
 // 用法（已发布的加密网址）：
-//   node site/tools/check-preview.js https://previews--cartsmith.netlify.app/<slug>/ <密码> [截图资料夹]
+//   node site/tools/check-preview.js https://previews.cartsmithstudio.com/<slug>/ <密码> [截图资料夹]
 const { chromium } = require('playwright');
 const fs = require('fs');
 const path = require('path');
