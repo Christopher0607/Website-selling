@@ -53,7 +53,8 @@ function audit() {
   const ratio = (a, b) => { const x = lum(a), y = lum(b); return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05); };
   const over = (top, bottom) => { const a = top[3]; return [0, 1, 2].map((i) => top[i] * a + bottom[i] * (1 - a)).concat(1); };
   const visible = (el) => { const cs = getComputedStyle(el); return cs.visibility !== 'hidden' && cs.display !== 'none' && +cs.opacity > 0.05; };
-  const clippedX = (el) => { for (let a = el.parentElement; a; a = a.parentElement) { const ox = getComputedStyle(a).overflowX; if (ox !== 'visible') return a; } return null; };
+  // starts at the element itself: a name with its own overflow:hidden + ellipsis (sticky add-to-cart bar) ends in “…”, not cut off
+  const clippedX = (el) => { for (let a = el; a; a = a.parentElement) { const ox = getComputedStyle(a).overflowX; if (ox !== 'visible') return a; } return null; };
 
   // top note
   const bar = document.querySelector('.demo-bar');
@@ -139,16 +140,9 @@ function audit() {
 async function scan(page, url, vp, shotDir) {
   await page.goto(url, { waitUntil: 'load' });
   await unlock(page);
-  const isReady = () => document.documentElement.getAttribute('data-store') === 'ready';
-  const ready = await page.waitForFunction(isReady, null, { timeout: 8000 }).then(() => true).catch(() => false);
-  let noJs = '';
-  if (!ready) { // say why, so a rare failure can be told apart: slow network vs. the script really not running
-    const got = await page.evaluate(() => performance.getEntriesByType('resource').filter((r) => /store\.js/.test(r.name)).map((r) => Math.round(r.responseEnd)));
-    const late = await page.waitForFunction(isReady, null, { timeout: 15000 }).then(() => true).catch(() => false);
-    noJs = late ? ' (ran after 8+ s: slow network?)' : got.length ? ` (store.js downloaded at ${got[0]} ms but never ran)` : ' (store.js never requested)';
-  }
+  const ready = await page.waitForFunction(() => document.documentElement.getAttribute('data-store') === 'ready', null, { timeout: 8000 }).then(() => true).catch(() => false);
   await page.waitForTimeout(300);
-  const total = { overflow: null, bar: [], contrast: new Set(), lowContrast: new Set(), cut: new Set(), broken: new Set(), small: new Set(), covered: new Set(), noJs };
+  const total = { overflow: null, bar: [], contrast: new Set(), lowContrast: new Set(), cut: new Set(), broken: new Set(), small: new Set(), covered: new Set(), noJs: !ready };
   const h = await page.evaluate(() => document.documentElement.scrollHeight);
   for (let y = 0; y < h; y += Math.floor(vp.height * 0.8)) {
     await page.evaluate((yy) => window.scrollTo(0, yy), y);
@@ -214,7 +208,7 @@ async function scan(page, url, vp, shotDir) {
       t.broken.forEach((x) => issues.broken.push(`${pg}: ${x}`));
       t.small.forEach((x) => issues.small.push(`${pg}: ${x}`));
       t.covered.forEach((x) => issues.covered.push(`${pg}: ${x}`));
-      if (t.noJs) issues.noJs.push(pg + t.noJs);
+      if (t.noJs) issues.noJs.push(pg);
     }
     const list = (a) => (a.length ? ': ' + a.slice(0, 6).join(' | ') + (a.length > 6 ? ` (+${a.length - 6} more)` : '') : '');
     ok(!issues.overflow.length, `no sideways shift on ${pages.length} pages` + list(issues.overflow));

@@ -1240,7 +1240,7 @@
    "name": "Hideaway",
    "delete_by": "2026-11-23",
    "photos": "placeholder",
-   "checked": "2026-11-10",
+   "checked": "2026-11-11",
    "pitch": {
     "mode": "pickup",
     "items": [
@@ -1251,8 +1251,8 @@
    },
    "facts": {
     "mode": "pickup",
-    "place": "AG7, Block A, Happy Mansion, Section 17, PJ",
-    "hours": "Pick up at the café: Wed, Thu & Sun 11am–7pm, Fri & Sat 11am–10pm.",
+    "place": "59D, Jalan Awan Jawa, Taman Yarl",
+    "hours": "Pick up at the café, Wed–Sun 11am–7pm.",
     "delivery": "",
     "products": [
      {
@@ -1262,7 +1262,7 @@
       "cat": "Butter cakes",
       "ex": false,
       "set": "",
-      "src": "Per slice, from a 2018 review. Your current prices go here."
+      "src": "Per slice, from Burpple / Eat Drink KL listings (before the 2025 move). Your current prices go here."
      },
      {
       "n": "Victoria Sponge",
@@ -1284,21 +1284,21 @@
      },
      {
       "n": "Pandan Gula Melaka Butter Cake",
-      "p": null,
-      "per": "",
+      "p": 10,
+      "per": "slice",
       "cat": "Butter cakes",
       "ex": false,
       "set": "",
-      "src": ""
+      "src": "Per slice, from Burpple / Eat Drink KL listings (before the 2025 move). Your current prices go here."
      },
      {
       "n": "Banana Pecan Raisin Loaf",
-      "p": null,
-      "per": "",
+      "p": 11,
+      "per": "slice",
       "cat": "Butter cakes",
       "ex": false,
       "set": "",
-      "src": ""
+      "src": "Per slice, from Burpple / Eat Drink KL listings (before the 2025 move). Your current prices go here."
      },
      {
       "n": "Scones with Homemade Jam",
@@ -1340,11 +1340,11 @@
     "faq": [
      [
       "When are you open?",
-      "Wednesday, Thursday and Sunday 11am–7pm; Friday and Saturday 11am–10pm. Closed on Mondays and Tuesdays."
+      "Wednesday to Sunday, 11am to 7pm. Closed on Mondays and Tuesdays."
      ],
      [
-      "Where are you?",
-      "AG7, Block A, Happy Mansion, Jalan 17/13, Section 17, 46400 Petaling Jaya."
+      "Where are you now?",
+      "59D, Jalan Awan Jawa, Taman Yarl, 58200 Kuala Lumpur, near OUG. We moved from Happy Mansion, Section 17 in 2025."
      ],
      [
       "Can I order a whole cake?",
@@ -1355,8 +1355,8 @@
       "Yes, cake prices shown are per slice."
      ]
     ],
-    "contact": "Call or WhatsApp 013-757 1237, or message @hideaway_17 on Instagram.",
-    "sources": "Checked 2026-11-10: Malaysia Food and Travel via Newswav (11 Aug 2025; Doreen Thean, ex-Malaysia Airlines, ~10 cakes daily, lemon drizzle, pandan gula melaka, banana pecan raisin loaf, pastas; hours) ; FMT (8 May 2022; mother-daughter team, opened Oct 2018, scones with homemade jam, Victoria sponge) ; 2018 review (classic RM9, Victoria RM10 per slice)."
+    "contact": "Call or WhatsApp 013-757 1237, or message us on Instagram.",
+    "sources": "Checked 2026-11-10: Malaysia Food and Travel via Newswav (11 Aug 2025; Doreen Thean, ex-Malaysia Airlines, ~10 cakes daily, lemon drizzle, pandan gula melaka, banana pecan raisin loaf, pastas; hours) ; FMT (8 May 2022; mother-daughter team, opened Oct 2018, scones with homemade jam, Victoria sponge) ; 2018 review (classic RM9, Victoria RM10 per slice). ; MOVED (Eat Drink KL, 22 Oct 2025; Waze / TikTok listings): 59D Jalan Awan Jawa, Taman Yarl, 58200 KL, Wed-Sun 11am-7pm, closed Mon-Tue. Burpple: Pandan Gula Melaka RM10, Banana Pecan Raisin RM11 per slice."
    }
   },
   {
@@ -1368,7 +1368,7 @@
    "name": "Ome by Spacebar Coffee",
    "delete_by": "2026-11-23",
    "photos": "placeholder",
-   "checked": "2026-11-10",
+   "checked": "",
    "pitch": {
     "mode": "pickup",
     "items": [
@@ -1707,13 +1707,13 @@
    "name": "RATA Restaurant",
    "delete_by": "2026-11-23",
    "photos": "placeholder",
-   "checked": "2026-11-10",
+   "checked": "2026-11-11",
    "pitch": {
     "mode": "pickup",
     "items": [
-     "Slow-Roasted NZ Leg of Lamb Set",
-     "Lamb Ragout & Mango Chutney Pizza",
-     "Coconut Lamb Skewers"
+     "lamb ragout & mango chutney pizza",
+     "nasi lemak udang sambal petai",
+     "Christmas leg of lamb"
     ]
    },
    "facts": {
@@ -1733,30 +1733,57 @@
      },
      {
       "n": "Lamb Ragout & Mango Chutney Pizza",
-      "p": null,
+      "p": 52.9,
       "per": "",
-      "cat": "Signatures",
+      "cat": "Pizza (14\")",
       "ex": false,
       "set": "",
-      "src": ""
+      "src": "From RATA's own online ordering page (checked 11 Nov 2026). Dine-in prices may differ."
      },
      {
-      "n": "Coconut Lamb Skewers",
-      "p": null,
+      "n": "Beef Pepperoni & Pulled Beef Pizza",
+      "p": 55.9,
       "per": "",
-      "cat": "Signatures",
+      "cat": "Pizza (14\")",
       "ex": false,
       "set": "",
-      "src": ""
+      "src": "From RATA's own online ordering page (checked 11 Nov 2026). Dine-in prices may differ."
      },
      {
-      "n": "Spicy Lamb Linguine",
-      "p": null,
+      "n": "Lamb Ragout Linguine",
+      "p": 35.9,
       "per": "",
-      "cat": "Signatures",
+      "cat": "Pasta",
       "ex": false,
       "set": "",
-      "src": ""
+      "src": "From RATA's own online ordering page (checked 11 Nov 2026). Dine-in prices may differ."
+     },
+     {
+      "n": "Lemon Butter & Seafood Fettuccine",
+      "p": 36.9,
+      "per": "",
+      "cat": "Pasta",
+      "ex": false,
+      "set": "",
+      "src": "From RATA's own online ordering page (checked 11 Nov 2026). Dine-in prices may differ."
+     },
+     {
+      "n": "Nasi Lemak Udang Sambal Petai",
+      "p": 34.9,
+      "per": "",
+      "cat": "Mains",
+      "ex": false,
+      "set": "",
+      "src": "From RATA's own online ordering page (checked 11 Nov 2026). Dine-in prices may differ."
+     },
+     {
+      "n": "Mutton Chukka & Turmeric Rice",
+      "p": 33.9,
+      "per": "",
+      "cat": "Mains",
+      "ex": false,
+      "set": "",
+      "src": "From RATA's own online ordering page (checked 11 Nov 2026). Dine-in prices may differ."
      }
     ],
     "faq": [
@@ -1769,6 +1796,10 @@
       "The set feeds up to 4."
      ],
      [
+      "Are these your current prices?",
+      "The pizza, pasta and mains prices are from RATA's own online ordering page (Nov 2026). The Christmas lamb is last year's price: this year's goes in when the menu is out."
+     ],
+     [
       "Where do I pick up?",
       "25, Jalan SS 15/5A, Subang Jaya."
      ],
@@ -1778,7 +1809,7 @@
      ]
     ],
     "contact": "Call or message 012-424 1194, or message @rata_subang on Instagram.",
-    "sources": "Checked 2026-11-10: TheSmartLocal Christmas takeaways (13 Dec 2025; NZ leg of lamb set RM199/kg feeds up to 4, sides; order from 24 Nov by phone 012-424 1194) https://thesmartlocal.my/christmas-takeaways/ ; The Star (Feb 2019) and Eat Drink KL (2018) for the menu; Tatler Subang Jaya guide."
+    "sources": "Checked 2026-11-11: RATA's own online ordering page (Beep) https://ratarestaurant.beepit.com/ (current menu and prices: pizzas, pasta, mains); TheSmartLocal Christmas takeaways (13 Dec 2025; NZ leg of lamb set RM199/kg feeds up to 4, sides; order from 24 Nov by phone 012-424 1194) https://thesmartlocal.my/christmas-takeaways/ ; The Star (Feb 2019) and Eat Drink KL (2018) for background; Tatler Subang Jaya guide. Coconut lamb skewers removed: not on the current menu."
    }
   },
   {
@@ -1790,7 +1821,7 @@
    "name": "Blue Dahlia",
    "delete_by": "2026-11-23",
    "photos": "placeholder",
-   "checked": "2026-11-10",
+   "checked": "2026-11-11",
    "pitch": {
     "mode": "pickup",
     "items": [
@@ -1906,12 +1937,12 @@
      },
      {
       "n": "Cendol",
-      "p": null,
+      "p": 6.9,
       "per": "",
       "cat": "Mains & desserts",
       "ex": false,
       "set": "",
-      "src": ""
+      "src": "From Malaysia Food and Travel (Mar 2025). Your current prices go here."
      },
      {
       "n": "Festive Kuih Gift Box (example)",
@@ -1942,7 +1973,7 @@
      ]
     ],
     "contact": "WhatsApp 011-2980 3362, or message @bluedahliamy on Instagram.",
-    "sources": "Checked 2026-11-10: Malay Mail review (5 Apr 2025; owner's Melaka Peranakan mother's recipes; kuih koci and abok-abok; 10:30am-6pm daily) https://www.malaymail.com/news/eat-drink/2025/04/05/for-outstanding-melaka-peranakan-kuih-cakes-and-desserts-head-over-to-blue-dahlia-in-section-17-pj/171953 ; FMT (5 Feb 2026; Yugin Lee and Nina Yeoh, 18-20 kuih daily, seri muka, peanut mochi, Big Leaf next door) ; Buro247 kuih list (bingka ubi, koci, pulut panggang, talam, pineapple tarts)."
+    "sources": "Checked 2026-11-10: Malay Mail review (5 Apr 2025; owner's Melaka Peranakan mother's recipes; kuih koci and abok-abok; 10:30am-6pm daily) https://www.malaymail.com/news/eat-drink/2025/04/05/for-outstanding-melaka-peranakan-kuih-cakes-and-desserts-head-over-to-blue-dahlia-in-section-17-pj/171953 ; FMT (5 Feb 2026; Yugin Lee and Nina Yeoh, 18-20 kuih daily, seri muka, peanut mochi, Big Leaf next door) ; Buro247 kuih list (bingka ubi, koci, pulut panggang, talam, pineapple tarts). ; Malaysia Food and Travel (6 Mar 2025): Cendol RM6.90; also kuih seri muka, pulut inti kelapa, onde-onde, sago kelapa. Hours differ between listings (10:30am-6pm in Malay Mail 2025 / FMT 2026; 10:30am-10pm in an earl"
    }
   },
   {
@@ -2081,7 +2112,7 @@
    "name": "Le Petit Four Pâtisserie",
    "delete_by": "2026-11-23",
    "photos": "placeholder",
-   "checked": "2026-11-10",
+   "checked": "2026-11-11",
    "pitch": {
     "mode": "pickup",
     "items": [
@@ -2133,13 +2164,40 @@
       "src": "From TheSmartLocal (Sep 2023). Your current prices go here."
      },
      {
+      "n": "Enchanté",
+      "p": 26,
+      "per": "",
+      "cat": "Cakes",
+      "ex": false,
+      "set": "",
+      "src": "From Daniel Food Diary (May 2025). Your current prices go here."
+     },
+     {
+      "n": "Mango Yuzu",
+      "p": 25,
+      "per": "",
+      "cat": "Cakes",
+      "ex": false,
+      "set": "",
+      "src": "From Daniel Food Diary (May 2025). Your current prices go here."
+     },
+     {
+      "n": "Ham & Cheese Croissant",
+      "p": 17,
+      "per": "",
+      "cat": "Viennoiserie",
+      "ex": false,
+      "set": "",
+      "src": "From Daniel Food Diary (May 2025). Your current prices go here."
+     },
+     {
       "n": "Pistachio Tart",
-      "p": null,
+      "p": 24,
       "per": "",
       "cat": "Tarts",
       "ex": false,
       "set": "",
-      "src": ""
+      "src": "From Daniel Food Diary (May 2025). Your current prices go here."
      },
      {
       "n": "Almond Croissant",
@@ -2161,12 +2219,12 @@
      },
      {
       "n": "Strawberry Shortcake",
-      "p": null,
+      "p": 25,
       "per": "",
       "cat": "Cakes",
       "ex": false,
       "set": "",
-      "src": ""
+      "src": "From Daniel Food Diary (May 2025). Your current prices go here."
      },
      {
       "n": "Bûche de Noël",
@@ -2224,7 +2282,7 @@
      ]
     ],
     "contact": "Call us on 016-409 3918, message @lepetitfourpatisserie on Instagram, or visit us at 310, Lebuh Pantai, George Town.",
-    "sources": "Public info only, checked 2026-11-10: TheSmartLocal Penang bakeries (updated 7 Sep 2023) https://thesmartlocal.my/bakeries-in-penang/ ; Gempak Christmas Penang (16 Dec 2021) https://gempak.com/rojakdaily/lifestyle/sugar-rush-9-places-get-your-christmas-cake-and-sweet-treats-penang-68939 ; Vulcan Post 2024 https://vulcanpost.com/876184/le-petit-four-patisserie-french-pastry-desserts-penang-malaysia . First version by the research session 2026-11-09."
+    "sources": "Public info only, checked 2026-11-10: TheSmartLocal Penang bakeries (updated 7 Sep 2023) https://thesmartlocal.my/bakeries-in-penang/ ; Gempak Christmas Penang (16 Dec 2021) https://gempak.com/rojakdaily/lifestyle/sugar-rush-9-places-get-your-christmas-cake-and-sweet-treats-penang-68939 ; Vulcan Post 2024 https://vulcanpost.com/876184/le-petit-four-patisserie-french-pastry-desserts-penang-malaysia . First version by the research session 2026-11-09. ; Daniel Food Diary (14 May 2025): Pistachio Tart RM24, Strawberry Shortcake RM25, Mango Yuzu RM25, Lemon Yuzu RM22, Enchanté RM26, ham and cheese croissant RM17; hours 9am-6pm, closed Thursdays (2025 listing; older listings say closed Wed and Thu"
    }
   },
   {
@@ -2591,13 +2649,13 @@
    "name": "Gongsi 共肆",
    "delete_by": "2026-11-23",
    "photos": "placeholder",
-   "checked": "2026-11-10",
+   "checked": "2026-11-11",
    "pitch": {
     "mode": "booking",
     "items": [
      "san bei ji",
-     "braised pork rice",
-     "lamb chops with shacha sauce"
+     "sesame oil ginger duck breast",
+     "lamb shoulder with shacha sauce"
     ]
    },
    "facts": {
@@ -2613,70 +2671,43 @@
       "cat": "Mains",
       "ex": false,
       "set": "",
-      "src": "From Malay Mail (Nov 2025). Your current prices go here."
+      "src": "From GONGSI's own menu (ED02/2026). All prices are subject to 10% service charge."
      },
      {
-      "n": "Braised Pork Rice",
-      "p": 33,
+      "n": "Sesame Oil Ginger Duck Breast à la Française",
+      "p": 72,
       "per": "",
       "cat": "Mains",
       "ex": false,
       "set": "",
-      "src": "From Malay Mail (Nov 2025). Your current prices go here."
+      "src": "From GONGSI's own menu (ED02/2026). All prices are subject to 10% service charge."
      },
      {
-      "n": "Grilled Lamb Chops with Shacha Sauce",
+      "n": "Grilled Lamb Shoulder with Shacha Sauce",
       "p": 63,
       "per": "",
-      "cat": "Mains",
+      "cat": "Charcoal",
       "ex": false,
       "set": "",
-      "src": "From Malay Mail (Nov 2025). Your current prices go here."
+      "src": "From GONGSI's own menu (ED02/2026). All prices are subject to 10% service charge."
      },
      {
-      "n": "Shaoxing Wine Chicken Liver Pâté",
-      "p": 29,
+      "n": "Charcoal-Grilled Pork Tomahawk",
+      "p": 92,
       "per": "",
-      "cat": "Small plates",
+      "cat": "Charcoal",
       "ex": false,
       "set": "",
-      "src": "From Malay Mail (Nov 2025). Your current prices go here."
+      "src": "From GONGSI's own menu (ED02/2026). All prices are subject to 10% service charge."
      },
      {
-      "n": "Deep-Fried Baby Pomfret",
-      "p": 33,
+      "n": "Dry-Aged Jade Perch Fish",
+      "p": 69,
       "per": "",
-      "cat": "Small plates",
+      "cat": "Charcoal",
       "ex": false,
       "set": "",
-      "src": "From Malay Mail (Nov 2025). Your current prices go here."
-     },
-     {
-      "n": "Pegaga Salad",
-      "p": 27,
-      "per": "",
-      "cat": "Small plates",
-      "ex": false,
-      "set": "",
-      "src": "From Malay Mail (Nov 2025). Your current prices go here."
-     },
-     {
-      "n": "Stir-Fried Baby Chives with Century Egg",
-      "p": 33,
-      "per": "",
-      "cat": "Vegetables",
-      "ex": false,
-      "set": "",
-      "src": "From Malay Mail (Nov 2025). Your current prices go here."
-     },
-     {
-      "n": "Stir-Fried Bitter Gourd with Salted Egg",
-      "p": 33,
-      "per": "",
-      "cat": "Vegetables",
-      "ex": false,
-      "set": "",
-      "src": "From Malay Mail (Nov 2025). Your current prices go here."
+      "src": "From GONGSI's own menu (ED02/2026). All prices are subject to 10% service charge."
      },
      {
       "n": "Truffle Cream Poulet Grillé",
@@ -2685,43 +2716,106 @@
       "cat": "Mains",
       "ex": false,
       "set": "",
-      "src": "From TheSmartLocal (May 2026). Your current prices go here."
+      "src": "From GONGSI's own menu (ED02/2026). All prices are subject to 10% service charge."
      },
      {
-      "n": "Seafood Risotto with Sun-Dried Tomato",
-      "p": 79,
+      "n": "Chinese Curry Prawns",
+      "p": 66,
       "per": "",
       "cat": "Mains",
       "ex": false,
       "set": "",
-      "src": "From TheSmartLocal (May 2026). Your current prices go here."
+      "src": "From GONGSI's own menu (ED02/2026). All prices are subject to 10% service charge."
+     },
+     {
+      "n": "Seafood Risotto with Sun-Dried Tomato",
+      "p": 76,
+      "per": "",
+      "cat": "Mains",
+      "ex": false,
+      "set": "",
+      "src": "From GONGSI's own menu (ED02/2026). All prices are subject to 10% service charge."
+     },
+     {
+      "n": "Braised Pork Belly Rice with Crispy Base",
+      "p": 63,
+      "per": "",
+      "cat": "Mains",
+      "ex": false,
+      "set": "",
+      "src": "From GONGSI's own menu (ED02/2026). All prices are subject to 10% service charge."
+     },
+     {
+      "n": "Mapo Tofu in Pot with Crispy Rice",
+      "p": 47,
+      "per": "",
+      "cat": "Mains",
+      "ex": false,
+      "set": "",
+      "src": "From GONGSI's own menu (ED02/2026). All prices are subject to 10% service charge."
      },
      {
       "n": "Oyster Omelette",
-      "p": null,
+      "p": 49,
       "per": "",
       "cat": "Small plates",
       "ex": false,
       "set": "",
-      "src": ""
+      "src": "From GONGSI's own menu (ED02/2026). All prices are subject to 10% service charge."
      },
      {
-      "n": "Seven-Day Dry-Aged Jade Perch",
-      "p": null,
+      "n": "Shaoxing Wine Chicken Liver Pâté with You-tiao",
+      "p": 29,
       "per": "",
-      "cat": "Mains",
+      "cat": "Small plates",
       "ex": false,
       "set": "",
-      "src": ""
+      "src": "From GONGSI's own menu (ED02/2026). All prices are subject to 10% service charge."
      },
      {
-      "n": "Chinese Tea Ice Cream",
-      "p": null,
+      "n": "Silken Tofu with Century Egg",
+      "p": 26,
       "per": "",
-      "cat": "Desserts",
+      "cat": "Small plates",
       "ex": false,
       "set": "",
-      "src": ""
+      "src": "From GONGSI's own menu (ED02/2026). All prices are subject to 10% service charge."
+     },
+     {
+      "n": "Deep-Fried Pomfret Fish",
+      "p": 26,
+      "per": "",
+      "cat": "Small plates",
+      "ex": false,
+      "set": "",
+      "src": "From GONGSI's own menu (ED02/2026). All prices are subject to 10% service charge."
+     },
+     {
+      "n": "Pegaga Salad",
+      "p": 27,
+      "per": "",
+      "cat": "Small plates",
+      "ex": false,
+      "set": "",
+      "src": "From GONGSI's own menu (ED02/2026). All prices are subject to 10% service charge."
+     },
+     {
+      "n": "Stir-Fried Baby Chive with Century Egg",
+      "p": 33,
+      "per": "",
+      "cat": "Vegetables",
+      "ex": false,
+      "set": "",
+      "src": "From GONGSI's own menu (ED02/2026). All prices are subject to 10% service charge."
+     },
+     {
+      "n": "Stir-Fried Bitter Gourd with Salted Egg",
+      "p": 33,
+      "per": "",
+      "cat": "Vegetables",
+      "ex": false,
+      "set": "",
+      "src": "From GONGSI's own menu (ED02/2026). All prices are subject to 10% service charge."
      },
      {
       "n": "The Red Room (table for eight)",
@@ -2739,6 +2833,10 @@
       "Pick a date and time at checkout (you can pre-order dishes too), or call 012-206 5655."
      ],
      [
+      "Is there a service charge?",
+      "Yes, all prices are subject to 10% service charge."
+     ],
+     [
       "When are you open?",
       "Dinner, Tuesday to Sunday, 5:30pm to 10pm. Closed on Mondays."
      ],
@@ -2752,7 +2850,7 @@
      ]
     ],
     "contact": "Call 012-206 5655, or message @gongsi_11 on Instagram.",
-    "sources": "Checked 2026-11-10: Malay Mail 'Bukit Bintang's most exciting new opening, GONGSI' (7 Nov 2025, via Yahoo) https://malaysia.news.yahoo.com/bukit-bintang-most-exciting-opening-022523002.html ; TheSmartLocal Jalan Sin Chew Kee food (13 May 2026) https://thesmartlocal.my/jalan-sin-chew-kee-food/ ."
+    "sources": "Checked 2026-11-11: GONGSI's own menu ED02/2026 (Linktree https://linktr.ee/gongsi → Google Drive PDF; prices subject to 10% service charge); Malay Mail (7 Nov 2025) and TheSmartLocal (13 May 2026) for the story and hours. Online reservations also on TableCheck (linked from their Linktree)."
    }
   },
   {
@@ -3028,13 +3126,13 @@
    "name": "Norm Micro Roastery",
    "delete_by": "2026-11-23",
    "photos": "placeholder",
-   "checked": "2026-11-10",
+   "checked": "2026-11-11",
    "pitch": {
     "mode": "pickup",
     "items": [
      "house roast beans",
-     "scallop and prawn pumpkin risotto",
-     "buttermilk waffles"
+     "clam and prawn pumpkin risotto",
+     "buttermilk chicken burger"
     ]
    },
    "facts": {
@@ -3062,13 +3160,13 @@
       "src": ""
      },
      {
-      "n": "Scallop & Prawn Pumpkin Risotto",
-      "p": null,
+      "n": "Signature Clam & Prawn Pumpkin Risotto",
+      "p": 45.9,
       "per": "",
       "cat": "Brunch",
       "ex": false,
       "set": "",
-      "src": ""
+      "src": "From a July 2026 visit (Panasm blog). ++ = before service charge and SST. Your current prices go here."
      },
      {
       "n": "Smoked Chili Jam Scrambled Eggs",
@@ -3080,25 +3178,34 @@
       "src": ""
      },
      {
-      "n": "Conchiglie with Seasonal Mushrooms",
-      "p": null,
+      "n": "Buttermilk Chicken Burger",
+      "p": 37.9,
       "per": "",
       "cat": "Brunch",
       "ex": false,
       "set": "",
-      "src": ""
+      "src": "From a July 2026 visit (Panasm blog). ++ = before service charge and SST. Your current prices go here."
+     },
+     {
+      "n": "Citrus Passion",
+      "p": 29.9,
+      "per": "",
+      "cat": "Brunch",
+      "ex": false,
+      "set": "",
+      "src": "From a July 2026 visit (Panasm blog). ++ = before service charge and SST. Your current prices go here."
+     },
+     {
+      "n": "Conchiglie with Seasonal Mushrooms",
+      "p": 35.9,
+      "per": "",
+      "cat": "Brunch",
+      "ex": false,
+      "set": "",
+      "src": "From a July 2026 visit (Panasm blog). ++ = before service charge and SST. Your current prices go here."
      },
      {
       "n": "Norm Baked Eggs",
-      "p": null,
-      "per": "",
-      "cat": "Brunch",
-      "ex": false,
-      "set": "",
-      "src": ""
-     },
-     {
-      "n": "24-Hour Buttermilk Waffle",
       "p": null,
       "per": "",
       "cat": "Brunch",
@@ -3141,10 +3248,14 @@
      [
       "Do you have brunch?",
       "Yes: the scallop and prawn pumpkin risotto, smoked chili jam scrambled eggs, baked eggs and buttermilk waffles."
+     ],
+     [
+      "Do prices include service charge?",
+      "Prices marked ++ are before service charge and SST."
      ]
     ],
     "contact": "Call or WhatsApp 016-527 6273, or message @norm.micro.roastery on Instagram.",
-    "sources": "Checked 2026-11-10: nickblitzz review (6 Jul 2024; hours 9am-7pm, closed Wednesday; risotto, scrambled eggs, conchiglie) http://www.nickblitzz.sg/2024/07/review-good-industry-vibe-cafe-in.html ; Tatler Asia listing https://www.tatlerasia.com/dining/norm-micro-roastery ; Cafe Culture (phone); blog reviews (baked eggs, buttermilk waffle, refurbished warehouse). Hours differ between sources: confirm by phone."
+    "sources": "Checked 2026-11-10: nickblitzz review (6 Jul 2024; hours 9am-7pm, closed Wednesday; risotto, scrambled eggs, conchiglie) http://www.nickblitzz.sg/2024/07/review-good-industry-vibe-cafe-in.html ; Tatler Asia listing https://www.tatlerasia.com/dining/norm-micro-roastery ; Cafe Culture (phone); blog reviews (baked eggs, buttermilk waffle, refurbished warehouse). Hours differ between sources: confirm by phone. ; Panasm blog (31 Jul 2026): Norm Daily 24.9++, Conchiglie 35.9++, Signature Clam and Prawn Pumpkin Risotto 45.9++, Buttermilk Chicken Burger 37.9++, Citrus Passion 29.9++."
    }
   },
   {
