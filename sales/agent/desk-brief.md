@@ -1,4 +1,4 @@
-# How our system works (for the sales desk AI) — updated 2026-11-11
+# How our system works (for the sales desk AI) — updated 2026-11-12
 
 This is the current, complete picture of how Cartsmith Studio finds and talks to customers. It is newer than the
 "approved sales scripts" (written 2026-11-08 for Shopee sellers): when they disagree, follow THIS document.
@@ -31,13 +31,46 @@ Built into the desk by `python3 site/build.py` (file: `sales/agent/desk-brief.md
 4. **Send the mockup** by WhatsApp (or email) right after the call: short message = who we are, the sample website is
    already made for them, link + password, private and deleted on the date, no cost or obligation, our own site at the
    end (https://cartsmithstudio.com/). If we wrote to them on Instagram before, the message says so.
-5. **Follow-up 2 days later**: send the link and password again so it is easy to find, and say we can put THEIR own
-   photos and current prices in for free so it looks like their own site. One follow-up, then a last polite message
-   later. Never chase more.
+5. **Second call 1–2 days later**, and written follow-ups if the call does not connect — see section 2b. At most
+   three written follow-ups after the mockup, then stop.
 6. **Interested** → a 15-minute call → written quotation within 24 hours (valid 14 days) → 50% deposit → build →
-   balance → launch. Prices and offers ONLY from the knowledge base (Starter RM2,800, Catalog RM3,500, Growth RM4,800;
-   Care from RM150 / month; founding-client offer for the first 3 clients only).
+   balance → launch. Prices and offers ONLY from the knowledge base (Starter RM800, Catalog RM1,200, Growth RM1,600;
+   festive pre-order page RM399; monthly plan RM0 upfront + RM199 × 12; Care from RM150 / month; founding-client terms
+   for the first 3 clients only: balance only when happy, live in 7 working days or RM50 off per late day).
 7. Lost / not interested / already has a website → close politely; the mockup is deleted by its date.
+
+## 2b. After the mockup is sent: the follow-up playbook (2026-11-12)
+What the first 11 calls taught us: on the phone almost every owner says "send it over, I'll have a look" — often just
+to end the call politely — and then nothing happens. Seven mockups went out; one owner replied in detail, one said
+"Ok", none asked about price. The missing step is the second conversation, and the price nobody has heard.
+- **On the first call, set up the second one** (a statement): "I'll WhatsApp it now, and give you a quick call on
+  Thursday afternoon to hear what you think."
+- **Second call, 1–2 days after sending** (the desk shows "第二通电话" with the script). Questions are fine on the phone.
+  Ask what they thought and listen. Then three short points:
+  1. **Price, plainly**: their own website from RM800 one-off, fixed and written down (or RM0 upfront and RM199 a month
+     for 12 months). As one of our first 3 clients they pay the second half only when happy, live in 7 working days.
+  2. **Timing**: Christmas (25 Dec), Chinese New Year (6 Feb 2027), Hari Raya (expected 10 Mar 2027). Customers ask about
+     festive orders weeks before; pick the one that fits THEIR shop (Malay kuih → Raya; Chinese bakery → CNY).
+  3. **A small first step**: a festive pre-order page for RM399, live in 3 working days; the RM399 comes off a full
+     website within 60 days.
+  Then ONE concrete next step: a written quotation today (WhatsApp), or a 15-minute visit / call at a set day and time.
+- **They have not opened it** (desk shows no visits, or the link opened but no password entered): resend the link and
+  password, call again in 2 days. Never say we can see this.
+- **Written follow-ups** (only when the call did not connect, or as the message after the call):
+  1. 1–2 days after sending: link + password again; their own photos and current prices go in for free; the price in
+     one line; the RM399 festive page as the small first step; ONE specific detail from THEIR mockup (a dish, a set, the
+     booking or pre-order page).
+  2. About 4 days later: one new useful angle for their kind of shop (festive sets with cut-off dates and slots left so
+     they stop answering the same DM; bookings that arrive with date, time and party size; regulars ordering without
+     platform commission), the price again in one line, the link again, door open.
+  3. About a week later: the last short, polite message — the sample stays up until its delete date; if the timing is
+     not right, they can message us any time. Then stop.
+- **Respect "not ready" and "no".** Thank them, close, never chase. Example (Hideaway Café, 11-11): "menu changes daily,
+  whole cakes are old-school manual pre-orders, not ready to go online yet, will remember you" → we thanked them, said
+  the sample stays up until 23 Nov, and stopped. Baba Beng already had an online store → closed, no more messages.
+- Never invent urgency: no "today only" price, no made-up slots or deadlines. Festive dates are real; prices are fixed.
+- When an owner says something new (an objection, what they want), write it in the conversation so the next message
+  and the quotation use it.
 
 ## 3. Statuses on a card
 new = not contacted yet · contacted = we sent a message (often on Instagram) but no reply · replied = they replied
@@ -73,10 +106,20 @@ lost · no_response · do_not_contact. "Next follow-up" and "next call" dates ar
 ## 5. Phone answers we use (keep consistent with the desk)
 - Owner not in → ask what time the owner is usually in, call back then.
 - Busy → "I'll WhatsApp you the link so you can look later." (a statement)
-- How much? → the sample is free; a full website starts from RM2,800, fixed and written down; details come with the link.
+- How much? → the sample is free; a full website starts from RM800 one-off, fixed and written down; a festive
+  pre-order page is RM399; or RM0 upfront and RM199 a month for 12 months. Details come with the link.
 - We already have Shopee / Instagram / foodpanda → keep them; this gives regulars one link to order directly, without
   paying commission on every order.
 - We already have a website → apologise, close, mark 已经有网站.
 - Not interested → thank them, close, mark 不需要.
 - How did you get my number? → from a public article / listing about their shop; apologise for the cold call.
 - Email instead → take the email and send the link there.
+- (Second call) Need to ask my partner / boss → "I'll WhatsApp a short summary with the price so you can forward it" +
+  a set time to call back.
+- (Second call) Not now / after the festive season → the RM399 festive page is the small step; otherwise no problem,
+  the sample stays up until its date.
+- (Second call) Too expensive → RM0 upfront and RM199 a month, or start with the RM399 festive page. Never lower prices.
+- (Second call) WhatsApp / phone orders are enough → orders still come to their WhatsApp, already filled in (items,
+  date, name), so less back and forth.
+- (Second call) Menu changes every day → "today's menu" changed from the phone in a minute, or only fixed items and
+  festive sets.

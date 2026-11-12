@@ -17,7 +17,7 @@
 
 ## 2. 我们的建议 What we recommend
 
-**[Starter RM2,800 / Growth RM4,800 / Catalog RM3,500]** —— [一句话说明为什么适合你]
+**[Starter RM800 / Growth RM1,600 / Catalog RM1,200 / 节日预购页 Festive page RM399 / 月付 Monthly plan RM199 × 12]** —— [一句话说明为什么适合你]
 
 **包含 What's included：**（从 `sales/packages.html` 复制这个套餐的内容）
 -
@@ -38,11 +38,13 @@
 | 项目 Item | 金额 Amount |
 |---|---|
 | [套餐 Package] | RM |
-| 首批客户优惠 7 折（如适用）Founding client 30% off | –RM |
+| 节日预购页抵扣（60 天内升级，如适用）Festive page credit | –RM399 |
 | 加购 Add-on：[项目] | RM |
 | **总计 Total** | **RM** |
 
 **付款 Payment：** 50% 订金（开工前）RM____ · 50% 余款（上线前）RM____
+（首批客户 Founding client：余款在你满意成品后才付；7 个工作天上线，迟一天减 RM50 · balance only when you are happy; live in 7 working days or RM50 off per day late）
+（月付 Monthly plan：不用订金，上线当天付第 1 期 RM199，共 12 期 · no deposit; first RM199 on launch day, 12 payments）
 
 **月费维护 Care：** [基础 Basic RM150 / 标准 Standard RM300] / 月。
 **上线后第 1 个月免费**（首批客户 2 个月），之后最少 6 个月，再按月续。

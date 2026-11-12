@@ -527,7 +527,7 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
     const cs = await p.textContent('[data-cs="p907"]');
     ok(/连续打电话 · 1 \//.test(await p.textContent('[data-sheet-panel]')), 'call session starts with the callback that is due');
     ok(/May I speak to the owner/.test(cs) && /with your Salted Pistachio, Affogato, where customers can order and choose a pick-up date online/.test(cs) && /意思：你好，请问老板在吗/.test(cs), 'script in their language, with what is in their mockup, and the Chinese meaning under each line');
-    ok(/多少钱/.test(cs) && /RM2,800/.test(cs) && /已经有网站/.test(cs) && /样板已检查 2026-11-10/.test(cs), 'usual answers (price, already have a website...) and the mockup-checked badge are on screen');
+    ok(/多少钱/.test(cs) && /RM800/.test(cs) && /已经有网站/.test(cs) && /样板已检查 2026-11-10/.test(cs), 'usual answers (price, already have a website...) and the mockup-checked badge are on screen');
     ok(/拨打 \+60 17-202 2162/.test(cs), 'big dial button with the number');
     await p.click('[data-cs="p907"] .callout [data-act="cs-out"][data-out="ok"]');
     await p.waitForSelector('[data-cs="p907"] [data-act="cs-wa"]');
@@ -650,6 +650,49 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
     fs.writeFileSync(STORE, before);
     await p.reload();
     await p.click('[data-tab="stats"]');
+  }
+
+  // after the mockup (2026-11-12): the second call with its script, the first follow-up with the price, outcomes
+  {
+    const api4 = (body) => fetch(`${BASE}/api/desk`, { method: 'POST', headers: { 'content-type': 'application/json', 'x-desk-key': KEY }, body: JSON.stringify(body) }).then((r) => r.json());
+    const before = fs.readFileSync(STORE, 'utf8');
+    const d7 = JSON.parse(before);
+    const base7 = { created: '2026-11-10', platform: 'other', store_url: '', instagram: '', email: '', niche: 'bakery', input: 'x', notes: '', brand_clear: true, sales_signal: true, active_social: true, no_or_weak_website: true, budget_signal: true, score: 5, fit: 'good', template: 'chili-pantry', history: [], language: 'en', touches: 1, status: 'preview_sent', preview_delete_by: '2099-01-01', followup: '' };
+    d7.items.unshift({ ...base7, id: 'p961', business_name: 'Second Call Bakery', phone: '60122887449', whatsapp: '60122887449', next_followup_date: '2000-01-01',
+      preview_url: 'https://previews.cartsmithstudio.com/m-second-call-1234abcd/', preview_password: 'second1234', preview_slug: 'm-second-call-1234abcd' });
+    d7.items.unshift({ ...base7, id: 'p962', business_name: 'Warm Lead Cafe', phone: '60123334445', whatsapp: '60123334445', next_followup_date: '2099-01-01', next_call_date: '2000-01-01',
+      preview_url: 'https://previews.cartsmithstudio.com/m-warm-lead-1234abcd/', preview_password: 'warm1234', preview_slug: 'm-warm-lead-1234abcd' });
+    fs.writeFileSync(STORE, JSON.stringify(d7));
+    await p.reload();
+    await p.evaluate(() => { window.DESK_NOW = '2026-11-10T07:00:00Z'; }); // 15:00
+    await p.click('[data-tab="list"]'); await p.click('[data-tab="today"]');
+    await p.waitForSelector('#c-p961 [data-act="call"]');
+    const c1 = await p.textContent('#c-p961');
+    ok(/第二通电话/.test(c1) && /Did you get a chance to look/.test(c1) && /RM800/.test(c1) && /RM399/.test(c1) && /RM199 a month/.test(c1), 'mockup sent and follow-up due: the card shows the second call and its script (price, festive page, monthly)');
+    ok((await p.$$('#c-p961 [data-act="call"]')).length === 1, 'one call button on the card');
+    ok(!!(await p.$('#c-p962 [data-act="call"]')), 'mockup sent and only the call date is due: the card is on today\'s list too');
+    const fu = JSON.parse(fs.readFileSync(STORE, 'utf8')).items.find((x) => x.id === 'p961').followup || '';
+    ok(fu.includes('second1234') && /from RM800 one-off/.test(fu) && /RM399/.test(fu) && /second half only when you're happy/.test(fu) && !/[?？]/.test(fu.replace(/https?:\/\/\S+/g, '')),
+      'first follow-up after the mockup: link, password, the price, the festive page, no questions');
+    await p.click('#c-p961 [data-act="call"]');
+    await p.waitForSelector('#c-p961 [data-callout]');
+    const co = await p.textContent('#c-p961 [data-callout]');
+    ok(/有兴趣/.test(co) && /还没看：重发/.test(co) && !/可以发样板/.test(co), 'second call: its own outcome buttons (interested / not looked yet)');
+    await p.click('#c-p961 [data-act="call-cancel"]');
+    // not looked yet → link again now, call again on the date
+    const n1 = await api4({ action: 'call', id: 'p962', outcome: 'notyet', date: '2099-01-03' });
+    ok(n1.item && n1.item.next_call_date === '2099-01-03' && n1.item.next_followup_date <= '2099-01-01' && n1.item.followup.includes('warm1234') && n1.item.status === 'preview_sent', 'not looked yet: follow-up with the link is ready now, the next call is on the date');
+    // the first follow-up is sent → the next one in 4 days (AI), then 7, then stop
+    const s1 = await api4({ action: 'mark', id: 'p962', event: 'sent', channel: 'wa' });
+    ok(s1.item && s1.item.pv_followups === 1 && s1.item.next_followup_date > n1.item.next_followup_date && !s1.item.followup, 'first follow-up sent: the card waits 4 days and the canned message is not repeated');
+    const l1 = await api4({ action: 'list' });
+    ok(!(l1.items.find((x) => x.id === 'p962') || {}).followup, 'the canned follow-up does not come back after it was sent');
+    await api4({ action: 'mark', id: 'p962', event: 'sent', channel: 'wa' });
+    const s3 = await api4({ action: 'mark', id: 'p962', event: 'sent', channel: 'wa' });
+    ok(s3.item.pv_followups === 3 && s3.item.status === 'no_response' && !s3.item.next_followup_date, 'after the third follow-up: no more reminders (no response)');
+    const w = await api4({ action: 'call', id: 'p961', outcome: 'warm' });
+    ok(w.item && w.item.status === 'replied' && /有兴趣/.test(w.item.reply_summary) && /报价/.test(w.item.reply_next) && !w.item.call_ok, 'second call, interested: the card moves to replied with "send the quotation today"');
+    fs.writeFileSync(STORE, before);
   }
 
   // corrections by Claude Code: calls and replies that happened outside the desk, with their real dates

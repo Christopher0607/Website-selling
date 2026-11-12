@@ -1,6 +1,6 @@
 # 销售话术（定稿 v3 · 2026-11-08：Instagram / WhatsApp / Email 通用；用工作室名义、不署个人名字、不用表情符号）
 
-> 基于 `docs/04-sales-kit.md`，按 Cartsmith 的决定修改：目标是 **Shopee / TikTok Shop 上有自己品牌的中小型卖家**；收费是**一次性建站费 + 月费**，**上线后第 1 个月维护免费**；前 3 个客户 7 折 + 维护免费 2 个月。
+> 基于 `docs/04-sales-kit.md`，按 Cartsmith 的决定修改：目标是 **Shopee / TikTok Shop 上有自己品牌的中小型卖家**；收费是**一次性建站费 + 月费**，**上线后第 1 个月维护免费**。2026-11-12 起：Starter RM800、Catalog RM1,200、Growth RM1,600；节日预购页 RM399；月付 RM0 开始、RM199 × 12 个月；前 3 个客户不打折，改成：50% 订金、满意才付尾款；7 个工作天上线，迟一天减 RM50；维护免费 2 个月；送桌上 QR 卡设计（条件：真实评价 + 同意当案例）。
 > **写法规则（2026-11-08 俊宇定）：** 用「Cartsmith Studio」和「我们 / we」的名义，**不写个人名字**，**不用表情符号**；同一段话要能直接用在 Instagram 私信、WhatsApp 和 Email。
 > `[方括号]` 一定要换成真的内容。最重要的是「具体观察」——没有它，对方不会回。
 > 数字（Shopee 费用）先用工作室网站的计算器算，**不确定就说"大约"**。
@@ -122,14 +122,16 @@
 **中文**
 > 我建议 [Starter / Growth]：一次性 RM[价格]，大约 [10 / 15] 个工作天上线。
 > 上线后**第一个月维护免费**——你先用一个月，觉得有帮助再开始月费，基础维护每月 RM150（备份、更新、监控、每月 30 分钟小修改）。
-> 你是我们前 3 个客户之一的话，建站费打 7 折、维护免费两个月，条件是上线后给我一段真实评价、让我把网站放进作品集。
-> 付款是 50% 订金开工，50% 余款上线前付。付款网关和域名都用你自己的名字开，网站付清后就是你的。
+> 你是我们前 3 个客户之一的话：先付 50% 订金，做好你满意才付尾款；7 个工作天上线，迟一天减 RM50；维护免费两个月，再送你桌上的 QR 卡设计。条件是上线后给我一段真实评价、让我把网站当案例。
+> 不想一次付的话，也可以月付：一开始不用付钱，每个月 RM199，付满 12 个月网站就是你的。
+> 一般付款是 50% 订金开工，50% 余款上线前付。付款网关和域名都用你自己的名字开，网站付清后就是你的。
 
 **English**
 > I'd recommend [Starter / Growth]: RM[price] one-time, live in about [10 / 15] working days.
 > After launch, **the first month of Care is free** — try it for a month; if it helps, Basic Care is RM150 a month (backups, updates, monitoring and 30 minutes of small changes).
-> As one of our first 3 clients you get 30% off the setup and 2 free months of Care, in exchange for an honest review and permission to show the site in our portfolio.
-> 50% deposit to start, 50% before launch. The payment gateway and domain are in your own name, and the website is yours once it's paid.
+> As one of our first 3 clients: 50% deposit, and you pay the balance only when you're happy with the finished site; live in 7 working days or RM50 off for each day late; 2 free months of Care and a free table QR card design. In return, an honest review and permission to show the site as an example.
+> If you'd rather not pay at once, there's a monthly plan: nothing upfront, RM199 a month, and after 12 payments the website is yours.
+> Normally it's 50% deposit to start, 50% before launch. The payment gateway and domain are in your own name, and the website is yours once it's paid.
 
 ---
 
@@ -153,7 +155,7 @@ Instagram（专业账号）→ **设定 → Business tools and controls → Save
 | 快捷键 | 内容 |
 |---|---|
 | `hi` | 你好，这里是 Cartsmith Studio。我们帮本地品牌做自己的网店，上线后每个月帮你维护。想先看我们的 6 个样板店吗？ cartsmithstudio.com/templates.html |
-| `price` | 套餐：Starter RM2,800（20 款产品）、Growth RM4,800（80 款 + 广告追踪）。上线后第 1 个月维护免费，之后 RM150/月起。详细：cartsmithstudio.com/pricing.html |
+| `price` | 套餐：Starter RM800（20 项）、Catalog RM1,200、Growth RM1,600（80 项 + 订位或节日预购 + 广告追踪）。节日预购页 RM399；也可以月付 RM199 × 12（一开始不用付）。上线后第 1 个月维护免费，之后 RM150/月起。详细：cartsmithstudio.com/pricing.html |
 | `mockup` | 可以免费帮你做首页样板，只给你看、不满意没关系。请给我：店铺链接 + 喜欢的模板（cartsmithstudio.com/templates.html）+ 3–5 款主打产品 |
 | `calc` | 这是 Shopee 费用计算器，可以算你的单在 Shopee 和自己网站各留多少：cartsmithstudio.com/shopee-fee-calculator.html |
 | `thanks` | 谢谢你的时间 有任何问题随时 DM 我，祝生意越来越好！ |

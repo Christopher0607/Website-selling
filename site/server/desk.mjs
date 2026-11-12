@@ -405,6 +405,11 @@ function mark(p, ev, url, channel) {
     if (['new', 'contacted'].includes(p.status)) {
       p.status = p.touches >= 3 ? 'no_response' : 'contacted';
       p.next_followup_date = p.touches === 1 ? myDate(3) : (p.touches === 2 ? myDate(7) : '');
+    } else if (p.status === 'preview_sent') {
+      // follow-ups after the mockup (2026-11-12): 1st → the next one in 4 days, 2nd → the last one in 7 days, 3rd → stop
+      p.pv_followups = (p.pv_followups || 0) + 1;
+      p.next_followup_date = p.pv_followups === 1 ? myDate(4) : (p.pv_followups === 2 ? myDate(7) : '');
+      if (p.pv_followups >= 3) { p.status = 'no_response'; p.next_call_date = ''; }
     }
     p.followup = '';
   } else if (ev === 'dnc') { p.status = 'do_not_contact'; p.next_followup_date = ''; }
@@ -549,12 +554,27 @@ const PVMSG_AGAIN = {
   en: (n, u, pw, d) => `Hi, this is Cartsmith Studio. We messaged you on Instagram a few days ago. We've now made a free sample website for ${n}:\n${u}\nPassword: ${pw}\n\nIt opens best on your phone; the photos are placeholders. It's private to you and will be deleted on ${d}. No cost, no obligation. Just reply here if you'd like to talk.\n\nAbout us: ${STUDIO_URL}\n— Cartsmith Studio`,
   ms: (n, u, pw, d) => `Hai, ini Cartsmith Studio. Kami ada hantar mesej di Instagram beberapa hari lepas. Kami sudah siapkan contoh laman web percuma untuk ${n}:\n${u}\nKata laluan: ${pw}\n\nBuka di telefon untuk tengok; gambar hanya contoh. Ia hanya untuk anda dan akan dipadam pada ${d}. Tiada bayaran, tiada komitmen. Balas sahaja di sini kalau berminat.\n\nTentang kami: ${STUDIO_URL}\n— Cartsmith Studio`,
 };
-// two days after the mockup went out: a short nudge, no AI needed
-const PVFOLLOW_V = 2;
+// 1–2 days after the mockup went out (2026-11-12): link again + the price in plain words + a small first step for the
+// festive season. No AI needed. Prices: sales/agent/knowledge.md / site/studio.json. FOUNDING_OPEN: set to false once
+// the first 3 clients have signed (their terms: balance only when happy).
+const PVFOLLOW_V = 3;
+const FOUNDING_OPEN = true;
+const FROM_PRICE = 'RM800';
+const FESTIVE_PRICE = 'RM399';
+// the next festive season(s) worth naming, by today's date in Malaysia (CNY 2027-02-06; Hari Raya expected 2027-03-10)
+function festiveName(lang) {
+  const t = myDate();
+  const N = {
+    en: t < '2026-12-20' ? 'Christmas and Chinese New Year' : t < '2027-02-01' ? 'Chinese New Year' : t < '2027-03-05' ? 'Hari Raya' : 'the next festive season',
+    zh: t < '2026-12-20' ? '圣诞和农历新年' : t < '2027-02-01' ? '农历新年' : t < '2027-03-05' ? '开斋节' : '下一个节日',
+    ms: t < '2027-02-01' ? 'Tahun Baru Cina dan Hari Raya' : t < '2027-03-05' ? 'Hari Raya' : 'musim perayaan seterusnya',
+  };
+  return N[lang] || N.en;
+}
 const PVFOLLOW = {
-  zh: (n, u, pw) => `你好，我是 Cartsmith Studio。再发一次 ${n} 的样板网站给你，方便你有空时打开：\n${u}\n密码：${pw}\n\n传几张你们自己的照片和现在的价钱给我们，我们会免费帮你换上去，看起来就是你们自己的网站。\n\n— Cartsmith Studio`,
-  en: (n, u, pw) => `Hi, Cartsmith Studio here. Here's the sample website for ${n} again, so it's easy to find when you have a moment:\n${u}\nPassword: ${pw}\n\nSend us a few of your own photos and your current prices, and we'll put them in for free, so it looks like your own site.\n\n— Cartsmith Studio`,
-  ms: (n, u, pw) => `Hai, Cartsmith Studio di sini. Ini contoh laman web untuk ${n} sekali lagi, supaya senang dibuka bila ada masa:\n${u}\nKata laluan: ${pw}\n\nHantar beberapa gambar sendiri dan harga terkini, dan kami akan masukkan secara percuma, supaya ia nampak macam laman web anda sendiri.\n\n— Cartsmith Studio`,
+  zh: (n, u, pw) => `你好，我是 Cartsmith Studio。再发一次 ${n} 的样板网站，方便你找：\n${u}\n密码：${pw}\n\n你们自己的照片和现在的价钱，我们可以免费换上去。做成你们自己的网站是一次性 ${FROM_PRICE} 起，价钱固定、写清楚${FOUNDING_OPEN ? '；你会是我们最早的几位客户之一，满意了才付另一半' : ''}。${festiveName('zh')}快到了，也可以先只做一个节日预购页，${FESTIVE_PRICE}，3 个工作天上线。\n\n直接回复这里就好，我们会接着处理。\n— Cartsmith Studio`,
+  en: (n, u, pw) => `Hi, Cartsmith Studio here. Here's the sample website for ${n} again, so it's easy to find:\n${u}\nPassword: ${pw}\n\nYour own photos and current prices can go in for free. To make it your own website: from ${FROM_PRICE} one-off, fixed and written down${FOUNDING_OPEN ? ", and as one of our first clients you pay the second half only when you're happy with it" : ''}. With ${festiveName('en')} coming, a festive pre-order page on its own is ${FESTIVE_PRICE}, live in 3 working days.\n\nJust reply here and we'll take it from there.\n— Cartsmith Studio`,
+  ms: (n, u, pw) => `Hai, Cartsmith Studio di sini. Ini contoh laman web untuk ${n} sekali lagi, supaya senang dicari:\n${u}\nKata laluan: ${pw}\n\nGambar sendiri dan harga terkini boleh dimasukkan secara percuma. Untuk jadikan ia laman web anda sendiri: dari ${FROM_PRICE} sekali bayar, harga tetap dan bertulis${FOUNDING_OPEN ? ', dan sebagai antara pelanggan terawal kami, baki dibayar hanya bila anda berpuas hati' : ''}. Untuk ${festiveName('ms')}, halaman pre-order perayaan sahaja ialah ${FESTIVE_PRICE}, siap dalam 3 hari bekerja.\n\nBalas sahaja di sini dan kami akan uruskan seterusnya.\n— Cartsmith Studio`,
 };
 const PVMSG = {
   zh: (n, u, pw, d) => `你好，我们是 Cartsmith Studio，帮本地餐饮和品牌做网站。我们已经帮 ${n} 做好了一个免费的样板网站：\n${u}\n密码：${pw}\n\n用手机打开就可以看，照片是示意图。样板只给你看，${d} 会删除；不用钱，也不用马上决定，有兴趣回复这里就好。\n\n我们的网站：${STUDIO_URL}\n— Cartsmith Studio`,
@@ -575,7 +595,7 @@ function refreshPreviewMsgs(doc) {
       p.preview_msg = pvMsg(p); p.preview_msg_v = PVMSG_V; changed = true;
     }
     // mockup already sent: the follow-up is the "did you have a look?" nudge with the link again
-    if (p.status === 'preview_sent' && p.preview_url && p.preview_password && (!String(p.followup || '').includes(p.preview_url) || (p.followup_v || 1) < PVFOLLOW_V)) {
+    if (p.status === 'preview_sent' && !(p.pv_followups || 0) && p.preview_url && p.preview_password && (!String(p.followup || '').includes(p.preview_url) || (p.followup_v || 1) < PVFOLLOW_V)) {
       p.followup = pvFollow(p); p.followup_v = PVFOLLOW_V; changed = true;
     }
   }
@@ -643,11 +663,11 @@ function refreshContacts(doc, LEADS) {
   return changed;
 }
 // ---------------------------------------------------------------- phone calls (2026-11-09: calling is the first step)
-const CALL_OUTCOMES = ['no_answer', 'ok', 'callback', 'no'];
+const CALL_OUTCOMES = ['no_answer', 'ok', 'callback', 'no', 'warm', 'notyet'];
 const POSTCALL = {
-  zh: (n, u, pw) => `你好，我是 Cartsmith Studio，刚刚跟你通过电话，谢谢你抽时间。\n\n这是我们帮 ${n} 做好的免费样板网站：\n${u || '[样板网址]'}\n密码：${pw || '[密码]'}\n\n用手机打开就可以看，照片是示意图。样板只给你看，14 天内会删除。看了有什么想法，直接回复这里就好，不喜欢也没关系。\n\n我们的网站：${STUDIO_URL}\n— Cartsmith Studio`,
-  en: (n, u, pw) => `Hi, this is Cartsmith Studio. Thanks for taking our call just now.\n\nHere's the free sample website we made for ${n}:\n${u || '[mockup link]'}\nPassword: ${pw || '[password]'}\n\nIt opens best on your phone; the photos are placeholders. It's private to you and will be deleted within 14 days. Any thoughts, just reply here, and no worries if it's not for you.\n\nAbout us: ${STUDIO_URL}\n— Cartsmith Studio`,
-  ms: (n, u, pw) => `Hai, ini Cartsmith Studio. Terima kasih kerana sudi bercakap dengan kami tadi.\n\nIni contoh laman web percuma yang kami buat untuk ${n}:\n${u || '[pautan contoh]'}\nKata laluan: ${pw || '[kata laluan]'}\n\nBuka di telefon untuk tengok; gambar hanya contoh. Ia hanya untuk anda dan akan dipadam dalam 14 hari. Kalau ada pendapat, balas sahaja di sini, tiada masalah kalau tak berminat.\n\nTentang kami: ${STUDIO_URL}\n— Cartsmith Studio`,
+  zh: (n, u, pw) => `你好，我是 Cartsmith Studio，刚刚跟你通过电话，谢谢你抽时间。\n\n这是我们帮 ${n} 做好的免费样板网站：\n${u || '[样板网址]'}\n密码：${pw || '[密码]'}\n\n用手机打开就可以看，照片是示意图。样板只给你看，14 天内会删除。我们过两天打个电话听听你的想法，你也可以直接回复这里，不喜欢也没关系。\n\n我们的网站：${STUDIO_URL}\n— Cartsmith Studio`,
+  en: (n, u, pw) => `Hi, this is Cartsmith Studio. Thanks for taking our call just now.\n\nHere's the free sample website we made for ${n}:\n${u || '[mockup link]'}\nPassword: ${pw || '[password]'}\n\nIt opens best on your phone; the photos are placeholders. It's private to you and will be deleted within 14 days. We'll give you a quick call in a couple of days to hear what you think, or just reply here, and no worries if it's not for you.\n\nAbout us: ${STUDIO_URL}\n— Cartsmith Studio`,
+  ms: (n, u, pw) => `Hai, ini Cartsmith Studio. Terima kasih kerana sudi bercakap dengan kami tadi.\n\nIni contoh laman web percuma yang kami buat untuk ${n}:\n${u || '[pautan contoh]'}\nKata laluan: ${pw || '[kata laluan]'}\n\nBuka di telefon untuk tengok; gambar hanya contoh. Ia hanya untuk anda dan akan dipadam dalam 14 hari. Kami akan telefon dalam dua tiga hari untuk dengar pendapat anda, atau balas sahaja di sini, tiada masalah kalau tak berminat.\n\nTentang kami: ${STUDIO_URL}\n— Cartsmith Studio`,
 };
 function callInto(p, outcome, date) {
   if (!CALL_OUTCOMES.includes(outcome)) throw Object.assign(new Error('电话结果不对'), { code: 'bad_input' });
@@ -682,6 +702,26 @@ function callInto(p, outcome, date) {
     p.next_call_date = d;
     if (p.status === 'new') p.status = 'contacted';
     log(p, 'call', '改天再打：' + d);
+  } else if (outcome === 'warm') {
+    // second call (after the mockup): interested → quotation or a set time to talk
+    p.touches = (p.touches || 0) + 1;
+    p.prev_status = p.status === 'replied' ? (p.prev_status || 'preview_sent') : p.status;
+    p.status = 'replied';
+    p.next_call_date = '';
+    p.next_followup_date = '';
+    p.call_ok = '';
+    p.draft_reply = '';
+    p.reply_intent = 'interested';
+    p.reply_summary = '第二通电话：有兴趣。';
+    p.reply_next = '今天把报价发给他（sales/proposal-template.md），或照电话里约好的时间再谈。把对方在电话里说的重点（想要什么、担心什么、哪个节日）告诉卡片的 AI 助手，请它写报价信息。';
+    log(p, 'call', '第二通：有兴趣');
+  } else if (outcome === 'notyet') {
+    // second call: they have not looked yet → send the link and password again now, call again on the date
+    const d = /^\d{4}-\d{2}-\d{2}$/.test(date || '') && date >= today ? date : myDate(2);
+    p.next_call_date = d;
+    p.next_followup_date = today;
+    if (p.preview_url && p.preview_password && !(p.pv_followups || 0)) { p.followup = pvFollow(p); p.followup_v = PVFOLLOW_V; }
+    log(p, 'call', '还没看样板：重发网址和密码，' + d + ' 再打');
   } else if (outcome === 'no') {
     p.status = 'do_not_contact';
     p.next_call_date = '';
@@ -807,9 +847,14 @@ async function handle(action, b, doc) {
     case 'followup': {
       const p = find(doc, b.id);
       const hasPv = !!(p.preview_url && p.preview_password);
-      const kind = p.status === 'preview_sent' && (p.touches || 0) <= 2
-        ? 'follow-up two days after we sent the free mockup: send the link and password again so it is easy to find, and say we can put their own photos and current prices in for free (statements only, no questions)'
-        : hasPv && p.status !== 'preview_sent'
+      const n = p.pv_followups || 0;
+      const kind = p.status === 'preview_sent' && n === 0
+        ? `FIRST follow-up after we sent the free mockup (see "After the mockup is sent" in How our system works): the link and password again so it is easy to find; their own photos and current prices go in for free; the price in plain words (their own website from ${FROM_PRICE} one-off, fixed and written down${FOUNDING_OPEN ? '; as one of our first 3 clients they pay the second half only when happy' : ''}); the small first step: a festive pre-order page for ${FESTIVE_PRICE}, live in 3 working days, for ${festiveName('en')}; ONE specific detail from THEIR mockup (a dish, a set, the booking or pre-order page). Statements only, no questions`
+        : p.status === 'preview_sent' && n === 1
+          ? 'SECOND follow-up after the mockup (about 4 days after the first): one new, useful angle for their kind of shop (e.g. festive sets with cut-off dates and slots left so they stop answering the same DM; table bookings that arrive with date, time and party size; regulars ordering without platform commission), the price again in one line, the mockup link again, door open. Short. Statements only, no questions'
+          : p.status === 'preview_sent'
+            ? `LAST polite message after the mockup: very short; the sample website stays up until ${p.preview_delete_by || 'its delete date'} and is then deleted; if the timing is not right, they can message us here any time. No price, no pressure, no questions`
+            : hasPv && p.status !== 'preview_sent'
           ? 'they did not answer our earlier message; the free mockup is ready: send it now (link and password), say briefly that we wrote before'
           : (p.touches || 0) <= 1
             ? 'gentle follow-up: one short, useful point for a food business (e.g. taking pre-orders or bookings without answering every DM), then offer a free sample website as a statement with an easy next step (no questions)'

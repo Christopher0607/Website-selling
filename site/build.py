@@ -1120,6 +1120,17 @@ class Studio:
 <a class="s-btn s-btn--block{'' if p.get('highlight') else ' s-btn--ghost'}" href="{root}start.html?package={p['id']}">Get a free mockup first</a></article>""")
         return '<div class="pkgs">' + "".join(out) + "</div>"
 
+    def frag_starts(self, root):
+        # other ways to start (2026-11-12): festive pre-order page, monthly plan
+        out = []
+        for p in self.d.get("starts", []):
+            feats = "".join(f"<li>{icon('check')}{e(f)}</li>" for f in p["features"])
+            out.append(f"""<article class="pkg"><h3>{e(p['name'])}</h3><p class="pkg__for">{e(p['for'])}</p>
+<p class="pkg__price"><span>RM</span>{p['price']:,}<small>{e(p['unit'])}</small></p>
+<p class="pkg__meta">{e(p['meta'])}</p><ul class="s-ticks">{feats}</ul>
+<a class="s-btn s-btn--block s-btn--ghost" href="{root}start.html?package={p['id']}">Ask about this</a></article>""")
+        return '<div class="pkgs pkgs--2">' + "".join(out) + "</div>"
+
     def frag_care(self, root):
         c = self.d["care"]
         head = "".join(f"<th>{e(x['name'])}<br><b>RM{x['price']}/month</b></th>" for x in c["plans"])
@@ -1208,6 +1219,7 @@ class Studio:
                 "TEMPLATE_CARDS_DETAILED": lambda: self.frag_template_cards(root, detailed=True),
                 "TEMPLATE_OPTIONS": lambda: self.frag_template_options(root),
                 "PACKAGES": lambda: self.frag_packages(root),
+                "STARTS": lambda: self.frag_starts(root),
                 "CARE": lambda: self.frag_care(root),
                 "FAQ": lambda: self.frag_faq(root),
                 "FAQ_SHORT": lambda: self.frag_faq(root, 6),

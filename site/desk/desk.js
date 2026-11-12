@@ -89,6 +89,8 @@
   const fmtPhone = (n) => !n ? '' : /^601/.test(n) ? fmtWa(n) : '+' + n.replace(/^(60)([2-9])(\d{3,4})(\d{4})$/, '$1 $2-$3 $4');
   const callBtn = (p) => `<button class="btn btn--sm ch ch--call" data-act="call" data-id="${p.id}">${svg('phone', 16)}打电话</button>`;
   const callDue = (p) => !!p.next_call_date && p.next_call_date <= S.today && ['new', 'contacted'].includes(p.status) && !!callNo(p);
+  // second call (2026-11-12): the mockup was sent, and the follow-up or call date has come
+  const secondDue = (p) => p.status === 'preview_sent' && !!callNo(p) && ((!!p.next_call_date && p.next_call_date <= S.today) || (!!p.next_followup_date && p.next_followup_date <= S.today));
   const nowMY = () => { const d = window.DESK_NOW ? new Date(window.DESK_NOW) : new Date(); const m = new Date(d.getTime() + 8 * 3600e3); return m.getUTCHours() * 60 + m.getUTCMinutes(); };
   function badHour() {
     const t = nowMY();
@@ -104,6 +106,15 @@
     return confirm(`现在是 ${String(Math.floor(t / 60)).padStart(2, '0')}:${String(t % 60).padStart(2, '0')}（${why}），餐厅和店家多数在忙，常常不会理。建议：餐厅 14:30–17:00、卖产品的 10:00–12:00。\n\n还是要现在${what}吗？`);
   }
   function callBlock(p) {
+    if (S.calling === p.id && p.status === 'preview_sent') {
+      return `<div class="callout" data-callout="${p.id}"><b>第二通电话打得怎么样？</b>
+        <div class="btnrow">
+          <button class="btn btn--sm" data-act="call-out" data-out="warm" data-id="${p.id}">${svg('check', 16)}有兴趣</button>
+          <button class="btn btn--ghost btn--sm" data-act="call-out" data-out="no_answer" data-id="${p.id}">没接</button>
+          <button class="btn btn--ghost btn--sm" data-act="call-out" data-out="no" data-id="${p.id}">不需要</button>
+        </div>
+        <div class="callout__later"><label>还没看样板 / 改天再打<input type="date" data-call-date value="${esc(nextDay(2))}" min="${esc(S.today)}"></label><button class="btn btn--ghost btn--sm" data-act="call-out" data-out="notyet" data-id="${p.id}">还没看：重发</button><button class="btn btn--ghost btn--sm" data-act="call-out" data-out="callback" data-id="${p.id}">改天再打</button><button class="linkbtn" data-act="call-cancel" data-id="${p.id}">还没打</button></div></div>`;
+    }
     if (S.calling === p.id) {
       return `<div class="callout" data-callout="${p.id}"><b>电话打得怎么样？</b>
         <div class="btnrow">
@@ -114,6 +125,11 @@
         <div class="callout__later"><label>改天再打<input type="date" data-call-date value="${esc(nextDay())}" min="${esc(S.today)}"></label><button class="btn btn--ghost btn--sm" data-act="call-out" data-out="callback" data-id="${p.id}">记下</button><button class="linkbtn" data-act="call-cancel" data-id="${p.id}">还没打</button></div></div>`;
     }
     let h = '';
+    if (secondDue(p)) {
+      h += `<div class="send"><span class="send__label">第二通电话</span><div class="send__btns">${callBtn(p)}</div></div>`;
+      h += `<details class="cue"><summary>${svg('phone', 14)}第二通电话台词（发样板后 1–2 天）</summary>${secondHTML(p)}<p><a href="call-script.html#second" target="_blank" rel="noopener">完整电话脚本 →</a></p></details>`;
+      return h;
+    }
     if (callDue(p) && p.status !== 'new') h += `<div class="send"><span class="send__label">今天再打</span><div class="send__btns">${callBtn(p)}</div></div>`;
     if (callNo(p) && (p.status === 'new' || callDue(p))) {
       const tries = p.call_misses ? `（已经打过 ${p.call_misses} 次没接）` : '';
@@ -121,7 +137,7 @@
     }
     return h;
   }
-  const nextDay = () => { const d = new Date(S.today + 'T00:00:00Z'); d.setUTCDate(d.getUTCDate() + 1); return d.toISOString().slice(0, 10); };
+  const nextDay = (n = 1) => { const d = new Date(S.today + 'T00:00:00Z'); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); };
   function visitList(q) {
     const open = ['new', 'contacted', 'replied', 'preview_sent'];
     const items = S.items.filter((p) => p.address && open.includes(p.status) && !/^在家做/.test(p.address) && (!q || [p.business_name, p.area, p.address].join(' ').toLowerCase().includes(q)));
@@ -134,7 +150,7 @@
 
   // ------------------------------------------------------------ call script (2026-11-10): 4 short steps in their language, the Chinese meaning under each line,
   // and what to say back to the usual answers — each answer has the button to press
-  const STUDIO_PRICE = 'RM2,800'; // Starter package in site/studio.json: change both together
+  const STUDIO_PRICE = 'RM800'; // Starter package in site/studio.json: change both together (2026-11-12)
   const PV_ACT = {
     pickup: { en: 'order and choose a pick-up date', zh: '下单、选日期自取', ms: 'membuat tempahan dan pilih tarikh ambil' },
     booking: { en: 'book a table', zh: '订位', ms: 'tempah meja' },
@@ -182,7 +198,7 @@
     const objs = [
       ['老板不在 / 员工接的', { en: 'No problem. What time is the owner usually in? I\'ll call back then.', zh: '没关系。老板通常几点比较方便？我那个时候再打。', ms: 'Tak apa. Pukul berapa pemilik biasanya ada? Saya telefon semula nanti.' }, 'callback'],
       ['现在很忙', { en: "Sorry to catch you at a busy time. I'll WhatsApp you the link, so you can look later.", zh: '不好意思打扰。我先 WhatsApp 发给你，你有空再看。', ms: 'Maaf ganggu waktu sibuk. Saya WhatsApp pautannya, anda tengok bila senang.' }, 'ok'],
-      ['多少钱？', { en: `The sample is free. If you'd like your own website, it starts from ${STUDIO_PRICE}, a fixed price written down. I'll send the details together with the link.`, zh: `样板是免费的。如果要做正式的网站，从 ${STUDIO_PRICE} 起，价钱固定、写清楚。我把详细资料跟样板一起发给你。`, ms: `Contoh ini percuma. Kalau nak laman web sendiri, harga bermula ${STUDIO_PRICE}, harga tetap dan bertulis. Saya hantar butiran bersama pautan.` }, ''],
+      ['多少钱？', { en: `The sample is free. If you'd like your own website, it starts from ${STUDIO_PRICE}, one-off, fixed and written down. For the festive season there's also a pre-order page from RM399. I'll send the details together with the link.`, zh: `样板是免费的。如果要做正式的网站，一次性 ${STUDIO_PRICE} 起，价钱固定、写清楚。节日季也可以先做一个预购页，RM399。我把详细资料跟样板一起发给你。`, ms: `Contoh ini percuma. Kalau nak laman web sendiri, harga bermula ${STUDIO_PRICE} sekali bayar, harga tetap dan bertulis. Untuk musim perayaan ada juga halaman pre-order dari RM399. Saya hantar butiran bersama pautan.` }, ''],
       ['我们已经有 Shopee / Instagram / foodpanda', { en: "That's fine, keep them. This gives your regulars one link to order from you directly, without paying commission on every order.", zh: '没关系，那些照样用。这个是让熟客有一个链接直接跟你订，不用每一单都给平台抽佣。', ms: 'Tak apa, teruskan. Ini beri pelanggan tetap satu pautan untuk tempah terus dengan anda, tanpa komisen setiap pesanan.' }, ''],
       ['我们已经有网站', { en: "Oh, that's great. Sorry to bother you, and have a good day!", zh: '哦，那很好。不好意思打扰了，祝生意兴隆！', ms: 'Oh, bagus. Maaf mengganggu, selamat maju jaya!' }, 'has_site'],
       ['不需要', { en: 'No problem at all. Thank you for your time, and have a good day!', zh: '没问题，谢谢你的时间，祝生意兴隆！', ms: 'Tak apa. Terima kasih atas masa anda, selamat maju jaya!' }, 'no'],
@@ -200,6 +216,44 @@
     const steps = sc.steps.map(([h, t]) => `<li><b>${esc(h)}</b>${sayHTML(sc.L, t)}</li>`).join('');
     const objs = sc.objs.map(([h, t, out]) => `<details class="obj2"><summary>${esc(h)}</summary>${sayHTML(sc.L, t)}${withButtons && out ? `<button class="btn btn--ghost btn--sm" data-act="cs-out" data-out="${out}" data-id="${p.id}">按：${OUT_BTN[out]}</button>` : ''}</details>`).join('');
     return `<ol class="steps2">${steps}</ol><div class="objs2"><div class="objs2__h">对方可能会说</div>${objs}</div>`;
+  }
+  // second call (2026-11-12): most owners said "send it, I'll look" on the first call; this call is where the sale happens
+  const FESTIVE_PRICE = 'RM399'; // festive pre-order page in site/studio.json "starts"
+  function festiveNow() {
+    const t = S.today || '';
+    if (t < '2026-12-20') return { en: 'Christmas and Chinese New Year', zh: '圣诞和农历新年', ms: 'Krismas dan Tahun Baru Cina' };
+    if (t < '2027-02-01') return { en: 'Chinese New Year', zh: '农历新年', ms: 'Tahun Baru Cina' };
+    if (t < '2027-03-05') return { en: 'Hari Raya', zh: '开斋节', ms: 'Hari Raya' };
+    return { en: 'the next festive season', zh: '下一个节日', ms: 'musim perayaan seterusnya' };
+  }
+  function secondOf(p) {
+    const L = ['en', 'zh', 'ms'].includes(p.language) ? p.language : 'en';
+    const n = p.business_name;
+    const f = festiveNow();
+    const T = {
+      open: { en: `Hi, this is Cartsmith Studio. We sent you the free sample website for ${n} on WhatsApp the other day. Did you get a chance to look?`, zh: `你好，我是 Cartsmith Studio。前两天用 WhatsApp 发了 ${n} 的免费样板网站给你，你有空看了吗？`, ms: `Hai, ini Cartsmith Studio. Kami ada WhatsApp contoh laman web percuma untuk ${n} beberapa hari lepas. Sempat tengok?` },
+      price: { en: `Thanks for looking. Everything on it can change: your own photos, today's prices. To make it your own website, it's from ${STUDIO_PRICE}, one-off, fixed and written down; or nothing upfront and RM199 a month. As one of our first clients you pay the second half only when you're happy, and it's live in 7 working days.`, zh: `谢谢你看。上面的东西都可以换：你们自己的照片、现在的价钱。做成你们自己的网站，一次性 ${STUDIO_PRICE} 起，价钱固定、写清楚；不想一次付也可以，一开始不用钱，每个月 RM199。你是我们最早的几位客户之一，满意了才付另一半，7 个工作天上线。`, ms: `Terima kasih sudi tengok. Semua boleh ditukar: gambar sendiri, harga terkini. Untuk jadikan laman web anda sendiri, dari ${STUDIO_PRICE} sekali bayar, harga tetap dan bertulis; atau tiada bayaran awal, RM199 sebulan. Sebagai antara pelanggan terawal kami, baki dibayar hanya bila anda puas hati, dan siap dalam 7 hari bekerja.` },
+      festive: { en: `With ${f.en} coming, customers start asking about festive orders weeks before. If you'd like to start small, we can do just a festive pre-order page for ${FESTIVE_PRICE}, live in 3 working days, and the ${FESTIVE_PRICE} comes off the full website later.`, zh: `${f.zh}快到了，客人通常提早几个星期就开始问节日的订单。想先试小一点，可以只做一个节日预购页，${FESTIVE_PRICE}，3 个工作天上线，之后做正式网站，这 ${FESTIVE_PRICE} 全额扣掉。`, ms: `Dengan ${f.ms} semakin dekat, pelanggan mula bertanya tentang tempahan perayaan beberapa minggu lebih awal. Kalau nak mula kecil, kami boleh buat halaman pre-order perayaan sahaja, ${FESTIVE_PRICE}, siap dalam 3 hari bekerja, dan ${FESTIVE_PRICE} itu ditolak bila buat laman web penuh nanti.` },
+      close: { en: "I'll WhatsApp you a short written quotation today, so you have all the details in one place. I can also drop by for 15 minutes to show you on the phone. Which day suits you?", zh: '我今天用 WhatsApp 发一份简单的报价给你，细节都写清楚。方便的话我也可以过去 15 分钟，用手机给你看。你哪一天比较方便？', ms: 'Saya WhatsApp sebut harga ringkas hari ini, semua butiran di satu tempat. Saya juga boleh singgah 15 minit untuk tunjuk di telefon. Hari apa yang sesuai?' },
+      notyet: { en: "No problem, it only takes two minutes on your phone. I'll WhatsApp you the link and password again now, and give you a quick call in two days.", zh: '没关系，用手机看两分钟就好。我现在再发一次网址和密码给你，两天后再打给你。', ms: 'Tak apa, dua minit sahaja di telefon. Saya WhatsApp pautan dan kata laluan sekali lagi sekarang, dan telefon semula dalam dua hari.' },
+    };
+    const steps = [['1 开场', T.open], ['2 看过了：先听他说，再讲价钱', T.price], ['3 节日：更小的第一步', T.festive], ['4 约下一步，然后按「有兴趣」', T.close], ['还没看：重发，然后按「还没看：重发」', T.notyet]];
+    const objs = [
+      ['要问老板 / 合伙人', { en: "Of course. I'll WhatsApp a short summary with the price so you can forward it. When's a good time to call you back?", zh: '当然。我用 WhatsApp 发一份有价钱的简介，你可以直接转给他。什么时候方便再打给你？', ms: 'Sudah tentu. Saya WhatsApp ringkasan dengan harga supaya boleh dihantar terus. Bila sesuai saya telefon semula?' }],
+      ['现在不急 / 节日后再说', { en: `Understood. If you want this season's pre-orders, the festive page is the small step. Otherwise no problem, the sample stays up until ${p.preview_delete_by || 'its delete date'}.`, zh: `明白。想接这个节日的预购，节日预购页是最小的一步；不然也没关系，样板会留到 ${p.preview_delete_by || '删除日'}。`, ms: `Faham. Kalau nak pre-order musim ini, halaman perayaan ialah langkah kecil. Kalau tidak, tak apa, contoh ini kekal sehingga ${p.preview_delete_by || 'tarikh dipadam'}.` }],
+      ['太贵', { en: `There's nothing upfront and RM199 a month, or the ${FESTIVE_PRICE} festive page to start. Both are fixed and written down; I'll put them in the quotation.`, zh: `也可以一开始不用钱，每个月 RM199；或者先做 ${FESTIVE_PRICE} 的节日预购页。两个都是固定价钱，我写进报价里。`, ms: `Ada pilihan tiada bayaran awal, RM199 sebulan, atau halaman perayaan ${FESTIVE_PRICE} dahulu. Kedua-dua harga tetap; saya masukkan dalam sebut harga.` }],
+      ['我们用 WhatsApp / 电话接单就够了', { en: 'That works, and orders can still come to your WhatsApp. The difference is they arrive already filled in, with the items, the date and the name, so there is less back and forth.', zh: '可以的，订单照样到你的 WhatsApp。不同的是，订单来的时候已经填好：要什么、哪一天、叫什么名字，不用来回问。', ms: 'Boleh, tempahan masih masuk ke WhatsApp anda. Bezanya, ia sampai sudah lengkap: barang, tarikh dan nama, jadi kurang berbalas-balas.' }],
+      ['菜单每天换', { en: "That's fine. The website can show today's menu, changed from your phone in a minute, or only the fixed items and the festive sets.", zh: '没关系。网站可以放「今日菜单」，你用手机一分钟就改好；或者只放固定的和节日套餐。', ms: 'Tak apa. Laman web boleh tunjuk menu hari ini, ditukar dari telefon dalam seminit, atau hanya menu tetap dan set perayaan.' }],
+      ['不需要', { en: 'No problem, thank you for taking a look. Have a good day!', zh: '没问题，谢谢你花时间看。祝生意兴隆！', ms: 'Tak apa, terima kasih kerana sudi tengok. Selamat maju jaya!' }],
+    ];
+    return { L, steps, objs };
+  }
+  function secondHTML(p) {
+    const sc = secondOf(p);
+    const steps = sc.steps.map(([h, t]) => `<li><b>${esc(h)}</b>${sayHTML(sc.L, t)}</li>`).join('');
+    const objs = sc.objs.map(([h, t]) => `<details class="obj2"><summary>${esc(h)}</summary>${sayHTML(sc.L, t)}</details>`).join('');
+    const seen = p.preview_views && p.preview_views.visits ? '<p class="hint">他打开过样板：可以直接从第 2 步开始。不要说你看得到。</p>' : (p.preview_views ? '' : '<p class="hint">没有看到他打开样板的记录：多半要用「还没看」那一句。不要说你看得到。</p>');
+    return `${seen}<ol class="steps2">${steps}</ol><div class="objs2"><div class="objs2__h">对方可能会说</div>${objs}</div>`;
   }
   const pvChecked = (p) => p.preview_checked ? `<span class="okbadge">${svg('check', 12)}样板已检查 ${esc(p.preview_checked)}</span>` : '<span class="warnbadge">样板还没检查：发之前先打开看一遍</span>';
 
@@ -368,11 +422,13 @@
       }
     } else if (['contacted', 'preview_sent', 'proposal_sent', 'call_booked'].includes(p.status) && (due || mode === 'full')) {
       if (p.followup) {
-        body += msgBox(p, 'followup', p.status === 'contacted' ? (p.touches <= 1 ? '第 2 条：给一个有用的资讯' : '最后一条') : '跟进信息') + sendRow(p, 'followup');
+        body += msgBox(p, 'followup', p.status === 'contacted' ? (p.touches <= 1 ? '第 2 条：给一个有用的资讯' : '最后一条') : p.status === 'preview_sent' ? ['跟进信息（第 1 条：网址密码、价钱、节日预购页）', '跟进信息（第 2 条：换一个有用的角度）', '最后一条（礼貌收尾）'][Math.min(2, p.pv_followups || 0)] : '跟进信息') + sendRow(p, 'followup');
         body += `<div class="btnrow btnrow--end">${sentBtn}${moreBtn}</div>`;
       } else {
-        body += `<div class="btnrow"><button class="btn btn--sm" data-act="followup" data-id="${p.id}">${svg('pen', 16)}写跟进信息</button><button class="btn btn--ghost btn--sm" data-act="reply" data-id="${p.id}">${svg('reply', 16)}对方有回复</button>${moreBtn}</div>`;
+        body += `<div class="btnrow"><button class="btn btn--sm" data-act="followup" data-id="${p.id}">${svg('pen', 16)}写跟进信息${p.status === 'preview_sent' ? `（第 ${Math.min(3, (p.pv_followups || 0) + 1)} 条）` : ''}</button><button class="btn btn--ghost btn--sm" data-act="reply" data-id="${p.id}">${svg('reply', 16)}对方有回复</button>${moreBtn}</div>`;
       }
+    } else if (secondDue(p)) {
+      body += `<div class="btnrow"><button class="btn btn--ghost btn--sm" data-act="reply" data-id="${p.id}">${svg('reply', 16)}对方有回复</button>${moreBtn}</div>`;
     } else {
       body += `<div class="btnrow"><button class="btn btn--ghost btn--sm" data-act="reply" data-id="${p.id}">${svg('reply', 16)}对方有回复</button>${moreBtn}</div>`;
     }
@@ -391,7 +447,7 @@
   function msgBox(p, field, label) { return `<div class="msg"><label>${esc(label)}</label><textarea data-field="${field}" data-id="${p.id}">${esc(p[field] || '')}</textarea></div>`; }
   function sendRow(p, field) {
     const b = [];
-    if (callNo(p) && (field === 'message' || field === 'followup' || (field === 'preview_msg' && ['new', 'contacted'].includes(p.status)))) b.push(['call', callBtn(p)]);
+    if (callNo(p) && (field === 'message' || (field === 'followup' && !secondDue(p)) || (field === 'preview_msg' && ['new', 'contacted'].includes(p.status)))) b.push(['call', callBtn(p)]);
     if (waNo(p)) b.push(['wa', `<button class="btn btn--sm ch ch--wa" data-act="wa" data-field="${field}" data-id="${p.id}">${svg('wa', 16)}WhatsApp ${esc(fmtPhone(waNo(p)))}</button>`]);
     if (p.email) b.push(['email', `<button class="btn btn--sm ch ch--mail" data-act="email" data-field="${field}" data-id="${p.id}">${svg('mail', 16)}Email</button>`]);
     if (p.instagram) b.push(['ig', `<button class="btn btn--sm ch ch--ig" data-act="copyopen" data-field="${field}" data-id="${p.id}">${svg('ig', 16)}Instagram</button>`]);
@@ -415,7 +471,7 @@
     const limit = S.settings.dailyLimit || 10;
     const left = Math.max(0, limit - sentToday());
     const fresh = S.items.filter((p) => p.status === 'new' && p.score >= 3 && p.fit !== 'skip' && !p.duplicate_of && !p.next_call_date).sort((a, b) => b.score - a.score || (a.id < b.id ? -1 : 1));
-    const follow = S.items.filter((p) => ['contacted', 'preview_sent', 'proposal_sent', 'call_booked'].includes(p.status) && p.next_followup_date && p.next_followup_date <= S.today);
+    const follow = S.items.filter((p) => (['contacted', 'preview_sent', 'proposal_sent', 'call_booked'].includes(p.status) && p.next_followup_date && p.next_followup_date <= S.today) || secondDue(p));
     const sendNow = S.items.filter((p) => p.status === 'replied' && p.call_ok);
     const replied = S.items.filter((p) => p.status === 'replied' && !p.call_ok);
     const calls = S.items.filter((p) => callDue(p));
@@ -514,7 +570,7 @@
     if (contacted >= 20) {
       if (replied / contacted < 0.1) weakest = '回复率偏低：开场白的观察要更具体，或者多用 WhatsApp / Email。';
       else if (reached('preview_sent') < replied * 0.4) weakest = '有回复但很少要样板：回信时先用费用计算器算给对方看，再提免费样板。';
-      else if (reached('won') === 0 && reached('proposal_sent') >= 3) weakest = '有报价没成交：想想价格和信任感（首批优惠、分两期付款）。';
+      else if (reached('won') === 0 && reached('proposal_sent') >= 3) weakest = '有报价没成交：想想信任感（前 3 位客户满意才付尾款、7 天上线保证）和更小的第一步（节日预购页 RM399、月付 RM199）。';
     }
     $('[data-stats]').innerHTML = `<h2>数字</h2>
       <div class="statgrid"><div class="stat"><b>${it.length}</b><small>名单总数</small></div><div class="stat"><b>${it.filter((p) => p.first_contact_date && p.first_contact_date >= week).length}</b><small>过去 7 天新联系</small></div><div class="stat"><b>${pct(replied, contacted)}</b><small>回复率</small></div><div class="stat"><b>${it.filter((p) => p.status === 'do_not_contact').length}</b><small>不再联系</small></div></div>
@@ -741,7 +797,7 @@
         busy(t, true, '记录中…');
         const j = await api('call', { id: p.id, outcome, date: dateEl ? dateEl.value : '' });
         upsert(j.item); S.calling = null; render();
-        toast({ no_answer: j.item.next_call_date ? `已记录没接，${j.item.next_call_date} 再打。` : '3 次都没接：改用 WhatsApp / Email 发开场白。', ok: j.item.preview_url ? '已记录。信息已经填好网址和密码，在「电话说可以，现在发样板」按 WhatsApp 发给他。' : '已记录。样板还没做：跟 Claude Code 说「帮我做 ' + p.business_name + ' 的样板」。', callback: `已记录，${j.item.next_call_date} 会提醒你再打。`, no: '已标记不再联系。' }[outcome]);
+        toast({ no_answer: j.item.next_call_date ? `已记录没接，${j.item.next_call_date} 再打。` : '3 次都没接：改用 WhatsApp / Email 发开场白。', ok: j.item.preview_url ? '已记录。信息已经填好网址和密码，在「电话说可以，现在发样板」按 WhatsApp 发给他。' : '已记录。样板还没做：跟 Claude Code 说「帮我做 ' + p.business_name + ' 的样板」。', callback: `已记录，${j.item.next_call_date} 会提醒你再打。`, no: '已标记不再联系。', warm: '已记录有兴趣：今天把报价发给他。卡片上的 AI 助手可以帮你写报价信息。', notyet: `已记录。网址和密码已经填进跟进信息，现在用 WhatsApp 发给他；${j.item.next_call_date} 再打。` }[outcome]);
         return;
       }
       if (act === 'queue-start') { startQueue(); return; }

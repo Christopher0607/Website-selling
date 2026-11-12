@@ -9,12 +9,18 @@
     "dm": "https://ig.me/m/cartsmith.studio"
   },
   "packages": [
-    {"id": "starter", "name": "Starter", "price": 2800, "for": "Your first own website", "meta": "Up to 20 products · ~10 working days",
-     "features": ["Home, Shop, About, Contact, FAQ, Shipping & Returns", "1 payment gateway: FPX, cards & e-wallets", "West / East Malaysia shipping rates", "WhatsApp / Instagram chat buttons", "Privacy & terms drafts (EN + BM)", "Mobile-first design, basic SEO, SSL", "Training video + 30-min handover", "First month of Care free"]},
-    {"id": "growth", "name": "Growth", "price": 4800, "for": "Bigger range, ready for ads", "meta": "Up to 80 products · ~15 working days", "highlight": true, "tag": "Most complete",
-     "features": ["Everything in Starter", "Bulk product import + variations (size, colour…)", "2 payment methods", "Campaign / sale landing page", "Free-shipping threshold & vouchers", "GA4 + Meta Pixel ad tracking", "Homepage copy written for you (EN or 中文) + 3 SEO articles", "2 training sessions", "First month of Care free"]},
-    {"id": "catalog", "name": "Catalog (B2B)", "price": 3500, "for": "Wholesalers & manufacturers", "meta": "Up to 50 products · ~12 working days",
-     "features": ["Product catalogue with enquiry, not checkout", "Pre-filled quotation requests", "Certificates / partners page", "GA4 tracking", "Mobile-first design, basic SEO, SSL", "First month of Care free"]}
+    {"id": "starter", "name": "Starter", "price": 800, "for": "Your own ordering website or online shop", "meta": "Up to 20 items · ~10 working days",
+     "features": ["Home, Menu or Shop, About, Contact, FAQ, Delivery & Returns", "Orders for pick-up, delivery or shipping — paid online or sent to your WhatsApp", "1 payment gateway: FPX, cards & e-wallets", "Delivery areas, West / East Malaysia shipping rates", "WhatsApp / Instagram chat buttons", "Privacy & terms drafts (EN + BM)", "Mobile-first design, basic SEO, SSL", "Training video + 30-min handover", "First month of Care free"]},
+    {"id": "growth", "name": "Growth", "price": 1600, "for": "Bookings, festive pre-orders, ready for ads", "meta": "Up to 80 items · ~15 working days", "highlight": true, "tag": "Most complete",
+     "features": ["Everything in Starter", "Table bookings or festive pre-orders with cut-off dates", "Bulk import + options (size, flavour, add-ons…)", "2 payment methods", "Campaign / festive landing page", "Free-delivery threshold & vouchers", "GA4 + Meta Pixel ad tracking", "Homepage copy written for you (EN or 中文) + 3 SEO articles", "2 training sessions", "First month of Care free"]},
+    {"id": "catalog", "name": "Catalog (B2B)", "price": 1200, "for": "Catering, wholesale & corporate orders", "meta": "Up to 50 items · ~12 working days",
+     "features": ["Menu or product catalogue with enquiry, not checkout", "Pre-filled quotation requests (events, bulk, corporate gifts)", "Certificates / partners page", "GA4 tracking", "Mobile-first design, basic SEO, SSL", "First month of Care free"]}
+  ],
+  "starts": [
+    {"id": "festive", "name": "Festive pre-order page", "price": 399, "unit": "one-time", "for": "Take Christmas, CNY or Raya pre-orders this season", "meta": "1 page · live in 3 working days",
+     "features": ["Up to 12 festive sets or items, with photos, prices and options", "Customers choose a pick-up or delivery date; cut-off dates and sold-out switch", "Orders arrive on your WhatsApp, already filled in", "Online for that festive season; small changes (sold out, prices) included", "Upgrade to a full website within 60 days and the RM399 comes off"]},
+    {"id": "monthly", "name": "Monthly plan", "price": 199, "unit": "a month × 12", "for": "Your own website with nothing to pay upfront", "meta": "RM0 upfront · 12 monthly payments",
+     "features": ["Everything in Starter", "Hosting and Basic Care included", "First payment on launch day", "After 12 payments the website is yours", "Terms in a written agreement"]}
   ],
   "care": {
     "plans": [{"name": "Basic Care", "price": 150}, {"name": "Standard Care", "price": 300}],
@@ -39,7 +45,7 @@
   "compare": {
     "cols": ["Build it yourself on a store platform", "Cheap template website", "Freelancer or agency", "Cartsmith"],
     "rows": [
-      ["Typical setup price", "Your own time + monthly plan", "about RM800–1,500 ¹", "WooCommerce stores often RM2,000–10,000+ ² · agencies RM2,500–50,000 ³", "RM2,800 / RM3,500 / RM4,800 — fixed and written down"],
+      ["Typical setup price", "Your own time + monthly plan", "about RM800–1,500 ¹", "WooCommerce stores often RM2,000–10,000+ ² · agencies RM2,500–50,000 ³", "RM800 / RM1,200 / RM1,600 — fixed and written down"],
       ["See it before you pay", "Free trial — but you build it", "Template screenshots", "Sometimes a mockup", "Free homepage mockup with your own products + 6 live demos"],
       ["Malaysian payments & shipping set up", "You set it up", "Often basic only", "Depends on the quote", "Done for you: FPX, cards, e-wallets, West/East rates, policy drafts"],
       ["After launch", "You maintain it", "Usually on your own", "Varies, often per job", "Care plan: updates, backups, monitoring, small edits"],
@@ -60,7 +66,7 @@
     "sources": ["https://jumixdesign.com/shopee-seller-fees-malaysia-2026/", "https://www.zetpy.com/?p=10621", "https://www.worldfirst.com/my/blog/e-commerce-online-sellers/shopee-seller-fees-malaysia/"]
   },
   "faq": [
-    ["How much does a website cost?", "<p>One-time setup: <b>Starter RM2,800</b>, <b>Catalog (B2B) RM3,500</b> or <b>Growth RM4,800</b>. Then an optional monthly Care plan (RM150 or RM300). <a href=\"pricing.html\">See everything that's included</a>.</p>"],
+    ["How much does a website cost?", "<p>One-time setup: <b>Starter RM800</b>, <b>Catalog (B2B) RM1,200</b> or <b>Growth RM1,600</b>. Then an optional monthly Care plan (RM150 or RM300). Two other ways to start: a <b>festive pre-order page for RM399</b>, or the <b>monthly plan: RM0 upfront, RM199 a month for 12 months</b>. <a href=\"pricing.html\">See everything that's included</a>.</p>"],
     ["Is there a free trial?", "<p>Two things are free: a <b>homepage mockup</b> before you decide (with your own products), and the <b>first month of Care</b> after your site goes live. A whole website can't be built for free because each one takes many hours of work.</p>"],
     ["Do I have to leave Shopee or TikTok Shop?", "<p>No. Keep them for new customers. Your own website is for <b>repeat customers</b>, wholesale buyers and ad traffic — with no marketplace commission, and the customer list is yours.</p>"],
     ["Will the website bring customers by itself?", "<p>Not at first, and we won't pretend otherwise. Customers come from your existing followers, a QR card in every parcel, your live sessions and ads. We set up those entry points for you.</p>"],
@@ -71,7 +77,7 @@
     ["What platform do you build on?", "<p>WordPress + WooCommerce — open source, used by millions of stores, and not locked to us. Any developer can take it over later.</p>"],
     ["Can I change the template's colours, fonts and layout?", "<p>Yes. The 6 templates are starting points. We use your logo, colours, photos and wording, and adjust sections to fit how you sell.</p>"],
     ["What do I need to prepare?", "<p>Your logo, product list (a Shopee export works), product photos, prices, shipping and return policies, and company details. We send a simple checklist after the deposit.</p>"],
-    ["You're a new studio — why should I trust you?", "<p>Fair question. That's why you can click through 6 live demos, get a free mockup before paying anything, see all prices written down, and pay 50% deposit / 50% before launch. Our first 3 clients also get a founding offer: 30% off setup + 2 free months of Care, in exchange for an honest review.</p>"],
+    ["You're a new studio — why should I trust you?", "<p>Fair question. That's why you can click through our live demos, get a free mockup before paying anything, and see all prices written down. Our first 3 clients also get extra protection: 50% deposit and the balance only when you're happy with the finished site, live in 7 working days or RM50 off for each day late, and 2 free months of Care. In return we ask for an honest review and permission to show your site as an example.</p>"],
     ["Is the chat on this website a real person?", "<p>It's an AI assistant (powered by DeepSeek) that answers from our price list. A real person at Cartsmith reads every lead and takes over for quotes, contracts and anything unusual. <a href=\"privacy.html#ai\">How chat data is handled</a>.</p>"]
   ]
 }
