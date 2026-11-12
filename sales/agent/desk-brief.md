@@ -52,14 +52,14 @@ to end the call politely — and then nothing happens. Seven mockups went out; o
   2. **Timing**: Christmas (25 Dec), Chinese New Year (6 Feb 2027), Hari Raya (expected 10 Mar 2027). Customers ask about
      festive orders weeks before; pick the one that fits THEIR shop (Malay kuih → Raya; Chinese bakery → CNY).
   3. **A small first step**: a festive pre-order page for RM399, live in 3 working days; the RM399 comes off a full
-     website within 60 days.
+     website within 60 days. Sample: https://cartsmithstudio.com/demo/butter-lantern/ (?fest=cny / raya / xmas).
   Then ONE concrete next step: a written quotation today (WhatsApp), or a 15-minute visit / call at a set day and time.
 - **They have not opened it** (desk shows no visits, or the link opened but no password entered): resend the link and
   password, call again in 2 days. Never say we can see this.
 - **Written follow-ups** (only when the call did not connect, or as the message after the call):
   1. 1–2 days after sending: link + password again; their own photos and current prices go in for free; the price in
-     one line; the RM399 festive page as the small first step; ONE specific detail from THEIR mockup (a dish, a set, the
-     booking or pre-order page).
+     one line; the RM399 festive page as the small first step, with the link to the sample festive page; ONE specific
+     detail from THEIR mockup (a dish, a set, the booking or pre-order page).
   2. About 4 days later: one new useful angle for their kind of shop (festive sets with cut-off dates and slots left so
      they stop answering the same DM; bookings that arrive with date, time and party size; regulars ordering without
      platform commission), the price again in one line, the link again, door open.
@@ -73,10 +73,14 @@ to end the call politely — and then nothing happens. Seven mockups went out; o
   and the quotation use it.
 
 ## 2c. Full demo websites to show (2026-11-12)
-When an owner wants to see what a finished website does (beyond their own sample), point them to one of the two
+When an owner wants to see what a finished website does (beyond their own sample), point them to one of the four
 complete demos — fictional brands, everything clickable, nothing charged:
-- Restaurants, cafés, caterers: https://cartsmithstudio.com/demo/sireh-salt/ (ordering, bookings, festive pre-orders,
+- Fine dining, chef-led or upmarket restaurants: https://cartsmithstudio.com/demo/maison-cendre/ (tasting menus,
+  reservations with deposits and a waitlist, private dining, seasonal dinners; owner side at /demo/maison-cendre/owner.html).
+- Everyday restaurants, cafés, caterers: https://cartsmithstudio.com/demo/sireh-salt/ (ordering, bookings, festive pre-orders,
   catering, vouchers; the owner side at /demo/sireh-salt/owner.html shows how they would run it from their phone).
+- The small first step (RM399 festive pre-order page): https://cartsmithstudio.com/demo/butter-lantern/?fest=cny
+  (use ?fest=raya for Malay bakeries, ?fest=xmas for Christmas bakes). Best link in a festive follow-up.
 - Bakeries, kuih and cookie makers, sambal and gift brands: https://cartsmithstudio.com/demo/dulang-daun/ (shop, gift
   boxes, build-your-own hamper, West/East shipping, WhatsApp orders, tracking; owner side at /demo/dulang-daun/owner.html).
 Use at most one demo link per message, as a statement ("Here is a full example of what the finished website does: …").

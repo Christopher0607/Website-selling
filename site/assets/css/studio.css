@@ -143,6 +143,7 @@ h1 .zh, h2 .zh { font-size: .42em; font-weight: 600; margin-top: .6em; color: in
 .pkgs { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(16px, 2vw, 24px); align-items: stretch; }
 .pkgs--2 { grid-template-columns: repeat(2, 1fr); max-width: 860px; margin: 0 auto; }
 .flags { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(16px, 2.4vw, 28px); }
+.flags .flag__body h3 { font-size: 1.5rem; }
 .flag { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; display: flex; flex-direction: column; }
 .flag__img { display: block; aspect-ratio: 16 / 10; overflow: hidden; background: var(--line); }
 .flag__img img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s; }

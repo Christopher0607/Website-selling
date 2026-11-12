@@ -1128,7 +1128,7 @@ class Studio:
             out.append(f"""<article class="pkg"><h3>{e(p['name'])}</h3><p class="pkg__for">{e(p['for'])}</p>
 <p class="pkg__price"><span>RM</span>{p['price']:,}<small>{e(p['unit'])}</small></p>
 <p class="pkg__meta">{e(p['meta'])}</p><ul class="s-ticks">{feats}</ul>
-<a class="s-btn s-btn--block s-btn--ghost" href="{root}start.html?package={p['id']}">Ask about this</a></article>""")
+{f'<a class="s-btn s-btn--block" href="{root}{p["demo"]}" style="margin-bottom:10px">See the demo</a>' if p.get("demo") else ""}<a class="s-btn s-btn--block s-btn--ghost" href="{root}start.html?package={p['id']}">Ask about this</a></article>""")
         return '<div class="pkgs pkgs--2">' + "".join(out) + "</div>"
 
     def frag_care(self, root):
@@ -1169,28 +1169,33 @@ class Studio:
     def frag_hero_phones(self, root):
         # 2026-11-12: the two flagship demos (restaurant, food gift shop) instead of three shop templates
         out = []
-        for i, (shot, href, label) in enumerate([("sireh-salt", "demo/sireh-salt/menu.html", "the restaurant demo menu"),
-                                                 ("dulang-daun", "demo/dulang-daun/index.html", "the food gift shop demo"),
-                                                 ("sireh-salt-festive", "demo/sireh-salt/festive.html", "the restaurant demo festive pre-orders")]):
+        for i, (shot, href, label) in enumerate([("maison-cendre", "demo/maison-cendre/index.html", "the boutique restaurant demo"),
+                                                 ("butter-lantern", "demo/butter-lantern/index.html?fest=cny", "the festive pre-order page demo"),
+                                                 ("dulang-daun", "demo/dulang-daun/index.html", "the food gift shop demo")]):
             p = f"assets/shots/{shot}-mobile.webp"
             if os.path.exists(os.path.join(HERE, p)):
                 out.append(f'<a class="phone phone--{i}" href="{root}{href}" aria-label="Open {label}"><img src="{root}{p}" alt="" width="390" height="844"{" fetchpriority=high" if i == 1 else " loading=lazy"}></a>')
         return '<div class="phones">' + "".join(out) + "</div>"
 
     def frag_flagships(self, root):
+        # 2026-11-12: two restaurant looks (boutique, everyday), the food gift shop, and the RM399 festive pre-order page
         cards = [
-            ("sireh-salt", "Sireh &amp; Salt", "Restaurant", "demo/sireh-salt/index.html", "img/hero.webp",
+            ("maison-cendre", "Maison Cendre", "Boutique restaurant", "demo/maison-cendre/index.html", "img/hero.webp", ("See the owner side", "demo/maison-cendre/owner.html"),
+             ["Tasting menus and à la carte with dietary tags", "Reservations: dining room, chef’s counter, private salon", "Deposits, places left and a waitlist when it is full", "Seasonal dinners and feasts to take home", "Private events, takeaway and gift cards", "Your side: tonight’s covers, waitlist and dishes running out"]),
+            ("sireh-salt", "Sireh &amp; Salt", "Everyday restaurant or café", "demo/sireh-salt/index.html", "img/hero.webp", ("See the owner side", "demo/sireh-salt/owner.html"),
              ["Menu with options and sold-out dishes", "Pick-up and delivery orders, paid online or sent to your WhatsApp", "Table bookings with tables left", "Festive pre-orders with cut-off dates and sets left", "Catering enquiries and gift vouchers", "Your side: orders, bookings and sold-out switches on your phone"]),
-            ("dulang-daun", "Dulang &amp; Daun", "Food gifts &amp; online shop", "demo/dulang-daun/index.html", "img/hero.webp",
+            ("dulang-daun", "Dulang &amp; Daun", "Food gifts &amp; online shop", "demo/dulang-daun/index.html", "img/hero.webp", ("See the owner side", "demo/dulang-daun/owner.html"),
              ["Sizes, flavours and bundles", "Free-shipping bar, vouchers, West and East Malaysia rates", "Build-your-own hamper and gift orders with a card", "Order on WhatsApp or pay online, then track the parcel", "Notify-me when sold out, corporate gift quotes", "Your side: pack, ship, stock and the waiting list on your phone"]),
+            ("butter-lantern", "Butter &amp; Lantern", "Festive pre-order page · RM399", "demo/butter-lantern/index.html?fest=cny", "img/cny-hero.webp", ("See it for Hari Raya", "demo/butter-lantern/index.html?fest=raya"),
+             ["One page, live in 3 working days", "Festive sets with cut-off dates and how many are left", "Customers pick a collection or delivery day", "Orders arrive on your WhatsApp, already filled in", "Re-dressed for Chinese New Year, Raya, Christmas or Deepavali", "The RM399 comes off a full website if you upgrade within 60 days"]),
         ]
         out = []
-        for slug, name, kind, href, img, feats in cards:
+        for slug, name, kind, href, img, second, feats in cards:
             li = "".join(f"<li>{icon('check')}{f}</li>" for f in feats)
             out.append(f'<article class="flag"><a class="flag__img" href="{root}{href}" tabindex="-1" aria-hidden="true"><img src="{root}demo/{slug}/{img}" alt="" loading="lazy" width="760" height="560"></a>'
                        f'<div class="flag__body"><p class="kicker">{kind}</p><h3>{name}</h3><ul class="s-ticks">{li}</ul>'
-                       f'<div class="s-btns"><a class="s-btn" href="{root}{href}">Open the demo</a><a class="s-btn s-btn--ghost" href="{root}{href.replace("index.html", "owner.html")}">See the owner side</a></div></div></article>')
-        return '<div class="flags">' + "".join(out) + '</div><p class="s-hero__note" style="text-align:center;margin-top:16px">Both brands are fictional and nothing is charged; every button works. Open them on your phone.</p>'
+                       f'<div class="s-btns"><a class="s-btn" href="{root}{href}">Open the demo</a><a class="s-btn s-btn--ghost" href="{root}{second[1]}">{second[0]}</a></div></div></article>')
+        return '<div class="flags">' + "".join(out) + '</div><p class="s-hero__note" style="text-align:center;margin-top:16px">All four brands are fictional and nothing is charged; every button works. Open them on your phone.</p>'
 
 
     def frag_calculator(self, root):

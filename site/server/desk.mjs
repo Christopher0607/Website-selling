@@ -557,10 +557,12 @@ const PVMSG_AGAIN = {
 // 1–2 days after the mockup went out (2026-11-12): link again + the price in plain words + a small first step for the
 // festive season. No AI needed. Prices: sales/agent/knowledge.md / site/studio.json. FOUNDING_OPEN: set to false once
 // the first 3 clients have signed (their terms: balance only when happy).
-const PVFOLLOW_V = 3;
+const PVFOLLOW_V = 4;
 const FOUNDING_OPEN = true;
 const FROM_PRICE = 'RM800';
 const FESTIVE_PRICE = 'RM399';
+// the RM399 product as a demo (site/flagships/butter-lantern); ?fest= picks the festival it opens on
+const FESTIVE_DEMO = STUDIO_URL + 'demo/butter-lantern/';
 // the next festive season(s) worth naming, by today's date in Malaysia (CNY 2027-02-06; Hari Raya expected 2027-03-10)
 function festiveName(lang) {
   const t = myDate();
@@ -572,9 +574,9 @@ function festiveName(lang) {
   return N[lang] || N.en;
 }
 const PVFOLLOW = {
-  zh: (n, u, pw) => `你好，我是 Cartsmith Studio。再发一次 ${n} 的样板网站，方便你找：\n${u}\n密码：${pw}\n\n你们自己的照片和现在的价钱，我们可以免费换上去。做成你们自己的网站是一次性 ${FROM_PRICE} 起，价钱固定、写清楚${FOUNDING_OPEN ? '；你会是我们最早的几位客户之一，满意了才付另一半' : ''}。${festiveName('zh')}快到了，也可以先只做一个节日预购页，${FESTIVE_PRICE}，3 个工作天上线。\n\n直接回复这里就好，我们会接着处理。\n— Cartsmith Studio`,
-  en: (n, u, pw) => `Hi, Cartsmith Studio here. Here's the sample website for ${n} again, so it's easy to find:\n${u}\nPassword: ${pw}\n\nYour own photos and current prices can go in for free. To make it your own website: from ${FROM_PRICE} one-off, fixed and written down${FOUNDING_OPEN ? ", and as one of our first clients you pay the second half only when you're happy with it" : ''}. With ${festiveName('en')} coming, a festive pre-order page on its own is ${FESTIVE_PRICE}, live in 3 working days.\n\nJust reply here and we'll take it from there.\n— Cartsmith Studio`,
-  ms: (n, u, pw) => `Hai, Cartsmith Studio di sini. Ini contoh laman web untuk ${n} sekali lagi, supaya senang dicari:\n${u}\nKata laluan: ${pw}\n\nGambar sendiri dan harga terkini boleh dimasukkan secara percuma. Untuk jadikan ia laman web anda sendiri: dari ${FROM_PRICE} sekali bayar, harga tetap dan bertulis${FOUNDING_OPEN ? ', dan sebagai antara pelanggan terawal kami, baki dibayar hanya bila anda berpuas hati' : ''}. Untuk ${festiveName('ms')}, halaman pre-order perayaan sahaja ialah ${FESTIVE_PRICE}, siap dalam 3 hari bekerja.\n\nBalas sahaja di sini dan kami akan uruskan seterusnya.\n— Cartsmith Studio`,
+  zh: (n, u, pw) => `你好，我是 Cartsmith Studio。再发一次 ${n} 的样板网站，方便你找：\n${u}\n密码：${pw}\n\n你们自己的照片和现在的价钱，我们可以免费换上去。做成你们自己的网站是一次性 ${FROM_PRICE} 起，价钱固定、写清楚${FOUNDING_OPEN ? '；你会是我们最早的几位客户之一，满意了才付另一半' : ''}。${festiveName('zh')}快到了，也可以先只做一个节日预购页，${FESTIVE_PRICE}，3 个工作天上线，样子可以看这里：\n${FESTIVE_DEMO}?fest=cny\n\n直接回复这里就好，我们会接着处理。\n— Cartsmith Studio`,
+  en: (n, u, pw) => `Hi, Cartsmith Studio here. Here's the sample website for ${n} again, so it's easy to find:\n${u}\nPassword: ${pw}\n\nYour own photos and current prices can go in for free. To make it your own website: from ${FROM_PRICE} one-off, fixed and written down${FOUNDING_OPEN ? ", and as one of our first clients you pay the second half only when you're happy with it" : ''}. With ${festiveName('en')} coming, a festive pre-order page on its own is ${FESTIVE_PRICE}, live in 3 working days. This is what one looks like:\n${FESTIVE_DEMO}\n\nJust reply here and we'll take it from there.\n— Cartsmith Studio`,
+  ms: (n, u, pw) => `Hai, Cartsmith Studio di sini. Ini contoh laman web untuk ${n} sekali lagi, supaya senang dicari:\n${u}\nKata laluan: ${pw}\n\nGambar sendiri dan harga terkini boleh dimasukkan secara percuma. Untuk jadikan ia laman web anda sendiri: dari ${FROM_PRICE} sekali bayar, harga tetap dan bertulis${FOUNDING_OPEN ? ', dan sebagai antara pelanggan terawal kami, baki dibayar hanya bila anda berpuas hati' : ''}. Untuk ${festiveName('ms')}, halaman pre-order perayaan sahaja ialah ${FESTIVE_PRICE}, siap dalam 3 hari bekerja. Contohnya di sini:\n${FESTIVE_DEMO}?fest=raya\n\nBalas sahaja di sini dan kami akan uruskan seterusnya.\n— Cartsmith Studio`,
 };
 const PVMSG = {
   zh: (n, u, pw, d) => `你好，我们是 Cartsmith Studio，帮本地餐饮和品牌做网站。我们已经帮 ${n} 做好了一个免费的样板网站：\n${u}\n密码：${pw}\n\n用手机打开就可以看，照片是示意图。样板只给你看，${d} 会删除；不用钱，也不用马上决定，有兴趣回复这里就好。\n\n我们的网站：${STUDIO_URL}\n— Cartsmith Studio`,
@@ -849,7 +851,7 @@ async function handle(action, b, doc) {
       const hasPv = !!(p.preview_url && p.preview_password);
       const n = p.pv_followups || 0;
       const kind = p.status === 'preview_sent' && n === 0
-        ? `FIRST follow-up after we sent the free mockup (see "After the mockup is sent" in How our system works): the link and password again so it is easy to find; their own photos and current prices go in for free; the price in plain words (their own website from ${FROM_PRICE} one-off, fixed and written down${FOUNDING_OPEN ? '; as one of our first 3 clients they pay the second half only when happy' : ''}); the small first step: a festive pre-order page for ${FESTIVE_PRICE}, live in 3 working days, for ${festiveName('en')}; ONE specific detail from THEIR mockup (a dish, a set, the booking or pre-order page). Statements only, no questions`
+        ? `FIRST follow-up after we sent the free mockup (see "After the mockup is sent" in How our system works): the link and password again so it is easy to find; their own photos and current prices go in for free; the price in plain words (their own website from ${FROM_PRICE} one-off, fixed and written down${FOUNDING_OPEN ? '; as one of our first 3 clients they pay the second half only when happy' : ''}); the small first step: a festive pre-order page for ${FESTIVE_PRICE}, live in 3 working days, for ${festiveName('en')}, with the link to a sample one (${FESTIVE_DEMO}, add ?fest=cny for Chinese New Year or ?fest=raya for Hari Raya); ONE specific detail from THEIR mockup (a dish, a set, the booking or pre-order page). Statements only, no questions`
         : p.status === 'preview_sent' && n === 1
           ? 'SECOND follow-up after the mockup (about 4 days after the first): one new, useful angle for their kind of shop (e.g. festive sets with cut-off dates and slots left so they stop answering the same DM; table bookings that arrive with date, time and party size; regulars ordering without platform commission), the price again in one line, the mockup link again, door open. Short. Statements only, no questions'
           : p.status === 'preview_sent'

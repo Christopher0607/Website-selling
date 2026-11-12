@@ -14,10 +14,12 @@
 - Languages: English, 中文, Bahasa Malaysia.
 
 ## The demo websites (fictional brands, Pexels photos, demo checkout takes no payment)
-Two complete demo websites (2026-11-12) — the best ones to show food businesses:
-- **Sireh & Salt** (restaurant): https://cartsmithstudio.com/demo/sireh-salt/ — menu with options and sold-out dishes, pick-up and delivery orders (paid online or sent to WhatsApp), table bookings with tables left, festive pre-orders (Christmas, Chinese New Year, Hari Raya) with cut-off dates and sets left, catering enquiries, gift vouchers, opening hours, and the owner's side on a phone (orders, bookings, sold-out switches, prices, festive stock, "closed today").
+Four complete demo websites (2026-11-12) — the best ones to show food businesses:
+- **Maison Cendre** (boutique restaurant): https://cartsmithstudio.com/demo/maison-cendre/ — tasting menus and à la carte with dietary tags, reservations for the dining room, the chef's counter (deposit) and a private salon, places left and a waitlist, seasonal dinners (Christmas, Chinese New Year, Valentine's Day) and feasts to take home, private events, takeaway, gift cards, and the owner's side (tonight's covers, waitlist, dishes running out, "closed for a private event"). The same design works for any restaurant that wants to look its best.
+- **Sireh & Salt** (everyday restaurant or café): https://cartsmithstudio.com/demo/sireh-salt/ — menu with options and sold-out dishes, pick-up and delivery orders (paid online or sent to WhatsApp), table bookings with tables left, festive pre-orders (Christmas, Chinese New Year, Hari Raya) with cut-off dates and sets left, catering enquiries, gift vouchers, opening hours, and the owner's side on a phone (orders, bookings, sold-out switches, prices, festive stock, "closed today").
+- **Butter & Lantern** (the RM399 festive pre-order page): https://cartsmithstudio.com/demo/butter-lantern/ — one page: festive sets with cut-off dates and how many are left, a collection or delivery day, the order sent to WhatsApp already filled in; the same page re-dressed for Chinese New Year, Hari Raya, Christmas or Deepavali (add ?fest=cny, raya, xmas or deepavali to the link).
 - **Dulang & Daun** (food gifts / online shop): https://cartsmithstudio.com/demo/dulang-daun/ — sizes and flavours, free-shipping bar, vouchers, West and East Malaysia shipping, build-your-own hamper, gift orders with a card, order on WhatsApp or pay online, parcel tracking, notify-me when sold out, corporate gift quotes, and the owner's side (pack, ship, stock, waiting list).
-Both say clearly they are demos; their reviews are labelled samples. Six more shop templates:
+All four say clearly they are demos; their reviews are labelled samples. Six more shop templates:
 | Template | Style | Demo shows | Also good for |
 |---|---|---|---|
 | Dewlane | Clean & minimal | skincare | beauty, wellness, personal care |

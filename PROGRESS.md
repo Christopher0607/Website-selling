@@ -7,7 +7,7 @@
 ## 当前状态
 
 - 当前阶段：**Phase 4.1 找客户**（网站 https://cartsmith.netlify.app 已上线；俊宇 2026-11-07 说开始找客户）
-- 下一个任务：**(1) 俊宇：① 今天打第二通电话给 Secawan、Le Petit Four、Haruki（11-10 发的样板，工作台「今天要跟进」有台词），明天 Dreamz、Gongsi；② 再打 Siru、Gongsi（约好今天）、Contour、Blue Dahlia（号码是 011-2980 3362，上次多按了一个 0）、Nely；Nely、Monét、Siru 的 WhatsApp 草稿先打电话再发；③ 换工作台密码（Worker `cartsmith` → Settings → Variables and Secrets → `SALES_DESK_KEY`）、删掉误建的 Worker `website-selling`；④ Netlify 项目**留到 11-24 再删**（11-10 发给 Secawan、Le Petit Four、Haruki 的样板是旧的 netlify 网址），只移除域名可以。(2) Claude Code：约 11-26 或谈满 50 位老板时，跟俊宇一起看数字；有人买节日预购页时，用 Sireh & Salt 的节日页做底，3 个工作天交付。**
+- 下一个任务：**(1) 俊宇：① 今天打第二通电话给 Secawan、Le Petit Four、Haruki（11-10 发的样板，工作台「今天要跟进」有台词），明天 Dreamz、Gongsi；② 再打 Siru、Gongsi（约好今天）、Contour、Blue Dahlia（号码是 011-2980 3362，上次多按了一个 0）、Nely；Nely、Monét、Siru 的 WhatsApp 草稿先打电话再发；③ 换工作台密码（Worker `cartsmith` → Settings → Variables and Secrets → `SALES_DESK_KEY`）、删掉误建的 Worker `website-selling`；④ Netlify 项目**留到 11-24 再删**（11-10 发给 Secawan、Le Petit Four、Haruki 的样板是旧的 netlify 网址），只移除域名可以。(2) Claude Code：约 11-26 或谈满 50 位老板时，跟俊宇一起看数字；有人买节日预购页时，用 Butter & Lantern（`site/flagships/butter-lantern/`）做底，换成客户的店名、套餐、价钱、照片、日期和 WhatsApp，3 个工作天交付。**
 - 卡住的事：没有（DigitalOcean 服务器、域名、SSM 都等第一个客户说「好」再做；SSM 一定要在收订金前完成）
 
 ---
@@ -111,6 +111,8 @@
 
 | 日期 | 任务 | 结果 | 网址 / 文件 | 未解决的问题 |
 |---|---|---|---|---|
+| 2026-11-12 | 4.4g 节日预购页示范 Butter & Lantern（俊宇：节日的也设计一个）+ 首页 4 个示范 | RM399 节日预购页这个产品的示范，虚构家庭烘焙坊（上网查过没有同名）：一页有节日套餐、截止日倒数、剩几份、自取或外送日期（满 RM200 免运）、订单用 WhatsApp 送出（信息自动填好、不用付款网关）；上方一按就换成农历新年 / 开斋节 / 圣诞 / 屠妖节四种颜色和花纹（屠妖节示范「还没开放、开放时通知」）；没指定就显示最近的节日。首页、模板页改成 4 个示范（精品餐厅、一般餐厅、礼盒网店、节日预购页），价钱页的节日预购页加「See the demo」；AI 客服和工作台 AI 知道哪个示范给谁看；第一条跟进信息附上节日预购页示范的链接（中文开农历新年版、马来文开开斋节版） | https://cartsmithstudio.com/demo/butter-lantern/ 、site/flagships/butter-lantern/、site/build.py、site/pages/index.html、site/server/desk.mjs | 屠妖节 2027 的日期还没放；开斋节日期以官方宣布为准 |
+| 2026-11-12 | 4.4f 精品餐厅示范 Maison Cendre（俊宇：餐厅要高级的、不用马来文名字、一般餐厅也能用；Sireh & Salt 保留） | 虚构的吉隆坡柴火料理精品餐厅（上网查过没有同名）：品尝菜单 8 道 / 5 道（配酒、无酒精配对）和单点（素食、无麸质、含坚果、招牌标签）；订位分用餐区、主厨吧台（每位订金 RM100）、包厢（转询价），剩几个座位、客满排候补、饮食需求、加入日历；节日晚宴和外带套餐（圣诞、农历新年、情人节）；外带（选项、自取 / 外送、礼券和优惠码）；包场询价；礼券；示范留言（标明）；老板后台（今晚人数、候补一键通知、外带订单、「今晚没有」开关和改价、节日剩余、今晚客满 / 包场）。4 个示范一共 158 项自动检查（手机和电脑）全过 | https://cartsmithstudio.com/demo/maison-cendre/ 、site/flagships/maison-cendre/ | 照片是 Pexels 示意图 |
 | 2026-11-12 | 4.4e 首页以餐饮为主（俊宇：精品样板） | 工作室首页的标题、说明和手机画面换成两个精品样板（餐厅、食品礼盒）；首页和模板页先列精品样板，6 个商店模板放后面；AI 客服的资料和工作台 AI 的说明都加了这两个网址，可以发给老板看 | site/pages/index.html、templates.html、site/build.py、sales/agent/knowledge.md、desk-brief.md | — |
 | 2026-11-12 | 4.4d 电商精品样板 Dulang & Daun（俊宇：靠 IG / WhatsApp 卖货的本地食品礼盒） | 虚构品牌（上网查过没有同名）：选项、缺货通知、购物车免运进度条、买 3 包优惠、自组礼盒、东西马运费（新鲜 kaya 不寄东马）、送礼（卡片、不放价钱）、优惠码、网上付款（示范）或 WhatsApp 下单、订单追踪、节日寄送截止日、公司送礼报价、示范评价（标明）、老板后台（包装、寄出加追踪号、缺货开关、等候名单一键通知）。两个样板一共 98 项自动检查（手机和电脑）全过 | https://cartsmithstudio.com/demo/dulang-daun/ 、site/flagships/dulang-daun/、site/tools/check-flagships.js | 部分照片是示意（例如 kaya 用椰子照片） |
 | 2026-11-12 | 4.4c 餐厅精品样板 Sireh & Salt（俊宇：餐饮样板做餐厅、要够真实、评价区可以放例子） | 虚构的现代马来西亚餐厅（上网查过没有同名）：菜单选项和售完、自取 / 外送（邮区判断、最低消费、免运门槛）、网上付款（示范）或 WhatsApp 下单、优惠码和礼券、订位（剩几桌、加入日历）、节日预购（圣诞、农历新年 2027-02-06、开斋节预计 2027-03-10；截止日、倒数、剩几份、订金）、外烩询价、礼券、营业中 / 已打烊（马来西亚时间）、地图、示范评价（每则标 Sample review）、老板后台（订单、订位、售完、改价、节日剩余、今天休息 / 很忙）。修了手机版被日期列撑宽的问题 | https://cartsmithstudio.com/demo/sireh-salt/ 、site/flagships/sireh-salt/ | — |

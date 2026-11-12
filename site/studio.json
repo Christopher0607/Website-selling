@@ -17,7 +17,7 @@
      "features": ["Menu or product catalogue with enquiry, not checkout", "Pre-filled quotation requests (events, bulk, corporate gifts)", "Certificates / partners page", "GA4 tracking", "Mobile-first design, basic SEO, SSL", "First month of Care free"]}
   ],
   "starts": [
-    {"id": "festive", "name": "Festive pre-order page", "price": 399, "unit": "one-time", "for": "Take Christmas, CNY or Raya pre-orders this season", "meta": "1 page · live in 3 working days",
+    {"id": "festive", "name": "Festive pre-order page", "price": 399, "demo": "demo/butter-lantern/index.html?fest=cny", "unit": "one-time", "for": "Take Christmas, CNY or Raya pre-orders this season", "meta": "1 page · live in 3 working days",
      "features": ["Up to 12 festive sets or items, with photos, prices and options", "Customers choose a pick-up or delivery date; cut-off dates and sold-out switch", "Orders arrive on your WhatsApp, already filled in", "Online for that festive season; small changes (sold out, prices) included", "Upgrade to a full website within 60 days and the RM399 comes off"]},
     {"id": "monthly", "name": "Monthly plan", "price": 199, "unit": "a month × 12", "for": "Your own website with nothing to pay upfront", "meta": "RM0 upfront · 12 monthly payments",
      "features": ["Everything in Starter", "Hosting and Basic Care included", "First payment on launch day", "After 12 payments the website is yours", "Terms in a written agreement"]}

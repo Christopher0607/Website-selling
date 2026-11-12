@@ -1,0 +1,21 @@
+{"images": [
+ {"file": "cny-hero.webp", "pexels": 7364073, "crop": "wide", "dest": "img", "note": "CNY hero: red lanterns"},
+ {"file": "raya-hero.webp", "pexels": 39470925, "crop": "wide", "dest": "img", "note": "Raya hero: kuih on banana leaf"},
+ {"file": "xmas-hero.webp", "pexels": 6032736, "crop": "wide", "dest": "img", "note": "Christmas hero: wreath and cake"},
+ {"file": "deepavali-hero.webp", "pexels": 18488302, "crop": "wide", "dest": "img", "note": "Deepavali hero: laddoo and diya"},
+ {"file": "pineapple-tarts.webp", "pexels": 4392242, "crop": "square", "dest": "img", "note": "Pineapple tarts (golden pastries)"},
+ {"file": "kuih-bangkit.webp", "pexels": 11054320, "crop": "square", "dest": "img", "note": "Kuih bangkit (cookie jar)"},
+ {"file": "butter-cookies.webp", "pexels": 6783198, "crop": "square", "dest": "img", "note": "Butter cookies"},
+ {"file": "cookie-jars.webp", "pexels": 7541729, "crop": "square", "dest": "img", "note": "Cookie jars set"},
+ {"file": "kuih-tray.webp", "pexels": 35327227, "crop": "square", "dest": "img", "note": "Kuih tray"},
+ {"file": "pandan-stars.webp", "pexels": 3334440, "crop": "square", "dest": "img", "note": "Pandan star cookies"},
+ {"file": "raya-box.webp", "pexels": 10819659, "crop": "square", "dest": "img", "note": "Biskut raya box"},
+ {"file": "gift-box.webp", "pexels": 8014845, "crop": "square", "dest": "img", "note": "Gift box"},
+ {"file": "choc-cake.webp", "pexels": 14780891, "crop": "square", "dest": "img", "note": "Chocolate Christmas cake"},
+ {"file": "panettone.webp", "pexels": 16336319, "crop": "square", "dest": "img", "note": "Panettone"},
+ {"file": "fruit-cake.webp", "pexels": 13819639, "crop": "square", "dest": "img", "note": "Christmas fruit cake slice"},
+ {"file": "xmas-box.webp", "pexels": 29653182, "crop": "square", "dest": "img", "note": "Christmas gift box"},
+ {"file": "laddoo.webp", "pexels": 18488302, "crop": "square", "dest": "img", "note": "Motichoor laddoo"},
+ {"file": "barfi.webp", "pexels": 18488312, "crop": "square", "dest": "img", "note": "Laddoo and barfi tower"},
+ {"file": "sweets-plate.webp", "pexels": 8819769, "crop": "square", "dest": "img", "note": "Mixed sweets platter"}
+]}
