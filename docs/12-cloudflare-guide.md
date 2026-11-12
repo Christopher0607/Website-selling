@@ -11,7 +11,7 @@
 
 | Worker | 用途 | GitHub 分支 | 网址 |
 |---|---|---|---|
-| `website-selling` | 工作室网站 + 工作台 + AI 客服 + 浏览监控 + 网站表单 | `ccr-4e1e8221-7msrbj` | https://cartsmithstudio.com 、https://cartsmithstudio.com/desk/ |
+| `cartsmith` | 工作室网站 + 工作台 + AI 客服 + 浏览监控 + 网站表单 | `ccr-4e1e8221-7msrbj` | https://cartsmithstudio.com 、https://cartsmithstudio.com/desk/ |
 | `cartsmith-previews` | 客户的加密样板（只有静态档案） | `previews` | https://previews.cartsmithstudio.com/<代号>-xxxx/（网址和密码永远不变） |
 
 ## 第 1 部分：开 Cloudflare（俊宇；这时 Netlify 照常运作，客户不受影响）
@@ -20,13 +20,13 @@
 2. **资料库：** 左边选单 **Storage & databases → D1 SQL database → Create database** → 名字 `cartsmith-desk` → Create。
    把资料库页面上的 **Database ID** 贴给 Claude Code（不是密码）。Claude Code 会把它写进 `site/wrangler.jsonc` 再 push。
 3. **网站 Worker：** **Workers & Pages → Create → Import a repository → GitHub → Website-selling**，设定页照填：
-   - Project name：`website-selling`（预设的名字；一定要跟 `site/wrangler.jsonc` 的 name 一样）
+   - Project name：`cartsmith`（一定要跟 `site/wrangler.jsonc` 的 name 一样）
    - Build command：`python3 build.py`
    - Deploy command：`npx wrangler deploy`
    - **Enable Preview builds：关掉**
    - **Advanced settings → Root directory（Path）：`site`**
    - 按 **Deploy**，等它成功。
-4. **密码和 Key：** Worker `website-selling` → **Settings → Variables and Secrets → Add** → Type 选 **Secret**：
+4. **密码和 Key：** Worker `cartsmith` → **Settings → Variables and Secrets → Add** → Type 选 **Secret**：
    - `SALES_DESK_KEY` = 工作台密码
    - `DEEPSEEK_API_KEY` = DeepSeek 的 Key
    - 存好后它会自动重新部署。
@@ -54,12 +54,12 @@
 2. **Porkbun** → ACCOUNT → Domain Management → `cartsmithstudio.com` → Details → Nameservers 的铅笔 →
    删掉 4 个 `nsone.net`，填那 2 个 → Save Nameservers。
 3. 等 Cloudflare 寄信说域名 **Active**（几分钟到几小时）。
-4. Worker `website-selling` → **Settings → Domains & Routes → Add → Custom domain** → `cartsmithstudio.com` → Add；再加一次 `www.cartsmithstudio.com`。
+4. Worker `cartsmith` → **Settings → Domains & Routes → Add → Custom domain** → `cartsmithstudio.com` → Add；再加一次 `www.cartsmithstudio.com`。
    Worker `cartsmith-previews` → 同样加 `previews.cartsmithstudio.com`。
    如果说「已经有 DNS 记录」：到 **DNS → Records** 删掉那个名字的旧记录，再加一次。
 5. 告诉 Claude Code「域名改好了」，它会检查全部网址，没问题才通知你。
 6. 之后：Netlify 新帐号 → 项目 → Domain management → 移除 `cartsmithstudio.com`（项目过几天确认没问题再删）。
-7. **换工作台密码**（之前的临时密码出现在聊天里）：Worker `website-selling` → Settings → Variables and Secrets → `SALES_DESK_KEY` → Edit → 新密码 → Deploy。
+7. **换工作台密码**（之前的临时密码出现在聊天里）：Worker `cartsmith` → Settings → Variables and Secrets → `SALES_DESK_KEY` → Edit → 新密码 → Deploy。
    手机和电脑的工作台重新登入一次。
 
 ## 技术说明（给 Claude Code）
