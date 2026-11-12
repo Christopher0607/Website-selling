@@ -62,7 +62,8 @@ async function track(req) {
       return done;
     }
     const vid = String(q.get('v') || '').replace(/[^a-z0-9]/gi, '').slice(0, 16) || 'x';
-    const page = String(q.get('p') || 'index.html').replace(/[^\w./-]/g, '').slice(0, 80) || 'index.html';
+    let page = String(q.get('p') || 'index.html').replace(/[^\w./-]/g, '').slice(0, 80) || 'index.html';
+    if (!/\.html$/.test(page)) page = (page.replace(/\/$/, '/index') || 'index') + '.html'; // Workers serve /x.html as /x
     let d = r.devices[vid];
     if (!d) {
       if (Object.keys(r.devices).length >= 20) return done;

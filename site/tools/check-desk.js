@@ -446,6 +446,17 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
     const studioJs = fs.readFileSync(require('path').join(__dirname, '..', 'dist', 'assets', 'js', 'studio.js'), 'utf8');
     const start = fs.readFileSync(require('path').join(__dirname, '..', 'dist', 'start.html'), 'utf8');
     ok(/fetch\('\/api\/form'/.test(studioJs) && /action="\/api\/form"/.test(start) && !/data-netlify/.test(start), 'website forms post to our own /api/form (no Netlify Forms)');
+    // the real form on the website: fill it in like a visitor, land on the thank-you page, see it on the desk
+    const v = await ctx.newPage();
+    await v.goto(BASE + '/start.html');
+    await v.fill('form[name="mockup-request"] [name="name"]', 'Mei');
+    await v.fill('form[name="mockup-request"] [name="brand"]', 'Kopi Mei');
+    await v.fill('form[name="mockup-request"] [name="instagram"]', '@kopi.mei');
+    await v.fill('form[name="mockup-request"] [name="shop_url"]', 'https://instagram.com/kopi.mei');
+    await v.check('form[name="mockup-request"] [name="consent"]');
+    await Promise.all([v.waitForURL(/thanks/, { timeout: 15000 }), v.click('form[name="mockup-request"] button[type="submit"]')]);
+    await v.close();
+    ok(Object.values(JSON.parse(fs.readFileSync(STORE + '.forms.json', 'utf8'))).some((f) => f.fields.brand === 'Kopi Mei' && f.form === 'mockup-request'), 'filling in the website form lands on the thank-you page and the request reaches the desk');
   }
 
   // mockup views (2026-11-11): the mockup's password page reports opens to /api/track; the desk shows them

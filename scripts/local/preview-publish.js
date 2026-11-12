@@ -145,8 +145,8 @@ function encryptSite(p, out) {
 const BRANCH_FILES = {
   'netlify.toml': '# previews 分支：只放加密的免费样板（scripts/local/preview-publish.js）。分支部署不扣 Netlify 点数。\n[build]\n  base = "site"\n  publish = "public"\n  command = "echo previews"\n',
   'site/netlify.toml': '[build]\n  publish = "public"\n  command = "echo previews"\n',
-  // Cloudflare Pages (2026-11-12) runs `python3 build.py` in site/ for every branch: on this branch it only copies public/ to dist/
-  'site/build.py': '# previews branch: Cloudflare Pages builds every branch with `python3 build.py`; here it only copies public/ to dist/\nimport os, shutil\nHERE = os.path.dirname(os.path.abspath(__file__))\nshutil.rmtree(os.path.join(HERE, "dist"), ignore_errors=True)\nshutil.copytree(os.path.join(HERE, "public"), os.path.join(HERE, "dist"))\nprint("previews: copied public/ to dist/")\n',
+  // Cloudflare (2026-11-12): this branch is its own Worker with static assets only (root directory site/, deploy command npx wrangler deploy)
+  'site/wrangler.jsonc': '// previews 分支：Cloudflare Worker「cartsmith-previews」，只放加密的样板（静态档案），网址 previews.cartsmithstudio.com\n{\n  "name": "cartsmith-previews",\n  "compatibility_date": "2025-06-01",\n  "assets": { "directory": "./public", "html_handling": "auto-trailing-slash", "not_found_handling": "none" }\n}\n',
   'site/public/index.html': '<!doctype html><meta charset="utf-8"><meta name="robots" content="noindex,nofollow"><title>Cartsmith Studio</title><p style="font:16px system-ui;padding:24px">Nothing here. <a href="' + SITE_URL + '/">Cartsmith Studio</a></p>\n',
   'site/public/robots.txt': 'User-agent: *\nDisallow: /\n',
   'site/public/_headers': '/*\n  X-Robots-Tag: noindex, nofollow\n  Referrer-Policy: no-referrer\n',

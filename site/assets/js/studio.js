@@ -45,7 +45,7 @@
       msg.textContent = 'Sending…';
       const data = Object.fromEntries(new FormData(form).entries());
       netlifySubmit(data)
-        .then(() => { location.href = form.getAttribute('action') || 'thanks.html'; })
+        .then(() => { location.href = 'thanks.html'; })
         .catch(() => {
           // Fallback so the request is never lost: show the details, copy them, open the Instagram DM.
           btn.disabled = false;
