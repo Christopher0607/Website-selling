@@ -250,7 +250,7 @@ You are now the studio owner's private assistant for ONE customer only (the file
 
 // the conversation as far as the desk knows it: what we sent (with text), what they said, calls
 function thread(p) {
-  const who = { sent: '我们（工作台发的）', we_replied: '我们（自己在 IG / WhatsApp 回的）', their_reply: '对方', call: '电话', preview_sent: '我们发了样板', has_site: '记录：对方已有网站', lost: '记录：没成交', dnc: '记录：不再联系' };
+  const who = { sent: '我们（工作台发的）', we_replied: '我们（自己在 IG / WhatsApp 回的）', their_reply: '对方', call: '电话', preview_sent: '我们发了样板', has_site: '记录：对方已有网站', lost: '记录：没成交', dnc: '记录：不再联系', note: '备注' };
   return (p.history || []).filter((h) => who[h.e]).slice(-30).map((h) => `${h.d} ${who[h.e]}${h.n ? '：' + String(h.n).slice(0, 800) : ''}`).join('\n');
 }
 
@@ -358,6 +358,37 @@ const CHANNELS = ['ig', 'wa', 'email'];
 // ------------------------------------------------------------------ actions
 function find(doc, id) { const p = doc.items.find((x) => x.id === id); if (!p) throw Object.assign(new Error('找不到这个商家'), { code: 'not_found' }); return p; }
 function log(p, event, note) { (p.history = p.history || []).push({ d: myDate(), e: event, n: (note || '').slice(0, 2000) }); }
+
+// ---------------------------------------------------------------- corrections by Claude Code (2026-11-12)
+// Junyu tells Claude Code what happened outside the desk (calls made on his phone, messages and replies on WhatsApp);
+// Claude Code writes it onto the card with the real dates. History entries go in date order and carry fix: 1.
+// "first": put it before that day's other entries (e.g. the call that came before the messages). Not in the desk UI.
+const FIX_EVENTS = ['call', 'sent', 'preview_sent', 'their_reply', 'we_replied', 'note', 'lost', 'has_site', 'dnc'];
+const FIX_DATES = ['first_contact_date', 'last_contact_date', 'next_followup_date', 'next_call_date', 'last_call_date', 'call_ok', 'preview_delete_by'];
+const FIX_TEXT = ['lost_reason', 'notes', 'draft_reply', 'followup', 'reply_summary', 'reply_next'];
+function correctInto(p, fields, hist, why) {
+  const bad = (m) => Object.assign(new Error(m), { code: 'bad_input' });
+  const today = myDate();
+  const f = fields || {};
+  for (const k of FIX_DATES) if (k in f) { if (f[k] && !isDate(f[k])) throw bad(k + '：日期格式不对'); p[k] = f[k] || ''; }
+  for (const k of ['calls', 'call_misses', 'touches']) if (k in f) p[k] = Math.max(0, parseInt(f[k], 10) || 0);
+  if ('status' in f) { if (!STATUSES.includes(f.status)) throw bad('不认识的状态'); p.status = f.status; }
+  for (const k of FIX_TEXT) if (k in f) p[k] = String(f[k] || '').slice(0, 3000);
+  for (const k of CRITERIA) if (k in f) p[k] = f[k] === true;
+  if ('channels' in f) p.channels = [...new Set((Array.isArray(f.channels) ? f.channels : []).filter((c) => [...CHANNELS, 'call'].includes(c)))];
+  if ('last_channel' in f && [...CHANNELS, 'call', ''].includes(f.last_channel)) p.last_channel = f.last_channel;
+  p.score = CRITERIA.filter((c) => p[c]).length;
+  const H = (p.history = p.history || []);
+  const firsts = {};
+  for (const h of (Array.isArray(hist) ? hist : []).slice(0, 40)) {
+    if (!h || !isDate(h.d) || h.d > today || !FIX_EVENTS.includes(h.e)) throw bad('补记的记录不对：' + JSON.stringify(h).slice(0, 80));
+    let i = H.findIndex((x) => (h.first ? x.d >= h.d : x.d > h.d));
+    if (i < 0) i = H.length;
+    if (h.first) { i += firsts[h.d] || 0; firsts[h.d] = (firsts[h.d] || 0) + 1; }
+    H.splice(i, 0, { d: h.d, e: h.e, n: String(h.n || '').slice(0, 2000), fix: 1 });
+  }
+  log(p, 'corrected', String(why || '').slice(0, 300));
+}
 
 function mark(p, ev, url, channel) {
   const today = myDate();
@@ -832,6 +863,12 @@ ${text}
     case 'call': {
       const p = find(doc, b.id);
       callInto(p, b.outcome, b.date);
+      return { item: p, saved: true };
+    }
+
+    case 'correct': {
+      const p = find(doc, b.id);
+      correctInto(p, b.fields, b.history, b.why);
       return { item: p, saved: true };
     }
 

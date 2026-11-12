@@ -652,6 +652,30 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
     await p.click('[data-tab="stats"]');
   }
 
+  // corrections by Claude Code: calls and replies that happened outside the desk, with their real dates
+  {
+    const api3 = (body) => fetch(`${BASE}/api/desk`, { method: 'POST', headers: { 'content-type': 'application/json', 'x-desk-key': KEY }, body: JSON.stringify(body) }).then((r) => r.json());
+    const before = fs.readFileSync(STORE, 'utf8');
+    const d0 = JSON.parse(before);
+    const c = d0.items[0];
+    c.history = [{ d: '2026-11-08', e: 'sent', n: 'ig' }, { d: '2026-11-10', e: 'sent', n: 'first message' }, { d: '2026-11-11', e: 'call', n: '没接' }];
+    fs.writeFileSync(STORE, JSON.stringify(d0));
+    const r = await api3({ action: 'correct', id: c.id, why: 'test', fields: { status: 'preview_sent', calls: 2, last_call_date: '2026-11-11', next_followup_date: '2026-11-12', channels: ['call', 'wa', 'nope'] },
+      history: [{ d: '2026-11-10', e: 'call', n: '15:10 ok', first: true }, { d: '2026-11-10', e: 'preview_sent', n: 'link', first: true }, { d: '2026-11-11', e: 'their_reply', n: 'Ok' }] });
+    const h = (r.item && r.item.history) || [];
+    const order = h.map((x) => x.d + ' ' + x.e).join(' | ');
+    ok(r.item && r.item.status === 'preview_sent' && r.item.calls === 2 && r.item.next_followup_date === '2026-11-12' && r.item.channels.join() === 'call,wa',
+      'correct: fields set (status, calls, dates; unknown channel dropped)');
+    ok(/^2026-11-08 sent \| 2026-11-10 call \| 2026-11-10 preview_sent \| 2026-11-10 sent \| 2026-11-11 call \| 2026-11-11 their_reply \| \d{4}-\d\d-\d\d corrected$/.test(order),
+      'correct: history goes in date order ("first" before that day\'s entries, in the order given): ' + order);
+    ok(h.filter((x) => x.fix).length === 3, 'correct: added entries are marked');
+    const fut = await api3({ action: 'correct', id: c.id, history: [{ d: '2099-01-01', e: 'call', n: 'x' }] });
+    const badSt = await api3({ action: 'correct', id: c.id, fields: { status: 'paid' } });
+    const badEv = await api3({ action: 'correct', id: c.id, history: [{ d: '2026-11-10', e: 'won', n: 'x' }] });
+    ok(fut.error === 'bad_input' && badSt.error === 'bad_input' && badEv.error === 'bad_input', 'correct: future dates, unknown statuses and other events are refused');
+    fs.writeFileSync(STORE, before);
+  }
+
   // restore from a CSV backup (moving to a new Netlify account)
   await p.click('[data-tab="stats"]');
   await p.setInputFiles('[data-restore-file]', { name: 'backup.csv', mimeType: 'text/csv', buffer: Buffer.from(csv) });
