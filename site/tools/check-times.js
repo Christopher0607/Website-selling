@@ -53,8 +53,9 @@ const BAD_TEXT = /\bNaN\b|\bundefined\b|Invalid Date|\bnull\b|-\d+\s*(days|hours
     await open('dulang-daun/owner.html'); await check('dulang-daun owner');
 
     // Butter & Lantern: the nearest festival and each one by name
-    for (const f of ['', '?fest=cny', '?fest=raya', '?fest=xmas', '?fest=deepavali']) {
+    for (const f of ['', '?fest=cny', '?fest=raya', '?fest=xmas', '?fest=val']) {
       await open('butter-lantern/index.html' + f); await check('butter-lantern ' + (f || '(nearest)'));
+      await open('butter-lantern/owner.html' + f); await check('butter-lantern owner ' + (f || '(nearest)'));
     }
     await ctx.close();
   }

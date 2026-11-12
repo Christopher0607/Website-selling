@@ -1116,23 +1116,25 @@ class Studio:
             tag = f'<span class="pkg__tag">{e(p["tag"])}</span>' if p.get("tag") else ""
             out.append(f"""<article class="pkg{hl}">{tag}<h3>{e(p['name'])}</h3><p class="pkg__for">{e(p['for'])}</p>
 <p class="pkg__price"><span>RM</span>{p['price']:,}<small>one-time</small></p>
+<p class="pkg__after">then <b>RM{self.d['care']['plans'][0]['price']}/month</b> maintenance, first month free</p>
 <p class="pkg__meta">{e(p['meta'])}</p><ul class="s-ticks">{feats}</ul>
 <a class="s-btn s-btn--block{'' if p.get('highlight') else ' s-btn--ghost'}" href="{root}start.html?package={p['id']}">Get a free mockup first</a></article>""")
         return '<div class="pkgs">' + "".join(out) + "</div>"
 
     def frag_starts(self, root):
-        # other ways to start (2026-11-12): festive pre-order page, monthly plan
+        # other ways to start (2026-11-12): festive pre-order shop, monthly plan
         out = []
         for p in self.d.get("starts", []):
             feats = "".join(f"<li>{icon('check')}{e(f)}</li>" for f in p["features"])
             out.append(f"""<article class="pkg"><h3>{e(p['name'])}</h3><p class="pkg__for">{e(p['for'])}</p>
 <p class="pkg__price"><span>RM</span>{p['price']:,}<small>{e(p['unit'])}</small></p>
 <p class="pkg__meta">{e(p['meta'])}</p><ul class="s-ticks">{feats}</ul>
+{f'<p class="pkg__after pkg__after--end">{e(p["after"])}</p>' if p.get("after") else ""}
 {f'<a class="s-btn s-btn--block" href="{root}{p["demo"]}" style="margin-bottom:10px">See the demo</a>' if p.get("demo") else ""}<a class="s-btn s-btn--block s-btn--ghost" href="{root}start.html?package={p['id']}">Ask about this</a></article>""")
         return '<div class="pkgs pkgs--2">' + "".join(out) + "</div>"
 
     def frag_starts_mini(self, root):
-        # homepage (2026-11-12): the RM399 festive page and the RM199-a-month plan, one compact card each
+        # homepage (2026-11-12): the RM399 festive shop and the RM199-a-month plan, one compact card each
         out = []
         for p in self.d.get("starts", []):
             link = (f'<a class="s-btn s-btn--sm" href="{root}{p["demo"]}">See the demo</a>' if p.get("demo")
@@ -1175,7 +1177,7 @@ class Studio:
 
     def frag_template_options(self, root):
         demos = [("maison-cendre", "Maison Cendre — boutique restaurant"), ("sireh-salt", "Sireh &amp; Salt — everyday restaurant or café"),
-                 ("dulang-daun", "Dulang &amp; Daun — food gifts &amp; online shop"), ("butter-lantern", "Butter &amp; Lantern — festive pre-order page")]
+                 ("dulang-daun", "Dulang &amp; Daun — food gifts &amp; online shop"), ("butter-lantern", "Butter &amp; Lantern — festive pre-order shop")]
         return ('<optgroup label="Demo websites">' + "".join(f'<option value="{v}">{t}</option>' for v, t in demos) + '</optgroup>'
                 + '<optgroup label="Shop templates">' + "".join(f'<option value="{st.slug}">{e(st.t["name"])} — {e(st.t["style"])} ({e(st.t["category"])})</option>' for st in self.stores) + '</optgroup>')
 
@@ -1183,7 +1185,7 @@ class Studio:
         # 2026-11-12: the two flagship demos (restaurant, food gift shop) instead of three shop templates
         out = []
         for i, (shot, href, label) in enumerate([("maison-cendre", "demo/maison-cendre/index.html", "the boutique restaurant demo"),
-                                                 ("butter-lantern", "demo/butter-lantern/index.html?fest=cny", "the festive pre-order page demo"),
+                                                 ("butter-lantern", "demo/butter-lantern/index.html?fest=cny", "the festive pre-order shop demo"),
                                                  ("dulang-daun", "demo/dulang-daun/index.html", "the food gift shop demo")]):
             p = f"assets/shots/{shot}-mobile.webp"
             if os.path.exists(os.path.join(HERE, p)):
@@ -1203,9 +1205,9 @@ class Studio:
             ("dulang-daun", "Dulang &amp; Daun", "Food gifts &amp; online shop", "demo/dulang-daun/index.html", "#123c3a", ("See the owner side", "demo/dulang-daun/owner.html"),
              "Gift boxes and hampers, shipped across Malaysia.",
              ["Sizes, flavours, bundles and vouchers", "West and East Malaysia shipping, parcel tracking", "Build-your-own hamper, gift orders with a card", "Your side: pack, ship, stock and the waiting list"]),
-            ("butter-lantern", "Butter &amp; Lantern", "Festive pre-order page · RM399", "demo/butter-lantern/index.html?fest=cny", "#9d1c1f", ("See it for Hari Raya", "demo/butter-lantern/index.html?fest=raya"),
-             "One page for festive pre-orders, sent to your WhatsApp.",
-             ["Festive sets with cut-off dates and how many are left", "Customers pick a collection or delivery day", "Re-dressed for CNY, Raya, Christmas or Deepavali", "Live in 3 working days; the RM399 comes off a full website"]),
+            ("butter-lantern", "Butter &amp; Lantern", "Festive pre-order shop · RM399", "demo/butter-lantern/index.html?fest=cny", "#8f1418", ("See the owner side", "demo/butter-lantern/owner.html?fest=cny"),
+             "Your own festive online shop, live in 3 working days.",
+             ["Up to 10 items, cut-off countdown and how many are left", "Online payment or DuitNow QR, order emails, order tracking", "Collection or delivery slots; what to bake each day", "Re-dressed for CNY, Raya, Christmas or Valentine's"]),
         ]
         out = []
         for slug, name, kind, href, bg, second, line, feats in cards:

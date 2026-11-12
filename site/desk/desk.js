@@ -199,7 +199,7 @@
     const objs = [
       ['老板不在 / 员工接的', { en: 'No problem. What time is the owner usually in? I\'ll call back then.', zh: '没关系。老板通常几点比较方便？我那个时候再打。', ms: 'Tak apa. Pukul berapa pemilik biasanya ada? Saya telefon semula nanti.' }, 'callback'],
       ['现在很忙', { en: "Sorry to catch you at a busy time. I'll WhatsApp you the link, so you can look later.", zh: '不好意思打扰。我先 WhatsApp 发给你，你有空再看。', ms: 'Maaf ganggu waktu sibuk. Saya WhatsApp pautannya, anda tengok bila senang.' }, 'ok'],
-      ['多少钱？', { en: `The sample is free. If you'd like your own website, it starts from ${STUDIO_PRICE}, one-off, fixed and written down. For the festive season there's also a pre-order page from RM399. I'll send the details together with the link.`, zh: `样板是免费的。如果要做正式的网站，一次性 ${STUDIO_PRICE} 起，价钱固定、写清楚。节日季也可以先做一个预购页，RM399。我把详细资料跟样板一起发给你。`, ms: `Contoh ini percuma. Kalau nak laman web sendiri, harga bermula ${STUDIO_PRICE} sekali bayar, harga tetap dan bertulis. Untuk musim perayaan ada juga halaman pre-order dari RM399. Saya hantar butiran bersama pautan.` }, ''],
+      ['多少钱？', { en: `The sample is free. If you'd like your own website, it starts from ${STUDIO_PRICE}, one-off, fixed and written down. For the festive season there's also a festive pre-order shop from RM399. I'll send the details together with the link.`, zh: `样板是免费的。如果要做正式的网站，一次性 ${STUDIO_PRICE} 起，价钱固定、写清楚。节日季也可以先做一个节日预购网店，RM399。我把详细资料跟样板一起发给你。`, ms: `Contoh ini percuma. Kalau nak laman web sendiri, harga bermula ${STUDIO_PRICE} sekali bayar, harga tetap dan bertulis. Untuk musim perayaan ada juga kedai pre-order perayaan dari RM399. Saya hantar butiran bersama pautan.` }, ''],
       ['我们已经有 Shopee / Instagram / foodpanda', { en: "That's fine, keep them. This gives your regulars one link to order from you directly, without paying commission on every order.", zh: '没关系，那些照样用。这个是让熟客有一个链接直接跟你订，不用每一单都给平台抽佣。', ms: 'Tak apa, teruskan. Ini beri pelanggan tetap satu pautan untuk tempah terus dengan anda, tanpa komisen setiap pesanan.' }, ''],
       ['我们已经有网站', { en: "Oh, that's great. Sorry to bother you, and have a good day!", zh: '哦，那很好。不好意思打扰了，祝生意兴隆！', ms: 'Oh, bagus. Maaf mengganggu, selamat maju jaya!' }, 'has_site'],
       ['不需要', { en: 'No problem at all. Thank you for your time, and have a good day!', zh: '没问题，谢谢你的时间，祝生意兴隆！', ms: 'Tak apa. Terima kasih atas masa anda, selamat maju jaya!' }, 'no'],
@@ -219,7 +219,7 @@
     return `<ol class="steps2">${steps}</ol><div class="objs2"><div class="objs2__h">对方可能会说</div>${objs}</div>`;
   }
   // second call (2026-11-12): most owners said "send it, I'll look" on the first call; this call is where the sale happens
-  const FESTIVE_PRICE = 'RM399'; // festive pre-order page in site/studio.json "starts"
+  const FESTIVE_PRICE = 'RM399'; // festive pre-order shop in site/studio.json "starts"
   function festiveNow() {
     const t = S.today || '';
     if (t < '2026-12-20') return { en: 'Christmas and Chinese New Year', zh: '圣诞和农历新年', ms: 'Krismas dan Tahun Baru Cina' };
@@ -234,7 +234,7 @@
     const T = {
       open: { en: `Hi, this is Cartsmith Studio. We sent you the free sample website for ${n} on WhatsApp the other day. Did you get a chance to look?`, zh: `你好，我是 Cartsmith Studio。前两天用 WhatsApp 发了 ${n} 的免费样板网站给你，你有空看了吗？`, ms: `Hai, ini Cartsmith Studio. Kami ada WhatsApp contoh laman web percuma untuk ${n} beberapa hari lepas. Sempat tengok?` },
       price: { en: `Thanks for looking. Everything on it can change: your own photos, today's prices. To make it your own website, it's from ${STUDIO_PRICE}, one-off, fixed and written down; or nothing upfront and RM199 a month. As one of our first clients you pay the second half only when you're happy, and it's live in 7 working days.`, zh: `谢谢你看。上面的东西都可以换：你们自己的照片、现在的价钱。做成你们自己的网站，一次性 ${STUDIO_PRICE} 起，价钱固定、写清楚；不想一次付也可以，一开始不用钱，每个月 RM199。你是我们最早的几位客户之一，满意了才付另一半，7 个工作天上线。`, ms: `Terima kasih sudi tengok. Semua boleh ditukar: gambar sendiri, harga terkini. Untuk jadikan laman web anda sendiri, dari ${STUDIO_PRICE} sekali bayar, harga tetap dan bertulis; atau tiada bayaran awal, RM199 sebulan. Sebagai antara pelanggan terawal kami, baki dibayar hanya bila anda puas hati, dan siap dalam 7 hari bekerja.` },
-      festive: { en: `With ${f.en} coming, customers start asking about festive orders weeks before. If you'd like to start small, we can do just a festive pre-order page for ${FESTIVE_PRICE}, live in 3 working days, and the ${FESTIVE_PRICE} comes off the full website later.`, zh: `${f.zh}快到了，客人通常提早几个星期就开始问节日的订单。想先试小一点，可以只做一个节日预购页，${FESTIVE_PRICE}，3 个工作天上线，之后做正式网站，这 ${FESTIVE_PRICE} 全额扣掉。`, ms: `Dengan ${f.ms} semakin dekat, pelanggan mula bertanya tentang tempahan perayaan beberapa minggu lebih awal. Kalau nak mula kecil, kami boleh buat halaman pre-order perayaan sahaja, ${FESTIVE_PRICE}, siap dalam 3 hari bekerja, dan ${FESTIVE_PRICE} itu ditolak bila buat laman web penuh nanti.` },
+      festive: { en: `With ${f.en} coming, customers start asking about festive orders weeks before. If you'd like to start small, we can do just a festive pre-order shop for ${FESTIVE_PRICE}: customers pay online and you get the orders by email, live in 3 working days, and the ${FESTIVE_PRICE} comes off the full website later.`, zh: `${f.zh}快到了，客人通常提早几个星期就开始问节日的订单。想先试小一点，可以只做一个节日预购网店，${FESTIVE_PRICE}，顾客网上付款、订单自动寄到你的电邮，3 个工作天上线；之后做正式网站，这 ${FESTIVE_PRICE} 全额扣掉。`, ms: `Dengan ${f.ms} semakin dekat, pelanggan mula bertanya tentang tempahan perayaan beberapa minggu lebih awal. Kalau nak mula kecil, kami boleh buat kedai pre-order perayaan sahaja, ${FESTIVE_PRICE}, siap dalam 3 hari bekerja, dan ${FESTIVE_PRICE} itu ditolak bila buat laman web penuh nanti.` },
       close: { en: "I'll WhatsApp you a short written quotation today, so you have all the details in one place. I can also drop by for 15 minutes to show you on the phone. Which day suits you?", zh: '我今天用 WhatsApp 发一份简单的报价给你，细节都写清楚。方便的话我也可以过去 15 分钟，用手机给你看。你哪一天比较方便？', ms: 'Saya WhatsApp sebut harga ringkas hari ini, semua butiran di satu tempat. Saya juga boleh singgah 15 minit untuk tunjuk di telefon. Hari apa yang sesuai?' },
       notyet: { en: "No problem, it only takes two minutes on your phone. I'll WhatsApp you the link and password again now, and give you a quick call in two days.", zh: '没关系，用手机看两分钟就好。我现在再发一次网址和密码给你，两天后再打给你。', ms: 'Tak apa, dua minit sahaja di telefon. Saya WhatsApp pautan dan kata laluan sekali lagi sekarang, dan telefon semula dalam dua hari.' },
     };
@@ -243,18 +243,18 @@
     const steps = [['1 开场', T.open], ['2 看过了：先听他说，再讲价钱', T.price], ...(d ? [['2b 完整示范：' + d.name + '（跟进信息里已附网址）', T.demo]] : []), ['3 节日：更小的第一步', T.festive], ['4 约下一步，然后按「有兴趣」', T.close], ['还没看：重发，然后按「还没看：重发」', T.notyet]];
     const objs = [
       ['要问老板 / 合伙人', { en: "Of course. I'll WhatsApp a short summary with the price so you can forward it. When's a good time to call you back?", zh: '当然。我用 WhatsApp 发一份有价钱的简介，你可以直接转给他。什么时候方便再打给你？', ms: 'Sudah tentu. Saya WhatsApp ringkasan dengan harga supaya boleh dihantar terus. Bila sesuai saya telefon semula?' }],
-      ['现在不急 / 节日后再说', { en: `Understood. If you want this season's pre-orders, the festive page is the small step. Otherwise no problem, the sample stays up until ${p.preview_delete_by || 'its delete date'}.`, zh: `明白。想接这个节日的预购，节日预购页是最小的一步；不然也没关系，样板会留到 ${p.preview_delete_by || '删除日'}。`, ms: `Faham. Kalau nak pre-order musim ini, halaman perayaan ialah langkah kecil. Kalau tidak, tak apa, contoh ini kekal sehingga ${p.preview_delete_by || 'tarikh dipadam'}.` }],
-      ['太贵', { en: `There's nothing upfront and RM199 a month, or the ${FESTIVE_PRICE} festive page to start. Both are fixed and written down; I'll put them in the quotation.`, zh: `也可以一开始不用钱，每个月 RM199；或者先做 ${FESTIVE_PRICE} 的节日预购页。两个都是固定价钱，我写进报价里。`, ms: `Ada pilihan tiada bayaran awal, RM199 sebulan, atau halaman perayaan ${FESTIVE_PRICE} dahulu. Kedua-dua harga tetap; saya masukkan dalam sebut harga.` }],
+      ['现在不急 / 节日后再说', { en: `Understood. If you want this season's pre-orders, the festive shop is the small step. Otherwise no problem, the sample stays up until ${p.preview_delete_by || 'its delete date'}.`, zh: `明白。想接这个节日的预购，节日预购网店是最小的一步；不然也没关系，样板会留到 ${p.preview_delete_by || '删除日'}。`, ms: `Faham. Kalau nak pre-order musim ini, kedai perayaan ialah langkah kecil. Kalau tidak, tak apa, contoh ini kekal sehingga ${p.preview_delete_by || 'tarikh dipadam'}.` }],
+      ['太贵', { en: `There's nothing upfront and RM199 a month, or the ${FESTIVE_PRICE} festive shop to start. Both are fixed and written down; I'll put them in the quotation.`, zh: `也可以一开始不用钱，每个月 RM199；或者先做 ${FESTIVE_PRICE} 的节日预购网店。两个都是固定价钱，我写进报价里。`, ms: `Ada pilihan tiada bayaran awal, RM199 sebulan, atau kedai perayaan ${FESTIVE_PRICE} dahulu. Kedua-dua harga tetap; saya masukkan dalam sebut harga.` }],
       ['我们用 WhatsApp / 电话接单就够了', { en: 'That works, and orders can still come to your WhatsApp. The difference is they arrive already filled in, with the items, the date and the name, so there is less back and forth.', zh: '可以的，订单照样到你的 WhatsApp。不同的是，订单来的时候已经填好：要什么、哪一天、叫什么名字，不用来回问。', ms: 'Boleh, tempahan masih masuk ke WhatsApp anda. Bezanya, ia sampai sudah lengkap: barang, tarikh dan nama, jadi kurang berbalas-balas.' }],
       ['菜单每天换', { en: "That's fine. The website can show today's menu, changed from your phone in a minute, or only the fixed items and the festive sets.", zh: '没关系。网站可以放「今日菜单」，你用手机一分钟就改好；或者只放固定的和节日套餐。', ms: 'Tak apa. Laman web boleh tunjuk menu hari ini, ditukar dari telefon dalam seminit, atau hanya menu tetap dan set perayaan.' }],
       ['不需要', { en: 'No problem, thank you for taking a look. Have a good day!', zh: '没问题，谢谢你花时间看。祝生意兴隆！', ms: 'Tak apa, terima kasih kerana sudi tengok. Selamat maju jaya!' }],
     ];
     return { L, steps, objs };
   }
-  // the complete demo website that fits this shop (picked by the server from its niche) + the festive page demo
+  // the complete demo website that fits this shop (picked by the server from its niche) + the festive shop demo
   function demoRow(p) {
     if (!p.demo && !p.fest_demo) return '';
-    return `<div class="pvbox__row pvbox__demo"><b>适合他的示范</b>${p.demo ? `<a href="${esc(p.demo.url)}" target="_blank" rel="noopener">${esc(p.demo.name)}</a><span>${esc(p.demo.zh)}</span>` : '<span>没有（不是餐饮：用 6 个商店模板）</span>'}${p.fest_demo ? `<a href="${esc(p.fest_demo)}" target="_blank" rel="noopener">节日预购页 RM399</a>` : ''}</div>`;
+    return `<div class="pvbox__row pvbox__demo"><b>适合他的示范</b>${p.demo ? `<a href="${esc(p.demo.url)}" target="_blank" rel="noopener">${esc(p.demo.name)}</a><span>${esc(p.demo.zh)}</span>` : '<span>没有（不是餐饮：用 6 个商店模板）</span>'}${p.fest_demo ? `<a href="${esc(p.fest_demo)}" target="_blank" rel="noopener">节日预购网店 RM399</a>` : ''}</div>`;
   }
   function secondHTML(p) {
     const sc = secondOf(p);
@@ -430,7 +430,7 @@
       }
     } else if (['contacted', 'preview_sent', 'proposal_sent', 'call_booked'].includes(p.status) && (due || mode === 'full')) {
       if (p.followup) {
-        body += msgBox(p, 'followup', p.status === 'contacted' ? (p.touches <= 1 ? '第 2 条：给一个有用的资讯' : '最后一条') : p.status === 'preview_sent' ? ['跟进信息（第 1 条：网址密码、适合他的示范网站、三种开始方式：RM800 起 / 每月 RM199 / 节日预购页 RM399）', '跟进信息（第 2 条：换一个有用的角度）', '最后一条（礼貌收尾）'][Math.min(2, p.pv_followups || 0)] : '跟进信息') + sendRow(p, 'followup');
+        body += msgBox(p, 'followup', p.status === 'contacted' ? (p.touches <= 1 ? '第 2 条：给一个有用的资讯' : '最后一条') : p.status === 'preview_sent' ? ['跟进信息（第 1 条：网址密码、适合他的示范网站、三种开始方式：RM800 起 / 每月 RM199 / 节日预购网店 RM399）', '跟进信息（第 2 条：换一个有用的角度）', '最后一条（礼貌收尾）'][Math.min(2, p.pv_followups || 0)] : '跟进信息') + sendRow(p, 'followup');
         body += `<div class="btnrow btnrow--end">${sentBtn}${moreBtn}</div>`;
       } else {
         body += `<div class="btnrow"><button class="btn btn--sm" data-act="followup" data-id="${p.id}">${svg('pen', 16)}写跟进信息${p.status === 'preview_sent' ? `（第 ${Math.min(3, (p.pv_followups || 0) + 1)} 条）` : ''}</button><button class="btn btn--ghost btn--sm" data-act="reply" data-id="${p.id}">${svg('reply', 16)}对方有回复</button>${moreBtn}</div>`;
@@ -578,7 +578,7 @@
     if (contacted >= 20) {
       if (replied / contacted < 0.1) weakest = '回复率偏低：开场白的观察要更具体，或者多用 WhatsApp / Email。';
       else if (reached('preview_sent') < replied * 0.4) weakest = '有回复但很少要样板：回信时先用费用计算器算给对方看，再提免费样板。';
-      else if (reached('won') === 0 && reached('proposal_sent') >= 3) weakest = '有报价没成交：想想信任感（前 3 位客户满意才付尾款、7 天上线保证）和更小的第一步（节日预购页 RM399、月付 RM199）。';
+      else if (reached('won') === 0 && reached('proposal_sent') >= 3) weakest = '有报价没成交：想想信任感（前 3 位客户满意才付尾款、7 天上线保证）和更小的第一步（节日预购网店 RM399、月付 RM199）。';
     }
     $('[data-stats]').innerHTML = `<h2>数字</h2>
       <div class="statgrid"><div class="stat"><b>${it.length}</b><small>名单总数</small></div><div class="stat"><b>${it.filter((p) => p.first_contact_date && p.first_contact_date >= week).length}</b><small>过去 7 天新联系</small></div><div class="stat"><b>${pct(replied, contacted)}</b><small>回复率</small></div><div class="stat"><b>${it.filter((p) => p.status === 'do_not_contact').length}</b><small>不再联系</small></div></div>

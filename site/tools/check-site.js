@@ -21,6 +21,8 @@ function pages() {
       if (fs.statSync(p).isDirectory()) { if (f !== 'desk') walk(p); } else if (f.endsWith('.html')) out.push(path.relative(DIST, p).split(path.sep).join('/'));
     }
   })(DIST);
+  // the festive shop is one shop in four dresses: check every festival, not only the nearest one
+  for (const f of out.filter((x) => x.startsWith('demo/butter-lantern/'))) for (const fest of ['cny', 'raya', 'xmas', 'val']) out.push(f + '?fest=' + fest);
   return out.filter((p) => p.startsWith(ONLY)).sort();
 }
 
@@ -116,7 +118,7 @@ function inspect(phone) {
     for (const href of links) {
       const [p0, hash] = href.split('#');
       const p = p0.split('?')[0];
-      const file = p ? path.normalize(path.join(DIST, p.startsWith('/') ? p.slice(1) : path.join(path.dirname(rel), p))) : path.join(DIST, rel);
+      const file = p ? path.normalize(path.join(DIST, p.startsWith('/') ? p.slice(1) : path.join(path.dirname(rel), p))) : path.join(DIST, rel.split('?')[0]);
       const target = fs.existsSync(file) && fs.statSync(file).isDirectory() ? path.join(file, 'index.html') : file;
       if (!fs.existsSync(target)) { bad++; console.log(`  ✗ ${rel}: link to a missing page: ${href}`); continue; }
       if (hash && target.endsWith('.html') && !ids(target).has(hash) && !/data-|tab=/.test(hash)) {

@@ -35,7 +35,7 @@ Built into the desk by `python3 site/build.py` (file: `sales/agent/desk-brief.md
    three written follow-ups after the mockup, then stop.
 6. **Interested** → a 15-minute call → written quotation within 24 hours (valid 14 days) → 50% deposit → build →
    balance → launch. Prices and offers ONLY from the knowledge base (Starter RM800, Catalog RM1,200, Growth RM1,600;
-   festive pre-order page RM399; monthly plan RM0 upfront + RM199 × 12; Care from RM150 / month; founding-client terms
+   festive pre-order shop RM399 (up to 10 items, online payment or DuitNow QR, order emails, own dashboard; 3 months of hosting and maintenance, then pause free or RM49/month); monthly plan RM0 upfront + RM199 × 12; maintenance from RM150 / month after the free first month (always say it with the setup price); founding-client terms
    for the first 3 clients only: balance only when happy, live in 7 working days or RM50 off per late day).
 7. Lost / not interested / already has a website → close politely; the mockup is deleted by its date.
 
@@ -51,7 +51,7 @@ to end the call politely — and then nothing happens. Seven mockups went out; o
      for 12 months). As one of our first 3 clients they pay the second half only when happy, live in 7 working days.
   2. **Timing**: Christmas (25 Dec), Chinese New Year (6 Feb 2027), Hari Raya (expected 10 Mar 2027). Customers ask about
      festive orders weeks before; pick the one that fits THEIR shop (Malay kuih → Raya; Chinese bakery → CNY).
-  3. **A small first step**: a festive pre-order page for RM399, live in 3 working days; the RM399 comes off a full
+  3. **A small first step**: a festive pre-order shop for RM399, live in 3 working days; the RM399 comes off a full
      website within 60 days. Sample: https://cartsmithstudio.com/demo/butter-lantern/ (?fest=cny / raya / xmas).
   Then ONE concrete next step: a written quotation today (WhatsApp), or a 15-minute visit / call at a set day and time.
 - **They have not opened it** (desk shows no visits, or the link opened but no password entered): resend the link and
@@ -59,8 +59,8 @@ to end the call politely — and then nothing happens. Seven mockups went out; o
 - **Written follow-ups** (only when the call did not connect, or as the message after the call):
   1. 1–2 days after sending: link + password again; their own photos and current prices go in for free; the price in
      one line (RM800 one-off, or nothing upfront and RM199 a month for 12 months); the full demo website that fits them
-     (the card file says which one); the RM399 festive page as the small first step, with the link to the sample
-     festive page; ONE specific detail from THEIR mockup (a dish, a set, the booking or pre-order page).
+     (the card file says which one); the RM399 festive pre-order shop as the small first step, with the link to the
+     Butter & Lantern demo; ONE specific detail from THEIR mockup (a dish, a set, the booking or pre-order page).
   2. About 4 days later: one new useful angle for their kind of shop (festive sets with cut-off dates and slots left so
      they stop answering the same DM; bookings that arrive with date, time and party size; regulars ordering without
      platform commission), the price again in one line, the link again, door open.
@@ -81,8 +81,9 @@ business ("Full demo website that fits them"); use that one:
   reservations with deposits and a waitlist, private dining, seasonal dinners; owner side at /demo/maison-cendre/owner.html).
 - Everyday restaurants, cafés, caterers: https://cartsmithstudio.com/demo/sireh-salt/ (ordering, bookings, festive pre-orders,
   catering, vouchers; the owner side at /demo/sireh-salt/owner.html shows how they would run it from their phone).
-- The small first step (RM399 festive pre-order page): https://cartsmithstudio.com/demo/butter-lantern/?fest=cny
-  (use ?fest=raya for Malay bakeries, ?fest=xmas for Christmas bakes). Best link in a festive follow-up.
+- The small first step (RM399 festive pre-order shop): https://cartsmithstudio.com/demo/butter-lantern/?fest=cny
+  (use ?fest=raya for Malay bakeries, ?fest=xmas for Christmas bakes, ?fest=val for Valentine's). It is a real online shop:
+  payment online or by DuitNow QR, order emails, order tracking and the owner's dashboard. Best link in a festive follow-up.
 - Bakeries, kuih and cookie makers, sambal and gift brands: https://cartsmithstudio.com/demo/dulang-daun/ (shop, gift
   boxes, build-your-own hamper, West/East shipping, WhatsApp orders, tracking; owner side at /demo/dulang-daun/owner.html).
 Use at most one demo link per message, as a statement ("Here is a full example of what the finished website does: …").
@@ -122,7 +123,7 @@ lost · no_response · do_not_contact. "Next follow-up" and "next call" dates ar
 - Owner not in → ask what time the owner is usually in, call back then.
 - Busy → "I'll WhatsApp you the link so you can look later." (a statement)
 - How much? → the sample is free; a full website starts from RM800 one-off, fixed and written down; a festive
-  pre-order page is RM399; or RM0 upfront and RM199 a month for 12 months. Details come with the link.
+  pre-order shop is RM399; or RM0 upfront and RM199 a month for 12 months. Details come with the link.
 - We already have Shopee / Instagram / foodpanda → keep them; this gives regulars one link to order directly, without
   paying commission on every order.
 - We already have a website → apologise, close, mark 已经有网站.
@@ -131,9 +132,9 @@ lost · no_response · do_not_contact. "Next follow-up" and "next call" dates ar
 - Email instead → take the email and send the link there.
 - (Second call) Need to ask my partner / boss → "I'll WhatsApp a short summary with the price so you can forward it" +
   a set time to call back.
-- (Second call) Not now / after the festive season → the RM399 festive page is the small step; otherwise no problem,
+- (Second call) Not now / after the festive season → the RM399 festive shop is the small step; otherwise no problem,
   the sample stays up until its date.
-- (Second call) Too expensive → RM0 upfront and RM199 a month, or start with the RM399 festive page. Never lower prices.
+- (Second call) Too expensive → RM0 upfront and RM199 a month, or start with the RM399 festive shop. Never lower prices.
 - (Second call) WhatsApp / phone orders are enough → orders still come to their WhatsApp, already filled in (items,
   date, name), so less back and forth.
 - (Second call) Menu changes every day → "today's menu" changed from the phone in a minute, or only fixed items and

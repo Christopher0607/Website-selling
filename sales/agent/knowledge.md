@@ -1,7 +1,7 @@
 # Cartsmith Studio — knowledge base for the sales assistant
 
 > This file is the ONLY source of facts the AI may use about Cartsmith Studio. When prices or offers change, edit this file (and site/studio.json, site/desk/desk.js STUDIO_PRICE, sales/agent/desk-brief.md, docs/00-decisions.md) — then rebuild the website (python3 site/build.py) so the website chat and the desk use the new version.
-> Last updated: 2026-11-12 (new prices RM800 / RM1,200 / RM1,600, festive pre-order page RM399, monthly plan RM199 × 12, new founding-client terms)
+> Last updated: 2026-11-12 (new prices RM800 / RM1,200 / RM1,600, festive pre-order shop RM399, monthly plan RM199 × 12, new founding-client terms)
 
 ## Who we are
 - Cartsmith Studio is a small (one-person) web studio in Malaysia. In messages, speak as "we" / "Cartsmith Studio" and do not use the owner's personal name. New studio — no long client list yet. Honest about that.
@@ -17,7 +17,7 @@
 Four complete demo websites (2026-11-12) — the best ones to show food businesses:
 - **Maison Cendre** (boutique restaurant): https://cartsmithstudio.com/demo/maison-cendre/ — tasting menus and à la carte with dietary tags, reservations for the dining room, the chef's counter (deposit) and a private salon, places left and a waitlist, seasonal dinners (Christmas, Chinese New Year, Valentine's Day) and feasts to take home, private events, takeaway, gift cards, and the owner's side (tonight's covers, waitlist, dishes running out, "closed for a private event"). The same design works for any restaurant that wants to look its best.
 - **Sireh & Salt** (everyday restaurant or café): https://cartsmithstudio.com/demo/sireh-salt/ — menu with options and sold-out dishes, pick-up and delivery orders (paid online or sent to WhatsApp), table bookings with tables left, festive pre-orders (Christmas, Chinese New Year, Hari Raya) with cut-off dates and sets left, catering enquiries, gift vouchers, opening hours, and the owner's side on a phone (orders, bookings, sold-out switches, prices, festive stock, "closed today").
-- **Butter & Lantern** (the RM399 festive pre-order page): https://cartsmithstudio.com/demo/butter-lantern/ — one page: festive sets with cut-off dates and how many are left, a collection or delivery day, the order sent to WhatsApp already filled in; the same page re-dressed for Chinese New Year, Hari Raya, Christmas or Deepavali (add ?fest=cny, raya, xmas or deepavali to the link).
+- **Butter & Lantern** (the RM399 festive pre-order shop): https://cartsmithstudio.com/demo/butter-lantern/ — a real online shop for one festive season: up to 10 items with how many are left, early-bird price and a cut-off countdown, cart, collection or delivery day and time slot, online payment (FPX, card, e-wallet) or DuitNow QR with a receipt upload, an order email, order tracking, and the owner's dashboard (orders, payments to check, what to bake each day, stock). The Chinese New Year version is in Chinese first, Hari Raya in Malay first, Christmas and Valentine's Day in English (add ?fest=cny, raya, xmas or val to the link).
 - **Dulang & Daun** (food gifts / online shop): https://cartsmithstudio.com/demo/dulang-daun/ — sizes and flavours, free-shipping bar, vouchers, West and East Malaysia shipping, build-your-own hamper, gift orders with a card, order on WhatsApp or pay online, parcel tracking, notify-me when sold out, corporate gift quotes, and the owner's side (pack, ship, stock, waiting list).
 All four say clearly they are demos; their reviews are labelled samples. Six more shop templates:
 | Template | Style | Demo shows | Also good for |
@@ -42,15 +42,15 @@ All templates: phone-first design, slide-out cart with free-shipping bar, sticky
 Starter includes: Home, Menu or Shop, About, Contact, FAQ, Delivery & Returns, Privacy & Terms drafts (EN + BM); orders for pick-up, local delivery or shipping (delivery areas, West / East Malaysia rates), paid online or sent to their WhatsApp already filled in; WhatsApp / Instagram chat buttons; printable QR card design (table or parcel); 1 training video + 30-min handover.
 Growth adds: table bookings (date, time, party size) or festive pre-orders with cut-off dates; options (size, flavour, add-ons); campaign / festive page; free-delivery threshold and vouchers; GA4 + Meta Pixel (ad tracking); homepage copy written by us (EN or 中文) + 3 SEO articles; 2 training sessions.
 Catalog: Home, Catalogue (menu or products), About, Certificates/Partners, Contact; pre-filled quotation requests (events, bulk orders, corporate gifts); GA4.
-Every package: mobile-first design, basic SEO, speed optimisation, order/enquiry emails, SSL, **first month of Care free after launch**.
+Every package: mobile-first design, basic SEO, speed optimisation, order/enquiry emails, SSL, **first month of maintenance free after launch; after that a monthly maintenance fee from RM150 (optional, always mention it with the setup price)**.
 Not included (add-ons): product / food photography, logo design, large copywriting jobs, running ads, extra languages.
 
 ## Two other ways to start
-- **Festive pre-order page — RM399 one-time.** One page for one festive season (Christmas, CNY or Raya): up to 12 festive sets or items with photos, prices and options; customers choose a pick-up or delivery date (cut-off dates, sold-out switch); the order arrives on the shop's WhatsApp already filled in (no payment gateway needed — they confirm and take payment the way they do now). Live in 3 working days after we have the items, prices and photos. Online for that festive season, on a link we provide (or their own domain if they have one); small changes during the season (sold out, prices) included. If they upgrade to a full website within 60 days, the RM399 comes off the setup price.
-- **Monthly plan — RM0 upfront, RM199 a month for 12 months.** Everything in Starter, plus hosting and Basic Care. First payment on launch day. After 12 payments the website is theirs (they can keep Care at RM150 / month or take a full backup). Minimum 12 months; leaving early and other terms are set out in a written agreement.
+- **Festive pre-order shop — RM399 one-time.** Their own online shop for a festive season (Chinese New Year, Hari Raya, Christmas, Valentine's Day…), on WordPress + WooCommerce: up to 10 items with photos, prices, options and stock; cut-off date and early-bird price; collection or delivery days and time slots; online payment (FPX, cards, e-wallets) through a payment gateway in their own name, or DuitNow QR with a receipt upload from day one (gateway approval can take a few days); order emails, order tracking and their own dashboard. Live in 3 working days after we have the items, prices and photos. Includes 3 months of hosting and maintenance. After that they choose: pause it for free and reopen next season for RM149 (new dates, items and prices), or keep it open for RM49 a month (for shops with new products all year). A new festival look: RM99. If they upgrade to a full website within 60 days, the RM399 comes off the setup price. Payment-gateway fees per transaction are paid by them.
+- **Monthly plan — RM0 upfront, RM199 a month for 12 months.** Everything in Starter, plus hosting and basic maintenance. First payment on launch day. After 12 payments the website is theirs (they can keep maintenance at RM150 / month or take a full backup). Minimum 12 months; leaving early and other terms are set out in a written agreement.
 
-## Monthly Care (maintenance)
-| | Basic Care RM150/month | Standard Care RM300/month |
+## Monthly maintenance (maintenance fee)
+| | Basic maintenance RM150/month | Standard maintenance RM300/month |
 |---|---|---|
 | Hosting + SSL, daily backups, quarterly restore test, uptime monitoring | yes | yes |
 | Updates | monthly | checked weekly |
@@ -64,11 +64,11 @@ Extra items RM8 each · product copywriting RM15 each · extra language from RM9
 
 ## Offers (the ONLY offers that exist — never invent others)
 - Free sample website (mockup) before signing: private (password-protected), uses the business's public information (menu, prices where published, address, hours), stock placeholder photos, deleted after 14 days if they don't go ahead. No obligation. Ready in 1–2 working days. Changes to it during that time are free (their own photos, current prices, wording).
-- Founding clients (first 3 clients only; no discount on the price): 50% deposit and the balance only when they are happy with the finished site; live in 7 working days (from deposit + all content) or RM50 off for each day late; 2 free months of Care (instead of 1); free table QR card design. In return: an honest review and permission to show the site as an example (sales numbers can stay private).
-- Referral: a client who refers a friend who signs up gets one free month of Care or RM200 (their choice).
+- Founding clients (first 3 clients only; no discount on the price): 50% deposit and the balance only when they are happy with the finished site; live in 7 working days (from deposit + all content) or RM50 off for each day late; 2 free months of maintenance (instead of 1); free table QR card design. In return: an honest review and permission to show the site as an example (sales numbers can stay private).
+- Referral: a client who refers a friend who signs up gets one free month of maintenance or RM200 (their choice).
 
 ## Payment & ownership
-- 50% deposit to start, 50% balance before launch (founding clients: balance only when happy; monthly plan: nothing upfront). Care paid monthly in advance (or 3 months at a time). Bank transfer / DuitNow.
+- 50% deposit to start, 50% balance before launch (founding clients: balance only when happy; monthly plan: nothing upfront). maintenance paid monthly in advance (or 3 months at a time). Bank transfer / DuitNow.
 - Third-party costs paid directly by the client, in the client's own name: domain (about RM50–120/year), payment gateway fees (per transaction, check the gateway's official price page), paid plugins if any.
 - Payment gateway (e.g. Billplz, ToyyibPay) is opened in the client's own company name — usually needs the client's business registration. We help with the application. Orders sent to WhatsApp need no gateway.
 - The website belongs to the client once fully paid (monthly plan: after the 12th payment). Domain and payment accounts are always in the client's name.
@@ -79,22 +79,22 @@ Extra items RM8 each · product copywriting RM15 each · extra language from RM9
 2. Short call → written quotation within 24 hours (valid 14 days)
 3. Deposit + content checklist (logo, menu or product list, photos, delivery and pick-up details, policies, company details)
 4. Build on a private test site with test orders → client reviews, sends all changes in one list
-5. Balance → domain connected, payments switched to live, real test order, training → first month of Care free
+5. Balance → domain connected, payments switched to live, real test order, training → first month of maintenance free
 
 ## Why Cartsmith (vs other options) — keep it factual, never insult competitors
 - Delivery platforms (foodpanda, GrabFood) and marketplaces (Shopee): good for new customers, but take a commission on every order (delivery platforms often around 20–30%, varies by shop; check their own contract). Their own website is for regulars, pre-orders and bookings, with no commission per order. Keep both.
 - DIY store platforms: low monthly fee, but they set up and maintain everything themselves; good value if they enjoy doing it.
 - Cheap template websites: about RM800–1,500 in Malaysia (2026 pricing guides), usually basic setup and no help afterwards.
 - Freelancers / agencies: restaurant and WooCommerce websites often RM2,000–15,000+ (2026 pricing guides); quality and after-sales vary.
-- Cartsmith: free sample website with their own name and menu before paying; fixed written prices; Malaysian payments, delivery and pick-up set up; client owns everything (no lock-in); monthly Care with first month free; one person who replies (EN / 中文 / BM).
+- Cartsmith: free sample website with their own name and menu before paying; fixed written prices; Malaysian payments, delivery and pick-up set up; client owns everything (no lock-in); monthly maintenance with first month free; one person who replies (EN / 中文 / BM).
 
 ## Honest answers to common questions
 - "Do I have to leave foodpanda / Grab / Shopee?" No. Keep them for new customers; the website is for regulars, pre-orders, bookings and catering, and the customer data is theirs.
 - "Will the website bring customers by itself?" Not at first. Customers come from their regulars, Instagram, a QR card on the table or in the bag, and Google Maps. We set up those entry points.
 - "Can you guarantee sales / Google page one?" No — and be careful of anyone who does. We guarantee a website that works well on phones, takes orders correctly, loads fast and is looked after.
 - "You're new, no case studies?" True — that's why the first 3 clients pay the balance only when happy and get a 7-working-day guarantee; prices and scope are written clearly; they can see the sample website first.
-- "Too expensive?" Start with the festive pre-order page (RM399, comes off the full website within 60 days) or the monthly plan (RM0 upfront, RM199 a month). A simple way to think about it with their OWN numbers: if regulars order directly instead of through a platform that takes a commission, the saving on those orders adds up every month — never promise a result. Never lower the prices.
-- "Can it be free for 1–2 months?" The sample website is free, and the first month of Care after launch is free. A whole website can't be built for free because each one takes many hours.
+- "Too expensive?" Start with the festive pre-order shop (RM399, comes off the full website within 60 days) or the monthly plan (RM0 upfront, RM199 a month). A simple way to think about it with their OWN numbers: if regulars order directly instead of through a platform that takes a commission, the saving on those orders adds up every month — never promise a result. Never lower the prices.
+- "Can it be free for 1–2 months?" The sample website is free, and the first month of maintenance after launch is free. A whole website can't be built for free because each one takes many hours.
 - "No monthly fee?" Possible — we hand over a full backup after launch and they host it themselves; updates/backups/fixes are then theirs (or paid per job).
 - "My menu changes every day / we only take orders by phone." The website can show "today's menu" that they change from their phone in a minute, or only the fixed items and festive sets; orders can still go to their WhatsApp. If they are not ready, that's fine — no pressure.
 - "Can I change the design?" Yes: logo, colours, fonts, photos, sections.

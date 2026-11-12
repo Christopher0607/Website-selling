@@ -389,46 +389,113 @@ const ok = (c, m) => { console.log((c ? '  ✅ ' : '  ❌ ') + m); if (!c) fail+
   await p.goto(M + 'owner.html');
   await p.click('[data-reset]');
 
-  // ---------------------------------------------------------------- Butter & Lantern (festive pre-order page)
-  console.log('Butter & Lantern (festive pre-order page)');
-  const F = BASE + '/demo/butter-lantern/index.html';
-  const fr = await p.goto(F + '?fest=cny');
-  ok(fr.ok() && /Demo website/.test(await p.textContent('.demobar')) && (await p.$$('[data-fests] button')).length === 4, 'loads with the demo banner and the four festivals');
-  ok((await p.getAttribute('body', 'data-fest')) === 'cny' && /Chinese New Year cookies/.test(await p.textContent('[data-hero]')) && /days/.test(await p.textContent('[data-hero]')), 'Chinese New Year: headline and countdown');
+  // ---------------------------------------------------------------- Butter & Lantern (RM399 festive shop, v2 2026-11-13)
+  console.log('Butter & Lantern (festive pre-order shop)');
+  const FB = BASE + '/demo/butter-lantern/';
+  const myToday = new Date(Date.now() + 8 * 3600e3).toISOString().slice(0, 10);
+  const fr = await p.goto(FB + 'index.html?fest=cny');
+  ok(fr.ok() && /Demo website/.test(await p.textContent('.demobar')) && /up to 10 items/.test(await p.textContent('.demobar')) && (await p.$$('[data-fests] button')).length === 4, 'loads with the demo banner (RM399, up to 10 items) and four festivals');
+  const blHero = await p.textContent('[data-hero]');
+  ok((await p.getAttribute('body', 'data-lang')) === 'zh' && /团圆的味道/.test(blHero) && /黄梨球/.test(blHero) && /天/.test(blHero), 'Chinese New Year: Chinese first, countdown, and this season’s cookies in the opening');
+  ok((await p.$$('a[href*="wa.me"]')).length === 0 && /FPX/.test(await p.textContent('#how')), 'ordering is an online checkout (no WhatsApp ordering); payment methods listed');
+  ok(/已售完/.test(await p.textContent('#i-ng')) && await p.$eval('#i-ng .card__foot button', (x) => x.disabled), 'a sold-out item says so and cannot be added');
+  ok(/最多可以放 10 样/.test(await p.textContent('[data-cap]')), 'the page says a RM399 shop holds up to 10 items');
   await shot('bl-cny');
-  await p.click('[data-q="tarts:1"]');
-  await p.click('[data-q="tarts:1"]');
-  await p.click('[data-q="set:1"]');
-  ok(/RM264\.00/.test(await p.textContent('[data-order] .total')), 'sets add up (2 × RM68 + RM128 = RM264)');
-  await p.click('[data-mode="delivery"]');
-  ok(/RM264\.00/.test(await p.textContent('[data-order] .total')), 'delivery is free over RM200');
-  await p.click('[data-mode="collect"]');
-  await p.click('[data-order] .day >> nth=1');
-  await p.fill('#o-name', 'Test Auntie');
-  await p.fill('#o-phone', '012-345 6789');
-  await p.click('[data-send]');
-  await p.waitForSelector('[data-order] .waprev');
-  const blText = await p.textContent('[data-order] .waprev');
-  ok(/2 × Pineapple Tarts/.test(blText) && /Collect · Tue 2 Feb/.test(blText) && /Name: Test Auntie/.test(blText), 'the WhatsApp message is filled in (sets, day, name)');
-  ok(/^https:\/\/wa\.me\/\?text=/.test(await p.getAttribute('[data-order] a.btn--wa', 'href')), 'WhatsApp opens with the order and no fixed number');
-  await p.goto(F + '?fest=cny');
-  ok(/Only 21 left/.test(await p.textContent('.set >> nth=0')), '"only X left" goes down after an order (23 → 21)');
-  await p.click('[data-fest="raya"]');
-  ok((await p.getAttribute('body', 'data-fest')) === 'raya' && /Kuih raya/.test(await p.textContent('[data-hero]')) && /fest=raya/.test(p.url()), 'one tap re-dresses the page for Hari Raya');
+  await p.click('#i-pb .card__foot [data-item]');
+  await p.waitForSelector('[data-sheet].is-on');
+  await p.click('[data-opt="l"]');
+  await p.click('[data-sq="1"]');
+  ok(/RM156\.00/.test(await p.textContent('[data-sheet-add]')), 'options: big jar × 2 = RM156');
+  await p.click('[data-sheet-add]');
+  await p.waitForSelector('[data-drawer].is-on');
+  const cnyEarly = myToday <= '2026-12-31';
+  const cartTxt = await p.textContent('[data-drawer]');
+  ok(/RM156\.00/.test(cartTxt) && (cnyEarly ? /−RM15\.60/.test(cartTxt) && /RM140\.40/.test(cartTxt) : true), 'cart: subtotal' + (cnyEarly ? ', early-bird 10% off, total RM140.40' : ''));
+  await p.goto(FB + 'checkout.html?fest=cny');
+  ok(/结账/.test(await p.textContent('h1')) && (await p.$$('.slot:not([disabled])')).length > 0, 'checkout: collection days and time slots with places left');
+  await p.click('[data-next]');
+  await p.click('[data-next]');
+  ok(/请填写名字/.test(await p.textContent('[data-err]')), 'details are checked before payment');
+  await p.fill('#c-name', 'Test Auntie');
+  await p.fill('#c-phone', '012-345 6789');
+  await p.fill('#c-email', 'auntie@example.com');
+  await p.check('[data-k="gift"]');
+  await p.fill('#c-gname', 'Uncle Lim');
+  await p.fill('#c-gphone', '012-777 8888');
+  await p.fill('#c-gmsg', '新年快乐');
+  await p.click('[data-next]');
+  await p.click('[data-pay-go]');
+  ok(/请选银行/.test(await p.textContent('[data-err]')), 'FPX asks for a bank first');
+  await p.click('[data-bank="Maybank2u"]');
+  await p.click('[data-pay-go]');
+  await p.waitForSelector('[data-pay].is-on');
+  ok(/Secure payment/.test(await p.textContent('[data-pay]')) && /Maybank2u/.test(await p.textContent('[data-pay]')), 'the payment page shows the amount and the bank (demo, nothing charged)');
+  await Promise.all([p.waitForURL(/order\.html/), p.click('[data-approve]')]);
+  const ord1 = await p.textContent('main');
+  const no1 = (ord1.match(/BL-\d+/) || [''])[0];
+  ok(/订单已确认/.test(ord1) && !!no1 && /auntie@example\.com/.test(ord1) && /订单确认 BL-/.test(ord1) && /Uncle Lim/.test(ord1), 'order confirmed: order number, the confirmation email, gift recipient');
+  await p.goto(FB + 'index.html?fest=cny');
+  ok(/只剩 35 份/.test(await p.textContent('#i-pb')), 'stock goes down after the order (37 → 35)');
+  await p.goto(FB + 'owner.html?fest=cny');
+  const ownTxt = await p.textContent('[data-owner]');
+  ok(ownTxt.includes(no1) && /Test Auntie/.test(ownTxt) && /待确认付款/.test(ownTxt), 'owner: the new order is on the list, with payments to check');
+  await p.click('[data-adv="' + no1 + '"]');
+  ok(/制作中/.test(await p.textContent('[data-row="' + no1 + '"]')), 'owner: one tap moves the order to baking');
+  await p.click('[data-tab="bake"]');
+  ok(/黄梨球/.test(await p.textContent('.prod')), 'owner: what to bake that day');
+  await p.click('[data-tab="stock"]');
+  ok((await p.$$('.stk__row')).length === 8, 'owner: stock for every item');
+  await p.goto(FB + 'order.html?fest=cny');
+  await p.fill('#t-no', no1);
+  await p.fill('#t-ph', '0123456789');
+  await Promise.all([p.waitForURL(/no=BL-/), p.click('[data-track] button[type=submit]')]);
+  ok(/制作中/.test(await p.textContent('.tl')), 'track order: number + mobile shows the status the owner set');
+  // Christmas, in English: Klang Valley delivery + DuitNow QR with a receipt
+  await p.goto(FB + 'index.html?fest=xmas');
+  ok((await p.getAttribute('body', 'data-lang')) === 'en' && /Christmas bakes/.test(await p.textContent('[data-hero]')), 'one link re-dresses the shop for Christmas, in English');
+  await p.click('#i-gb .card__foot [data-item]');
+  await p.waitForSelector('[data-sheet].is-on');
+  await p.click('[data-sheet-add]');
+  await p.goto(FB + 'checkout.html?fest=xmas');
+  await p.click('[data-mode="kv"]');
+  await p.fill('#c-addr', '12 Jalan SS2/24, Petaling Jaya');
+  await p.fill('#c-pc', '81300');
+  ok(/outside the Klang Valley/.test(await p.textContent('[data-pcnote]')), 'delivery: a postcode outside the Klang Valley is caught');
+  await p.fill('#c-pc', '47300');
+  ok(/inside our Klang Valley area/.test(await p.textContent('[data-pcnote]')) && /RM15\.00/.test(await p.textContent('.summ')), 'delivery: Klang Valley postcode, RM15 under RM200');
+  await p.click('[data-next]');
+  await p.fill('#c-name', 'Sarah Test');
+  await p.fill('#c-phone', '012-345 6789');
+  await p.fill('#c-email', 'sarah@example.com');
+  await p.click('[data-next]');
+  await p.click('[data-pm="duitnow"]');
+  ok(!!(await p.$('.qr svg')) && !!(await p.$('[data-receipt]')), 'DuitNow QR with a receipt upload');
+  await p.click('[data-pay-go]');
+  ok(/upload your receipt/i.test(await p.textContent('[data-err]')), 'DuitNow needs the receipt');
+  await p.click('[data-skip-receipt]');
+  await Promise.all([p.waitForURL(/order\.html/), p.click('[data-pay-go]')]);
+  const no2 = ((await p.textContent('main')).match(/BL-\d+/) || [''])[0];
+  ok(/checking your payment/i.test(await p.textContent('main')), 'DuitNow order: received, payment being checked');
+  await p.goto(FB + 'owner.html?fest=xmas');
+  await p.click('[data-adv="' + no2 + '"]');
+  ok(/Paid/.test(await p.textContent('[data-row="' + no2 + '"]')), 'owner: "Payment received" confirms a DuitNow order');
+  // Valentine's: roses never go by courier
+  await p.goto(FB + 'index.html?fest=val#i-cr');
+  await p.waitForSelector('[data-sheet].is-on');
+  await p.click('[data-sheet-add]');
+  await p.goto(FB + 'checkout.html?fest=val');
+  ok(await p.$eval('[data-mode="courier"]', (x) => x.disabled), "Valentine's: roses and cupcakes can't go by courier");
+  await p.goto(FB + 'index.html?fest=raya');
+  ok((await p.getAttribute('body', 'data-lang')) === 'ms' && /Kuih raya/.test(await p.textContent('[data-hero]')) && /Tart Nenas/.test(await p.textContent('#sets')), 'Hari Raya: Malay first, with Raya cookies');
   await shot('bl-raya');
-  await p.click('[data-fest="deepavali"]');
-  ok(/coming soon/i.test(await p.textContent('[data-hero]')) && !!(await p.$('[data-notify]')), 'Deepavali: not open yet, leave a number instead');
-  await p.fill('#n-phone', '012-345 6789');
-  await p.click('[data-notify] button');
-  ok(/on the list/.test(await p.textContent('[data-order]')), 'Deepavali: notify-me works');
-  await p.goto(F);
-  ok((await p.getAttribute('body', 'data-fest')) === 'xmas' || (await p.getAttribute('body', 'data-fest')) === 'cny', 'without ?fest the page shows the next festival');
+  await p.goto(FB + 'index.html');
+  ok(['cny', 'raya', 'xmas', 'val'].includes(await p.getAttribute('body', 'data-fest')), 'without ?fest the shop shows the next festival');
 
   // desktop layout
   const d = await b.newContext({ viewport: { width: 1366, height: 900 }, reducedMotion: 'reduce' });
   const dp = await d.newPage();
   dp.on('pageerror', (e) => errors.push(e.message));
-  for (const u of ['sireh-salt/index', 'sireh-salt/menu', 'sireh-salt/order', 'sireh-salt/festive', 'sireh-salt/owner', 'dulang-daun/index', 'dulang-daun/shop', 'dulang-daun/product', 'dulang-daun/hamper', 'dulang-daun/checkout', 'dulang-daun/owner', 'maison-cendre/index', 'maison-cendre/menu', 'maison-cendre/book', 'maison-cendre/festive', 'maison-cendre/owner', 'butter-lantern/index']) {
+  for (const u of ['sireh-salt/index', 'sireh-salt/menu', 'sireh-salt/order', 'sireh-salt/festive', 'sireh-salt/owner', 'dulang-daun/index', 'dulang-daun/shop', 'dulang-daun/product', 'dulang-daun/hamper', 'dulang-daun/checkout', 'dulang-daun/owner', 'maison-cendre/index', 'maison-cendre/menu', 'maison-cendre/book', 'maison-cendre/festive', 'maison-cendre/owner', 'butter-lantern/index', 'butter-lantern/checkout', 'butter-lantern/order', 'butter-lantern/owner']) {
     await dp.goto(BASE + '/demo/' + u + '.html' + (u.endsWith('product') ? '?p=hamper-ong' : ''));
     const over = await dp.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
     ok(over <= 1, `desktop ${u}.html: no sideways scrolling`);
@@ -442,7 +509,7 @@ const ok = (c, m) => { console.log((c ? '  ✅ ' : '  ❌ ') + m); if (!c) fail+
   await p.click('.buyrow [data-add]');
   for (const u of ['sireh-salt/index', 'sireh-salt/menu', 'sireh-salt/order', 'sireh-salt/book', 'sireh-salt/festive', 'sireh-salt/catering', 'sireh-salt/vouchers', 'sireh-salt/owner',
     'dulang-daun/index', 'dulang-daun/shop', 'dulang-daun/product', 'dulang-daun/hamper', 'dulang-daun/checkout', 'dulang-daun/track', 'dulang-daun/corporate', 'dulang-daun/owner',
-    'maison-cendre/index', 'maison-cendre/menu', 'maison-cendre/book', 'maison-cendre/private', 'maison-cendre/festive', 'maison-cendre/order', 'maison-cendre/gift', 'maison-cendre/owner', 'butter-lantern/index']) {
+    'maison-cendre/index', 'maison-cendre/menu', 'maison-cendre/book', 'maison-cendre/private', 'maison-cendre/festive', 'maison-cendre/order', 'maison-cendre/gift', 'maison-cendre/owner', 'butter-lantern/index', 'butter-lantern/checkout', 'butter-lantern/order', 'butter-lantern/owner']) {
     await p.goto(BASE + '/demo/' + u + '.html' + (u.endsWith('product') ? '?p=sambal-bilis' : ''));
     const w = await p.evaluate(() => Math.max(document.documentElement.scrollWidth, window.innerWidth));
     ok(w <= phoneW + 1, `phone ${u}.html: fits the phone width (${w}px)`);
