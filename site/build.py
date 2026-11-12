@@ -1413,6 +1413,41 @@ HEADERS = """# 自动产生（site/build.py）。Cloudflare Pages 的回应标�
 """
 
 
+def build_flagships():
+    """Hand-made flagship demos (2026-11-12): site/flagships/<slug>/ → dist/demo/<slug>/.
+    Each folder: layout.html ({{TITLE}} {{DESC}} {{PAGE}} {{BODY}}), pages/*.html (a <!-- title/description/page --> header
+    and the page body), style.css, app.js, img/. Fictional brands, Pexels placeholder photos (image-sources.md)."""
+    root = os.path.join(HERE, "flagships")
+    n = 0
+    for slug in sorted(os.listdir(root)) if os.path.isdir(root) else []:
+        src = os.path.join(root, slug)
+        if not os.path.isfile(os.path.join(src, "layout.html")):
+            continue
+        out = os.path.join(DIST, "demo", slug)
+        shutil.copytree(os.path.join(src, "img"), os.path.join(out, "img"), dirs_exist_ok=True)
+        for f in os.listdir(src):
+            if f.endswith((".css", ".js")):
+                shutil.copy(os.path.join(src, f), os.path.join(out, f))
+        layout = open(os.path.join(src, "layout.html"), encoding="utf-8").read()
+        for fn in sorted(os.listdir(os.path.join(src, "pages"))):
+            if not fn.endswith(".html"):
+                continue
+            body = open(os.path.join(src, "pages", fn), encoding="utf-8").read()
+            m = re.match(r"\s*<!--(.*?)-->\s*", body, re.S)
+            meta = {}
+            if m:
+                for part in m.group(1).split("\n"):
+                    if ":" in part:
+                        k, v = part.split(":", 1)
+                        meta[k.strip()] = v.strip()
+                body = body[m.end():]
+            html = (layout.replace("{{TITLE}}", e(meta.get("title", slug))).replace("{{DESC}}", e(meta.get("description", "")))
+                    .replace("{{PAGE}}", e(meta.get("page", fn[:-5]))).replace("{{BODY}}", body))
+            write(f"demo/{slug}/{fn}", html)
+            n += 1
+    return n
+
+
 def main():
     if os.path.exists(DIST):
         shutil.rmtree(DIST)
@@ -1427,6 +1462,7 @@ def main():
     for st in stores:
         n += st.build()
     n += Studio(studio_data, stores).build()
+    n += build_flagships()
     build_knowledge()
     # sales desk (private tool, password-protected by the /api/desk function)
     shutil.copytree(os.path.join(HERE, "desk"), os.path.join(DIST, "desk"))

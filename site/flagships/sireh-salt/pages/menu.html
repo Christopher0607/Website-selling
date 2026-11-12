@@ -1,0 +1,18 @@
+<!--
+title: Menu — Sireh & Salt (demo website)
+description: The full menu with prices, spice levels, add-ons and today's sold-out dishes. Demo restaurant website by Cartsmith Studio.
+page: menu
+-->
+<section class="menu-hero wrap">
+  <p class="kicker">Menu</p>
+  <h1 style="font-size:clamp(2.1rem,5.4vw,3.4rem)">Today’s menu</h1>
+  <p class="lead">Tap a dish to choose the spice level and add-ons. Prices in RM, no service charge on pick-up and delivery. <span data-status-long></span></p>
+  <div class="filters" data-filters role="group" aria-label="Filter the menu">
+    <button type="button" data-filter="" class="is-on" aria-pressed="true">Everything</button>
+    <button type="button" data-filter="pop" aria-pressed="false">Popular</button>
+    <button type="button" data-filter="mild" aria-pressed="false">Not spicy</button>
+  </div>
+</section>
+<nav class="cats" aria-label="Menu sections"><div class="wrap cats__in" data-cats></div></nav>
+<div class="wrap" data-menu style="padding-bottom:120px"></div>
+<a class="bagbar" href="order.html" data-bagbar hidden></a>
