@@ -1,0 +1,6 @@
+// previews 分支：Cloudflare Worker「cartsmith-previews」，只放加密的样板（静态档案），网址 previews.cartsmithstudio.com
+{
+  "name": "cartsmith-previews",
+  "compatibility_date": "2025-06-01",
+  "assets": { "directory": "./public", "html_handling": "auto-trailing-slash", "not_found_handling": "none" }
+}
