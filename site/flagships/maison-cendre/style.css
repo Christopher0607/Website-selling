@@ -23,7 +23,7 @@ p { margin: 0 0 1em; }
 :focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
 .skip { position: absolute; left: -999px; top: 8px; background: var(--ink); color: #fff; padding: 8px 14px; z-index: 100; }
 .skip:focus { left: 8px; }
-.wrap { width: min(1200px, 100% - 32px); margin: 0 auto; }
+.wrap { width: min(1200px, 100% - 2 * clamp(16px, 4vw, 48px)); margin: 0 auto; }
 .narrow { width: min(760px, 100% - 32px); margin: 0 auto; }
 .muted { color: var(--muted); }
 .small { font-size: .88rem; }
@@ -418,3 +418,5 @@ textarea.input { min-height: 96px; resize: vertical; }
   .mrow__photo { width: 64px; height: 64px; }
 }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
+/* desktop: every day visible, no sideways scrolling (2026-11-12) */
+@media (min-width: 900px) { .days { flex-wrap: wrap; overflow: visible; } }

@@ -25,7 +25,7 @@ p { margin: 0 0 1em; }
 :focus-visible { outline: 3px solid var(--turmeric); outline-offset: 2px; border-radius: 6px; }
 .skip { position: absolute; left: -999px; top: 8px; background: var(--ink); color: #fff; padding: 8px 14px; border-radius: 8px; z-index: 100; }
 .skip:focus { left: 8px; }
-.wrap { width: min(1180px, 100% - 32px); margin: 0 auto; }
+.wrap { width: min(1180px, 100% - 2 * clamp(16px, 4vw, 48px)); margin: 0 auto; }
 .muted { color: var(--muted); }
 .small { font-size: .88rem; }
 .center { text-align: center; }
@@ -562,3 +562,5 @@ button.bagbtn { cursor: pointer; padding: 0; }
   .announce { font-size: .76rem; }
   .wabtn { display: none; }
 }
+/* desktop: every day visible, no sideways scrolling (2026-11-12) */
+@media (min-width: 900px) { .days { flex-wrap: wrap; overflow: visible; } }

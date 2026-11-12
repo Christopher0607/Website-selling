@@ -87,7 +87,7 @@ const ok = (c, m) => { console.log((c ? '  ✅ ' : '  ❌ ') + m); if (!c) fail+
   await p.fill('#o-code', vcode);
   await p.click('[data-apply]');
   ok(/Gift voucher .* applied/.test(await p.textContent('.summary')) && /−RM56\.90/.test(await p.textContent('.summary')), 'the voucher code takes RM100 off (capped at the subtotal)');
-  await p.click('.slot >> nth=1');
+  await p.click('.slot >> nth=-1'); // the last time offered (late in the evening only one may be left)
   await p.fill('#o-name', 'Test Customer');
   await p.fill('#o-phone', '012-345 6789');
   await p.click('label.payopt:has-text("WhatsApp")');

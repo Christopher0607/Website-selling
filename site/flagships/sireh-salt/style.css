@@ -25,7 +25,7 @@ p { margin: 0 0 1em; }
 :focus-visible { outline: 3px solid var(--turmeric); outline-offset: 2px; border-radius: 6px; }
 .skip { position: absolute; left: -999px; top: 8px; background: var(--ink); color: #fff; padding: 8px 14px; border-radius: 8px; z-index: 100; }
 .skip:focus { left: 8px; }
-.wrap { width: min(1180px, 100% - 32px); margin: 0 auto; }
+.wrap { width: min(1180px, 100% - 2 * clamp(16px, 4vw, 48px)); margin: 0 auto; }
 .muted { color: var(--muted); }
 .small { font-size: .88rem; }
 .center { text-align: center; }
@@ -368,7 +368,8 @@ textarea.input { min-height: 90px; resize: vertical; }
 .empty { text-align: center; padding: 40px 16px; color: var(--muted); }
 
 /* responsive */
-@media (max-width: 1080px) {
+/* the menu button takes over below 1180px: with laptop-width margins the full nav no longer fits (2026-11-12) */
+@media (max-width: 1180px) {
   .nav { position: fixed; inset: calc(var(--hdr) + 0px) 0 auto 0; top: var(--navtop, 108px); flex-direction: column; align-items: stretch; gap: 4px; background: var(--paper); padding: 12px 16px 20px; border-bottom: 1px solid var(--line); box-shadow: 0 20px 30px rgba(0,0,0,.08); transform: translateY(-8px); opacity: 0; visibility: hidden; transition: opacity .2s, transform .2s, visibility .2s; margin: 0; }
   .nav.is-open { transform: none; opacity: 1; visibility: visible; }
   .nav a { padding: 13px 14px; font-size: 1.02rem; }
@@ -408,3 +409,5 @@ textarea.input { min-height: 90px; resize: vertical; }
   .dm-short { display: inline; }
 }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
+/* desktop: every day visible, no sideways scrolling (2026-11-12) */
+@media (min-width: 900px) { .days { flex-wrap: wrap; overflow: visible; } }

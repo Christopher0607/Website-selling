@@ -1188,26 +1188,29 @@ class Studio:
         return '<div class="phones">' + "".join(out) + "</div>"
 
     def frag_flagships(self, root):
-        # 2026-11-12: two restaurant looks (boutique, everyday), the food gift shop, and the RM399 festive pre-order page
+        # 2026-11-12 (v3): each demo shown as a website, like the shop templates: a desktop and a phone screenshot on the
+        # demo's own colour (assets/shots/<slug>-desktop/-mobile.webp, made by tools/screenshots.js ... flagships)
         cards = [
-            ("maison-cendre", "Maison Cendre", "Boutique restaurant", "demo/maison-cendre/index.html", "img/hero.webp", ("See the owner side", "demo/maison-cendre/owner.html"),
-             ["Tasting menus and à la carte with dietary tags", "Reservations: dining room, chef’s counter, private salon", "Deposits, places left and a waitlist when it is full", "Seasonal dinners and feasts to take home", "Private events, takeaway and gift cards", "Your side: tonight’s covers, waitlist and dishes running out"]),
-            ("sireh-salt", "Sireh &amp; Salt", "Everyday restaurant or café", "demo/sireh-salt/index.html", "img/hero.webp", ("See the owner side", "demo/sireh-salt/owner.html"),
-             ["Menu with options and sold-out dishes", "Pick-up and delivery orders, paid online or sent to your WhatsApp", "Table bookings with tables left", "Festive pre-orders with cut-off dates and sets left", "Catering enquiries and gift vouchers", "Your side: orders, bookings and sold-out switches on your phone"]),
-            ("dulang-daun", "Dulang &amp; Daun", "Food gifts &amp; online shop", "demo/dulang-daun/index.html", "img/hero.webp", ("See the owner side", "demo/dulang-daun/owner.html"),
-             ["Sizes, flavours and bundles", "Free-shipping bar, vouchers, West and East Malaysia rates", "Build-your-own hamper and gift orders with a card", "Order on WhatsApp or pay online, then track the parcel", "Notify-me when sold out, corporate gift quotes", "Your side: pack, ship, stock and the waiting list on your phone"]),
-            ("butter-lantern", "Butter &amp; Lantern", "Festive pre-order page · RM399", "demo/butter-lantern/index.html?fest=cny", "img/cny-hero.webp", ("See it for Hari Raya", "demo/butter-lantern/index.html?fest=raya"),
-             ["One page, live in 3 working days", "Festive sets with cut-off dates and how many are left", "Customers pick a collection or delivery day", "Orders arrive on your WhatsApp, already filled in", "Re-dressed for Chinese New Year, Raya, Christmas or Deepavali", "The RM399 comes off a full website if you upgrade within 60 days"]),
+            ("maison-cendre", "Maison Cendre", "Boutique restaurant", "demo/maison-cendre/index.html", "#1b1916", ("See the owner side", "demo/maison-cendre/owner.html"),
+             "Tasting menus, reservations with deposits, private dining.",
+             ["Dining room, chef’s counter and private salon bookings", "Places left, deposits and a waitlist when it is full", "Seasonal dinners, takeaway and gift cards", "Your side: tonight’s covers and dishes running out"]),
+            ("sireh-salt", "Sireh &amp; Salt", "Everyday restaurant or café", "demo/sireh-salt/index.html", "#1d3b2a", ("See the owner side", "demo/sireh-salt/owner.html"),
+             "Menu, pick-up and delivery orders, table bookings.",
+             ["Menu with options and sold-out dishes", "Pick-up and delivery, paid online or sent to WhatsApp", "Table bookings and festive pre-orders", "Your side: orders, bookings and sold-out switches"]),
+            ("dulang-daun", "Dulang &amp; Daun", "Food gifts &amp; online shop", "demo/dulang-daun/index.html", "#123c3a", ("See the owner side", "demo/dulang-daun/owner.html"),
+             "Gift boxes and hampers, shipped across Malaysia.",
+             ["Sizes, flavours, bundles and vouchers", "West and East Malaysia shipping, parcel tracking", "Build-your-own hamper, gift orders with a card", "Your side: pack, ship, stock and the waiting list"]),
+            ("butter-lantern", "Butter &amp; Lantern", "Festive pre-order page · RM399", "demo/butter-lantern/index.html?fest=cny", "#9d1c1f", ("See it for Hari Raya", "demo/butter-lantern/index.html?fest=raya"),
+             "One page for festive pre-orders, sent to your WhatsApp.",
+             ["Festive sets with cut-off dates and how many are left", "Customers pick a collection or delivery day", "Re-dressed for CNY, Raya, Christmas or Deepavali", "Live in 3 working days; the RM399 comes off a full website"]),
         ]
-        lines = {"maison-cendre": "Tasting menus, reservations with deposits, private dining.",
-                 "sireh-salt": "Menu, pick-up and delivery orders, table bookings.",
-                 "dulang-daun": "Gift boxes and hampers, shipped across Malaysia.",
-                 "butter-lantern": "One page for festive pre-orders, sent to your WhatsApp."}
         out = []
-        for slug, name, kind, href, img, second, feats in cards:
+        for slug, name, kind, href, bg, second, line, feats in cards:
             li = "".join(f"<li>{icon('check')}{f}</li>" for f in feats)
-            out.append(f'<article class="flag"><a class="flag__img" href="{root}{href}" tabindex="-1" aria-hidden="true"><img src="{root}demo/{slug}/{img}" alt="" loading="lazy" width="760" height="560"></a>'
-                       f'<div class="flag__body"><p class="kicker">{kind}</p><h3>{name}</h3><p class="flag__line">{lines[slug]}</p><ul class="s-ticks">{li}</ul>'
+            out.append(f'<article class="flag"><a class="flag__media" href="{root}{href}" style="--flag-bg:{bg}" tabindex="-1" aria-hidden="true">'
+                       f'<img class="flag__desk" src="{root}assets/shots/{slug}-desktop.webp" alt="" loading="lazy" width="1440" height="900">'
+                       f'<img class="flag__phone" src="{root}assets/shots/{slug}-mobile.webp" alt="" loading="lazy" width="600" height="1298"></a>'
+                       f'<div class="flag__body"><p class="kicker">{kind}</p><h3>{name}</h3><p class="flag__line">{line}</p><ul class="s-ticks">{li}</ul>'
                        f'<div class="s-btns"><a class="s-btn" href="{root}{href}">Open the demo</a><a class="s-btn s-btn--ghost" href="{root}{second[1]}">{second[0]}</a></div></div></article>')
         return '<div class="flags">' + "".join(out) + '</div><p class="s-hero__note" style="text-align:center;margin-top:16px">All four brands are fictional and nothing is charged; every button works. Open them on your phone.</p>'
 

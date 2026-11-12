@@ -7,16 +7,19 @@ const fs = require('fs');
 const path = require('path');
 const BASE = process.argv[2] || 'http://localhost:8765';
 const OUT = path.join(__dirname, '..', 'assets', 'shots');
-const SLUGS = ['dewlane', 'plainfold', 'chili-pantry', 'lowlight', 'tailmate', 'voltnest'];
+// node tools/screenshots.js <base> flagships → the four demo websites (2026-11-12); default: the six shop templates
+const SETS = { templates: ['dewlane', 'plainfold', 'chili-pantry', 'lowlight', 'tailmate', 'voltnest'], flagships: ['maison-cendre', 'sireh-salt', 'dulang-daun', 'butter-lantern'] };
+const SLUGS = SETS[process.argv[3] || 'templates'];
+const QUERY = { 'butter-lantern': '?fest=cny' };
 
 (async () => {
   fs.mkdirSync(OUT, { recursive: true });
   const browser = await chromium.launch();
   for (const [kind, vp, scale, width] of [['desktop', { width: 1440, height: 900 }, 1, 1440], ['mobile', { width: 390, height: 844 }, 2, 600]]) {
-    const ctx = await browser.newContext({ viewport: vp, deviceScaleFactor: scale });
+    const ctx = await browser.newContext({ viewport: vp, deviceScaleFactor: scale, reducedMotion: 'reduce' });
     const page = await ctx.newPage();
     for (const slug of SLUGS) {
-      await page.goto(`${BASE}/demo/${slug}/index.html`, { waitUntil: 'networkidle' });
+      await page.goto(`${BASE}/demo/${slug}/index.html${QUERY[slug] || ''}`, { waitUntil: 'networkidle' });
       await page.addStyleTag({ content: '.toast{display:none!important}' });
       await page.waitForTimeout(400);
       const png = path.join(OUT, `${slug}-${kind}.png`);

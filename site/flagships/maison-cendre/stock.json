@@ -23,5 +23,7 @@
  {"file": "sorbet.webp", "pexels": 29978680, "crop": "square", "dest": "img", "note": "Sorbet and cream"},
  {"file": "rhubarb.webp", "pexels": 19748939, "crop": "square", "dest": "img", "note": "Rhubarb dessert"},
  {"file": "spread.webp", "pexels": 2792186, "crop": "wide", "dest": "img", "note": "Dishes to share / takeaway"},
- {"file": "gift.webp", "pexels": 8014845, "crop": "portrait", "dest": "img", "note": "Gift card"}
+ {"file": "gift.webp", "pexels": 8014845, "crop": "portrait", "dest": "img", "note": "Gift card"},
+ {"file": "plating-wide.webp", "pexels": 38431749, "crop": "wide", "dest": "img", "note": "Menus page hero (wide crop)"},
+ {"file": "wine-wide.webp", "pexels": 312080, "crop": "wide", "dest": "img", "note": "Gift cards page hero (wide crop)"}
 ]}

@@ -18,6 +18,8 @@
 | img/festive-2.webp | [Pexels 4992818](https://www.pexels.com/photo/4992818/) | Festive dinner table, dark | Pexels License（免费商用，不需署名） |
 | img/kitchen.webp | [Pexels 2544829](https://www.pexels.com/photo/2544829/) | Kitchen | Pexels License（免费商用，不需署名） |
 | img/wine.webp | [Pexels 312080](https://www.pexels.com/photo/312080/) | Wine pairing | Pexels License（免费商用，不需署名） |
+| img/plating-wide.webp | [Pexels 38431749](https://www.pexels.com/photo/38431749/) | Menus page hero (wide crop) | Pexels License（免费商用，不需署名） |
+| img/wine-wide.webp | [Pexels 312080](https://www.pexels.com/photo/312080/) | Gift cards page hero (wide crop) | Pexels License（免费商用，不需署名） |
 | img/bread.webp | [Pexels 4881596](https://www.pexels.com/photo/4881596/) | Sourdough | Pexels License（免费商用，不需署名） |
 | img/scallop.webp | [Pexels 32863869](https://www.pexels.com/photo/32863869/) | Scallop crudo | Pexels License（免费商用，不需署名） |
 | img/scallops.webp | [Pexels 16585778](https://www.pexels.com/photo/16585778/) | Seared scallops | Pexels License（免费商用，不需署名） |
