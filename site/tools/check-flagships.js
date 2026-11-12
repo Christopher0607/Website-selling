@@ -157,24 +157,143 @@ const ok = (c, m) => { console.log((c ? '  ✅ ' : '  ❌ ') + m); if (!c) fail+
   await p.goto(R + 'menu.html');
   ok(!/Sold out/.test(await p.textContent('#i-laksa')), 'reset the demo: everything back to normal');
 
+  // ---------------------------------------------------------------- Dulang & Daun (online shop for a food gift brand)
+  console.log('Dulang & Daun (food gift shop)');
+  const S = BASE + '/demo/dulang-daun/';
+  for (const pg of ['index', 'shop', 'product', 'hamper', 'checkout', 'track', 'corporate', 'owner']) {
+    const r = await p.goto(S + pg + '.html' + (pg === 'product' ? '?p=sambal-bilis' : ''));
+    ok(r.ok() && /Demo website/.test(await p.textContent('.demobar')), `${pg}.html loads with the demo banner`);
+    await shot('dd-' + pg);
+  }
+  await p.goto(S + 'index.html');
+  ok((await p.$$('[data-best] .pcard')).length === 4 && (await p.$$('[data-hampers] .pcard')).length === 4, 'home: bestsellers and gift boxes');
+  ok(/order by/.test(await p.textContent('[data-cutoff]')), 'home: festive delivery cut-off shown');
+  ok((await p.$$('.review .sample')).length === 4, 'home: every review is labelled as a sample');
+  await p.goto(S + 'shop.html');
+  ok((await p.$$('[data-grid] .pcard')).length === 14, 'shop: 14 products');
+  await p.click('[data-cat="hampers"]');
+  ok((await p.$$('[data-grid] .pcard')).length === 4, 'shop: the hampers filter shows 4 gift boxes');
+  await p.goto(S + 'product.html?p=sambal-bilis');
+  await p.click('[data-v="0:1"]');
+  ok(/RM28\.00/.test(await p.textContent('.pdp__price')), 'product: choosing 380 g changes the price to RM28');
+  await p.click('.buyrow [data-add]');
+  await p.waitForSelector('[data-drawer]:not([hidden])');
+  ok(/Sambal Ikan Bilis/.test(await p.textContent('[data-cart-body]')) && /Add RM122\.00 more for free shipping/.test(await p.textContent('[data-cart-body]')), 'cart drawer opens with the free-shipping bar (RM122 to go)');
+  await p.click('[data-cart-close] >> nth=1');
+  await p.goto(S + 'product.html?p=pineapple-tarts');
+  await p.click('[data-v="0:1"]');
+  await p.fill('[data-notify] input', '012-345 6789');
+  await p.click('[data-notify] button');
+  ok(/on the list/.test(await p.textContent('[data-notify-box]')), 'sold-out option (40 pcs): notify me works');
+  await p.goto(S + 'product.html?p=teh');
+  ok(!!(await p.$('[data-notify]')) && !(await p.$('.buyrow')), 'sold-out product: notify me instead of add to cart');
+  await p.goto(S + 'product.html?p=kerepek');
+  await p.click('.buyrow [data-q="1"]');
+  await p.click('.buyrow [data-q="1"]');
+  await p.click('.buyrow [data-add]');
+  await p.waitForSelector('[data-drawer]:not([hidden])');
+  ok(/any 3 for RM27/.test(await p.textContent('[data-cart-body]')) && /−RM2\.70/.test(await p.textContent('[data-cart-body]')), 'kerepek: any 3 for RM27 is applied in the cart');
+  await p.goto(S + 'hamper.html');
+  await p.click('[data-box="S"]');
+  for (const id of ['butter-cookies', 'pandan-cookies', 'kopi', 'sambal-udang']) await p.click(`[data-hi="${id}:1"]`);
+  ok(/Add hamper to cart/.test(await p.textContent('[data-hadd]')) && /RM113\.00/.test(await p.textContent('.summary')), 'hamper builder: a full small box (RM18 + 4 items = RM113)');
+  await p.click('[data-hadd]');
+  await p.waitForSelector('[data-drawer]:not([hidden])');
+  ok(/Your own hamper \(Small\)/.test(await p.textContent('[data-cart-body]')), 'the hamper goes into the cart with its contents');
+  // checkout: fresh kaya can't go to East Malaysia; voucher; gift; pay online
+  await p.goto(S + 'product.html?p=kaya');
+  await p.click('.buyrow [data-add]');
+  await p.goto(S + 'checkout.html');
+  await p.fill('#c-name', 'Test Buyer');
+  await p.fill('#c-phone', '012-345 6789');
+  await p.fill('#c-addr', '8 Jalan Test');
+  await p.fill('#c-pc', '88000');
+  await p.fill('#c-city', 'Kota Kinabalu');
+  await p.selectOption('#c-state', 'Sabah');
+  ok(/ships to West Malaysia only/.test(await p.textContent('[data-checkout]')), 'checkout: fresh kaya is refused for East Malaysia');
+  await p.click('.summary .cline:has-text("Pandan Kaya") [data-cq$=":-1"]');
+  ok(!/ships to West Malaysia only/.test(await p.textContent('[data-checkout]')) && /East Malaysia: 4–6 working days/.test(await p.textContent('[data-checkout]')), 'checkout: without the kaya, East Malaysia shipping is offered');
+  await p.fill('#c-code', 'WELCOME10');
+  await p.click('[data-apply]');
+  ok(/10% off \(WELCOME10\) applied/.test(await p.textContent('.summary')), 'voucher WELCOME10 applied');
+  await p.check('[data-gift]');
+  await p.fill('#c-to', 'Auntie Mei');
+  await p.fill('#c-msg', 'Happy new year');
+  await p.click('[data-place]');
+  await p.waitForSelector('.done .ref');
+  const dno = (await p.textContent('.done .ref')).trim();
+  ok(/^DD-\d+$/.test(dno) && /A gift for Auntie Mei/.test(await p.textContent('.done')), 'order paid (demo) as a gift: ' + dno);
+  await p.click('.done a[href^="track.html"]');
+  await p.waitForSelector('.timeline');
+  ok(/Order received/.test(await p.textContent('[data-track-out]')), 'tracking page shows the new order');
+  // WhatsApp order
+  await p.goto(S + 'product.html?p=butter-cookies');
+  await p.click('.buyrow [data-add]');
+  await p.goto(S + 'checkout.html');
+  await p.selectOption('#c-state', 'Selangor');
+  await p.fill('#c-pc', '47400');
+  await p.fill('#c-city', 'Petaling Jaya');
+  await p.click('label.payopt:has-text("Order on WhatsApp")');
+  await p.click('[data-place]');
+  await p.waitForSelector('.waprev');
+  ok(/Butter Cookies/.test(await p.textContent('.waprev')) && /Selangor/.test(await p.textContent('.waprev')) && /^https:\/\/wa\.me\/\?text=/.test(await p.getAttribute('.done a.btn--wa', 'href')), 'WhatsApp order: message filled in, wa.me with no fixed number');
+  // owner: pack and ship → tracking follows; stock; waiting list
+  await p.goto(S + 'owner.html');
+  ok(new RegExp(dno).test(await p.textContent('[data-owner]')), 'owner view: the new order is there');
+  await p.click(`[data-next="${dno}"]`); // Paid → Packed
+  await p.click(`[data-next="${dno}"]`); // Packed → Shipped
+  await p.goto(S + 'track.html?o=' + dno);
+  await p.waitForSelector('.timeline');
+  ok(/With the courier/.test(await p.textContent('[data-track-out]')) && /DEMO-TRK-\d+/.test(await p.textContent('[data-track-out]')), 'after "Ship" in the owner view, tracking shows the courier and a tracking number');
+  await p.goto(S + 'track.html');
+  await p.fill('#t-no', 'DD-2041');
+  await p.fill('#t-phone', '012-345 6789');
+  await p.click('[data-track] button');
+  ok(/With the courier/.test(await p.textContent('[data-track-out]')), 'tracking: the demo order DD-2041 works');
+  await p.goto(S + 'owner.html');
+  await p.click('[data-tab="stock"]');
+  await p.check('[data-out="sambal-bilis"]');
+  await p.click('[data-tab="waitlist"]');
+  ok(/Pineapple Tarts \(40 pcs\)/.test(await p.textContent('[data-owner]')) && /you, just now/.test(await p.textContent('[data-owner]')), 'waiting list shows the notify-me request');
+  await p.click('[data-back="teh"]');
+  await p.waitForSelector('[data-sheet]:not([hidden]) .waprev');
+  ok(/Teh Tarik Premix is back in stock/.test(await p.textContent('.waprev')), '"back in stock": one message for everyone on the list');
+  await p.goto(S + 'shop.html');
+  ok(/Notify me/.test(await p.textContent('.pcard:has-text("Sambal Ikan Bilis")')) && /Add/.test(await p.textContent('.pcard:has-text("Teh Tarik Premix")')), 'shop follows the owner: sambal sold out, teh back on sale');
+  // corporate
+  await p.goto(S + 'corporate.html');
+  await p.fill('#k-qty', '60');
+  ok(/Volume discount \(10%\)/.test(await p.textContent('[data-corp]')) && /RM4,212\.00|RM4212\.00/.test(await p.textContent('[data-corp]')), 'corporate: 60 boxes get 10% off (estimate RM4,212)');
+  await p.fill('#q-company', 'Test Sdn Bhd');
+  await p.fill('#q-name', 'Test Buyer');
+  await p.fill('#q-phone', '012-345 6789');
+  await p.click('[data-corp-form] button[type=submit]');
+  await p.waitForSelector('.done .ref');
+  ok(/60 × Terima Kasih Box/.test(await p.textContent('.done .waprev')), 'corporate enquiry sent (demo)');
+  await p.goto(S + 'owner.html');
+  await p.click('[data-reset]');
+
   // desktop layout
   const d = await b.newContext({ viewport: { width: 1366, height: 900 }, reducedMotion: 'reduce' });
   const dp = await d.newPage();
   dp.on('pageerror', (e) => errors.push(e.message));
-  for (const pg of ['index', 'menu', 'order', 'festive', 'owner']) {
-    await dp.goto(R + pg + '.html');
+  for (const u of ['sireh-salt/index', 'sireh-salt/menu', 'sireh-salt/order', 'sireh-salt/festive', 'sireh-salt/owner', 'dulang-daun/index', 'dulang-daun/shop', 'dulang-daun/product', 'dulang-daun/hamper', 'dulang-daun/checkout', 'dulang-daun/owner']) {
+    await dp.goto(BASE + '/demo/' + u + '.html' + (u.endsWith('product') ? '?p=hamper-ong' : ''));
     const over = await dp.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
-    ok(over <= 1, `desktop ${pg}.html: no sideways scrolling`);
-    if (SHOTS) await dp.screenshot({ path: `${SHOTS}/ss-desktop-${pg}.png`, fullPage: false });
+    ok(over <= 1, `desktop ${u}.html: no sideways scrolling`);
+    if (SHOTS) await dp.screenshot({ path: `${SHOTS}/desktop-${u.replace('/', '-')}.png`, fullPage: false });
   }
   const phoneW = devices['iPhone 13'].viewport.width;
   await p.goto(R + 'menu.html');
   await p.click('#i-satay [data-add]');
   await p.click('[data-sheet-add]');
-  for (const pg of ['index', 'menu', 'order', 'book', 'festive', 'catering', 'vouchers', 'owner']) {
-    await p.goto(R + pg + '.html');
+  await p.goto(S + 'product.html?p=kopi');
+  await p.click('.buyrow [data-add]');
+  for (const u of ['sireh-salt/index', 'sireh-salt/menu', 'sireh-salt/order', 'sireh-salt/book', 'sireh-salt/festive', 'sireh-salt/catering', 'sireh-salt/vouchers', 'sireh-salt/owner',
+    'dulang-daun/index', 'dulang-daun/shop', 'dulang-daun/product', 'dulang-daun/hamper', 'dulang-daun/checkout', 'dulang-daun/track', 'dulang-daun/corporate', 'dulang-daun/owner']) {
+    await p.goto(BASE + '/demo/' + u + '.html' + (u.endsWith('product') ? '?p=sambal-bilis' : ''));
     const w = await p.evaluate(() => Math.max(document.documentElement.scrollWidth, window.innerWidth));
-    ok(w <= phoneW + 1, `phone ${pg}.html: fits the phone width (${w}px)`);
+    ok(w <= phoneW + 1, `phone ${u}.html: fits the phone width (${w}px)`);
   }
   ok(!errors.length, 'no JavaScript errors' + (errors.length ? ': ' + errors.slice(0, 4).join(' | ') : ''));
   await b.close();

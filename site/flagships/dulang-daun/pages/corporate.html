@@ -1,0 +1,45 @@
+<!--
+title: Corporate gifts — Dulang & Daun (demo website)
+description: Gift boxes for clients and staff with your logo on the card, delivered to many addresses, with volume pricing. Demo online shop by Cartsmith Studio.
+page: corporate
+-->
+<section class="sec" style="padding-bottom:24px">
+  <div class="wrap story">
+    <div>
+      <p class="kicker">Corporate gifts</p>
+      <h1 style="font-size:clamp(2.1rem,5.4vw,3.4rem)">Gifts your clients will actually open</h1>
+      <p class="lead">Local, handmade and properly packed. Your logo on the card, ribbon in your colours, delivered to one office or a list of addresses, with an invoice for finance.</p>
+      <div class="btns"><a class="btn" href="#quote">Get a quote</a><a class="btn btn--ghost" href="shop.html#hampers">See the boxes</a></div>
+    </div>
+    <img src="img/corporate.webp" alt="Writing delivery labels on gift boxes (placeholder photo)" loading="lazy" width="1400" height="788">
+  </div>
+</section>
+<section class="sec" style="padding-top:20px">
+  <div class="wrap co" style="padding:0">
+    <div>
+      <section class="panel"><h2>Volume pricing</h2><div data-tiers></div><p class="small muted" style="margin-top:12px">Free logo card and ribbon in your colours from 20 boxes. Samples available for orders of 50 or more.</p></section>
+    </div>
+    <aside class="summary panel"><h2>Quick estimate</h2><div data-corp></div></aside>
+  </div>
+</section>
+<section class="sec sec--cream" id="quote">
+  <div class="wrap" style="max-width:760px">
+    <p class="kicker">Quote</p>
+    <h2>Tell us about the order</h2>
+    <form class="panel" data-corp-form novalidate>
+      <div class="row2">
+        <div class="field"><label for="q-company">Company</label><input class="input" id="q-company" name="company" required></div>
+        <div class="field"><label for="q-date">Deliver by</label><input class="input" id="q-date" name="date" type="date"></div>
+      </div>
+      <div class="field"><label for="q-where">Delivery</label><select class="input" id="q-where" name="where"><option>One address</option><option>A few offices</option><option>A list of home addresses (we send a template)</option></select></div>
+      <div class="field"><label for="q-notes">Anything else? <small>(optional)</small></label><textarea class="input" id="q-notes" name="notes" maxlength="400" placeholder="Logo, colours, budget per box, dietary needs"></textarea></div>
+      <div class="row2">
+        <div class="field"><label for="q-name">Your name</label><input class="input" id="q-name" name="name" autocomplete="name" required></div>
+        <div class="field"><label for="q-phone">Mobile number</label><input class="input" id="q-phone" name="phone" type="tel" autocomplete="tel" required placeholder="012-345 6789"></div>
+      </div>
+      <div class="field"><label for="q-email">Work email <small>(for the quote, optional)</small></label><input class="input" id="q-email" name="email" type="email" autocomplete="email"></div>
+      <button class="btn btn--block" type="submit">Request a quote</button>
+      <p class="small muted center" style="margin:10px 0 0">Demo website: nothing is sent anywhere.</p>
+    </form>
+  </div>
+</section>
