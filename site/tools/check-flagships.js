@@ -430,7 +430,7 @@ const ok = (c, m) => { console.log((c ? '  ✅ ' : '  ❌ ') + m); if (!c) fail+
   await p.click('[data-pay-go]');
   await p.waitForSelector('[data-pay].is-on');
   ok(/Secure payment/.test(await p.textContent('[data-pay]')) && /Maybank2u/.test(await p.textContent('[data-pay]')), 'the payment page shows the amount and the bank (demo, nothing charged)');
-  await Promise.all([p.waitForURL(/order\.html/), p.click('[data-approve]')]);
+  await Promise.all([p.waitForURL(/\/order(\.html)?\?/), p.click('[data-approve]')]);
   const ord1 = await p.textContent('main');
   const no1 = (ord1.match(/BL-\d+/) || [''])[0];
   ok(/订单已确认/.test(ord1) && !!no1 && /auntie@example\.com/.test(ord1) && /订单确认 BL-/.test(ord1) && /Uncle Lim/.test(ord1), 'order confirmed: order number, the confirmation email, gift recipient');
@@ -473,7 +473,7 @@ const ok = (c, m) => { console.log((c ? '  ✅ ' : '  ❌ ') + m); if (!c) fail+
   await p.click('[data-pay-go]');
   ok(/upload your receipt/i.test(await p.textContent('[data-err]')), 'DuitNow needs the receipt');
   await p.click('[data-skip-receipt]');
-  await Promise.all([p.waitForURL(/order\.html/), p.click('[data-pay-go]')]);
+  await Promise.all([p.waitForURL(/\/order(\.html)?\?/), p.click('[data-pay-go]')]);
   const no2 = ((await p.textContent('main')).match(/BL-\d+/) || [''])[0];
   ok(/checking your payment/i.test(await p.textContent('main')), 'DuitNow order: received, payment being checked');
   await p.goto(FB + 'owner.html?fest=xmas');
