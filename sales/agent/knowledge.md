@@ -14,6 +14,10 @@
 - Languages: English, 中文, Bahasa Malaysia.
 
 ## The demo websites (fictional brands, Pexels photos, demo checkout takes no payment)
+Two complete demo websites (2026-11-12) — the best ones to show food businesses:
+- **Sireh & Salt** (restaurant): https://cartsmithstudio.com/demo/sireh-salt/ — menu with options and sold-out dishes, pick-up and delivery orders (paid online or sent to WhatsApp), table bookings with tables left, festive pre-orders (Christmas, Chinese New Year, Hari Raya) with cut-off dates and sets left, catering enquiries, gift vouchers, opening hours, and the owner's side on a phone (orders, bookings, sold-out switches, prices, festive stock, "closed today").
+- **Dulang & Daun** (food gifts / online shop): https://cartsmithstudio.com/demo/dulang-daun/ — sizes and flavours, free-shipping bar, vouchers, West and East Malaysia shipping, build-your-own hamper, gift orders with a card, order on WhatsApp or pay online, parcel tracking, notify-me when sold out, corporate gift quotes, and the owner's side (pack, ship, stock, waiting list).
+Both say clearly they are demos; their reviews are labelled samples. Six more shop templates:
 | Template | Style | Demo shows | Also good for |
 |---|---|---|---|
 | Dewlane | Clean & minimal | skincare | beauty, wellness, personal care |

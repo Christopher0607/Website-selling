@@ -142,6 +142,16 @@ h1 .zh, h2 .zh { font-size: .42em; font-weight: 600; margin-top: .6em; color: in
 /* packages */
 .pkgs { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(16px, 2vw, 24px); align-items: stretch; }
 .pkgs--2 { grid-template-columns: repeat(2, 1fr); max-width: 860px; margin: 0 auto; }
+.flags { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(16px, 2.4vw, 28px); }
+.flag { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; display: flex; flex-direction: column; }
+.flag__img { display: block; aspect-ratio: 16 / 10; overflow: hidden; background: var(--line); }
+.flag__img img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s; }
+.flag:hover .flag__img img { transform: scale(1.03); }
+.flag__body { padding: 24px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+.flag__body h3 { font-size: 1.6rem; margin: 0 0 6px; }
+.flag__body .s-ticks { margin-bottom: 18px; font-size: .95rem; }
+.flag__body .s-btns { margin-top: auto; }
+@media (max-width: 860px) { .flags { grid-template-columns: minmax(0, 1fr); } }
 .pkg { position: relative; background: var(--card); border: 1px solid var(--line); border-radius: var(--r); padding: 30px 26px; display: flex; flex-direction: column; }
 .pkg--hl { border: 2px solid var(--ink); box-shadow: 0 20px 50px rgba(20,23,28,.12); }
 .pkg__tag { position: absolute; top: -13px; left: 26px; background: var(--ember); color: #fff; font-size: .75rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; padding: 5px 12px; border-radius: 999px; }

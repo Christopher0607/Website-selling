@@ -1167,12 +1167,31 @@ class Studio:
         return "".join(f'<option value="{st.slug}">{e(st.t["name"])} — {e(st.t["style"])} ({e(st.t["category"])})</option>' for st in self.stores)
 
     def frag_hero_phones(self, root):
+        # 2026-11-12: the two flagship demos (restaurant, food gift shop) instead of three shop templates
         out = []
-        for i, slug in enumerate(["plainfold", "dewlane", "lowlight"]):
-            p = f"assets/shots/{slug}-mobile.webp"
+        for i, (shot, href, label) in enumerate([("sireh-salt", "demo/sireh-salt/menu.html", "the restaurant demo menu"),
+                                                 ("dulang-daun", "demo/dulang-daun/index.html", "the food gift shop demo"),
+                                                 ("sireh-salt-festive", "demo/sireh-salt/festive.html", "the restaurant demo festive pre-orders")]):
+            p = f"assets/shots/{shot}-mobile.webp"
             if os.path.exists(os.path.join(HERE, p)):
-                out.append(f'<a class="phone phone--{i}" href="{root}demo/{slug}/index.html" aria-label="Open the {slug} demo"><img src="{root}{p}" alt="" width="390" height="844"{" fetchpriority=high" if i == 1 else " loading=lazy"}></a>')
+                out.append(f'<a class="phone phone--{i}" href="{root}{href}" aria-label="Open {label}"><img src="{root}{p}" alt="" width="390" height="844"{" fetchpriority=high" if i == 1 else " loading=lazy"}></a>')
         return '<div class="phones">' + "".join(out) + "</div>"
+
+    def frag_flagships(self, root):
+        cards = [
+            ("sireh-salt", "Sireh &amp; Salt", "Restaurant", "demo/sireh-salt/index.html", "img/hero.webp",
+             ["Menu with options and sold-out dishes", "Pick-up and delivery orders, paid online or sent to your WhatsApp", "Table bookings with tables left", "Festive pre-orders with cut-off dates and sets left", "Catering enquiries and gift vouchers", "Your side: orders, bookings and sold-out switches on your phone"]),
+            ("dulang-daun", "Dulang &amp; Daun", "Food gifts &amp; online shop", "demo/dulang-daun/index.html", "img/hero.webp",
+             ["Sizes, flavours and bundles", "Free-shipping bar, vouchers, West and East Malaysia rates", "Build-your-own hamper and gift orders with a card", "Order on WhatsApp or pay online, then track the parcel", "Notify-me when sold out, corporate gift quotes", "Your side: pack, ship, stock and the waiting list on your phone"]),
+        ]
+        out = []
+        for slug, name, kind, href, img, feats in cards:
+            li = "".join(f"<li>{icon('check')}{f}</li>" for f in feats)
+            out.append(f'<article class="flag"><a class="flag__img" href="{root}{href}" tabindex="-1" aria-hidden="true"><img src="{root}demo/{slug}/{img}" alt="" loading="lazy" width="760" height="560"></a>'
+                       f'<div class="flag__body"><p class="kicker">{kind}</p><h3>{name}</h3><ul class="s-ticks">{li}</ul>'
+                       f'<div class="s-btns"><a class="s-btn" href="{root}{href}">Open the demo</a><a class="s-btn s-btn--ghost" href="{root}{href.replace("index.html", "owner.html")}">See the owner side</a></div></div></article>')
+        return '<div class="flags">' + "".join(out) + '</div><p class="s-hero__note" style="text-align:center;margin-top:16px">Both brands are fictional and nothing is charged; every button works. Open them on your phone.</p>'
+
 
     def frag_calculator(self, root):
         c = self.d["calculator"]
@@ -1228,6 +1247,7 @@ class Studio:
                 "ADDONS": lambda: self.frag_addons(root),
                 "COMPARE_SOURCES": lambda: self.frag_compare_sources(root),
                 "HERO_PHONES": lambda: self.frag_hero_phones(root),
+                "FLAGSHIPS": lambda: self.frag_flagships(root),
                 "IG_DM": lambda: e(d["instagram"]["dm"]),
                 "IG_PROFILE": lambda: e(d["instagram"]["profile"]),
                 "IG_HANDLE": lambda: e(d["instagram"]["handle"]),

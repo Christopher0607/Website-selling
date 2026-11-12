@@ -72,6 +72,15 @@ to end the call politely — and then nothing happens. Seven mockups went out; o
 - When an owner says something new (an objection, what they want), write it in the conversation so the next message
   and the quotation use it.
 
+## 2c. Full demo websites to show (2026-11-12)
+When an owner wants to see what a finished website does (beyond their own sample), point them to one of the two
+complete demos — fictional brands, everything clickable, nothing charged:
+- Restaurants, cafés, caterers: https://cartsmithstudio.com/demo/sireh-salt/ (ordering, bookings, festive pre-orders,
+  catering, vouchers; the owner side at /demo/sireh-salt/owner.html shows how they would run it from their phone).
+- Bakeries, kuih and cookie makers, sambal and gift brands: https://cartsmithstudio.com/demo/dulang-daun/ (shop, gift
+  boxes, build-your-own hamper, West/East shipping, WhatsApp orders, tracking; owner side at /demo/dulang-daun/owner.html).
+Use at most one demo link per message, as a statement ("Here is a full example of what the finished website does: …").
+
 ## 3. Statuses on a card
 new = not contacted yet · contacted = we sent a message (often on Instagram) but no reply · replied = they replied
 (or said yes on the phone: "call_ok") · preview_sent = mockup sent, waiting · call_booked · proposal_sent · won ·
