@@ -1,9 +1,9 @@
-// Cloudflare Worker「cartsmith」：工作室网站（dist/ 静态档案）+ /api/desk、/api/track、/api/form、/api/chat（site/worker.mjs）。
+// Cloudflare Worker「website-selling」：工作室网站（dist/ 静态档案）+ /api/desk、/api/track、/api/form、/api/chat（site/worker.mjs）。
 // 建置（Workers Builds，Root directory = site）：Build command `python3 build.py`，Deploy command `npx wrangler deploy`。
 // 密码和 Key 不放这里：在 Cloudflare → Worker → Settings → Variables and Secrets 加 Secret（SALES_DESK_KEY、DEEPSEEK_API_KEY）。
 // 说明见 docs/12-cloudflare-guide.md
 {
-  "name": "cartsmith",
+  "name": "website-selling",
   "main": "worker.mjs",
   "compatibility_date": "2025-06-01",
   "keep_vars": true,
