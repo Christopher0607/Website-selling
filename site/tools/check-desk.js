@@ -119,7 +119,7 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
   ok(/^﻿?id,business_name/.test(csv) && csv.includes('Glow Lab') && csv.includes('do_not_contact'), 'CSV export has both merchants');
 
   // Claude Code's new-lead inbox (sales/leads/*.json → inbox.mjs)
-  const leadsTotal = (await import('../netlify/functions/desk/inbox.mjs')).INBOX.length;
+  const leadsTotal = (await import('../server/inbox.mjs')).INBOX.length;
   await p.click('[data-tab="today"]');
   await p.waitForSelector('[data-inbox]');
   ok((await p.$$('[data-inbox] .inbox__list li')).length === leadsTotal, `inbox shows ${leadsTotal} new leads`);
@@ -423,6 +423,31 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
     await p.click('[data-tab="today"]');
   }
 
+  // website forms (2026-11-12, was Netlify Forms): /api/form stores them, Today shows them until marked as seen
+  {
+    const post = (body, h) => fetch(`${BASE}/api/form`, { method: 'POST', headers: { 'content-type': 'application/x-www-form-urlencoded', accept: 'application/json', ...(h || {}) }, body: new URLSearchParams(body).toString() });
+    const r1 = await post({ 'form-name': 'mockup-request', 'bot-field': '', name: 'Aina', brand: 'Kedai Aina', instagram: '@kedai.aina', shop_url: 'https://shopee.com.my/kedaiaina', package: 'starter', message: 'We sell kuih raya', consent: 'yes' });
+    const bot = await post({ 'form-name': 'mockup-request', 'bot-field': 'spam', name: 'Bot' });
+    const bad = await post({ 'form-name': 'something-else', name: 'X' });
+    const page = await fetch(`${BASE}/api/form`, { method: 'POST', redirect: 'manual', headers: { 'content-type': 'application/x-www-form-urlencoded', accept: 'text/html' }, body: 'form-name=ai-chat-lead&name=Ben&contact=0123456789&interest=website' });
+    const ff = JSON.parse(fs.readFileSync(STORE + '.forms.json', 'utf8'));
+    const vals = Object.values(ff);
+    ok(r1.ok && (await r1.json()).ok && bot.ok && bad.status === 400 && page.status === 303 && page.headers.get('location') === '/thanks.html', 'form endpoint: saves, ignores the honeypot quietly, refuses unknown forms, sends a normal page post to thanks.html');
+    ok(vals.length === 2 && vals.some((f) => f.fields.brand === 'Kedai Aina') && !vals.some((f) => f.fields.name === 'Bot'), 'two real submissions stored, the bot one is not');
+    await p.reload();
+    await p.waitForSelector('#s-forms');
+    const ft = await p.textContent('#s-forms');
+    ok(/网站上申请免费样板/.test(ft) && /Kedai Aina/.test(ft) && /@kedai\.aina/.test(ft) && /AI 客服留下的资料/.test(ft) && /0123456789/.test(ft), 'Today shows the new website requests with their details');
+    await p.click('#s-forms [data-act="form-seen"]');
+    await p.waitForFunction(() => document.querySelectorAll('#s-forms [data-form-row]').length === 1 || !document.querySelector('#s-forms'));
+    await p.reload();
+    await p.waitForSelector('[data-today-list] [data-plan]');
+    ok((await p.$$('#s-forms [data-form-row]')).length === 1, '"seen" is saved: only the other request is still shown');
+    const studioJs = fs.readFileSync(require('path').join(__dirname, '..', 'dist', 'assets', 'js', 'studio.js'), 'utf8');
+    const start = fs.readFileSync(require('path').join(__dirname, '..', 'dist', 'start.html'), 'utf8');
+    ok(/fetch\('\/api\/form'/.test(studioJs) && /action="\/api\/form"/.test(start) && !/data-netlify/.test(start), 'website forms post to our own /api/form (no Netlify Forms)');
+  }
+
   // mockup views (2026-11-11): the mockup's password page reports opens to /api/track; the desk shows them
   {
     const UA_PHONE = 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1';
@@ -573,7 +598,7 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
   // no emoji anywhere in the interface (message boxes excluded: their text comes from the AI)
   const uiText = await p.evaluate(() => { const c = document.body.cloneNode(true); c.querySelectorAll('textarea').forEach((t) => t.remove()); return c.innerText; });
   ok(!/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u.test(uiText), 'no emoji in the desk interface');
-  const fnSrc = fs.readFileSync(require('path').join(__dirname, '..', 'netlify', 'functions', 'desk', 'index.mjs'), 'utf8');
+  const fnSrc = fs.readFileSync(require('path').join(__dirname, '..', 'server', 'desk.mjs'), 'utf8');
   ok(/NEVER use a personal name/.test(fnSrc) && /No emojis/.test(fnSrc) && /sign off as "Cartsmith Studio"/.test(fnSrc), 'AI prompt: studio sign-off, no personal name, no emojis');
   await p.reload();
   await p.waitForSelector('#app:not([hidden])');

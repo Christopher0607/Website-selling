@@ -1,3 +1,5 @@
+> **2026-11-12 起网站搬到 Cloudflare，这份是 Netlify 时期的纪录。现在的做法见 `docs/12-cloudflare-guide.md`。**
+
 # 09 — 把工作室网站放上 Netlify（一步一步）
 
 > 给俊宇：照顺序做，每一步做完再做下一步。看不懂的地方，把那一步贴给 Claude Code 问。

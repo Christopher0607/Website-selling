@@ -1,6 +1,6 @@
 # sales/leads — 新商家收件箱的资料
 
-Claude Code 上网找到的商家写在这里。`python3 site/build.py` 会把所有 `*.json` 合成 `site/netlify/functions/desk/inbox.mjs`。push 之后 Netlify 自动部署，工作台「今天」最上面就会出现「新商家 · Claude Code 找的」。俊宇按「全部加入」，AI 就逐家打分、写开场白，**资料不用复制粘贴**。
+Claude Code 上网找到的商家写在这里。`python3 site/build.py` 会把所有 `*.json` 合成 `site/server/inbox.mjs` 和 `sales/leads/inbox.json`。push 到 `leads` 分支后（不部署），工作台直接读取，工作台「今天」最上面就会出现「新商家 · Claude Code 找的」。俊宇按「全部加入」，AI 就逐家打分、写开场白，**资料不用复制粘贴**。
 
 ## 每天的定时任务（2026-11-08 起）
 
