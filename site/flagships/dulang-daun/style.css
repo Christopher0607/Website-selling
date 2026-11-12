@@ -271,7 +271,7 @@ textarea.input { min-height: 90px; resize: vertical; }
 .review p { margin: 0; font-size: .95rem; }
 .review footer { margin-top: auto; display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: .86rem; font-weight: 800; }
 .stars { color: var(--turmeric); letter-spacing: 2px; font-size: 1rem; }
-.sample { display: inline-block; font: 800 .66rem/1 var(--sans); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); border: 1px dashed #bdb39f; border-radius: 6px; padding: 4px 6px; }
+.sample { display: inline-block; font: 800 .72rem/1 var(--sans); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); border: 1px dashed #bdb39f; border-radius: 6px; padding: 4px 6px; }
 .disclaim { display: flex; gap: 10px; align-items: center; margin-top: 18px; color: #c9d6cb; font-size: .88rem; }
 .visit { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; align-items: stretch; }
 .mapcard { border-radius: 22px; overflow: hidden; border: 1px solid var(--line); background: #e9e3d4; position: relative; min-height: 320px; }

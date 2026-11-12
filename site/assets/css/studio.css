@@ -194,6 +194,19 @@ h1 .zh, h2 .zh { font-size: .42em; font-weight: 600; margin-top: .6em; color: in
 .s-tbl--compare td, .s-tbl--compare th { width: 20%; }
 .s-tbl--compare .us { background: #fff4ec; font-weight: 600; }
 .s-tbl--compare thead .us { background: var(--ink); color: #fff; }
+/* phones (2026-11-12): one block per question, every option labelled, instead of a table you have to swipe */
+@media (max-width: 760px) {
+  .s-tbl-wrap:has(.s-tbl--compare) { overflow: visible; }
+  .s-tbl--compare { min-width: 0; }
+  .s-tbl--compare thead { display: none; }
+  .s-tbl--compare, .s-tbl--compare tbody, .s-tbl--compare tr, .s-tbl--compare tbody th, .s-tbl--compare td { display: block; width: auto; }
+  .s-tbl--compare tr { border-bottom: 1px solid var(--line); padding: 4px 0 10px; }
+  .s-tbl--compare tbody tr:last-child { border-bottom: 0; }
+  .s-tbl--compare tbody th { font-family: var(--head); font-size: 1.05rem; padding: 14px 16px 6px; border: 0; min-width: 0; }
+  .s-tbl--compare td { display: grid; grid-template-columns: minmax(0, 40%) minmax(0, 1fr); gap: 12px; padding: 6px 16px; border: 0; }
+  .s-tbl--compare td::before { content: attr(data-label); font-size: .82rem; font-weight: 600; color: var(--muted); }
+  .s-tbl--compare td.us { margin: 6px 10px 0; padding: 10px 8px; border-radius: 10px; }
+}
 .s-sources { font-size: .82rem; color: var(--muted); margin-top: 14px; }
 .s-sources a { color: inherit; }
 
@@ -374,7 +387,7 @@ h1 .zh, h2 .zh { font-size: .42em; font-weight: 600; margin-top: .6em; color: in
   .p-index .flag__desk { display: none; }
   .p-index .flag__phone { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top; border: 0; border-radius: 0; box-shadow: none; }
   .p-index .flag__body { padding: 14px 16px; gap: 0; }
-  .p-index .flag__body .kicker { font-size: .66rem; letter-spacing: .08em; margin: 0 0 4px; }
+  .p-index .flag__body .kicker { font-size: .72rem; letter-spacing: .08em; margin: 0 0 4px; }
   .p-index .flags .flag__body h3 { font-size: 1.2rem; margin: 0 0 4px; }
   .p-index .flag__line { margin: 0 0 10px; font-size: .88rem; line-height: 1.45; }
   .p-index .flag__body .s-ticks, .p-index .flag .s-btn--ghost { display: none; }

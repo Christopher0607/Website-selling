@@ -61,7 +61,8 @@
   function toast(t) { var el = $('[data-toast]'); el.textContent = t; el.classList.add('is-on'); clearTimeout(toast.t); toast.t = setTimeout(function () { el.classList.remove('is-on'); }, 2600); }
   var WAICON = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 3a9 9 0 0 0-7.8 13.5L3 21l4.6-1.2A9 9 0 1 0 12 3z" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/><path d="M8.8 8.6c.3-.6.6-.6.9-.6h.6c.2 0 .4 0 .6.5l.7 1.7c.1.2 0 .4-.1.6l-.5.6c-.1.2-.2.3 0 .6.3.5.8 1.1 1.3 1.6.6.5 1.2.9 1.8 1.1.2.1.4.1.6-.1l.7-.8c.2-.2.4-.2.6-.1l1.6.8c.3.1.4.3.4.4 0 .3-.1 1-.6 1.4-.4.4-1.2.8-2 .7-.8-.1-2-.5-3.4-1.6-1.6-1.3-2.5-2.9-2.8-3.5-.3-.7-.4-1.6 0-2.4z" fill="currentColor"/></svg>';
 
-  function defaultFest() { var t = today(), best = null; ORDER.forEach(function (k) { var f = FESTS[k]; if (!f.soon && f.cutoff >= t && (!best || f.cutoff < FESTS[best].cutoff)) best = k; }); return best || 'cny'; }
+  ORDER.forEach(function (k) { var f = FESTS[k]; if (!f.soon && f.cutoff < today()) { f.soon = true; f.closed = true; f.kicker = f.name + ' · this year’s pre-orders have closed'; f.when = 'This year’s pre-orders have closed. Leave your WhatsApp number and we will tell you when the next ones open.'; } });
+  function defaultFest() { var t = today(), best = null; ORDER.forEach(function (k) { var f = FESTS[k]; if (!f.soon && f.cutoff >= t && (!best || f.cutoff < FESTS[best].cutoff)) best = k; }); return best || ORDER.filter(function (k) { return FESTS[k].soon && !FESTS[k].closed; })[0] || 'cny'; }
   var cur = new URLSearchParams(location.search).get('fest');
   if (!FESTS[cur]) cur = defaultFest();
   var S = { qty: {}, mode: 'collect', date: '', time: TIMES[0], name: '', phone: '', addr: '', pc: '' };
@@ -80,13 +81,13 @@
   function paintHero() {
     var f = F();
     $('[data-hero]').innerHTML = '<div><p class="kicker">' + esc(f.kicker) + '</p><h1>' + f.h1 + '</h1><p class="lead">' + esc(f.lead) + '</p>' + (f.soon ? '' : countdown(f)) +
-      '<div style="display:flex;gap:12px;flex-wrap:wrap"><a class="btn" href="#sets">' + (f.soon ? 'See what is coming' : 'Choose your sets') + '</a><a class="btn btn--ghost" href="' + WA + encodeURIComponent('Hi Butter & Lantern (demo website), a question about your ' + f.name + ' bakes: ') + '" target="_blank" rel="noopener">' + WAICON + 'Ask on WhatsApp</a></div>' +
-      '<div class="chips">' + (f.soon ? '<span>Dates announced about four weeks before</span>' : '<span>Order by ' + fmtDay(f.cutoff) + '</span><span>Collect ' + fmtDay(f.from) + ' to ' + fmtDay(f.to) + '</span><span>Delivery in the ' + DELIVERY.area + '</span>') + '</div></div>' +
-      '<div class="hero__img"><img src="img/' + f.hero + '.webp" alt="" width="1600" height="900"><div class="hero__badge">' + (f.soon ? '<span><b>Soon</b>pre-orders</span>' : '<span>Order by<b>' + fmtDay(f.cutoff).slice(4) + '</b></span>') + '</div></div>';
+      '<div style="display:flex;gap:12px;flex-wrap:wrap"><a class="btn" href="#sets">' + (f.closed ? 'See the sets' : f.soon ? 'See what is coming' : 'Choose your sets') + '</a><a class="btn btn--ghost" href="' + WA + encodeURIComponent('Hi Butter & Lantern (demo website), a question about your ' + f.name + ' bakes: ') + '" target="_blank" rel="noopener">' + WAICON + 'Ask on WhatsApp</a></div>' +
+      '<div class="chips">' + (f.closed ? '<span>Pre-orders closed for this year</span><span>Next dates announced about four weeks before</span>' : f.soon ? '<span>Dates announced about four weeks before</span>' : '<span>Order by ' + fmtDay(f.cutoff) + '</span><span>Collect ' + fmtDay(f.from) + ' to ' + fmtDay(f.to) + '</span><span>Delivery in the ' + DELIVERY.area + '</span>') + '</div></div>' +
+      '<div class="hero__img"><img src="img/' + f.hero + '.webp" alt="" width="1600" height="900"><div class="hero__badge">' + (f.closed ? '<span><b>Next</b>season</span>' : f.soon ? '<span><b>Soon</b>pre-orders</span>' : '<span>Order by<b>' + fmtDay(f.cutoff).slice(4) + '</b></span>') + '</div></div>';
   }
   function paintSets() {
     var f = F();
-    $('[data-sets-head]').innerHTML = '<p class="kicker">' + esc(f.name) + ' sets</p><h2>' + (f.soon ? 'Coming this Deepavali' : 'Made in small batches, so they do run out') + '</h2><p class="muted">' + esc(f.when) + '</p>';
+    $('[data-sets-head]').innerHTML = '<p class="kicker">' + esc(f.name) + ' sets</p><h2>' + (f.closed ? 'Back for the next ' + esc(f.name) : f.soon ? 'Coming this ' + esc(f.name) : 'Made in small batches, so they do run out') + '</h2><p class="muted">' + esc(f.when) + '</p>';
     $('[data-sets]').innerHTML = f.sets.map(function (s) {
       var left = leftOf(s), out = left <= 0, q = S.qty[s.id] || 0;
       return '<article class="set' + (out ? ' is-out' : '') + '"><img src="img/' + s.img + '.webp" alt="' + esc(s.n) + ' (placeholder photo)" loading="lazy" width="700" height="525"><div class="set__body"><h3>' + esc(s.n) + '</h3><p>' + esc(s.d) + '</p>' +
@@ -102,7 +103,7 @@
   function paintOrder() {
     var f = F(), el = $('[data-order]');
     if (f.soon) {
-      el.innerHTML = '<h2>Be the first to know</h2><p class="muted">Pre-orders for ' + esc(f.name) + ' are not open yet. Leave your WhatsApp number and we will message you once, on the day they open.</p><form data-notify><div class="field"><label for="n-phone">WhatsApp number</label><input class="input" id="n-phone" name="phone" type="tel" placeholder="012-345 6789" required></div><button class="btn btn--brand btn--block" type="submit">Tell me when it opens</button></form><p class="small muted" style="margin-top:10px">Demo: nothing is sent.</p>';
+      el.innerHTML = '<h2>Be the first to know</h2><p class="muted">Pre-orders for ' + esc(f.name) + (f.closed ? ' have closed for this year.' : ' are not open yet.') + ' Leave your WhatsApp number and we will message you once, on the day they open.</p><form data-notify><div class="field"><label for="n-phone">WhatsApp number</label><input class="input" id="n-phone" name="phone" type="tel" placeholder="012-345 6789" required></div><button class="btn btn--brand btn--block" type="submit">Tell me when it opens</button></form><p class="small muted" style="margin-top:10px">Demo: nothing is sent.</p>';
       return;
     }
     var ds = dates(f); if (ds.indexOf(S.date) < 0) S.date = ds[0];
@@ -118,7 +119,7 @@
   }
   function paintFaq() {
     var f = F();
-    var qa = f.soon ? [['When do Deepavali pre-orders open?', 'About four weeks before Deepavali. Leave your WhatsApp number above and we will tell you the day.'], ['Do you deliver?', 'Yes, in the Klang Valley, RM15 or free over RM200.']] :
+    var qa = f.soon ? [['When do ' + f.name + ' pre-orders open?', 'About four weeks before ' + f.name + '. Leave your WhatsApp number above and we will tell you the day.'], ['Do you deliver?', 'Yes, in the Klang Valley, RM15 or free over RM200.']] :
       [['What is the last day to order?', fmtDay(f.cutoff) + ', or earlier if a set sells out. The counts on this page are live.'], ['When can I collect?', 'Any day from ' + fmtDay(f.from) + ' to ' + fmtDay(f.to) + ', 10am–1pm or 2pm–6pm.'], ['How do I pay?', 'We confirm your order on WhatsApp and send DuitNow or bank details. Your sets are held once paid.'], ['Can I change my order?', 'Yes, until two days before your collection day. Just reply on WhatsApp.']];
     $('[data-faq]').innerHTML = qa.map(function (x) { return '<details><summary>' + esc(x[0]) + '</summary><p>' + esc(x[1]) + '</p></details>'; }).join('');
   }

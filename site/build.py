@@ -1012,7 +1012,7 @@ class Studio:
         self.stores = stores
 
     def nav(self):
-        return [("templates.html", "Templates"), ("pricing.html", "Pricing"), ("why-us.html", "Why us"), ("process.html", "How it works"), ("faq.html", "FAQ")]
+        return [("templates.html", "Demos"), ("pricing.html", "Pricing"), ("why-us.html", "Why us"), ("process.html", "How it works"), ("faq.html", "FAQ")]
 
     def layout(self, rel, title, desc, body, current="", noindex=False):
         d = self.d
@@ -1053,13 +1053,13 @@ class Studio:
 </main>
 <footer class="s-ftr"><div class="s-wrap s-ftr__grid">
   <div><a class="s-logo s-logo--light" href="{root}index.html" aria-label="Cartsmith Studio home"><svg class="s-mark" viewBox="0 0 100 100" width="30" height="30" aria-hidden="true"><path d="M72.98 30.72A30 30 0 1 0 72.98 69.28" fill="none" stroke="currentColor" stroke-width="14"/><rect x="66" y="43" width="14" height="14" fill="#ff5a2c"/></svg><span>cartsmith<em>studio</em></span></a>
-    <p>Online stores for Malaysian brands that sell on Shopee, TikTok Shop and Instagram. Built, launched and looked after by one person you can actually reach.</p>
+    <p>Websites that take orders, for Malaysian restaurants, cafés, bakeries and local brands. Built, launched and looked after by one person you can actually reach.</p>
     <p><a class="s-ig" href="{e(ig['profile'])}" rel="noopener">{icon('ig')} @{e(ig['handle'])}</a></p></div>
-  <div><h4>Studio</h4><ul><li><a href="{root}templates.html">6 templates</a></li><li><a href="{root}pricing.html">Pricing</a></li><li><a href="{root}why-us.html">Why Cartsmith</a></li><li><a href="{root}process.html">How it works</a></li></ul></div>
+  <div><h4>Studio</h4><ul><li><a href="{root}templates.html">Demo websites</a></li><li><a href="{root}pricing.html">Pricing</a></li><li><a href="{root}why-us.html">Why Cartsmith</a></li><li><a href="{root}process.html">How it works</a></li></ul></div>
   <div><h4>Free tools</h4><ul><li><a href="{root}shopee-fee-calculator.html">Shopee fee calculator</a></li><li><a href="{root}start.html">Free homepage mockup</a></li><li><a href="{root}faq.html">FAQ</a></li></ul></div>
   <div><h4>Talk to us</h4><ul><li><a href="{e(ig['dm'])}" rel="noopener">DM on Instagram</a></li><li><a href="{root}start.html">Request form</a></li><li><button class="s-linkbtn" type="button" data-chat-open>Ask the AI assistant</button></li></ul></div>
 </div>
-<div class="s-wrap s-ftr__bottom"><span>© {YEAR} Cartsmith Studio · Malaysia</span><span><a href="{root}privacy.html">Privacy</a> · Store demos use fictional brands and Pexels photos.</span></div></footer>
+<div class="s-wrap s-ftr__bottom"><span>© {YEAR} Cartsmith Studio · Malaysia</span><span><a href="{root}privacy.html">Privacy</a> · Demos use fictional brands and Pexels photos.</span></div></footer>
 {self.chat_widget(root)}
 </body>
 </html>
@@ -1159,7 +1159,7 @@ class Studio:
             cells = ""
             for i, v in enumerate(r[1:]):
                 us = ' class="us"' if i == len(r) - 2 else ""
-                cells += f"<td{us}>{e(v)}</td>"
+                cells += f'<td{us} data-label="{e(c["cols"][i])}">{e(v)}</td>'
             rows += f"<tr><th scope=row>{e(r[0])}</th>{cells}</tr>"
         return f'<div class="s-tbl-wrap"><table class="s-tbl s-tbl--compare"><thead><tr><th></th>{head}</tr></thead><tbody>{rows}</tbody></table></div>'
 
@@ -1174,7 +1174,10 @@ class Studio:
                 'Your own quotes may differ. Platform plans and fees change — check each provider\'s official pricing page.</p>')
 
     def frag_template_options(self, root):
-        return "".join(f'<option value="{st.slug}">{e(st.t["name"])} — {e(st.t["style"])} ({e(st.t["category"])})</option>' for st in self.stores)
+        demos = [("maison-cendre", "Maison Cendre — boutique restaurant"), ("sireh-salt", "Sireh &amp; Salt — everyday restaurant or café"),
+                 ("dulang-daun", "Dulang &amp; Daun — food gifts &amp; online shop"), ("butter-lantern", "Butter &amp; Lantern — festive pre-order page")]
+        return ('<optgroup label="Demo websites">' + "".join(f'<option value="{v}">{t}</option>' for v, t in demos) + '</optgroup>'
+                + '<optgroup label="Shop templates">' + "".join(f'<option value="{st.slug}">{e(st.t["name"])} — {e(st.t["style"])} ({e(st.t["category"])})</option>' for st in self.stores) + '</optgroup>')
 
     def frag_hero_phones(self, root):
         # 2026-11-12: the two flagship demos (restaurant, food gift shop) instead of three shop templates
@@ -1491,6 +1494,44 @@ def build_flagships():
     return n
 
 
+ASSET_RX = re.compile(r'((?:href|src)=")([^"#?:]+\.(?:css|js|webp|jpe?g|png|svg|avif|woff2))(")')
+
+
+def version_assets(dist):
+    """2026-11-12: every local stylesheet, script and image URL in the built pages gets ?v=<hash of the file>.
+    /assets/* is cached for 7 days (browsers and Cloudflare), so without this a phone could get the new page
+    with last week's stylesheet. A changed file gets a new URL; an unchanged one keeps its cache."""
+    import hashlib
+    memo = {}
+
+    def tag(path):
+        if path not in memo:
+            with open(path, "rb") as fh:
+                memo[path] = hashlib.md5(fh.read()).hexdigest()[:10]
+        return memo[path]
+
+    for base, _, files in os.walk(dist):
+        for fn in files:
+            if not fn.endswith(".html"):
+                continue
+            page = os.path.join(base, fn)
+            src = open(page, encoding="utf-8").read()
+
+            def sub(m):
+                url = m.group(2)
+                if url.startswith("//"):
+                    return m.group(0)
+                target = os.path.normpath(os.path.join(dist, url.lstrip("/")) if url.startswith("/") else os.path.join(base, url))
+                if not os.path.isfile(target):
+                    return m.group(0)
+                return f"{m.group(1)}{url}?v={tag(target)}{m.group(3)}"
+
+            out = ASSET_RX.sub(sub, src)
+            if out != src:
+                with open(page, "w", encoding="utf-8") as fh:
+                    fh.write(out)
+
+
 def main():
     if os.path.exists(DIST):
         shutil.rmtree(DIST)
@@ -1513,6 +1554,7 @@ def main():
     write("robots.txt", "User-agent: *\nDisallow: /demo/\nDisallow: /desk/\n")
     # response headers (Cloudflare Pages reads dist/_headers; same rules the site had on Netlify)
     write("_headers", HEADERS)
+    version_assets(DIST)
     files = sum(len(f) for _, _, f in os.walk(DIST))
     print(f"built {n} pages, {files} files → {DIST}")
 

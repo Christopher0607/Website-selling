@@ -51,7 +51,7 @@
       ["After launch", "You maintain it", "Usually on your own", "Varies, often per job", "Care plan: updates, backups, monitoring, small edits"],
       ["Monthly cost", "Platform plan + apps + fees (varies)", "Usually none — and no help", "Varies", "RM150 or RM300 — first month free"],
       ["Who owns it", "Your account on their platform", "You", "Check the contract", "You — domain and payment account in your name, full backup anytime"],
-      ["Made for Shopee / TikTok sellers", "General", "General", "Varies", "Yes — repeat-customer flow, parcel QR card, live-selling links"]
+      ["Made for Malaysian food businesses", "General", "General", "Varies", "Yes — ordering, bookings, festive pre-orders, WhatsApp orders, QR cards"]
     ],
     "sources": [
       ["Malaysia Web Design Pricing 2026 – Anchor Sprint", "https://anchor-sprint-website.pages.dev/blog/malaysia-web-design-pricing-2026-wordpress-vs-code/"],
@@ -68,15 +68,15 @@
   "faq": [
     ["How much does a website cost?", "<p>One-time setup: <b>Starter RM800</b>, <b>Catalog (B2B) RM1,200</b> or <b>Growth RM1,600</b>. Then an optional monthly Care plan (RM150 or RM300). Two other ways to start: a <b>festive pre-order page for RM399</b>, or the <b>monthly plan: RM0 upfront, RM199 a month for 12 months</b>. <a href=\"pricing.html\">See everything that's included</a>.</p>"],
     ["Is there a free trial?", "<p>Two things are free: a <b>homepage mockup</b> before you decide (with your own products), and the <b>first month of Care</b> after your site goes live. A whole website can't be built for free because each one takes many hours of work.</p>"],
-    ["Do I have to leave Shopee or TikTok Shop?", "<p>No. Keep them for new customers. Your own website is for <b>repeat customers</b>, wholesale buyers and ad traffic — with no marketplace commission, and the customer list is yours.</p>"],
-    ["Will the website bring customers by itself?", "<p>Not at first, and we won't pretend otherwise. Customers come from your existing followers, a QR card in every parcel, your live sessions and ads. We set up those entry points for you.</p>"],
-    ["Can you guarantee sales or Google page one?", "<p>No — and be careful of anyone who does. We guarantee a website that works well on phones, takes payments correctly, has the right shipping rates, loads fast and is looked after.</p>"],
+    ["Do I have to leave foodpanda, Grab or Shopee?", "<p>No. Keep them for new customers. Your own website is for <b>your regulars</b>, festive pre-orders, bookings and catering enquiries — with no platform commission, and the customer list is yours.</p>"],
+    ["Will the website bring customers by itself?", "<p>Not at first, and we won't pretend otherwise. Customers come from your existing followers, a QR card on your tables or in every parcel, your Instagram and your regulars. We set up those entry points for you.</p>"],
+    ["Can you guarantee sales or Google page one?", "<p>No — and be careful of anyone who does. We guarantee a website that works well on phones, takes orders and payments correctly, has the right delivery areas or shipping rates, loads fast and is looked after.</p>"],
     ["How long does it take?", "<p>About 10 working days for Starter, 12 for Catalog and 15 for Growth — counted from the day we have your deposit <b>and</b> all your content (logo, products, photos, policies).</p>"],
     ["Who owns the website?", "<p><b>You do</b>, once it's fully paid. Your domain and payment gateway are always opened in your own name. If you ever leave, you get a full backup.</p>"],
     ["Which payment methods can my customers use?", "<p>FPX online banking, cards and e-wallets, through a Malaysian payment gateway (for example Billplz or ToyyibPay) opened in your company's name. Gateways usually need your business registration — we help with the application. Gateway fees are charged per transaction by the gateway.</p>"],
     ["What platform do you build on?", "<p>WordPress + WooCommerce — open source, used by millions of stores, and not locked to us. Any developer can take it over later.</p>"],
-    ["Can I change the template's colours, fonts and layout?", "<p>Yes. The 6 templates are starting points. We use your logo, colours, photos and wording, and adjust sections to fit how you sell.</p>"],
-    ["What do I need to prepare?", "<p>Your logo, product list (a Shopee export works), product photos, prices, shipping and return policies, and company details. We send a simple checklist after the deposit.</p>"],
+    ["Can I change the colours, fonts and layout?", "<p>Yes. The demos and templates are starting points. We use your logo, colours, photos and wording, and adjust sections to fit how you sell.</p>"],
+    ["What do I need to prepare?", "<p>Your logo, your menu or product list with prices, photos, delivery or shipping and return rules, and company details. We send a simple checklist after the deposit.</p>"],
     ["You're a new studio — why should I trust you?", "<p>Fair question. That's why you can click through our live demos, get a free mockup before paying anything, and see all prices written down. Our first 3 clients also get extra protection: 50% deposit and the balance only when you're happy with the finished site, live in 7 working days or RM50 off for each day late, and 2 free months of Care. In return we ask for an honest review and permission to show your site as an example.</p>"],
     ["Is the chat on this website a real person?", "<p>It's an AI assistant (powered by DeepSeek) that answers from our price list. A real person at Cartsmith reads every lead and takes over for quotes, contracts and anything unusual. <a href=\"privacy.html#ai\">How chat data is handled</a>.</p>"]
   ]

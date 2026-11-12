@@ -501,7 +501,7 @@
   }
   // ------------------------------------------------------------ website forms (2026-11-12): free mockup requests and AI chat leads from /api/form
   const FORM_NAME = { 'mockup-request': '网站上申请免费样板', 'ai-chat-lead': 'AI 客服留下的资料' };
-  const FORM_FIELD = { name: '名字', brand: '品牌', instagram: 'Instagram', email: 'Email', contact: '联系方式', shop_url: '店铺链接', template: '喜欢的模板', package: '套餐', products: '产品数量', message: '留言', interest: '想要什么', language: '语言', transcript: '对话' };
+  const FORM_FIELD = { name: '名字', brand: '品牌', whatsapp: 'WhatsApp', instagram: 'Instagram', email: 'Email', contact: '联系方式', shop_url: '店铺链接', template: '喜欢的模板', package: '套餐', products: '产品数量', message: '留言', interest: '想要什么', language: '语言', transcript: '对话' };
   function formRow(f) {
     const rows = Object.entries(f.fields || {}).filter(([k, v]) => v && k !== 'consent').map(([k, v]) => `<li><b>${esc(FORM_FIELD[k] || k)}</b> ${esc(String(v).slice(0, k === 'transcript' ? 600 : 300))}</li>`).join('');
     return `<div class="card card--mini" data-form-row="${esc(f.id)}"><div class="mini__head"><b>${esc(FORM_NAME[f.form] || f.form)}</b><small>${esc(whenTxt(f.at))}</small></div><ul class="formlist">${rows}</ul>

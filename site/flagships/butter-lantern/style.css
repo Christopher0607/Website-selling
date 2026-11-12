@@ -76,7 +76,7 @@ p { margin: 0 0 1em; }
 .count { display: flex; gap: 10px; margin: 6px 0 24px; flex-wrap: wrap; }
 .count div { background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.28); border-radius: 14px; padding: 10px 12px; min-width: 74px; text-align: center; }
 .count b { display: block; font: 700 1.7rem/1 var(--serif); }
-.count small { font-size: .68rem; letter-spacing: .12em; text-transform: uppercase; opacity: .85; }
+.count small { font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; opacity: .85; }
 .chips { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 20px; }
 .chips span { background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.25); border-radius: 999px; padding: 6px 12px; font-size: .85rem; font-weight: 700; }
 /* sets + order */
@@ -112,7 +112,7 @@ p { margin: 0 0 1em; }
 .seg button.is-on { background: var(--brand); color: var(--on-brand); border-color: var(--brand); }
 .days { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
 .day { flex-shrink: 0; width: 64px; padding: 9px 4px; border-radius: 14px; border: 1.5px solid var(--line); background: #fff; cursor: pointer; text-align: center; line-height: 1.1; }
-.day small { display: block; font-size: .66rem; font-weight: 800; text-transform: uppercase; color: var(--muted); }
+.day small { display: block; font-size: .72rem; font-weight: 800; text-transform: uppercase; color: var(--muted); }
 .day b { display: block; font: 700 1.3rem/1.15 var(--serif); }
 .day.is-on { background: var(--brand); border-color: var(--brand); color: var(--on-brand); }
 .day.is-on small { color: inherit; opacity: .8; }

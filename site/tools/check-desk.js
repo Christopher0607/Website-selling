@@ -451,6 +451,7 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
     await v.goto(BASE + '/start.html');
     await v.fill('form[name="mockup-request"] [name="name"]', 'Mei');
     await v.fill('form[name="mockup-request"] [name="brand"]', 'Kopi Mei');
+    await v.fill('form[name="mockup-request"] [name="whatsapp"]', '012-345 6789');
     await v.fill('form[name="mockup-request"] [name="instagram"]', '@kopi.mei');
     await v.fill('form[name="mockup-request"] [name="shop_url"]', 'https://instagram.com/kopi.mei');
     await v.check('form[name="mockup-request"] [name="consent"]');
