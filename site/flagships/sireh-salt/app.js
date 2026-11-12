@@ -432,7 +432,8 @@
     var S = { date: '', time: 0, pax: 2, seat: 'Indoor', occ: '', name: '', phone: '', notes: '' };
     var root = $('[data-book]');
     function paint() {
-      var days = openDays(15).filter(function (d) { return d !== today() || HOURS[dowOf(d)].some(function (h) { return h[1] - 90 >= nowMin() + 30; }); }).slice(0, 14);
+      // offer a day only while it still has a time that is neither past nor full (at 19:55 the last table of the night can be taken)
+      var days = openDays(15).filter(function (d) { var minT = d === today() ? nowMin() + 30 : 0; return HOURS[dowOf(d)].some(function (h) { for (var t = h[0]; t <= h[1] - 90; t += 30) if (t >= minT && tablesLeft(d, t) > 0) return true; return false; }); }).slice(0, 14);
       if (days.indexOf(S.date) < 0) S.date = days[0];
       var slots = [];
       HOURS[dowOf(S.date)].forEach(function (h) { for (var t = h[0]; t <= h[1] - 90; t += 30) slots.push(t); });

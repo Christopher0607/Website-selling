@@ -63,6 +63,7 @@
   function upsert(item) {
     const i = S.items.findIndex((x) => x.id === item.id);
     if (i >= 0 && item.preview_views === undefined) item.preview_views = S.items[i].preview_views;
+    if (i >= 0 && item.demo === undefined) { item.demo = S.items[i].demo; item.fest_demo = S.items[i].fest_demo; }
     if (i >= 0) S.items[i] = item; else S.items.unshift(item);
   }
 
@@ -237,7 +238,9 @@
       close: { en: "I'll WhatsApp you a short written quotation today, so you have all the details in one place. I can also drop by for 15 minutes to show you on the phone. Which day suits you?", zh: '我今天用 WhatsApp 发一份简单的报价给你，细节都写清楚。方便的话我也可以过去 15 分钟，用手机给你看。你哪一天比较方便？', ms: 'Saya WhatsApp sebut harga ringkas hari ini, semua butiran di satu tempat. Saya juga boleh singgah 15 minit untuk tunjuk di telefon. Hari apa yang sesuai?' },
       notyet: { en: "No problem, it only takes two minutes on your phone. I'll WhatsApp you the link and password again now, and give you a quick call in two days.", zh: '没关系，用手机看两分钟就好。我现在再发一次网址和密码给你，两天后再打给你。', ms: 'Tak apa, dua minit sahaja di telefon. Saya WhatsApp pautan dan kata laluan sekali lagi sekarang, dan telefon semula dalam dua hari.' },
     };
-    const steps = [['1 开场', T.open], ['2 看过了：先听他说，再讲价钱', T.price], ['3 节日：更小的第一步', T.festive], ['4 约下一步，然后按「有兴趣」', T.close], ['还没看：重发，然后按「还没看：重发」', T.notyet]];
+    const d = p.demo;
+    if (d) T.demo = { en: `We've also just finished a complete demo website for ${d.kind.en}, with everything working. I'll WhatsApp you the link, so you can see what yours could do.`, zh: `我们也刚做好一个${d.kind.zh}的完整示范网站，每个功能都能用。我用 WhatsApp 把网址发给你，你可以看看你们的网站能做到什么。`, ms: `Kami juga baru siapkan laman web demo lengkap untuk ${d.kind.ms}, semua fungsi boleh digunakan. Saya WhatsApp pautannya, supaya anda boleh lihat apa yang laman web anda boleh buat.` };
+    const steps = [['1 开场', T.open], ['2 看过了：先听他说，再讲价钱', T.price], ...(d ? [['2b 完整示范：' + d.name + '（跟进信息里已附网址）', T.demo]] : []), ['3 节日：更小的第一步', T.festive], ['4 约下一步，然后按「有兴趣」', T.close], ['还没看：重发，然后按「还没看：重发」', T.notyet]];
     const objs = [
       ['要问老板 / 合伙人', { en: "Of course. I'll WhatsApp a short summary with the price so you can forward it. When's a good time to call you back?", zh: '当然。我用 WhatsApp 发一份有价钱的简介，你可以直接转给他。什么时候方便再打给你？', ms: 'Sudah tentu. Saya WhatsApp ringkasan dengan harga supaya boleh dihantar terus. Bila sesuai saya telefon semula?' }],
       ['现在不急 / 节日后再说', { en: `Understood. If you want this season's pre-orders, the festive page is the small step. Otherwise no problem, the sample stays up until ${p.preview_delete_by || 'its delete date'}.`, zh: `明白。想接这个节日的预购，节日预购页是最小的一步；不然也没关系，样板会留到 ${p.preview_delete_by || '删除日'}。`, ms: `Faham. Kalau nak pre-order musim ini, halaman perayaan ialah langkah kecil. Kalau tidak, tak apa, contoh ini kekal sehingga ${p.preview_delete_by || 'tarikh dipadam'}.` }],
@@ -247,6 +250,11 @@
       ['不需要', { en: 'No problem, thank you for taking a look. Have a good day!', zh: '没问题，谢谢你花时间看。祝生意兴隆！', ms: 'Tak apa, terima kasih kerana sudi tengok. Selamat maju jaya!' }],
     ];
     return { L, steps, objs };
+  }
+  // the complete demo website that fits this shop (picked by the server from its niche) + the festive page demo
+  function demoRow(p) {
+    if (!p.demo && !p.fest_demo) return '';
+    return `<div class="pvbox__row pvbox__demo"><b>适合他的示范</b>${p.demo ? `<a href="${esc(p.demo.url)}" target="_blank" rel="noopener">${esc(p.demo.name)}</a><span>${esc(p.demo.zh)}</span>` : '<span>没有（不是餐饮：用 6 个商店模板）</span>'}${p.fest_demo ? `<a href="${esc(p.fest_demo)}" target="_blank" rel="noopener">节日预购页 RM399</a>` : ''}</div>`;
   }
   function secondHTML(p) {
     const sc = secondOf(p);
@@ -368,7 +376,7 @@
   const hasPv = (p) => !!(p.preview_url && p.preview_password && p.preview_msg && p.status !== 'preview_sent');
   function pvBlock(p) {
     if (!p.preview_url || !p.preview_password || ['do_not_contact', 'won', 'lost'].includes(p.status)) return '';
-    let h = `<div class="pvbox" data-pvbox><div class="pvbox__row"><b>样板</b><a href="${esc(p.preview_url)}" target="_blank" rel="noopener">打开看看</a><span>密码 <code>${esc(p.preview_password)}</code></span><button class="linkbtn" data-act="copy-pv" data-id="${p.id}">复制网址和密码</button></div>${p.status === 'preview_sent' ? '' : pvChecked(p)}<small>${esc(p.preview_delete_by)} 删除${p.status === 'preview_sent' ? ' · 已经发给对方' : ''}</small>${viewsLine(p)}</div>`;
+    let h = `<div class="pvbox" data-pvbox><div class="pvbox__row"><b>样板</b><a href="${esc(p.preview_url)}" target="_blank" rel="noopener">打开看看</a><span>密码 <code>${esc(p.preview_password)}</code></span><button class="linkbtn" data-act="copy-pv" data-id="${p.id}">复制网址和密码</button></div>${p.status === 'preview_sent' ? '' : pvChecked(p)}<small>${esc(p.preview_delete_by)} 删除${p.status === 'preview_sent' ? ' · 已经发给对方' : ''}</small>${viewsLine(p)}${demoRow(p)}</div>`;
     if (p.status !== 'preview_sent' && p.preview_msg && !(p.status === 'replied' && p.draft_reply)) {
       h += msgBox(p, 'preview_msg', '发给对方的信息（已附上样板网址和密码，可以直接改）') + sendRow(p, 'preview_msg');
       h += `<div class="btnrow btnrow--end"><button class="btn btn--ghost btn--sm" data-act="pv-sent" data-id="${p.id}">${svg('check', 16)}已发样板</button></div>`;
@@ -422,7 +430,7 @@
       }
     } else if (['contacted', 'preview_sent', 'proposal_sent', 'call_booked'].includes(p.status) && (due || mode === 'full')) {
       if (p.followup) {
-        body += msgBox(p, 'followup', p.status === 'contacted' ? (p.touches <= 1 ? '第 2 条：给一个有用的资讯' : '最后一条') : p.status === 'preview_sent' ? ['跟进信息（第 1 条：网址密码、价钱、节日预购页）', '跟进信息（第 2 条：换一个有用的角度）', '最后一条（礼貌收尾）'][Math.min(2, p.pv_followups || 0)] : '跟进信息') + sendRow(p, 'followup');
+        body += msgBox(p, 'followup', p.status === 'contacted' ? (p.touches <= 1 ? '第 2 条：给一个有用的资讯' : '最后一条') : p.status === 'preview_sent' ? ['跟进信息（第 1 条：网址密码、适合他的示范网站、三种开始方式：RM800 起 / 每月 RM199 / 节日预购页 RM399）', '跟进信息（第 2 条：换一个有用的角度）', '最后一条（礼貌收尾）'][Math.min(2, p.pv_followups || 0)] : '跟进信息') + sendRow(p, 'followup');
         body += `<div class="btnrow btnrow--end">${sentBtn}${moreBtn}</div>`;
       } else {
         body += `<div class="btnrow"><button class="btn btn--sm" data-act="followup" data-id="${p.id}">${svg('pen', 16)}写跟进信息${p.status === 'preview_sent' ? `（第 ${Math.min(3, (p.pv_followups || 0) + 1)} 条）` : ''}</button><button class="btn btn--ghost btn--sm" data-act="reply" data-id="${p.id}">${svg('reply', 16)}对方有回复</button>${moreBtn}</div>`;

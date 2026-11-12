@@ -672,8 +672,9 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
     ok((await p.$$('#c-p961 [data-act="call"]')).length === 1, 'one call button on the card');
     ok(!!(await p.$('#c-p962 [data-act="call"]')), 'mockup sent and only the call date is due: the card is on today\'s list too');
     const fu = JSON.parse(fs.readFileSync(STORE, 'utf8')).items.find((x) => x.id === 'p961').followup || '';
-    ok(fu.includes('second1234') && /from RM800 one-off/.test(fu) && /RM399/.test(fu) && /\/demo\/butter-lantern\//.test(fu) && /second half only when you're happy/.test(fu) && !/[?？]/.test(fu.replace(/https?:\/\/\S+/g, '')),
-      'first follow-up after the mockup: link, password, the price, the festive page, no questions');
+    ok(fu.includes('second1234') && /from RM800 one-off/.test(fu) && /RM399/.test(fu) && /\/demo\/butter-lantern\//.test(fu) && /RM199 a month/.test(fu) && /\/demo\/dulang-daun\//.test(fu) && /second half only when you're happy/.test(fu) && !/[?？]/.test(fu.replace(/https?:\/\/\S+/g, '')),
+      'first follow-up after the mockup: link, password, the price, the monthly plan, the fitting demo (bakery → Dulang & Daun), the festive page, no questions');
+    ok(/Dulang &(amp;)? Daun/.test(c1) && /2b 完整示范/.test(c1), 'the card and the second-call script name the demo that fits (bakery → Dulang & Daun)');
     await p.click('#c-p961 [data-act="call"]');
     await p.waitForSelector('#c-p961 [data-callout]');
     const co = await p.textContent('#c-p961 [data-callout]');

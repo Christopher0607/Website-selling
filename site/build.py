@@ -1039,7 +1039,7 @@ class Studio:
 <link rel="stylesheet" href="{root}assets/css/studio.css">
 <script src="{root}assets/js/studio.js" defer></script>
 </head>
-<body class="studio">
+<body class="studio p-{rel.rsplit('.html', 1)[0].replace('/', '-')}">
 {sprite()}
 <a class="skip" href="#main">Skip to content</a>
 <header class="s-hdr"><div class="s-wrap s-hdr__in">
@@ -1131,6 +1131,16 @@ class Studio:
 {f'<a class="s-btn s-btn--block" href="{root}{p["demo"]}" style="margin-bottom:10px">See the demo</a>' if p.get("demo") else ""}<a class="s-btn s-btn--block s-btn--ghost" href="{root}start.html?package={p['id']}">Ask about this</a></article>""")
         return '<div class="pkgs pkgs--2">' + "".join(out) + "</div>"
 
+    def frag_starts_mini(self, root):
+        # homepage (2026-11-12): the RM399 festive page and the RM199-a-month plan, one compact card each
+        out = []
+        for p in self.d.get("starts", []):
+            link = (f'<a class="s-btn s-btn--sm" href="{root}{p["demo"]}">See the demo</a>' if p.get("demo")
+                    else f'<a class="s-btn s-btn--sm s-btn--ghost" href="{root}start.html?package={p["id"]}">Ask about this</a>')
+            out.append(f'<article class="sm"><div class="sm__txt"><h3>{e(p["name"])}</h3><p>{e(p["for"])}</p></div>'
+                       f'<p class="sm__price"><span>RM</span>{p["price"]:,}<small>{e(p["unit"])}</small></p>{link}</article>')
+        return '<div class="starts-mini"><p class="kicker">Or start smaller</p>' + "".join(out) + "</div>"
+
     def frag_care(self, root):
         c = self.d["care"]
         head = "".join(f"<th>{e(x['name'])}<br><b>RM{x['price']}/month</b></th>" for x in c["plans"])
@@ -1189,11 +1199,15 @@ class Studio:
             ("butter-lantern", "Butter &amp; Lantern", "Festive pre-order page · RM399", "demo/butter-lantern/index.html?fest=cny", "img/cny-hero.webp", ("See it for Hari Raya", "demo/butter-lantern/index.html?fest=raya"),
              ["One page, live in 3 working days", "Festive sets with cut-off dates and how many are left", "Customers pick a collection or delivery day", "Orders arrive on your WhatsApp, already filled in", "Re-dressed for Chinese New Year, Raya, Christmas or Deepavali", "The RM399 comes off a full website if you upgrade within 60 days"]),
         ]
+        lines = {"maison-cendre": "Tasting menus, reservations with deposits, private dining.",
+                 "sireh-salt": "Menu, pick-up and delivery orders, table bookings.",
+                 "dulang-daun": "Gift boxes and hampers, shipped across Malaysia.",
+                 "butter-lantern": "One page for festive pre-orders, sent to your WhatsApp."}
         out = []
         for slug, name, kind, href, img, second, feats in cards:
             li = "".join(f"<li>{icon('check')}{f}</li>" for f in feats)
             out.append(f'<article class="flag"><a class="flag__img" href="{root}{href}" tabindex="-1" aria-hidden="true"><img src="{root}demo/{slug}/{img}" alt="" loading="lazy" width="760" height="560"></a>'
-                       f'<div class="flag__body"><p class="kicker">{kind}</p><h3>{name}</h3><ul class="s-ticks">{li}</ul>'
+                       f'<div class="flag__body"><p class="kicker">{kind}</p><h3>{name}</h3><p class="flag__line">{lines[slug]}</p><ul class="s-ticks">{li}</ul>'
                        f'<div class="s-btns"><a class="s-btn" href="{root}{href}">Open the demo</a><a class="s-btn s-btn--ghost" href="{root}{second[1]}">{second[0]}</a></div></div></article>')
         return '<div class="flags">' + "".join(out) + '</div><p class="s-hero__note" style="text-align:center;margin-top:16px">All four brands are fictional and nothing is charged; every button works. Open them on your phone.</p>'
 
@@ -1244,6 +1258,7 @@ class Studio:
                 "TEMPLATE_OPTIONS": lambda: self.frag_template_options(root),
                 "PACKAGES": lambda: self.frag_packages(root),
                 "STARTS": lambda: self.frag_starts(root),
+                "STARTS_MINI": lambda: self.frag_starts_mini(root),
                 "CARE": lambda: self.frag_care(root),
                 "FAQ": lambda: self.frag_faq(root),
                 "FAQ_SHORT": lambda: self.frag_faq(root, 6),

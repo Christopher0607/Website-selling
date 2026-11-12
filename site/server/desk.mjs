@@ -279,6 +279,7 @@ function customerFile(p) {
     `Calls: ${p.calls || 0} (no answer ${p.call_misses || 0}); last call ${p.last_call_date || '-'}; next call ${p.next_call_date || '-'}`,
     `Contacts: WhatsApp ${fmtNo(p.whatsapp)}; phone ${fmtNo(p.phone)}; email ${p.email || '-'}; area ${p.area || '-'}; address ${p.address || '-'}`,
     mockupFile(p),
+    demoLine(p),
     viewsLine(p),
     p.input ? `Research notes:\n${String(p.input).slice(0, 2500)}` : '',
     p.preview_msg && p.status !== 'preview_sent' ? `Mockup message ready on the card (not sent yet): ${short(p.preview_msg)}` : '',
@@ -291,6 +292,10 @@ function customerFile(p) {
     p.ai_summary ? `Summary of our earlier conversation about this customer:\n${p.ai_summary}` : '',
   ];
   return parts.filter(Boolean).join('\n');
+}
+function demoLine(p) {
+  const d = demoFor(p);
+  return `Full demo website that fits them (send this one when they want to see what a finished website does): ${d ? `${d.name} ${d.url}` : 'none for this kind of shop: use the 6 shop templates, ' + STUDIO_URL + 'templates.html'}; festive pre-order page demo (the ${FESTIVE_PRICE} small first step): ${festDemo(p)}`;
 }
 async function chatAsk(messages, maxTokens = 1400) {
   const key = env('DEEPSEEK_API_KEY');
@@ -315,7 +320,7 @@ async function chatAsk(messages, maxTokens = 1400) {
   throw Object.assign(new Error(last), { code: 'ai_failed' });
 }
 // what the phone needs for the list: no AI conversation (opened on demand), no research notes / mockup facts (only the AI reads them)
-function slimItem(p) { const { ai_chat, input, preview_facts, ...rest } = p; return { ...rest, ai_count: (ai_chat || []).length }; }
+function slimItem(p) { const { ai_chat, input, preview_facts, ...rest } = p; return { ...rest, ai_count: (ai_chat || []).length, demo: demoFor(p), fest_demo: festDemo(p) }; }
 async function chatInto(p, text) {
   const q = String(text || '').trim().slice(0, 4000);
   if (!q) throw Object.assign(new Error('先输入问题或贴上对方的信息'), { code: 'bad_input' });
@@ -557,7 +562,7 @@ const PVMSG_AGAIN = {
 // 1–2 days after the mockup went out (2026-11-12): link again + the price in plain words + a small first step for the
 // festive season. No AI needed. Prices: sales/agent/knowledge.md / site/studio.json. FOUNDING_OPEN: set to false once
 // the first 3 clients have signed (their terms: balance only when happy).
-const PVFOLLOW_V = 4;
+const PVFOLLOW_V = 5;
 const FOUNDING_OPEN = true;
 const FROM_PRICE = 'RM800';
 const FESTIVE_PRICE = 'RM399';
@@ -573,10 +578,37 @@ function festiveName(lang) {
   };
   return N[lang] || N.en;
 }
+// The complete demo website that fits this business, picked from its niche and name (2026-11-12): restaurants go to
+// Maison Cendre (chef-led, upmarket) or Sireh & Salt (everyday); bakeries, kuih, desserts, coffee beans and food gifts go
+// to Dulang & Daun; other cafés and food places to Sireh & Salt; shops that are not food get none (the 6 templates fit them).
+const DEMOS = {
+  'maison-cendre': { name: 'Maison Cendre', zh: '精品餐厅', kind: { en: 'chef-led restaurants like yours', zh: '像你们这样的精品餐厅', ms: 'restoran seperti anda' } },
+  'sireh-salt': { name: 'Sireh & Salt', zh: '一般餐厅、咖啡馆', kind: { en: 'restaurants and cafés like yours', zh: '餐厅和咖啡馆', ms: 'restoran dan kafe seperti anda' } },
+  'dulang-daun': { name: 'Dulang & Daun', zh: '烘焙、糕点、食品礼盒', kind: { en: 'bakeries and food brands like yours', zh: '烘焙和食品品牌', ms: 'kedai kek, kuih dan jenama makanan seperti anda' } },
+};
+const RX_GOODS = /\bbak(?:e|ed|er|ers|ery|eries|es|ing)\b|cake|kuih|kueh|p[aâ]tiss|pastr|\btarts?\b|cookie|biscuit|bread|\bbuns?\b|donut|doughnut|croissant|brownie|macaron|mochi|dessert|gelato|ice cream|chocolate|kaya|sambal|sauce|hamper|gift|\bbeans?\b|roaster|roastery|snack|granola|\bjams?\b|honey|\bkek\b/;
+const RX_FINE = /kaiseki|omakase|fine[- ]?dining|tasting menu|degustation|chef'?s (?:table|counter)|chef-led|french|wine|bistro|dinner[- ]only|steak|contemporary|modern european|private dining|upscale|luxury/;
+const RX_FOOD = /caf[eé]|kopitiam|eatery|kitchen|food|f&b|grill|noodle|nasi|\bmee\b|dim sum|ramen|sushi|\bbar\b|cater|coffee|\btea\b|juice|brunch|western|thai|korean|japanese|chinese|malay|indian|mamak|vegetarian|vegan|seafood|bbq|burger|pizza|pasta|hotpot|steamboat|laksa|kebab|canteen|diner|warung/;
+function demoFor(p) {
+  const t = `${p.niche || ''} ${p.business_name || ''}`.toLowerCase();
+  const slug = /restaurant|restoran|dining/.test(t) ? (RX_FINE.test(t) ? 'maison-cendre' : 'sireh-salt')
+    : RX_GOODS.test(t) ? 'dulang-daun' : RX_FINE.test(t) ? 'maison-cendre' : RX_FOOD.test(t) ? 'sireh-salt' : '';
+  return slug ? { slug, url: `${STUDIO_URL}demo/${slug}/`, ...DEMOS[slug] } : null;
+}
+// which festival the festive demo opens on: Chinese-speaking or Chinese / Peranakan / Taiwanese shops → Chinese New Year,
+// Malay-speaking or Malay shops → Hari Raya, everyone else → the nearest festival (the page picks it)
+function festDemo(p) {
+  const t = `${p.niche || ''} ${p.business_name || ''}`.toLowerCase();
+  if (p.language === 'zh' || /chinese|taiwan|nyonya|peranakan|cantonese|hokkien|teochew|hakka|dim sum|hong kong|kopitiam/.test(t)) return FESTIVE_DEMO + '?fest=cny';
+  if (p.language === 'ms' || /\bmalay|\braya\b|kampung/.test(t)) return FESTIVE_DEMO + '?fest=raya';
+  return FESTIVE_DEMO;
+}
+const MONTHLY_PRICE = 'RM199';
+// v5 (2026-11-12): + the full demo website that fits them, + the monthly plan; three ways to start
 const PVFOLLOW = {
-  zh: (n, u, pw) => `你好，我是 Cartsmith Studio。再发一次 ${n} 的样板网站，方便你找：\n${u}\n密码：${pw}\n\n你们自己的照片和现在的价钱，我们可以免费换上去。做成你们自己的网站是一次性 ${FROM_PRICE} 起，价钱固定、写清楚${FOUNDING_OPEN ? '；你会是我们最早的几位客户之一，满意了才付另一半' : ''}。${festiveName('zh')}快到了，也可以先只做一个节日预购页，${FESTIVE_PRICE}，3 个工作天上线，样子可以看这里：\n${FESTIVE_DEMO}?fest=cny\n\n直接回复这里就好，我们会接着处理。\n— Cartsmith Studio`,
-  en: (n, u, pw) => `Hi, Cartsmith Studio here. Here's the sample website for ${n} again, so it's easy to find:\n${u}\nPassword: ${pw}\n\nYour own photos and current prices can go in for free. To make it your own website: from ${FROM_PRICE} one-off, fixed and written down${FOUNDING_OPEN ? ", and as one of our first clients you pay the second half only when you're happy with it" : ''}. With ${festiveName('en')} coming, a festive pre-order page on its own is ${FESTIVE_PRICE}, live in 3 working days. This is what one looks like:\n${FESTIVE_DEMO}\n\nJust reply here and we'll take it from there.\n— Cartsmith Studio`,
-  ms: (n, u, pw) => `Hai, Cartsmith Studio di sini. Ini contoh laman web untuk ${n} sekali lagi, supaya senang dicari:\n${u}\nKata laluan: ${pw}\n\nGambar sendiri dan harga terkini boleh dimasukkan secara percuma. Untuk jadikan ia laman web anda sendiri: dari ${FROM_PRICE} sekali bayar, harga tetap dan bertulis${FOUNDING_OPEN ? ', dan sebagai antara pelanggan terawal kami, baki dibayar hanya bila anda berpuas hati' : ''}. Untuk ${festiveName('ms')}, halaman pre-order perayaan sahaja ialah ${FESTIVE_PRICE}, siap dalam 3 hari bekerja. Contohnya di sini:\n${FESTIVE_DEMO}?fest=raya\n\nBalas sahaja di sini dan kami akan uruskan seterusnya.\n— Cartsmith Studio`,
+  zh: (n, u, pw, d, fl) => `你好，我是 Cartsmith Studio。再发一次 ${n} 的样板网站，方便你找：\n${u}\n密码：${pw}\n\n${d ? `我们也刚做好一个${d.kind.zh}的完整示范网站，每个按钮都可以按，可以看看你们自己的网站能做到什么：\n${d.url}\n\n` : ''}你们自己的照片和现在的价钱，我们可以免费换上去。开始的方式有三种：\n1. 做成你们自己的网站：一次性 ${FROM_PRICE} 起，价钱固定、写清楚${FOUNDING_OPEN ? '（你会是我们最早的几位客户之一，满意了才付另一半）' : ''}。\n2. 不用先付钱：每个月 ${MONTHLY_PRICE}，付 12 个月，主机和维护都包括在内。\n3. ${festiveName('zh')}快到了，也可以先只做一个节日预购页：${FESTIVE_PRICE}，3 个工作天上线，样子可以看这里：\n${fl}\n\n直接回复这里就好，我们会接着处理。\n— Cartsmith Studio`,
+  en: (n, u, pw, d, fl) => `Hi, Cartsmith Studio here. Here's the sample website for ${n} again, so it's easy to find:\n${u}\nPassword: ${pw}\n\n${d ? `We've also just finished a complete demo website for ${d.kind.en}. Every button works, so you can see what your own website could do:\n${d.url}\n\n` : ''}Your own photos and current prices go in for free. Three ways to start:\n1. Your own website from ${FROM_PRICE} one-off, fixed and written down${FOUNDING_OPEN ? " (as one of our first clients, you pay the second half only when you're happy with it)" : ''}.\n2. Nothing upfront: ${MONTHLY_PRICE} a month for 12 months, hosting and care included.\n3. With ${festiveName('en')} coming, just a festive pre-order page: ${FESTIVE_PRICE}, live in 3 working days. This is what one looks like:\n${fl}\n\nJust reply here and we'll take it from there.\n— Cartsmith Studio`,
+  ms: (n, u, pw, d, fl) => `Hai, Cartsmith Studio di sini. Ini contoh laman web untuk ${n} sekali lagi, supaya senang dicari:\n${u}\nKata laluan: ${pw}\n\n${d ? `Kami juga baru siapkan satu laman web demo lengkap untuk ${d.kind.ms}. Semua butang boleh ditekan, jadi anda boleh lihat apa yang laman web anda sendiri boleh buat:\n${d.url}\n\n` : ''}Gambar sendiri dan harga terkini boleh dimasukkan secara percuma. Tiga cara untuk mula:\n1. Laman web anda sendiri dari ${FROM_PRICE} sekali bayar, harga tetap dan bertulis${FOUNDING_OPEN ? ' (sebagai antara pelanggan terawal kami, baki dibayar hanya bila anda berpuas hati)' : ''}.\n2. Tiada bayaran awal: ${MONTHLY_PRICE} sebulan selama 12 bulan, hosting dan penyelenggaraan termasuk.\n3. Untuk ${festiveName('ms')}, halaman pre-order perayaan sahaja: ${FESTIVE_PRICE}, siap dalam 3 hari bekerja. Contohnya di sini:\n${fl}\n\nBalas sahaja di sini dan kami akan uruskan seterusnya.\n— Cartsmith Studio`,
 };
 const PVMSG = {
   zh: (n, u, pw, d) => `你好，我们是 Cartsmith Studio，帮本地餐饮和品牌做网站。我们已经帮 ${n} 做好了一个免费的样板网站：\n${u}\n密码：${pw}\n\n用手机打开就可以看，照片是示意图。样板只给你看，${d} 会删除；不用钱，也不用马上决定，有兴趣回复这里就好。\n\n我们的网站：${STUDIO_URL}\n— Cartsmith Studio`,
@@ -587,7 +619,7 @@ const pvMsg = (p) => {
   const T = (p.touches || 0) > 0 || p.status === 'contacted' ? PVMSG_AGAIN : PVMSG;
   return (T[p.language] || T.en)(p.business_name, p.preview_url, p.preview_password, p.preview_delete_by);
 };
-const pvFollow = (p) => (PVFOLLOW[p.language] || PVFOLLOW.en)(p.business_name, p.preview_url, p.preview_password);
+const pvFollow = (p) => (PVFOLLOW[p.language] || PVFOLLOW.en)(p.business_name, p.preview_url, p.preview_password, demoFor(p), festDemo(p));
 // cards made with the old, longer message get the new one (unless the mockup was already sent)
 function refreshPreviewMsgs(doc) {
   let changed = false;
@@ -851,9 +883,9 @@ async function handle(action, b, doc) {
       const hasPv = !!(p.preview_url && p.preview_password);
       const n = p.pv_followups || 0;
       const kind = p.status === 'preview_sent' && n === 0
-        ? `FIRST follow-up after we sent the free mockup (see "After the mockup is sent" in How our system works): the link and password again so it is easy to find; their own photos and current prices go in for free; the price in plain words (their own website from ${FROM_PRICE} one-off, fixed and written down${FOUNDING_OPEN ? '; as one of our first 3 clients they pay the second half only when happy' : ''}); the small first step: a festive pre-order page for ${FESTIVE_PRICE}, live in 3 working days, for ${festiveName('en')}, with the link to a sample one (${FESTIVE_DEMO}, add ?fest=cny for Chinese New Year or ?fest=raya for Hari Raya); ONE specific detail from THEIR mockup (a dish, a set, the booking or pre-order page). Statements only, no questions`
+        ? `FIRST follow-up after we sent the free mockup (see "After the mockup is sent" in How our system works): the link and password again so it is easy to find; their own photos and current prices go in for free; the full demo website that fits their kind of business (${demoFor(p) ? demoFor(p).url : 'skip if none'}); the price in plain words (their own website from ${FROM_PRICE} one-off, fixed and written down${FOUNDING_OPEN ? '; as one of our first 3 clients they pay the second half only when happy' : ''}; or nothing upfront and ${MONTHLY_PRICE} a month for 12 months); the small first step: a festive pre-order page for ${FESTIVE_PRICE}, live in 3 working days, for ${festiveName('en')}, with the link to a sample one (${festDemo(p)}); ONE specific detail from THEIR mockup (a dish, a set, the booking or pre-order page). Statements only, no questions`
         : p.status === 'preview_sent' && n === 1
-          ? 'SECOND follow-up after the mockup (about 4 days after the first): one new, useful angle for their kind of shop (e.g. festive sets with cut-off dates and slots left so they stop answering the same DM; table bookings that arrive with date, time and party size; regulars ordering without platform commission), the price again in one line, the mockup link again, door open. Short. Statements only, no questions'
+          ? `SECOND follow-up after the mockup (about 4 days after the first): one new, useful angle for their kind of shop (e.g. festive sets with cut-off dates and slots left so they stop answering the same DM; table bookings that arrive with date, time and party size; regulars ordering without platform commission), the price again in one line (from ${FROM_PRICE} one-off, or nothing upfront and ${MONTHLY_PRICE} a month), the mockup link again, door open. Short. Statements only, no questions`
           : p.status === 'preview_sent'
             ? `LAST polite message after the mockup: very short; the sample website stays up until ${p.preview_delete_by || 'its delete date'} and is then deleted; if the timing is not right, they can message us here any time. No price, no pressure, no questions`
             : hasPv && p.status !== 'preview_sent'

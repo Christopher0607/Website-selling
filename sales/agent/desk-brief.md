@@ -58,8 +58,9 @@ to end the call politely — and then nothing happens. Seven mockups went out; o
   password, call again in 2 days. Never say we can see this.
 - **Written follow-ups** (only when the call did not connect, or as the message after the call):
   1. 1–2 days after sending: link + password again; their own photos and current prices go in for free; the price in
-     one line; the RM399 festive page as the small first step, with the link to the sample festive page; ONE specific
-     detail from THEIR mockup (a dish, a set, the booking or pre-order page).
+     one line (RM800 one-off, or nothing upfront and RM199 a month for 12 months); the full demo website that fits them
+     (the card file says which one); the RM399 festive page as the small first step, with the link to the sample
+     festive page; ONE specific detail from THEIR mockup (a dish, a set, the booking or pre-order page).
   2. About 4 days later: one new useful angle for their kind of shop (festive sets with cut-off dates and slots left so
      they stop answering the same DM; bookings that arrive with date, time and party size; regulars ordering without
      platform commission), the price again in one line, the link again, door open.
@@ -74,7 +75,8 @@ to end the call politely — and then nothing happens. Seven mockups went out; o
 
 ## 2c. Full demo websites to show (2026-11-12)
 When an owner wants to see what a finished website does (beyond their own sample), point them to one of the four
-complete demos — fictional brands, everything clickable, nothing charged:
+complete demos — fictional brands, everything clickable, nothing charged. The customer file says which one fits this
+business ("Full demo website that fits them"); use that one:
 - Fine dining, chef-led or upmarket restaurants: https://cartsmithstudio.com/demo/maison-cendre/ (tasting menus,
   reservations with deposits and a waitlist, private dining, seasonal dinners; owner side at /demo/maison-cendre/owner.html).
 - Everyday restaurants, cafés, caterers: https://cartsmithstudio.com/demo/sireh-salt/ (ordering, bookings, festive pre-orders,
