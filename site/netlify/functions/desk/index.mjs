@@ -864,6 +864,38 @@ ${text}
       return { csv: toCsv(doc.items) };
 
     case 'restore': {
+      // full backup (JSON from "下载完整备份"): everything on each card comes back, including the AI assistant's conversations
+      if (b.backup) {
+        const src = b.backup.doc || b.backup;
+        if (!src || !Array.isArray(src.items) || !src.items.length || !src.items.every((x) => x && typeof x.id === 'string' && x.business_name)) throw Object.assign(new Error('这不是工作台下载的完整备份（JSON）'), { code: 'bad_input' });
+        if (src.items.length > 3000) throw Object.assign(new Error('备份档案太大'), { code: 'bad_input' });
+        let added = 0, skipped = 0, chats = 0;
+        if (!doc.items.length) { // new, empty desk: take the whole backup as it is
+          for (const k of Object.keys(doc)) delete doc[k];
+          Object.assign(doc, JSON.parse(JSON.stringify(src)));
+          doc.settings = doc.settings || { dailyLimit: 10 };
+          added = doc.items.length;
+          chats = doc.items.filter((x) => (x.ai_chat || []).length).length;
+        } else { // desk already has cards: add the missing ones, and give back conversations to cards that lost them
+          for (const it of src.items) {
+            const ig = handleOf(it.instagram || '');
+            const have = doc.items.find((x) => x.id === it.id && x.business_name === it.business_name) || (ig && doc.items.find((x) => x.instagram === ig)) || doc.items.find((x) => x.business_name === it.business_name);
+            if (have) {
+              if (!(have.ai_chat || []).length && (it.ai_chat || []).length) { have.ai_chat = it.ai_chat; have.ai_summary = it.ai_summary || have.ai_summary || ''; have.ai_sum_at = it.ai_sum_at || have.ai_sum_at || 0; chats++; }
+              skipped++;
+              continue;
+            }
+            const copy = JSON.parse(JSON.stringify(it));
+            if (doc.items.some((x) => x.id === copy.id)) copy.id = 'p' + String(doc.next++).padStart(3, '0');
+            doc.items.push(copy); added++;
+            if ((copy.ai_chat || []).length) chats++;
+          }
+          doc.inbox_done = [...new Set([...(doc.inbox_done || []), ...(src.inbox_done || [])])];
+        }
+        const maxId = Math.max(0, ...doc.items.map((x) => parseInt(String(x.id).slice(1), 10) || 0));
+        doc.next = Math.max(doc.next || 1, maxId + 1);
+        return { added, skipped, chats, full: true, saved: true };
+      }
       const csv = String(b.csv || '');
       if (!csv.trim() || csv.length > 3e6) throw Object.assign(new Error('备份档案是空的或太大'), { code: 'bad_input' });
       const rows = parseCsv(csv);

@@ -170,6 +170,38 @@
 
 > 做完告诉 Claude Code「新帐号好了」，它会检查网站、工作台、AI 客服，再重新开启每天找餐厅的定时任务。
 
+## 第 F2 部分：有了域名之后换 Netlify 帐号（2026-11-12）
+
+> 跟第 F 部分不同的地方：现在有域名 `cartsmithstudio.com`、样板子网址、AI 对话。**顺序很重要：先把新帐号的网站做好、资料还原好，最后才搬域名**，这样客户手上的链接只会断很短的时间。建议晚上做。
+> 提醒：Netlify 不允许靠重复开免费帐号来绕过额度，新帐号有被停用的风险；长期还是建议升级付费方案。
+
+**第 1 步：旧工作台下载完整备份（2 分钟）**
+1. 打开旧的工作台 → 下面「数字」→ **下载完整备份（含 AI 对话）**，得到 `cartsmith-desk-backup-日期.json`。再按一次「下载名单（CSV）」当第二份保险。两个档案都存好。
+
+**第 2 步：新帐号开网站（15 分钟，这时旧网站照常运作）**
+2. 登出旧帐号，用新的 Email 注册 Netlify → **Add new project → Import an existing project → GitHub** → 选 `Website-selling` → Branch to deploy：`ccr-4e1e8221-7msrbj`。
+3. 加环境变量（Scopes 勾 Functions）：`DEEPSEEK_API_KEY`、`SALES_DESK_KEY`（跟旧的一样）、`DEEPSEEK_MODEL` = `deepseek-flash`。按 **Deploy**，等变成 Published。
+4. **Project configuration → Build & deploy → Branches and deploy contexts → Configure → Branch deploys：Let me add individual branches → 填 `previews`** → Save。然后 **Deploys → Trigger deploy** 旁边选分支 `previews` 部署一次（或告诉 Claude Code，它重新发布一个样板就会触发）。
+5. 左边 **Forms → Enable form detection**。
+
+**第 3 步：还原资料（2 分钟）**
+6. 打开新网站的工作台（网址是新项目的 `xxx.netlify.app/desk/`）→ 输入工作台密码 → 「数字」→ **从备份还原** → 选第 1 步的 JSON → 还原。应该显示「还原了 N 家；N 家的 AI 对话也回来了」。打开一张卡的 AI 助手确认对话还在。
+
+**第 4 步：搬域名（10 分钟，这一段客户的链接会断）**
+7. 旧帐号 → 项目 → **Domain management** → `cartsmithstudio.com` 旁边 **Options → Remove domain**（`www` 和 `previews` 子网址也移除）。
+8. 旧帐号 → 左上角团队页 → **Domains** → 点 `cartsmithstudio.com` → 最下面 **Delete DNS zone**。
+9. 旧帐号 → 项目 → **Project configuration → General → Change project name** → `cartsmith-old`；**Build & deploy → Build settings → Builds: Stopped**。
+10. 新帐号 → 项目 → **Change project name** → `cartsmith`（旧的 `cartsmith.netlify.app` 链接才会继续能用）。
+11. 新帐号 → **Domain management → Add a domain → Add a domain you already own** → `cartsmithstudio.com` → 设成 Primary → **Options → Set up Netlify DNS** → 记下 4 个 Name servers。
+12. 如果这 4 个跟 Porkbun 里现在的不一样：Porkbun → Domain Management → Details → Nameservers → 换成新的 4 个 → Save。
+13. 新帐号 → Domain management → **Branch subdomains → New subdomain → `previews`**。
+
+**第 5 步：告诉 Claude Code「新帐号好了」**
+- Claude Code 会：帮每个样板重新写工作台备注（新工作台的加密钥匙不一样）、检查网站 / 工作台 / AI 客服 / 样板链接 / 浏览监控。
+- 旧帐号的项目过几天确认没问题再删。
+
+**搬不过去的：** 样板浏览记录（从搬家那天重新开始记）。
+
 ---
 
 ## 常见问题

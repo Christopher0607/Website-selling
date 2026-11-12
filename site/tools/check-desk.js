@@ -579,6 +579,43 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
   await p.waitForSelector('#app:not([hidden])');
   ok(!(await p.$('[data-inbox]')), 'inbox stays empty after reload');
 
+  // restore from the FULL backup (2026-11-12): AI conversations must survive a move to a new Netlify account
+  {
+    const api2 = (body) => fetch(`${BASE}/api/desk`, { method: 'POST', headers: { 'content-type': 'application/json', 'x-desk-key': KEY }, body: JSON.stringify(body) }).then((r) => r.json());
+    const bk = (await api2({ action: 'backup' })).backup;
+    const withChat = bk.doc.items.filter((x) => (x.ai_chat || []).length);
+    ok(withChat.length >= 1, `full backup has the AI conversations (${withChat.length} cards)`);
+    const before = fs.readFileSync(STORE, 'utf8');
+    // a) the new account's desk is empty
+    fs.writeFileSync(STORE, JSON.stringify({ next: 1, items: [], settings: { dailyLimit: 10 } }));
+    await p.reload();
+    await p.click('[data-tab="stats"]');
+    await p.setInputFiles('[data-restore-file]', { name: 'cartsmith-desk-backup.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(bk, null, 1)) });
+    await p.click('[data-restore]');
+    await p.waitForFunction(() => /AI 对话也回来了/.test(document.body.textContent), null, { timeout: 15000 });
+    const a = JSON.parse(fs.readFileSync(STORE, 'utf8'));
+    const same = (x, y) => JSON.stringify(x) === JSON.stringify(y);
+    if (process.env.DESK_DEBUG) console.log('    restore:', a.items.length, bk.doc.items.length, a.next, bk.doc.next, JSON.stringify(a.settings), JSON.stringify(bk.doc.settings));
+    ok(a.items.length === bk.doc.items.length && withChat.every((w) => same((a.items.find((x) => x.id === w.id) || {}).ai_chat, w.ai_chat)) && a.next >= bk.doc.next && same(a.settings, bk.doc.settings),
+      'empty desk + full backup: every card, every AI conversation, settings and the next id are back');
+    const w0 = withChat[0], a0 = a.items.find((x) => x.id === w0.id);
+    ok(same(a0.history, w0.history) && a0.status === w0.status && (a0.preview_password || '') === (w0.preview_password || '') && (a0.ai_summary || '') === (w0.ai_summary || ''), 'history, status, mockup password and the AI summary are the same as before');
+    // b) the desk already has the cards (e.g. restored from CSV earlier) but the conversations are gone
+    const stripped = JSON.parse(before);
+    stripped.items.forEach((x) => { delete x.ai_chat; delete x.ai_summary; });
+    stripped.items = stripped.items.filter((x) => x.id !== bk.doc.items[bk.doc.items.length - 1].id);
+    fs.writeFileSync(STORE, JSON.stringify(stripped));
+    const r2 = await api2({ action: 'restore', backup: bk });
+    const b2 = JSON.parse(fs.readFileSync(STORE, 'utf8'));
+    ok(r2.added === 1 && r2.chats >= withChat.length - 1 && b2.items.length === bk.doc.items.length && withChat.every((w) => same((b2.items.find((x) => x.id === w.id) || {}).ai_chat, w.ai_chat)),
+      'desk that already has the cards: conversations are put back, the missing card is added, nothing is duplicated');
+    const bad = await api2({ action: 'restore', backup: { hello: 1 } });
+    ok(bad.error === 'bad_input', 'a JSON file that is not a desk backup is refused');
+    fs.writeFileSync(STORE, before);
+    await p.reload();
+    await p.click('[data-tab="stats"]');
+  }
+
   // restore from a CSV backup (moving to a new Netlify account)
   await p.click('[data-tab="stats"]');
   await p.setInputFiles('[data-restore-file]', { name: 'backup.csv', mimeType: 'text/csv', buffer: Buffer.from(csv) });

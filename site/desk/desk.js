@@ -919,15 +919,18 @@
   $('[data-logout]').addEventListener('click', () => { store.clear(); location.reload(); });
   $('[data-restore]').addEventListener('click', async (ev) => {
     const f = $('[data-restore-file]').files[0];
-    if (!f) { toast('先选一个名单档案（CSV）。'); return; }
+    if (!f) { toast('先选一个备份档案（完整备份 JSON，或名单 CSV）。'); return; }
     const btn = ev.currentTarget;
     busy(btn, true, '还原中…');
     try {
-      const j = await api('restore', { csv: await f.text() });
+      const txt = await f.text();
+      let payload = { csv: txt };
+      if (/\.json$/i.test(f.name) || /^\s*\{/.test(txt)) { try { payload = { backup: JSON.parse(txt) }; } catch (e) { throw new Error('这个 JSON 档案读不了：请选工作台「下载完整备份」的档案。'); } }
+      const j = await api('restore', payload);
       const l = await api('list');
       S.items = l.items || []; S.inbox = l.inbox || [];
       render();
-      toast(`还原了 ${j.added} 家${j.skipped ? `，跳过 ${j.skipped} 家（已经有了）` : ''}。`);
+      toast(`还原了 ${j.added} 家${j.skipped ? `，跳过 ${j.skipped} 家（已经有了）` : ''}${j.full ? `；${j.chats} 家的 AI 对话也回来了` : ''}。`);
     } catch (e) { if (e.message !== 'unauthorised') toast(e.message); }
     busy(btn, false);
   });
