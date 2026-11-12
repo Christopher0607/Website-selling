@@ -1,4 +1,4 @@
-/* Cartsmith Studio — menu, request form (Netlify Forms) and AI chat (DeepSeek via /api/chat). */
+/* Cartsmith Studio — menu, request form (/api/form, shown in the sales desk) and AI chat (DeepSeek via /api/chat). */
 (function () {
   'use strict';
   const $ = (s, r) => (r || document).querySelector(s);
@@ -8,9 +8,9 @@
     get(k, fb) { try { const v = sessionStorage.getItem(k); return v ? JSON.parse(v) : fb; } catch (e) { return fb; } },
     set(k, v) { try { sessionStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* private mode */ } }
   };
-  // Netlify Forms accept a normal urlencoded POST to "/" with the form name.
+  // our own form endpoint (2026-11-12, was Netlify Forms): stored for the sales desk
   function netlifySubmit(fields) {
-    return fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(fields).toString() })
+    return fetch('/api/form', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded', Accept: 'application/json' }, body: new URLSearchParams(fields).toString() })
       .then((r) => { if (!r.ok) throw new Error('HTTP ' + r.status); return r; });
   }
 
@@ -45,7 +45,7 @@
       msg.textContent = 'Sending…';
       const data = Object.fromEntries(new FormData(form).entries());
       netlifySubmit(data)
-        .then(() => { location.href = form.getAttribute('action') || 'thanks.html'; })
+        .then(() => { location.href = 'thanks.html'; })
         .catch(() => {
           // Fallback so the request is never lost: show the details, copy them, open the Instagram DM.
           btn.disabled = false;

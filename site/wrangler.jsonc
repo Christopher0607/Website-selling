@@ -1,0 +1,21 @@
+// Cloudflare Worker「cartsmith」：工作室网站（dist/ 静态档案）+ /api/desk、/api/track、/api/form、/api/chat（site/worker.mjs）。
+// 建置（Workers Builds，Root directory = site）：Build command `python3 build.py`，Deploy command `npx wrangler deploy`。
+// 密码和 Key 不放这里：在 Cloudflare → Worker → Settings → Variables and Secrets 加 Secret（SALES_DESK_KEY、DEEPSEEK_API_KEY）。
+// 说明见 docs/12-cloudflare-guide.md
+{
+  "name": "cartsmith",
+  "main": "worker.mjs",
+  "compatibility_date": "2025-06-01",
+  "keep_vars": true,
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "none"
+  },
+  "d1_databases": [
+    { "binding": "DB", "database_name": "cartsmith-desk", "database_id": "9f784aee-d26f-442d-b12b-8e837b599b52" }
+  ],
+  "vars": { "DEEPSEEK_MODEL": "deepseek-flash" },
+  "observability": { "enabled": true }
+}

@@ -79,8 +79,8 @@ WhatsApp：012-345 6789 · Email：hello@glowlab.my
       </div>
       <div class="settings">
         <h3>从备份还原</h3>
-        <p class="hint">换 Netlify 帐号时用：在旧的工作台按「下载名单（CSV）」，在这里选那个档案。名单里已经有的商家会自动跳过。</p>
-        <label>名单档案（CSV）<input type="file" accept=".csv,text/csv" data-restore-file></label>
+        <p class="hint">换 Netlify 帐号时用：在旧的工作台按「下载完整备份（含 AI 对话）」，在这里选那个 JSON 档案，卡片、联系记录、样板网址和密码、AI 对话都会回来。（只有名单 CSV 也可以，但没有 AI 对话。）名单里已经有的商家会自动跳过。</p>
+        <label>备份档案（JSON 或 CSV）<input type="file" accept=".json,application/json,.csv,text/csv" data-restore-file></label>
         <div class="btnrow"><button class="btn btn--ghost" type="button" data-restore>还原</button></div>
       </div>
     </section>

@@ -1,19 +1,16 @@
-// Cartsmith 销售工作台（Sales Desk）后端 — Netlify Function，/api/desk
-// 设定（Netlify → Project configuration → Environment variables）：
-//   SALES_DESK_KEY     必填。工作台密码（俊宇自己定，只放在 Netlify 和他的密码管理器）
+// Cartsmith 销售工作台（Sales Desk）后端 — 不分平台的核心（2026-11-12 起跑在 Cloudflare Pages Functions：site/functions/api/*.js），/api/desk
+// 设定（Cloudflare → Pages 项目 → Settings → Variables and Secrets）：
+//   SALES_DESK_KEY     必填。工作台密码（俊宇自己定，只放在 Cloudflare 和他的密码管理器）
 //   DEEPSEEK_API_KEY   和网站 AI 客服共用
 //   DEEPSEEK_MODEL     选填，默认 deepseek-flash
-// 资料存在 Netlify Blobs（store: sales-desk）。本地测试：设定 DESK_LOCAL_FILE=/path/to/file.json
+// 资料：由入口传进来的 store（Cloudflare 用 D1：site/server/store-d1.mjs；本机测试用档案：site/server/store-file.mjs）。
 // 新商家收件箱：Claude Code 把上网找到的商家写进 sales/leads/*.json → build.py 产生 inbox.mjs + sales/leads/inbox.json →
 //   工作台「今天」最上面显示，俊宇按「全部加入」就逐家打分、写开场白（不用复制粘贴资料）。
-//   每天的新商家 push 到 GitHub 的 leads 分支（Netlify 不部署那个分支，不扣点数）；这里在执行时读取
+//   每天的新商家 push 到 GitHub 的 leads 分支（不部署那个分支）；这里在执行时读取
 //   LEADS_URL（默认 leads 分支的 sales/leads/inbox.json），和部署时打包的 INBOX 合并。LEADS_URL=off 关掉。
 //
 // 原则：AI 只负责分析和起草；信息一律由俊宇本人手动发送（Instagram / WhatsApp / Email 都是按一下打开、自己按发送；不自动发、不抓资料）。
-import crypto from 'node:crypto';
-import fs from 'node:fs';
-import { getStore } from '@netlify/blobs';
-import { KNOWLEDGE, IG_HANDLE } from '../chat/knowledge.mjs';
+import { KNOWLEDGE, IG_HANDLE } from './knowledge.mjs';
 import { SCRIPTS } from './scripts.mjs';
 import { BRIEF } from './brief.mjs';
 import { INBOX, PREVIEWS as BUNDLED_PREVIEWS } from './inbox.mjs';
@@ -24,10 +21,13 @@ const TEMPLATES = ['dewlane', 'plainfold', 'chili-pantry', 'lowlight', 'tailmate
 const CRITERIA = ['brand_clear', 'sales_signal', 'active_social', 'no_or_weak_website', 'budget_signal'];
 const EVENTS = ['sent', 'replied', 'preview_sent', 'call_booked', 'proposal_sent', 'won', 'lost', 'has_site', 'no_response', 'dnc', 'reopen', 'preview_deleted'];
 
-function env(k) {
-  try { if (globalThis.Netlify && globalThis.Netlify.env) { const v = globalThis.Netlify.env.get(k); if (v) return v; } } catch (e) { /* local */ }
-  return process.env[k];
-}
+// platform: set by the entry point on every request — { env(k), store, ip }
+//   store: { get(key), set(key, value), getMany(keys) -> Map, list(prefix, limit) -> [{key, value}], del(key) }
+let PLAT = { env: (k) => (typeof process !== 'undefined' && process.env ? process.env[k] : undefined), store: null, ip: 'local' };
+function env(k) { return PLAT.env(k); }
+// base64 / PEM helpers (no Buffer: the same code runs on Cloudflare and Node)
+const b64d = (s) => Uint8Array.from(atob(String(s || '')), (c) => c.charCodeAt(0));
+const b64e = (buf) => { const u = new Uint8Array(buf); let s = ''; for (let i = 0; i < u.length; i += 0x8000) s += String.fromCharCode.apply(null, u.subarray(i, i + 0x8000)); return btoa(s); };
 const json = (obj, status = 200) => new Response(JSON.stringify(obj), { status, headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' } });
 
 // Malaysia date (UTC+8), YYYY-MM-DD
@@ -36,20 +36,13 @@ function myDate(offsetDays = 0) { return new Date(Date.now() + 8 * 3600e3 + offs
 // ------------------------------------------------------------------ mockup views (2026-11-11)
 // The mockup's password page sends a beacon to /api/track (scripts/local/preview-publish.js): gate = password page shown,
 // view = a page shown after the password (or the key saved in that browser), time = seconds on that page.
-// Stored per mockup in Netlify Blobs (store: mockup-views). No IP, name or cookie of the visitor: only a random id the
+// Stored per mockup in the desk store (keys view:<slug>). No IP, name or cookie of the visitor: only a random id the
 // mockup keeps in that browser (to tell devices apart), the device kind and the page. Junyu's own opens (cookie cs_staff,
 // set when he opens the desk on cartsmithstudio.com) and automated browsers (our checks, link-preview bots) are not counted.
 const VIEW_SLUG = /^[a-z0-9][a-z0-9-]{2,80}$/;
 const BOT_UA = /Headless|bot\b|bot\/|crawl|spider|slurp|preview|facebookexternalhit|WhatsApp|Telegram|Slack|Discord|Twitterbot|LinkedIn|curl|wget|python|node-fetch|undici|axios|Playwright|Puppeteer|Lighthouse|PageSpeed/i;
 function viewStore() {
-  const file = env('DESK_LOCAL_FILE');
-  if (file) {
-    const vf = file + '.views.json';
-    const all = () => { try { return JSON.parse(fs.readFileSync(vf, 'utf8')); } catch (e) { return {}; } };
-    return { async get(s) { return all()[s] || null; }, async set(s, r) { const a = all(); a[s] = r; fs.writeFileSync(vf, JSON.stringify(a)); } };
-  }
-  const store = getStore({ name: 'mockup-views', consistency: 'strong' });
-  return { get: (s) => store.get(s, { type: 'json' }), set: (s, r) => store.setJSON(s, r) };
+  return { get: (s) => PLAT.store.get('view:' + s), set: (s, r) => PLAT.store.set('view:' + s, r) };
 }
 const deviceKind = (ua) => (/iPad|Tablet/i.test(ua) ? 'tablet' : /Mobi|Android|iPhone/i.test(ua) ? 'mobile' : 'desktop');
 const slugOf = (p) => p.preview_slug || (String(p.preview_url || '').match(/\/([a-z0-9][a-z0-9-]{2,80})\/?(?:index\.html)?$/) || [])[1] || '';
@@ -69,7 +62,8 @@ async function track(req) {
       return done;
     }
     const vid = String(q.get('v') || '').replace(/[^a-z0-9]/gi, '').slice(0, 16) || 'x';
-    const page = String(q.get('p') || 'index.html').replace(/[^\w./-]/g, '').slice(0, 80) || 'index.html';
+    let page = String(q.get('p') || 'index.html').replace(/[^\w./-]/g, '').slice(0, 80) || 'index.html';
+    if (!/\.html$/.test(page)) page = (page.replace(/\/$/, '/index') || 'index') + '.html'; // Workers serve /x.html as /x
     let d = r.devices[vid];
     if (!d) {
       if (Object.keys(r.devices).length >= 20) return done;
@@ -103,9 +97,9 @@ function viewSummary(r) {
 async function viewsFor(items) {
   const slugs = [...new Set(items.map(slugOf).filter(Boolean))];
   if (!slugs.length) return new Map();
-  const vs = viewStore();
-  const got = await Promise.all(slugs.map((s) => Promise.resolve(vs.get(s)).catch(() => null)));
-  return new Map(slugs.map((s, i) => [s, viewSummary(got[i])]));
+  let got = new Map();
+  try { got = await PLAT.store.getMany(slugs.map((s) => 'view:' + s)); } catch (e) { console.error('views', e.message); } // one query, not one per mockup
+  return new Map(slugs.map((s) => [s, viewSummary(got.get('view:' + s) || null)]));
 }
 const AI_VIEWS = new Map(); // id -> summary, filled before an AI call so the customer file can mention it
 const myTime = (iso) => (iso ? new Date(Date.parse(iso) + 8 * 3600e3).toISOString().slice(0, 16).replace('T', ' ') : '-');
@@ -120,28 +114,20 @@ function viewsLine(p) {
 
 // ------------------------------------------------------------------ storage
 async function storage() {
-  const file = env('DESK_LOCAL_FILE');
-  if (file) {
-    return {
-      async load() { try { return JSON.parse(fs.readFileSync(file, 'utf8')); } catch (e) { return null; } },
-      async save(d) { fs.writeFileSync(file, JSON.stringify(d)); }
-    };
-  }
-  const store = getStore({ name: 'sales-desk', consistency: 'strong' });
-  return {
-    async load() { return store.get(DOC, { type: 'json' }); },
-    async save(d) { await store.setJSON(DOC, d); }
-  };
+  return { load: () => PLAT.store.get(DOC), save: (d) => PLAT.store.set(DOC, d) };
 }
 const emptyDoc = () => ({ next: 1, items: [], settings: { dailyLimit: 10 } });
 
 // ------------------------------------------------------------------ auth (constant-time) + failed-attempt limit
 const fails = new Map();
-function authorised(req, ip) {
+async function authorised(req, ip) {
   const want = env('SALES_DESK_KEY') || '';
   const got = req.headers.get('x-desk-key') || '';
-  const h = (s) => crypto.createHash('sha256').update(s).digest();
-  const ok = want.length >= 8 && crypto.timingSafeEqual(h(want), h(got));
+  const h = async (s) => new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)));
+  const [a, b] = await Promise.all([h(want), h(got)]);
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) diff |= a[i] ^ b[i]; // constant time
+  const ok = want.length >= 8 && diff === 0;
   if (!ok) {
     const now = Date.now();
     const arr = (fails.get(ip) || []).filter((t) => now - t < 600e3);
@@ -247,7 +233,7 @@ const LANG = { zh: 'Simplified Chinese (简体中文)', en: 'English', ms: 'Baha
 // ---------------------------------------------------------------- per-customer AI assistant (2026-11-09)
 // One conversation per customer, stored on that customer only (doc.items[i].ai_chat) → never mixed up.
 // Long conversations keep a running summary (ai_summary) so nothing important is forgotten.
-// Lives in the desk's private storage (Netlify Blobs), never in git (the repo is public).
+// Lives in the desk's private storage (D1 on Cloudflare), never in git (the repo is public).
 const CHAT_KEEP = 300, CHAT_SEND = 24, CHAT_SUM_EVERY = 30;
 const CHAT_RULES = `
 
@@ -328,7 +314,8 @@ async function chatAsk(messages, maxTokens = 1400) {
   }
   throw Object.assign(new Error(last), { code: 'ai_failed' });
 }
-function slimItem(p) { const { ai_chat, ...rest } = p; return { ...rest, ai_count: (ai_chat || []).length }; }
+// what the phone needs for the list: no AI conversation (opened on demand), no research notes / mockup facts (only the AI reads them)
+function slimItem(p) { const { ai_chat, input, preview_facts, ...rest } = p; return { ...rest, ai_count: (ai_chat || []).length }; }
 async function chatInto(p, text) {
   const q = String(text || '').trim().slice(0, 4000);
   if (!q) throw Object.assign(new Error('先输入问题或贴上对方的信息'), { code: 'bad_input' });
@@ -484,21 +471,31 @@ async function allLeads() {
 // {slug, url, enc, lead_id / instagram} to the leads branch. `enc` is the mockup password encrypted with
 // this desk's public key, so the public repo never holds a password. The private key never leaves Blobs.
 let keyCache = null;
+// 2026-11-12: ECDH P-256 + AES-GCM (was RSA-OAEP on Netlify). preview-publish.js reads `alg` from ?pubkey=1:
+//   enc = base64(JSON {v: 2, epk: <its one-time public key, raw base64>, iv, ct}); shared secret -> HKDF-SHA256 -> AES-256-GCM key.
 async function previewKeys() {
   if (keyCache) return keyCache;
-  const file = env('DESK_LOCAL_FILE');
-  const load = file ? async () => { try { return JSON.parse(fs.readFileSync(file + '.keys.json', 'utf8')); } catch (e) { return null; } }
-    : async () => getStore({ name: 'sales-desk', consistency: 'strong' }).get('preview-keys-v1', { type: 'json' });
-  const save = file ? async (k) => fs.writeFileSync(file + '.keys.json', JSON.stringify(k))
-    : async (k) => getStore({ name: 'sales-desk', consistency: 'strong' }).setJSON('preview-keys-v1', k);
-  let k = await load();
-  if (!k || !k.publicKey || !k.privateKey) {
-    const pair = crypto.generateKeyPairSync('rsa', { modulusLength: 2048, publicKeyEncoding: { type: 'spki', format: 'pem' }, privateKeyEncoding: { type: 'pkcs8', format: 'pem' } });
-    k = { publicKey: pair.publicKey, privateKey: pair.privateKey, created: myDate() };
-    await save(k);
+  let k = await PLAT.store.get('preview-keys-v2');
+  if (!k || !k.publicKey || !k.privateJwk) {
+    const pair = await crypto.subtle.generateKey({ name: 'ECDH', namedCurve: 'P-256' }, true, ['deriveBits']);
+    k = { alg: 'ECDH-P256-HKDF-AESGCM', publicKey: b64e(await crypto.subtle.exportKey('raw', pair.publicKey)), privateJwk: await crypto.subtle.exportKey('jwk', pair.privateKey), created: myDate() };
+    await PLAT.store.set('preview-keys-v2', k);
   }
   keyCache = k;
   return k;
+}
+let privCache = null;
+async function openSecret(enc) {
+  const k = await previewKeys();
+  privCache = privCache || await crypto.subtle.importKey('jwk', k.privateJwk, { name: 'ECDH', namedCurve: 'P-256' }, false, ['deriveBits']);
+  const box = JSON.parse(new TextDecoder().decode(b64d(enc)));
+  if (!box || box.v !== 2) throw new Error('old format (made for the previous desk): run preview-publish.js desk-note again');
+  const epk = await crypto.subtle.importKey('raw', b64d(box.epk), { name: 'ECDH', namedCurve: 'P-256' }, false, []);
+  const shared = await crypto.subtle.deriveBits({ name: 'ECDH', public: epk }, privCache, 256);
+  const hk = await crypto.subtle.importKey('raw', shared, 'HKDF', false, ['deriveKey']);
+  const aes = await crypto.subtle.deriveKey({ name: 'HKDF', hash: 'SHA-256', salt: new Uint8Array(0), info: new TextEncoder().encode('cartsmith-preview-v2') }, hk, { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
+  const pt = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: b64d(box.iv) }, aes, b64d(box.ct));
+  return JSON.parse(new TextDecoder().decode(pt));
 }
 function allPreviews() {
   const bySlug = new Map((BUNDLED_PREVIEWS || []).map((x) => [x.slug, x]));
@@ -510,7 +507,8 @@ function allPreviews() {
 const STUDIO_URL = 'https://cartsmithstudio.com/';
 // 2026-11-11: own domain. Cards saved before keep links / drafts with the old Netlify addresses: swap them (they still open, but
 // the customer should only ever see cartsmithstudio.com). Messages the owner already sent (thread, history) are left as they were.
-const OLD_URLS = [['https://previews--cartsmith.netlify.app', 'https://previews.cartsmithstudio.com'], ['https://cartsmith.netlify.app', 'https://cartsmithstudio.com']];
+const OLD_URLS = [['https://previews--cartsmith.netlify.app', 'https://previews.cartsmithstudio.com'], ['https://cartsmith.netlify.app', 'https://cartsmithstudio.com'],
+  ['previews--cartsmith.netlify.app', 'previews.cartsmithstudio.com'], ['cartsmith.netlify.app', 'cartsmithstudio.com']]; // also written without https://
 const DRAFT_FIELDS = ['preview_url', 'preview_msg', 'followup', 'draft_reply', 'message'];
 const newUrls = (s) => OLD_URLS.reduce((t, [a, b]) => t.split(a).join(b), String(s));
 const PVMSG_V = 3;
@@ -541,7 +539,7 @@ const pvFollow = (p) => (PVFOLLOW[p.language] || PVFOLLOW.en)(p.business_name, p
 function refreshPreviewMsgs(doc) {
   let changed = false;
   for (const p of doc.items) {
-    for (const k of DRAFT_FIELDS) if (typeof p[k] === 'string' && p[k].includes('cartsmith.netlify.app')) { p[k] = newUrls(p[k]); changed = true; }
+    for (const k of DRAFT_FIELDS) if (typeof p[k] === 'string' && p[k].includes('cartsmith.netlify.app')) { const v = newUrls(p[k]); if (v !== p[k]) { p[k] = v; changed = true; } }
     if (p.preview_url && p.preview_password && (p.preview_msg_v || 1) < PVMSG_V && p.status !== 'preview_sent') {
       p.preview_msg = pvMsg(p); p.preview_msg_v = PVMSG_V; changed = true;
     }
@@ -554,7 +552,7 @@ function refreshPreviewMsgs(doc) {
 }
 async function applyPreviews(doc, list) {
   if (!list.length) return false;
-  let keys = null, changed = false;
+  let changed = false;
   for (const pv of list) {
     const ig = handleOf(pv.instagram || '');
     const p = doc.items.find((x) => (pv.lead_id && x.lead_id === pv.lead_id) || (ig && x.instagram === ig));
@@ -575,10 +573,7 @@ async function applyPreviews(doc, list) {
     }
     if (!p || ['do_not_contact', 'won', 'lost'].includes(p.status)) continue;
     let secret;
-    try {
-      keys = keys || await previewKeys();
-      secret = JSON.parse(crypto.privateDecrypt({ key: keys.privateKey, padding: crypto.constants.RSA_PKCS1_OAEP_PADDING, oaepHash: 'sha256' }, Buffer.from(pv.enc, 'base64')).toString('utf8'));
-    } catch (e) { console.error('preview decrypt', pv.slug, e.message); continue; }
+    try { secret = await openSecret(pv.enc); } catch (e) { console.error('preview decrypt', pv.slug, e.message); continue; }
     const pw = String(secret.password || '').slice(0, 80);
     if (!pw) continue;
     p.preview_slug = pv.slug; p.preview_url = newUrls(pv.url).slice(0, 300); p.preview_password = pw;
@@ -726,7 +721,9 @@ async function handle(action, b, doc) {
       if (await applyPreviews(doc, allPreviews())) changed = true;
       if (refreshPreviewMsgs(doc)) changed = true;
       const vm = await viewsFor(doc.items);
-      return { items: doc.items.map((p) => ({ ...slimItem(p), preview_views: vm.get(slugOf(p)) || null })), settings: doc.settings, today: myDate(), inbox: pendingInbox(doc, LEADS), saved: changed };
+      let forms = [];
+      try { forms = (await PLAT.store.list('form:', 30)).map((r) => r.value).filter(Boolean); } catch (e) { console.error('forms', e.message); }
+      return { items: doc.items.map((p) => ({ ...slimItem(p), preview_views: vm.get(slugOf(p)) || null })), settings: doc.settings, today: myDate(), inbox: pendingInbox(doc, LEADS), forms, saved: changed };
     }
 
     case 'analyze': {
@@ -849,6 +846,15 @@ ${text}
       return { item: p, saved: true };
     }
 
+    case 'form-seen': {
+      const id = String(b.form_id || '').replace(/[^0-9a-z-]/g, '');
+      const f = id && await PLAT.store.get('form:' + id);
+      if (!f) throw Object.assign(new Error('找不到这份申请'), { code: 'not_found' });
+      f.seen = true;
+      await PLAT.store.set('form:' + id, f);
+      return { ok: true };
+    }
+
     case 'backup': {
       return { backup: { exported: myDate(), version: 1, doc } };
     }
@@ -864,6 +870,38 @@ ${text}
       return { csv: toCsv(doc.items) };
 
     case 'restore': {
+      // full backup (JSON from "下载完整备份"): everything on each card comes back, including the AI assistant's conversations
+      if (b.backup) {
+        const src = b.backup.doc || b.backup;
+        if (!src || !Array.isArray(src.items) || !src.items.length || !src.items.every((x) => x && typeof x.id === 'string' && x.business_name)) throw Object.assign(new Error('这不是工作台下载的完整备份（JSON）'), { code: 'bad_input' });
+        if (src.items.length > 3000) throw Object.assign(new Error('备份档案太大'), { code: 'bad_input' });
+        let added = 0, skipped = 0, chats = 0;
+        if (!doc.items.length) { // new, empty desk: take the whole backup as it is
+          for (const k of Object.keys(doc)) delete doc[k];
+          Object.assign(doc, JSON.parse(JSON.stringify(src)));
+          doc.settings = doc.settings || { dailyLimit: 10 };
+          added = doc.items.length;
+          chats = doc.items.filter((x) => (x.ai_chat || []).length).length;
+        } else { // desk already has cards: add the missing ones, and give back conversations to cards that lost them
+          for (const it of src.items) {
+            const ig = handleOf(it.instagram || '');
+            const have = doc.items.find((x) => x.id === it.id && x.business_name === it.business_name) || (ig && doc.items.find((x) => x.instagram === ig)) || doc.items.find((x) => x.business_name === it.business_name);
+            if (have) {
+              if (!(have.ai_chat || []).length && (it.ai_chat || []).length) { have.ai_chat = it.ai_chat; have.ai_summary = it.ai_summary || have.ai_summary || ''; have.ai_sum_at = it.ai_sum_at || have.ai_sum_at || 0; chats++; }
+              skipped++;
+              continue;
+            }
+            const copy = JSON.parse(JSON.stringify(it));
+            if (doc.items.some((x) => x.id === copy.id)) copy.id = 'p' + String(doc.next++).padStart(3, '0');
+            doc.items.push(copy); added++;
+            if ((copy.ai_chat || []).length) chats++;
+          }
+          doc.inbox_done = [...new Set([...(doc.inbox_done || []), ...(src.inbox_done || [])])];
+        }
+        const maxId = Math.max(0, ...doc.items.map((x) => parseInt(String(x.id).slice(1), 10) || 0));
+        doc.next = Math.max(doc.next || 1, maxId + 1);
+        return { added, skipped, chats, full: true, saved: true };
+      }
       const csv = String(b.csv || '');
       if (!csv.trim() || csv.length > 3e6) throw Object.assign(new Error('备份档案是空的或太大'), { code: 'bad_input' });
       const rows = parseCsv(csv);
@@ -876,19 +914,20 @@ ${text}
   }
 }
 
-export default async (req, context) => {
-  if (new URL(req.url).pathname === '/api/track') return (req.method === 'POST' || req.method === 'GET') ? track(req) : new Response(null, { status: 405 });
+// /api/desk — the entry point passes { env(k), store, ip }
+export async function handleDesk(req, plat) {
+  PLAT = plat;
   if (req.method === 'GET' && new URL(req.url).searchParams.has('pubkey')) {
-    try { return json({ pubkey: (await previewKeys()).publicKey }); } catch (e) { console.error('pubkey', e); return json({ error: 'server_error' }, 500); }
+    try { const k = await previewKeys(); return json({ pubkey: k.publicKey, alg: k.alg }); } catch (e) { console.error('pubkey', e); return json({ error: 'server_error' }, 500); }
   }
   if (req.method !== 'POST') return json({ error: 'method_not_allowed' }, 405);
   const origin = req.headers.get('origin');
   const host = req.headers.get('host');
   if (origin && host) { try { if (new URL(origin).host !== host) return json({ error: 'forbidden' }, 403); } catch (e) { return json({ error: 'forbidden' }, 403); } }
-  if (!env('SALES_DESK_KEY')) return json({ error: 'not_configured', message: '工作台密码还没设定（Netlify 环境变量 SALES_DESK_KEY）' }, 503);
-  const ip = (context && context.ip) || req.headers.get('x-nf-client-connection-ip') || 'local';
+  if (!env('SALES_DESK_KEY')) return json({ error: 'not_configured', message: '工作台密码还没设定（Cloudflare 环境变量 SALES_DESK_KEY）' }, 503);
+  const ip = plat.ip || 'local';
   if (locked(ip)) return json({ error: 'locked', message: '密码错太多次，10 分钟后再试' }, 429);
-  if (!authorised(req, ip)) return json({ error: 'unauthorised', message: '密码不对' }, 401);
+  if (!(await authorised(req, ip))) return json({ error: 'unauthorised', message: '密码不对' }, 401);
   let b;
   try { b = await req.json(); } catch (e) { return json({ error: 'bad_json' }, 400); }
   try {
@@ -903,6 +942,39 @@ export default async (req, context) => {
     if (status === 500) console.error('desk error', e);
     return json({ error: e.code || 'server_error', message: e.message || '出错了' }, status);
   }
-};
+}
 
-export const config = { path: ['/api/desk', '/api/track'] };
+// /api/track — beacons from the mockup password page (no password needed)
+export async function handleTrack(req, plat) {
+  PLAT = plat;
+  return (req.method === 'POST' || req.method === 'GET') ? track(req) : new Response(null, { status: 405 });
+}
+
+// /api/form — the website's forms (free mockup request, AI chat lead). Stored for the desk; no email is sent.
+const FORMS = ['mockup-request', 'ai-chat-lead'];
+const formHits = new Map();
+export async function handleForm(req, plat) {
+  PLAT = plat;
+  if (req.method !== 'POST') return json({ error: 'method_not_allowed' }, 405);
+  const ip = plat.ip || 'local';
+  const now = Date.now();
+  const hits = (formHits.get(ip) || []).filter((t) => now - t < 600e3);
+  if (hits.length >= 8) return json({ error: 'too_many' }, 429);
+  hits.push(now); formHits.set(ip, hits);
+  const type = req.headers.get('content-type') || '';
+  let fields = {};
+  try {
+    if (type.includes('application/json')) fields = await req.json();
+    else fields = Object.fromEntries(new URLSearchParams(await req.text()));
+  } catch (e) { return json({ error: 'bad_input' }, 400); }
+  const name = String(fields['form-name'] || '');
+  const wantsPage = !type.includes('application/json') && (req.headers.get('accept') || '').includes('text/html');
+  const done = () => (wantsPage ? new Response(null, { status: 303, headers: { Location: '/thanks.html' } }) : json({ ok: true }));
+  if (!FORMS.includes(name)) return json({ error: 'bad_input' }, 400);
+  if (fields['bot-field']) return done(); // honeypot: pretend it worked
+  const clean = {};
+  for (const [k, v] of Object.entries(fields).slice(0, 25)) if (!['form-name', 'bot-field'].includes(k)) clean[String(k).slice(0, 40)] = String(v == null ? '' : v).slice(0, 1500);
+  const id = new Date(now).toISOString().replace(/[-:.TZ]/g, '').slice(0, 14) + '-' + Math.random().toString(36).slice(2, 7);
+  await PLAT.store.set('form:' + id, { id, form: name, at: new Date(now).toISOString(), fields: clean, seen: false });
+  return done();
+}

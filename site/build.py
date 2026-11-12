@@ -1000,7 +1000,7 @@ def build_preview(cfg_path, out=None):
     write("_headers", "/*\n  X-Robots-Tag: noindex, nofollow\n", out)
     print(f"样板 {pv['code']}（{pv['brand']['name']}，模板 {pv['template']}）：{n} 页 → {out}")
     print(f"删除日期：{delete_by}。" + ("已设密码。" if pw else "⚠ 没有设密码（preview.json 加 \"password\"）。"))
-    print("下一步：打开 https://app.netlify.com/drop ，把上面的 site 文件夹拖进去（详细见 docs/09-netlify-guide.md）。")
+    print(f"下一步：node scripts/local/preview-publish.js publish {pv['code']}（加密后发布到 previews 分支）")
 
 
 # --------------------------------------------------------------------------
@@ -1076,10 +1076,7 @@ class Studio:
     <form class="chat__form" data-chat-form><label class="sr" for="chat-in">Message</label><textarea id="chat-in" rows="1" maxlength="800" placeholder="Type your question…" required></textarea><button class="s-btn s-btn--sm" type="submit">Send</button></form>
     <p class="chat__fine">AI can make mistakes — prices and terms are confirmed by the Cartsmith team in writing. Don't share passwords or card details. <a href="{root}privacy.html#ai">Privacy</a></p>
   </section>
-</div>
-<form name="ai-chat-lead" data-netlify="true" netlify-honeypot="bot-field" hidden>
-  <input name="bot-field"><input name="name"><input name="brand"><input name="instagram"><input name="shop_url"><input name="contact"><input name="language"><input name="interest"><textarea name="transcript"></textarea>
-</form>"""
+</div>"""
 
     # ---- fragments used by pages ---------------------------------------
     def frag_template_cards(self, root, detailed=False):
@@ -1347,7 +1344,7 @@ def load_previews():
 
 def build_knowledge():
     src = os.path.join(HERE, "..", "sales", "agent", "knowledge.md")
-    dst = os.path.join(HERE, "netlify", "functions", "chat", "knowledge.mjs")
+    dst = os.path.join(HERE, "server", "knowledge.mjs")
     if not os.path.exists(src):
         print("  ! knowledge.md not found, chat knowledge not updated")
         return
@@ -1364,14 +1361,14 @@ def build_knowledge():
     brief = open(brief_src, encoding="utf-8").read() if os.path.exists(brief_src) else ""
     outputs = {
         dst: content,
-        os.path.join(HERE, "netlify", "functions", "desk", "brief.mjs"):
+        os.path.join(HERE, "server", "brief.mjs"):
             "// 自动产生 —— 不要手动改。改 sales/agent/desk-brief.md，然后跑 python3 site/build.py\nexport const BRIEF = " + json.dumps(brief, ensure_ascii=False) + ";\n",
-        os.path.join(HERE, "netlify", "functions", "desk", "scripts.mjs"):
+        os.path.join(HERE, "server", "scripts.mjs"):
             "// 自动产生 —— 不要手动改。改 sales/scripts.md，然后跑 python3 site/build.py\nexport const SCRIPTS = " + json.dumps(scripts, ensure_ascii=False) + ";\n",
-        os.path.join(HERE, "netlify", "functions", "desk", "inbox.mjs"):
+        os.path.join(HERE, "server", "inbox.mjs"):
             "// 自动产生 —— 不要手动改。改 sales/leads/*.json，然后跑 python3 site/build.py\nexport const INBOX = " + json.dumps(leads, ensure_ascii=False, indent=1) + ";\n"
             + "export const PREVIEWS = " + json.dumps(previews, ensure_ascii=False, indent=1) + ";\n",
-        # 同一份资料的 JSON 版：工作台直接从 GitHub 的 leads 分支读取它，所以每天的新商家不用部署（不扣 Netlify 点数）
+        # 同一份资料的 JSON 版：工作台直接从 GitHub 的 leads 分支读取它，所以每天的新商家不用部署
         os.path.join(HERE, "..", "sales", "leads", "inbox.json"):
             json.dumps({"note": "自动产生，不要手动改（python3 site/build.py）", "leads": leads, "previews": previews}, ensure_ascii=False, indent=1) + "\n",
     }
@@ -1382,6 +1379,26 @@ def build_knowledge():
             with open(path, "w", encoding="utf-8") as fh:
                 fh.write(text_)
             print("  " + os.path.relpath(path, HERE) + " updated")
+
+
+HEADERS = """# 自动产生（site/build.py）。Cloudflare Pages 的回应标头。
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: SAMEORIGIN
+/demo/*
+  X-Robots-Tag: noindex, nofollow
+/desk
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: no-store
+/desk/*
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: no-store
+/assets/*
+  Cache-Control: public, max-age=604800
+/demo/*/img/*
+  Cache-Control: public, max-age=2592000, immutable
+"""
 
 
 def main():
@@ -1403,6 +1420,8 @@ def main():
     shutil.copytree(os.path.join(HERE, "desk"), os.path.join(DIST, "desk"))
     # robots (studio pages only; demos and the desk are noindex)
     write("robots.txt", "User-agent: *\nDisallow: /demo/\nDisallow: /desk/\n")
+    # response headers (Cloudflare Pages reads dist/_headers; same rules the site had on Netlify)
+    write("_headers", HEADERS)
     files = sum(len(f) for _, _, f in os.walk(DIST))
     print(f"built {n} pages, {files} files → {DIST}")
 

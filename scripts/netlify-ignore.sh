@@ -4,6 +4,10 @@
 # netlify.toml 里用：ignore = "bash ../scripts/netlify-ignore.sh"（Netlify 在 base 目录 site/ 执行）
 set -u
 
+# 2026-11-12：网站搬到 Cloudflare Pages。Netlify 不再 build（保留它最后一次部署，直到域名搬走）。
+echo "netlify-ignore: moved to Cloudflare Pages, skip"
+exit 0
+
 # 1) leads 分支只放每天的新商家资料，工作台直接从 GitHub 读取，不需要部署
 if [ "${BRANCH:-}" = "leads" ]; then
   echo "netlify-ignore: leads branch, skip"

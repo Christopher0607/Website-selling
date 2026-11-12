@@ -145,6 +145,8 @@ function encryptSite(p, out) {
 const BRANCH_FILES = {
   'netlify.toml': '# previews 分支：只放加密的免费样板（scripts/local/preview-publish.js）。分支部署不扣 Netlify 点数。\n[build]\n  base = "site"\n  publish = "public"\n  command = "echo previews"\n',
   'site/netlify.toml': '[build]\n  publish = "public"\n  command = "echo previews"\n',
+  // Cloudflare (2026-11-12): this branch is its own Worker with static assets only (root directory site/, deploy command npx wrangler deploy)
+  'site/wrangler.jsonc': '// previews 分支：Cloudflare Worker「cartsmith-previews」，只放加密的样板（静态档案），网址 previews.cartsmithstudio.com\n{\n  "name": "cartsmith-previews",\n  "compatibility_date": "2025-06-01",\n  "assets": { "directory": "./public", "html_handling": "auto-trailing-slash", "not_found_handling": "none" }\n}\n',
   'site/public/index.html': '<!doctype html><meta charset="utf-8"><meta name="robots" content="noindex,nofollow"><title>Cartsmith Studio</title><p style="font:16px system-ui;padding:24px">Nothing here. <a href="' + SITE_URL + '/">Cartsmith Studio</a></p>\n',
   'site/public/robots.txt': 'User-agent: *\nDisallow: /\n',
   'site/public/_headers': '/*\n  X-Robots-Tag: noindex, nofollow\n  Referrer-Policy: no-referrer\n',
@@ -184,6 +186,23 @@ function listOnBranch() {
 }
 
 // ---------------------------------------------------------------- desk note (url + password encrypted for the sales desk)
+// 2026-11-12: the desk on Cloudflare uses ECDH P-256 (alg ECDH-P256-HKDF-AESGCM): a one-time key pair here, shared secret ->
+// HKDF-SHA256 (info cartsmith-preview-v2) -> AES-256-GCM. The old desk (Netlify) sent an RSA PEM with no alg: RSA-OAEP-SHA256.
+async function sealForDesk(pubkey, alg, text) {
+  if (alg === 'ECDH-P256-HKDF-AESGCM') {
+    const subtle = crypto.webcrypto.subtle;
+    const desk = await subtle.importKey('raw', Buffer.from(pubkey, 'base64'), { name: 'ECDH', namedCurve: 'P-256' }, false, []);
+    const mine = await subtle.generateKey({ name: 'ECDH', namedCurve: 'P-256' }, true, ['deriveBits']);
+    const shared = await subtle.deriveBits({ name: 'ECDH', public: desk }, mine.privateKey, 256);
+    const hk = await subtle.importKey('raw', shared, 'HKDF', false, ['deriveKey']);
+    const aes = await subtle.deriveKey({ name: 'HKDF', hash: 'SHA-256', salt: new Uint8Array(0), info: Buffer.from('cartsmith-preview-v2') }, hk, { name: 'AES-GCM', length: 256 }, false, ['encrypt']);
+    const iv = crypto.randomBytes(12);
+    const ct = await subtle.encrypt({ name: 'AES-GCM', iv }, aes, Buffer.from(text));
+    const epk = Buffer.from(await subtle.exportKey('raw', mine.publicKey)).toString('base64');
+    return Buffer.from(JSON.stringify({ v: 2, epk, iv: iv.toString('base64'), ct: Buffer.from(ct).toString('base64') })).toString('base64');
+  }
+  return crypto.publicEncrypt({ key: pubkey, padding: crypto.constants.RSA_PKCS1_OAEP_PADDING, oaepHash: 'sha256' }, Buffer.from(text)).toString('base64');
+}
 const NOTES = path.join(ROOT, 'sales', 'leads', 'previews.json');
 async function deskNote(code) {
   const p = previewOf(code);
@@ -191,13 +210,13 @@ async function deskNote(code) {
   const rec = JSON.parse(fs.readFileSync(p.recPath, 'utf8'));
   if (!p.cfg.lead_id && !p.cfg.instagram) die('preview.json 要有 lead_id 或 instagram，工作台才知道是哪一家');
   const deskUrl = (process.env.DESK_URL || SITE_URL).replace(/\/$/, '') + '/api/desk?pubkey=1';
-  let pubkey;
+  let pubkey, alg = '';
   for (const wait of [0, 3, 10, 20]) {
     if (wait) execFileSync('sleep', [String(wait)]);
-    try { const r = await fetch(deskUrl); if (r.ok) { pubkey = (await r.json()).pubkey; if (pubkey) break; } } catch (e) { /* retry */ }
+    try { const r = await fetch(deskUrl); if (r.ok) { const j = await r.json(); pubkey = j.pubkey; alg = j.alg || ''; if (pubkey) break; } } catch (e) { /* retry */ }
   }
   if (!pubkey) die(`拿不到工作台的公钥（${deskUrl}）。工作台的新版本还没上线？晚一点再跑：node scripts/local/preview-publish.js desk-note ${code}`);
-  const enc = crypto.publicEncrypt({ key: pubkey, padding: crypto.constants.RSA_PKCS1_OAEP_PADDING, oaepHash: 'sha256' }, Buffer.from(JSON.stringify({ password: p.pw }))).toString('base64');
+  const enc = await sealForDesk(pubkey, alg, JSON.stringify({ password: p.pw }));
   const doc = fs.existsSync(NOTES) ? JSON.parse(fs.readFileSync(NOTES, 'utf8')) : { note: '做好的免费样板。网址公开，密码用工作台的公钥加密（只有工作台解得开）。scripts/local/preview-publish.js 自动写。', previews: [] };
   doc.previews = (doc.previews || []).filter((x) => x.slug !== rec.slug && x.code !== code);
   // pitch: what the desk's call script says is on their mockup (mode + up to 3 real products, no "Example" items);

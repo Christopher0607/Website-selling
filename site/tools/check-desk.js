@@ -119,7 +119,7 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
   ok(/^﻿?id,business_name/.test(csv) && csv.includes('Glow Lab') && csv.includes('do_not_contact'), 'CSV export has both merchants');
 
   // Claude Code's new-lead inbox (sales/leads/*.json → inbox.mjs)
-  const leadsTotal = (await import('../netlify/functions/desk/inbox.mjs')).INBOX.length;
+  const leadsTotal = (await import('../server/inbox.mjs')).INBOX.length;
   await p.click('[data-tab="today"]');
   await p.waitForSelector('[data-inbox]');
   ok((await p.$$('[data-inbox] .inbox__list li')).length === leadsTotal, `inbox shows ${leadsTotal} new leads`);
@@ -423,6 +423,42 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
     await p.click('[data-tab="today"]');
   }
 
+  // website forms (2026-11-12, was Netlify Forms): /api/form stores them, Today shows them until marked as seen
+  {
+    const post = (body, h) => fetch(`${BASE}/api/form`, { method: 'POST', headers: { 'content-type': 'application/x-www-form-urlencoded', accept: 'application/json', ...(h || {}) }, body: new URLSearchParams(body).toString() });
+    const r1 = await post({ 'form-name': 'mockup-request', 'bot-field': '', name: 'Aina', brand: 'Kedai Aina', instagram: '@kedai.aina', shop_url: 'https://shopee.com.my/kedaiaina', package: 'starter', message: 'We sell kuih raya', consent: 'yes' });
+    const bot = await post({ 'form-name': 'mockup-request', 'bot-field': 'spam', name: 'Bot' });
+    const bad = await post({ 'form-name': 'something-else', name: 'X' });
+    const page = await fetch(`${BASE}/api/form`, { method: 'POST', redirect: 'manual', headers: { 'content-type': 'application/x-www-form-urlencoded', accept: 'text/html' }, body: 'form-name=ai-chat-lead&name=Ben&contact=0123456789&interest=website' });
+    const ff = JSON.parse(fs.readFileSync(STORE + '.forms.json', 'utf8'));
+    const vals = Object.values(ff);
+    ok(r1.ok && (await r1.json()).ok && bot.ok && bad.status === 400 && page.status === 303 && page.headers.get('location') === '/thanks.html', 'form endpoint: saves, ignores the honeypot quietly, refuses unknown forms, sends a normal page post to thanks.html');
+    ok(vals.length === 2 && vals.some((f) => f.fields.brand === 'Kedai Aina') && !vals.some((f) => f.fields.name === 'Bot'), 'two real submissions stored, the bot one is not');
+    await p.reload();
+    await p.waitForSelector('#s-forms');
+    const ft = await p.textContent('#s-forms');
+    ok(/网站上申请免费样板/.test(ft) && /Kedai Aina/.test(ft) && /@kedai\.aina/.test(ft) && /AI 客服留下的资料/.test(ft) && /0123456789/.test(ft), 'Today shows the new website requests with their details');
+    await p.click('#s-forms [data-act="form-seen"]');
+    await p.waitForFunction(() => document.querySelectorAll('#s-forms [data-form-row]').length === 1 || !document.querySelector('#s-forms'));
+    await p.reload();
+    await p.waitForSelector('[data-today-list] [data-plan]');
+    ok((await p.$$('#s-forms [data-form-row]')).length === 1, '"seen" is saved: only the other request is still shown');
+    const studioJs = fs.readFileSync(require('path').join(__dirname, '..', 'dist', 'assets', 'js', 'studio.js'), 'utf8');
+    const start = fs.readFileSync(require('path').join(__dirname, '..', 'dist', 'start.html'), 'utf8');
+    ok(/fetch\('\/api\/form'/.test(studioJs) && /action="\/api\/form"/.test(start) && !/data-netlify/.test(start), 'website forms post to our own /api/form (no Netlify Forms)');
+    // the real form on the website: fill it in like a visitor, land on the thank-you page, see it on the desk
+    const v = await ctx.newPage();
+    await v.goto(BASE + '/start.html');
+    await v.fill('form[name="mockup-request"] [name="name"]', 'Mei');
+    await v.fill('form[name="mockup-request"] [name="brand"]', 'Kopi Mei');
+    await v.fill('form[name="mockup-request"] [name="instagram"]', '@kopi.mei');
+    await v.fill('form[name="mockup-request"] [name="shop_url"]', 'https://instagram.com/kopi.mei');
+    await v.check('form[name="mockup-request"] [name="consent"]');
+    await Promise.all([v.waitForURL(/thanks/, { timeout: 15000 }), v.click('form[name="mockup-request"] button[type="submit"]')]);
+    await v.close();
+    ok(Object.values(JSON.parse(fs.readFileSync(STORE + '.forms.json', 'utf8'))).some((f) => f.fields.brand === 'Kopi Mei' && f.form === 'mockup-request'), 'filling in the website form lands on the thank-you page and the request reaches the desk');
+  }
+
   // mockup views (2026-11-11): the mockup's password page reports opens to /api/track; the desk shows them
   {
     const UA_PHONE = 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1';
@@ -573,11 +609,48 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
   // no emoji anywhere in the interface (message boxes excluded: their text comes from the AI)
   const uiText = await p.evaluate(() => { const c = document.body.cloneNode(true); c.querySelectorAll('textarea').forEach((t) => t.remove()); return c.innerText; });
   ok(!/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u.test(uiText), 'no emoji in the desk interface');
-  const fnSrc = fs.readFileSync(require('path').join(__dirname, '..', 'netlify', 'functions', 'desk', 'index.mjs'), 'utf8');
+  const fnSrc = fs.readFileSync(require('path').join(__dirname, '..', 'server', 'desk.mjs'), 'utf8');
   ok(/NEVER use a personal name/.test(fnSrc) && /No emojis/.test(fnSrc) && /sign off as "Cartsmith Studio"/.test(fnSrc), 'AI prompt: studio sign-off, no personal name, no emojis');
   await p.reload();
   await p.waitForSelector('#app:not([hidden])');
   ok(!(await p.$('[data-inbox]')), 'inbox stays empty after reload');
+
+  // restore from the FULL backup (2026-11-12): AI conversations must survive a move to a new Netlify account
+  {
+    const api2 = (body) => fetch(`${BASE}/api/desk`, { method: 'POST', headers: { 'content-type': 'application/json', 'x-desk-key': KEY }, body: JSON.stringify(body) }).then((r) => r.json());
+    const bk = (await api2({ action: 'backup' })).backup;
+    const withChat = bk.doc.items.filter((x) => (x.ai_chat || []).length);
+    ok(withChat.length >= 1, `full backup has the AI conversations (${withChat.length} cards)`);
+    const before = fs.readFileSync(STORE, 'utf8');
+    // a) the new account's desk is empty
+    fs.writeFileSync(STORE, JSON.stringify({ next: 1, items: [], settings: { dailyLimit: 10 } }));
+    await p.reload();
+    await p.click('[data-tab="stats"]');
+    await p.setInputFiles('[data-restore-file]', { name: 'cartsmith-desk-backup.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(bk, null, 1)) });
+    await p.click('[data-restore]');
+    await p.waitForFunction(() => /AI 对话也回来了/.test(document.body.textContent), null, { timeout: 15000 });
+    const a = JSON.parse(fs.readFileSync(STORE, 'utf8'));
+    const same = (x, y) => JSON.stringify(x) === JSON.stringify(y);
+    if (process.env.DESK_DEBUG) console.log('    restore:', a.items.length, bk.doc.items.length, a.next, bk.doc.next, JSON.stringify(a.settings), JSON.stringify(bk.doc.settings));
+    ok(a.items.length === bk.doc.items.length && withChat.every((w) => same((a.items.find((x) => x.id === w.id) || {}).ai_chat, w.ai_chat)) && a.next >= bk.doc.next && same(a.settings, bk.doc.settings),
+      'empty desk + full backup: every card, every AI conversation, settings and the next id are back');
+    const w0 = withChat[0], a0 = a.items.find((x) => x.id === w0.id);
+    ok(same(a0.history, w0.history) && a0.status === w0.status && (a0.preview_password || '') === (w0.preview_password || '') && (a0.ai_summary || '') === (w0.ai_summary || ''), 'history, status, mockup password and the AI summary are the same as before');
+    // b) the desk already has the cards (e.g. restored from CSV earlier) but the conversations are gone
+    const stripped = JSON.parse(before);
+    stripped.items.forEach((x) => { delete x.ai_chat; delete x.ai_summary; });
+    stripped.items = stripped.items.filter((x) => x.id !== bk.doc.items[bk.doc.items.length - 1].id);
+    fs.writeFileSync(STORE, JSON.stringify(stripped));
+    const r2 = await api2({ action: 'restore', backup: bk });
+    const b2 = JSON.parse(fs.readFileSync(STORE, 'utf8'));
+    ok(r2.added === 1 && r2.chats >= withChat.length - 1 && b2.items.length === bk.doc.items.length && withChat.every((w) => same((b2.items.find((x) => x.id === w.id) || {}).ai_chat, w.ai_chat)),
+      'desk that already has the cards: conversations are put back, the missing card is added, nothing is duplicated');
+    const bad = await api2({ action: 'restore', backup: { hello: 1 } });
+    ok(bad.error === 'bad_input', 'a JSON file that is not a desk backup is refused');
+    fs.writeFileSync(STORE, before);
+    await p.reload();
+    await p.click('[data-tab="stats"]');
+  }
 
   // restore from a CSV backup (moving to a new Netlify account)
   await p.click('[data-tab="stats"]');

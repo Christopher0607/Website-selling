@@ -422,6 +422,8 @@
     const purge = S.items.filter((p) => p.preview_delete_by && p.preview_delete_by <= S.today && p.status !== 'won');
     const viewed = S.items.filter((p) => viewedRecently(p, 48) && !['won', 'lost', 'do_not_contact'].includes(p.status)).sort((a, b) => Date.parse(b.preview_views.last) - Date.parse(a.preview_views.last));
     let h = planHTML({ calls: callQueue().length, send: sendNow.length, replied: replied.length, follow: follow.length, fresh: fresh.length, viewed: viewed.length });
+    const newForms = (S.forms || []).filter((f) => !f.seen);
+    if (newForms.length) h += sect('网站上的新申请', newForms.length, newForms.map(formRow).join(''), '', 's-forms');
     if (S.inbox.length) h += inboxSect();
     if (sendNow.length) h += sect('电话说可以，现在发样板', sendNow.length, sendNow.map((p) => card(p)).join(''), '', 's-send');
     if (replied.length) h += sect('有回复，等你回', replied.length, replied.map((p) => card(p)).join(''), '', 's-replied');
@@ -432,6 +434,14 @@
     h += sect(`新联系 · 今天还可以发 ${left} 个`, fresh.length, left ? fresh.slice(0, Math.max(left, 1) + 2).map((p) => card(p)).join('') : '<div class="empty">今天的新联系已经发满了，明天继续。</div>', '名单里没有待联系的商家。', 's-fresh');
     if (purge.length) h += sect('样板到期，要删除', purge.length, purge.map((p) => `<div class="card"><p>${esc(p.business_name)} 的样板 ${esc(p.preview_url || '')} 已到期（${esc(p.preview_delete_by)}）。跟 Claude Code 说「删除 ${esc(p.business_name)} 的样板」，删好后按：</p><div class="btnrow"><button class="btn btn--sm" data-act="purged" data-id="${p.id}">已删除样板</button></div></div>`).join(''), '');
     $('[data-today-list]').innerHTML = h;
+  }
+  // ------------------------------------------------------------ website forms (2026-11-12): free mockup requests and AI chat leads from /api/form
+  const FORM_NAME = { 'mockup-request': '网站上申请免费样板', 'ai-chat-lead': 'AI 客服留下的资料' };
+  const FORM_FIELD = { name: '名字', brand: '品牌', instagram: 'Instagram', email: 'Email', contact: '联系方式', shop_url: '店铺链接', template: '喜欢的模板', package: '套餐', products: '产品数量', message: '留言', interest: '想要什么', language: '语言', transcript: '对话' };
+  function formRow(f) {
+    const rows = Object.entries(f.fields || {}).filter(([k, v]) => v && k !== 'consent').map(([k, v]) => `<li><b>${esc(FORM_FIELD[k] || k)}</b> ${esc(String(v).slice(0, k === 'transcript' ? 600 : 300))}</li>`).join('');
+    return `<div class="card card--mini" data-form-row="${esc(f.id)}"><div class="mini__head"><b>${esc(FORM_NAME[f.form] || f.form)}</b><small>${esc(whenTxt(f.at))}</small></div><ul class="formlist">${rows}</ul>
+      <div class="btnrow"><button class="btn btn--ghost btn--sm" data-act="form-seen" data-form="${esc(f.id)}">${svg('check', 16)}已看过（加进名单请到「加商家」）</button></div></div>`;
   }
   function inboxSect() {
     const rows = S.inbox.map((l) => `<li><div class="inbox__main"><div class="inbox__name"><b>${esc(l.name)}</b>${l.priority ? `<span class="tag">${esc(l.priority)} 级</span>` : ''}<span class="inbox__ch" title="已知的联系方式">${svg('ig', 14)}${l.wa ? svg('wa', 14) : ''}${l.email ? svg('mail', 14) : ''}</span></div><small>${esc(l.why)}</small></div><button class="linkbtn" data-act="skip-lead" data-lead="${esc(l.id)}">跳过</button></li>`).join('');
@@ -780,6 +790,12 @@
         return;
       }
       if (act === 'sentbar-no') { hideSentbar(); return; }
+      if (act === 'form-seen') {
+        const id = t.dataset.form;
+        busy(t, true, '…');
+        await api('form-seen', { form_id: id });
+        (S.forms || []).forEach((f) => { if (f.id === id) f.seen = true; }); render(); toast('已标记看过。'); return;
+      }
       if (act === 'skip-lead') {
         const id = t.dataset.lead;
         busy(t, true, '…');
@@ -919,15 +935,18 @@
   $('[data-logout]').addEventListener('click', () => { store.clear(); location.reload(); });
   $('[data-restore]').addEventListener('click', async (ev) => {
     const f = $('[data-restore-file]').files[0];
-    if (!f) { toast('先选一个名单档案（CSV）。'); return; }
+    if (!f) { toast('先选一个备份档案（完整备份 JSON，或名单 CSV）。'); return; }
     const btn = ev.currentTarget;
     busy(btn, true, '还原中…');
     try {
-      const j = await api('restore', { csv: await f.text() });
+      const txt = await f.text();
+      let payload = { csv: txt };
+      if (/\.json$/i.test(f.name) || /^\s*\{/.test(txt)) { try { payload = { backup: JSON.parse(txt) }; } catch (e) { throw new Error('这个 JSON 档案读不了：请选工作台「下载完整备份」的档案。'); } }
+      const j = await api('restore', payload);
       const l = await api('list');
-      S.items = l.items || []; S.inbox = l.inbox || [];
+      S.items = l.items || []; S.inbox = l.inbox || []; S.forms = l.forms || [];
       render();
-      toast(`还原了 ${j.added} 家${j.skipped ? `，跳过 ${j.skipped} 家（已经有了）` : ''}。`);
+      toast(`还原了 ${j.added} 家${j.skipped ? `，跳过 ${j.skipped} 家（已经有了）` : ''}${j.full ? `；${j.chats} 家的 AI 对话也回来了` : ''}。`);
     } catch (e) { if (e.message !== 'unauthorised') toast(e.message); }
     busy(btn, false);
   });
@@ -946,7 +965,7 @@
   async function load() {
     try {
       const j = await api('list');
-      S.items = j.items || []; S.inbox = j.inbox || []; S.settings = j.settings || S.settings; S.today = j.today;
+      S.items = j.items || []; S.inbox = j.inbox || []; S.forms = j.forms || []; S.settings = j.settings || S.settings; S.today = j.today;
       $('#login').hidden = true; $('#app').hidden = false;
       markStaff();
       $$('[data-icon]').forEach((el) => { el.innerHTML = svg(el.dataset.icon, 22); });

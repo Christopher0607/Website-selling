@@ -76,7 +76,7 @@ const SLUGS = ['dewlane', 'plainfold', 'chili-pantry', 'lowlight', 'tailmate', '
     const coShip = await page.textContent('[data-co-ship]');
     ok(/RM15\.00|Free/.test(coShip), `checkout shipping for Sabah = ${coShip}`);
     await page.click('[data-checkout] button[type=submit]');
-    await page.waitForURL(/order\.html/);
+    await page.waitForURL(/\/order(\.html)?(\?|$)/); // Cloudflare serves order.html as /order
     const no = await page.textContent('[data-order-no]');
     ok(/^#[A-Z]{2}\d{4}$/.test(no), `order page shows ${no}`);
     await page.goto(root + 'index.html');

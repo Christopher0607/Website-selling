@@ -1,6 +1,6 @@
-// Cartsmith website AI chat — Netlify Function → DeepSeek API (OpenAI-compatible).
-// 设定（Netlify → Project configuration → Environment variables）：
-//   DEEPSEEK_API_KEY   必填。只放在 Netlify，不要写进 git。
+// Cartsmith website AI chat — /api/chat → DeepSeek API (OpenAI-compatible). 不分平台（2026-11-12 起入口在 site/functions/api/chat.js）。
+// 设定（Cloudflare → Pages 项目 → Settings → Variables and Secrets）：
+//   DEEPSEEK_API_KEY   必填。只放在 Cloudflare（Secret），不要写进 git。
 //   DEEPSEEK_MODEL     选填，默认 deepseek-flash
 //   DEEPSEEK_BASE_URL  选填，默认 https://api.deepseek.com（测试时可以指向模拟服务）
 // 知识库和 Instagram 名字：knowledge.mjs 由 site/build.py 从 sales/agent/knowledge.md + site/studio.json 自动产生。
@@ -11,15 +11,9 @@ const MAX_CHARS = 800;
 const IG_DM = `https://ig.me/m/${IG_HANDLE}`;
 const EMPTY_LEAD = { name: '', brand: '', instagram: '', shop_url: '', contact: '', language: '', interest: '' };
 
-function env(k) {
-  try {
-    if (globalThis.Netlify && globalThis.Netlify.env) {
-      const v = globalThis.Netlify.env.get(k);
-      if (v) return v;
-    }
-  } catch (e) { /* not on Netlify */ }
-  return process.env[k];
-}
+// set by the entry point on every request: { env(k), ip }
+let PLAT = { env: (k) => (typeof process !== 'undefined' && process.env ? process.env[k] : undefined), ip: 'unknown' };
+function env(k) { return PLAT.env(k); }
 
 const json = (obj, status = 200) => new Response(JSON.stringify(obj), {
   status,
@@ -146,7 +140,8 @@ async function ask(key, msgs) {
   return { error: 'upstream' };
 }
 
-export default async (req, context) => {
+export async function handleChat(req, plat) {
+  PLAT = plat;
   if (req.method !== 'POST') return json({ error: 'method_not_allowed' }, 405);
   const origin = req.headers.get('origin');
   const host = req.headers.get('host');
@@ -155,7 +150,7 @@ export default async (req, context) => {
   }
   const key = env('DEEPSEEK_API_KEY');
   if (!key) return json({ error: 'not_configured' }, 503);
-  const ip = (context && context.ip) || req.headers.get('x-nf-client-connection-ip') || 'unknown';
+  const ip = plat.ip || 'unknown';
   if (limited(ip)) {
     return json({ reply: `You’ve sent a lot of messages — let’s continue on Instagram so the Cartsmith team can help you directly: ${IG_DM}`, lead_ready: false, lead: EMPTY_LEAD, handoff: true });
   }
@@ -165,6 +160,4 @@ export default async (req, context) => {
   if (!msgs.length || msgs[msgs.length - 1].role !== 'user') return json({ error: 'no_message' }, 400);
   const out = await ask(key, msgs);
   return json(out, out.error ? 502 : 200);
-};
-
-export const config = { path: '/api/chat' };
+}

@@ -15,7 +15,7 @@
 |---|---|---|---|
 | 1 ★ | 主攻行业（只选一个） | 本地护肤 / 美妆品牌 | **Shopee / TikTok Shop 上有自己品牌的中小型卖家**；6 个模板覆盖护肤、服装、食品、咖啡、宠物、3C 配件，30 天后看哪一类回复率最高再收窄 |
 | 2 ★ | 工作室名字 | Claude Code 提 10 个名字，查域名和社交账号是否可用 | **Cartsmith Studio**（2026-11-07 改；cart = 购物车，smith = 工匠，"做网店的工匠"；英文名，中英马都好念）。2026-11-07 网上搜过，马来西亚没有同名的网站设计公司。注册 SSM 时再到 ezBiz 查名字、MyIPO 查商标 |
-| 3 ★ | 工作室域名 | `.com`（有 SSM 注册后可以再加 `.com.my`） | **暂时不买**（2026-11-07）。工作室网站先放 Netlify 免费网址 `cartsmith.netlify.app`（`docs/09-netlify-guide.md`）。以后买了域名，服务器文件里的 `yourdomain.com` 都换成新域名 |
+| 3 ★ | 工作室域名 | `.com`（有 SSM 注册后可以再加 `.com.my`） | **买 `cartsmithstudio.com`**（2026-11-11 俊宇决定；原因：发样板链接带 `netlify.app`，看起来像临时网址、不专业）。在 Porkbun 买，USD 11.81 / 年，续费同价（2026-11-11 查 https://porkbun.com/tld/com ）；`cartsmith.com` 已被注册，`.com.my` 要 SSM。买好后交给 Netlify DNS 管理：工作室网站 `cartsmithstudio.com`，样板 `previews.cartsmithstudio.com/<代号>/`（Netlify branch subdomain，所有方案都可以用，要 Netlify DNS）。旧的 `cartsmith.netlify.app` 链接照样能打开。（2026-11-07 原本决定暂时不买，先用 `cartsmith.netlify.app`。）服务器文件里的 `yourdomain.com` 以后也换成新域名 |
 | 4 | 服务语言 | 中文 + 英文；马来文用话术模板 | 用默认 |
 | 5 | 套餐价格 | 用 `01-business-plan.md` 的价格 | **一次性建站费 + 月费**（Starter RM2,800 / Growth RM4,800 / Catalog RM3,500；Care RM150 / RM300）。**试用：上线后第 1 个月维护免费** |
 | 6 | 首批客户优惠 | 前 3 个客户 7 折，换真实评价和案例授权 | 前 3 个客户：建站 7 折 **+ 维护免费 2 个月**（代替 1 个月），换真实评价、案例授权、介绍朋友 |
