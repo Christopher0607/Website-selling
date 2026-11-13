@@ -202,3 +202,12 @@ h2.wp-block-heading { font-size: clamp(1.6rem, 3vw, 2.4rem); line-height: 1.15; 
 @media (max-width: 767px) {
   .agc-fest-cover .wp-block-cover__background { background: linear-gradient(180deg, rgba(40, 6, 6, .55) 0%, rgba(40, 6, 6, .82) 45%, rgba(40, 6, 6, .9) 100%) !important; }
 }
+
+/* 手机结账：运送方式另起一行，长的中文名称不会被挤掉（2026-11-13） */
+@media (max-width: 600px) {
+  .woocommerce-checkout-review-order-table .woocommerce-shipping-totals th,
+  .woocommerce-checkout-review-order-table .woocommerce-shipping-totals td { display: block; width: 100%; text-align: left; padding-left: 0; padding-right: 0; }
+  .woocommerce-checkout-review-order-table .woocommerce-shipping-totals th { padding-bottom: 4px; border-bottom: 0; }
+  #shipping_method li { text-align: left; margin-bottom: 6px; }
+  #shipping_method li label { display: inline; white-space: normal; }
+}

@@ -133,7 +133,7 @@ ZH = {
     '(screenshot or PDF, up to 5 MB)': '（截图或 PDF，5 MB 以内）',
     'Send receipt': '送出收据',
     'This link has expired. Please open your order again.': '这个连结已经过期，请重新打开你的订单。',
-    'The customer uploaded a payment receipt. Check it, then mark the order "Processing" (payment received).': '顾客上传了付款收据。请核对，然后把订单改成「处理中」（已收到付款）。',
+    'The customer uploaded a payment receipt. Check it, then mark the order "Processing" (payment received).': '顾客上传了付款收据。请核对，然后按「已收到付款」（订单会变成「正在处理」）。',
     'Payment receipt for order #%1$s – %2$s': '订单 #%1$s 的付款收据 – %2$s',
     '%1$s uploaded a payment receipt for %2$s.': '%1$s 上传了 %2$s 的付款收据。',
     'Check it in your bank app, then press "Payment received":': '请在银行 App 核对，然后按「已收到付款」：',

@@ -13,7 +13,7 @@
 | `new-site.sh <代号> <域名> [--basic-auth] [--noindex] [--www] [--no-ssl] [--empty]` | 新 WordPress 站（独立用户、PHP pool、数据库、SSL） |
 | `setup-store.sh <代号> [--products csv] [--content 文件夹] [--brand json]` | 把空站变成网店：主题、插件、WooCommerce 马来西亚设定、页面、菜单、页脚、产品 |
 | `setup-studio.sh <域名> [--force-pages]` | 工作室网站 |
-| `build-demo.sh <demo-代号>` | 建 / 重建样板站（资料在 `sites/<代号>/`） |
+| `build-demo.sh <demo-代号>` | 建 / 重建样板站（资料在 `sites/<代号>/`）；有 `festive.json` 的（例如 `demo-festive`）会再套节日预购设定、运送区域、DuitNow、中文语言包、示范订单（`php/festive-setup.php`） |
 | `clone-site.sh <来源> <目标> <域名> [--basic-auth] [--noindex]` | 复制站点（换网址、换 salts、清掉追踪 ID / 邮件 / 备份设定、新管理员密码） |
 | `apply-brand.sh <代号> <brand-config.json>` | 套用品牌：名称、颜色、字体、logo、WhatsApp、公司资料、运费、mode |
 | `make-preview.sh <潜在客户代号> <brand-config.json>` | 免费样板首页（密码 + noindex + Demo 模式，记录 14 天删除日） |

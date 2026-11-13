@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.4.0 — 2026-11-13（RM399 节日预购网店）
+- 新增节日预购（Settings → Agency → Festive pre-orders）：截止日 + 倒数（`[agc_festive]`、商店 / 购物车 / 结账上方自动显示），截止后不能下单、可以留 WhatsApp 号码等下次开放；剩几份（按库存，规格加总）；早鸟折扣（购物车自动扣）
+- 结账选自取 / 本地送货的日子和时段，每个时段有名额，满了不能选；快递显示寄出说明；运送方式按运送区域判断（区域名字含 `fest_delivery_zone`，默认 Klang Valley）
+- 新付款方式：DuitNow QR（手动），订单「保留」，顾客在订单完成页或查订单页上传收据（存在网站公开文件夹外面 `/var/www/<站>/private/receipts`，只有店家能开），店家收到通知电邮；示范模式另外有「示范网上付款」（不收钱）
+- 新订单状态「可以取货」（Ready）+ 顾客电邮；订单页 / 查订单页有进度时间线、加入日历；所有订单电邮写上取货 / 送货的日子和时段
+- 店家后台「WooCommerce → 节日订单」：这一季订单数、待确认付款、已收款；每天要做多少（已付款 / 待确认分开）；按时段的订单，一键「看收据 / 已收到付款 / 可以取货 / 完成」；打印；想收到通知的号码
+- Demo 模式新增「允许测试订单」（`demo_test_orders`）：只开放 DuitNow 示范 QR 和示范网上付款
+- 中文翻译 `languages/agency-core-zh_CN`（产生方法见 `languages/make-zh.py`）；宣告支援 WooCommerce 新订单表（HPOS）；不用 meta_query（旧订单表不支援）
+
 ## 1.3.0 — 2026-11-07
 - 新增 AI 客服聊天视窗（客人主动开始聊天）：经由本机的 sales-agent 服务呼叫 Claude；API Key 不放在 WordPress；客人留下名字 + WhatsApp 时自动存进 Leads 并寄电邮
 - 询价表单的储存改成共用函数 `AGC_Lead_Form::save()`

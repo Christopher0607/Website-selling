@@ -70,8 +70,16 @@ async function addFromHome(p, name, option) {
 }
 
 async function placeOrder(p) {
-  await Promise.all([p.waitForURL(/order-received|checkout\/?$/, { timeout: 30000 }).catch(() => {}), p.click('#place_order')]);
-  await p.waitForTimeout(800);
+  await p.evaluate(() => {
+    const t = document.getElementById('terms'); if (t && !t.checked) t.click();
+    document.querySelectorAll('.woocommerce-NoticeGroup, .woocommerce-error').forEach((e) => e.remove());
+  });
+  await p.click('#place_order');
+  // Done when we land on "order received", or WooCommerce shows an error.
+  await Promise.race([
+    p.waitForURL(/order-received/, { timeout: 45000 }),
+    p.waitForSelector('.woocommerce-NoticeGroup .woocommerce-error, .woocommerce-error', { timeout: 45000 }),
+  ]).catch(() => {});
   await p.waitForLoadState('domcontentloaded');
 }
 
@@ -178,13 +186,14 @@ async function setSetting(p, key, value) {
       ok(resp.ok() && /image\/png/.test(resp.headers()['content-type'] || ''), 'owner: the receipt opens (staff only)');
       const anon = await chromium.launch().then(async (b2) => { const r = await (await b2.newContext({ httpCredentials: AUTH })).request.get(href); const s = r.status(); await b2.close(); return s; });
       ok(anon !== 200, 'a visitor who is not logged in cannot open the receipt (' + anon + ')');
+      const dayUrl = p.url();
       await Promise.all([p.waitForLoadState('domcontentloaded'), row.locator('a:has-text("已收到付款"), a:has-text("Payment received")').click()]);
-      await p.goto(p.url().split('#')[0]);
-      let row2 = p.locator(`tr:has(a:text("#${no2}"))`);
-      if (!(await row2.count())) { await p.goBack(); row2 = p.locator(`tr:has(a:text("#${no2}"))`); }
-      ok(/处理中|Processing/.test(await row2.textContent()), 'owner: "Payment received" moves it to processing');
+      await p.goto(dayUrl);
+      const row2 = p.locator(`tr:has(a:text("#${no2}"))`);
+      ok(/正在处理|处理中|Processing/.test(await row2.textContent()), 'owner: "Payment received" moves it to processing');
       await Promise.all([p.waitForLoadState('domcontentloaded'), row2.locator('a:has-text("可以取货"), a:has-text("Ready")').click()]);
-      await p.goto(BASE + '/wp-admin/admin.php?page=agc-festive&day=' + encodeURIComponent((await row2.count()) ? '' : ''));
+      await p.goto(dayUrl);
+      ok(/可以取货|Ready/.test(await p.locator(`tr:has(a:text("#${no2}")) mark`).textContent()), 'owner: one tap marks it ready');
     }
     // tracking shows the new status
     await p.goto(BASE + '/track-order/');

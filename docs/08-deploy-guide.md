@@ -18,7 +18,7 @@ Get-Content $env:USERPROFILE\.ssh\id_ed25519.pub
 
 **B. DigitalOcean 开 Droplet**：Create → Droplets → Region **Singapore** → Image **Ubuntu 24.04 (LTS) x64**（脚本是在 24.04 测的，不要选 26.04）→ Size **Basic → Regular → 2 GB / 1 CPU / 50 GB**（2026-11-13 官网价 USD 12 / 月）→ Authentication **SSH Key → New SSH Key**，贴 A 的那一行，名字 `cartsmith-pc` → 勾 **Backups（每周，+20% ≈ USD 2.40）** 和 **Monitoring（免费）** → Hostname `agency-dev` → Create → 复制 **IP**。
 
-**C. Cloudflare 加一条 DNS**：dash.cloudflare.com → `cartsmithstudio.com` → **DNS → Records → Add record**：Type `A`，Name `master`，IPv4 = 服务器 IP，**Proxy status 关掉（灰色云 DNS only）** → Save。
+**C. Cloudflare 加两条 DNS**：dash.cloudflare.com → `cartsmithstudio.com` → **DNS → Records → Add record**：Type `A`，Name `master`，IPv4 = 服务器 IP，**Proxy status 关掉（灰色云 DNS only）** → Save。再按一次 Add record，一样的设定，Name 填 `demo-festive`（RM399 节日网店的 WordPress 示范）。
 
 **D. 登录服务器、下载程式、初始化**（PowerShell）：
 ```
@@ -34,13 +34,14 @@ bash /opt/agency/scripts/server/provision-server.sh --studio-domain cartsmithstu
 
 **E. 换成 deploy 用户、关掉 root 登录**：照下面旧版的「第 6 步」（旧视窗不要关）。
 
-**F. 建母版站**（用 deploy 登录）：
+**F. 建母版站 + 节日网店示范**（用 deploy 登录）：
 ```
 sudo /opt/agency/scripts/server/build-all.sh
+sudo /opt/agency/scripts/server/build-demo.sh demo-festive
 ```
-把最后的表格贴给 Claude Code（**不要贴密码**）。
+第一行建母版（约 10–15 分钟），第二行从母版复制出 Butter & Lantern 节日网店（约 5 分钟）。把最后的表格贴给 Claude Code（**不要贴密码**）。
 
-**G. 存密码**：`sudo cat /etc/agency/secrets/master.env` → 把 `WP_ADMIN_USER` / `WP_ADMIN_PASS` / `BASIC_AUTH_USER` / `BASIC_AUTH_PASS` 存进 Bitwarden。然后用手机开 `https://master.cartsmithstudio.com`。
+**G. 存密码**：`sudo cat /etc/agency/secrets/master.env` → 把 `WP_ADMIN_USER` / `WP_ADMIN_PASS` / `BASIC_AUTH_USER` / `BASIC_AUTH_PASS` 存进 Bitwarden。然后用手机开 `https://master.cartsmithstudio.com` 和 `https://demo-festive.cartsmithstudio.com`（节日网店示范；后台在网址后面加 `/wp-admin`，密码在 `sudo cat /etc/agency/secrets/demo-festive.env`）。
 
 **以后更新程式**（Claude Code push 之后）：`cd /opt/agency && sudo git pull && sudo scripts/server/install-code.sh all`
 

@@ -229,16 +229,8 @@ class AGC_Festive {
 			self::$booked = $cached;
 			return $cached;
 		}
-		$out    = array();
-		$orders = wc_get_orders(
-			array(
-				'limit'      => -1,
-				'status'     => self::holding_statuses(),
-				'type'       => 'shop_order',
-				'meta_query' => array( array( 'key' => self::DATE, 'compare' => 'EXISTS' ) ), // phpcs:ignore WordPress.DB.SlowDBQuery
-			)
-		);
-		foreach ( $orders as $o ) {
+		$out = array();
+		foreach ( self::season_orders() as $o ) {
 			$m = (string) $o->get_meta( self::MODE );
 			$d = (string) $o->get_meta( self::DATE );
 			$s = (string) $o->get_meta( self::SLOT );
@@ -1042,14 +1034,26 @@ class AGC_Festive {
 	 * @return WC_Order[]
 	 */
 	private static function season_orders() {
-		return wc_get_orders(
+		// Orders placed in the last ~8 months before the season ends, then keep the festive ones.
+		// (No meta query: the older order storage does not support it.)
+		$to    = self::date_setting( 'fest_to' );
+		$since = ( $to ? $to : self::now() )->modify( '-240 days' )->getTimestamp();
+		$all   = wc_get_orders(
 			array(
-				'limit'      => -1,
-				'type'       => 'shop_order',
-				'status'     => self::holding_statuses(),
-				'orderby'    => 'date',
-				'order'      => 'ASC',
-				'meta_query' => array( array( 'key' => self::MODE, 'compare' => 'EXISTS' ) ), // phpcs:ignore WordPress.DB.SlowDBQuery
+				'limit'        => -1,
+				'type'         => 'shop_order',
+				'status'       => self::holding_statuses(),
+				'orderby'      => 'date',
+				'order'        => 'ASC',
+				'date_created' => '>=' . $since,
+			)
+		);
+		return array_values(
+			array_filter(
+				$all,
+				static function ( $o ) {
+					return '' !== (string) $o->get_meta( self::MODE );
+				}
 			)
 		);
 	}
@@ -1240,6 +1244,9 @@ class AGC_Festive {
 .agc-card{background:#fff;border:1px solid #dcdcde;border-radius:8px;padding:4px 16px 12px;margin-bottom:16px}
 .agc-card .num{text-align:right}.agc-btns{white-space:nowrap}.agc-btns .button{margin:2px 0}
 .agc-phones span{display:inline-block;background:#f0f0f1;border-radius:4px;padding:2px 8px;margin:2px}
+.agc-fadm mark.order-status{display:inline-block;border-radius:4px;padding:2px 8px;background:#e5e5e5;color:#454545;white-space:nowrap}
+.agc-fadm mark.status-on-hold{background:#f8dda7;color:#94660c}.agc-fadm mark.status-processing{background:#c6e1c6;color:#2c4700}
+.agc-fadm mark.status-agc-ready{background:#c8d7e1;color:#2e4453}.agc-fadm mark.status-pending{background:#e5e5e5;color:#777}
 @media (max-width:960px){.agc-cols{grid-template-columns:minmax(0,1fr)}}
 @media print{#adminmenumain,#wpadminbar,.agc-days,.agc-kpis,.button,.notice,#wpfooter{display:none!important}#wpcontent{margin:0!important}}
 </style>';

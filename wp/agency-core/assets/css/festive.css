@@ -40,11 +40,11 @@
 .agc-fest-pick__title { display: block; font-weight: 800; margin-bottom: 8px; }
 .agc-fest-pick__select { width: 100%; max-width: 100%; }
 .agc-fest-pick.is-enhanced .agc-fest-pick__select { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
-.agc-fest-pick__days, .agc-fest-pick__slots { display: flex; gap: 8px; overflow-x: auto; padding: 2px 2px 8px; scrollbar-width: thin; }
-.agc-fest-pick__slots { flex-wrap: wrap; overflow: visible; }
+.agc-fest-pick__days, .agc-fest-pick__slots { display: flex; flex-wrap: wrap; gap: 8px; padding: 2px 2px 8px; }
 .agc-chip { flex: none; display: inline-flex; flex-direction: column; align-items: center; gap: 2px; min-width: 68px; border: 1.5px solid rgba(0,0,0,.16); background: #fff; color: var(--agc-fest-ink); border-radius: 12px; padding: 8px 10px; font: inherit; font-size: .85rem; line-height: 1.2; cursor: pointer; }
 .agc-chip small { font-size: .74rem; color: #646970; font-weight: 600; }
-.agc-chip[aria-pressed="true"] { border-color: var(--agc-fest); background: var(--agc-fest); color: #fff; }
+.agc-chip[aria-pressed="true"], .agc-chip[aria-pressed="true"]:hover, .agc-chip[aria-pressed="true"]:focus { border-color: var(--agc-fest) !important; background: var(--agc-fest) !important; color: #fff !important; opacity: 1 !important; }
+.agc-chip:not([aria-pressed="true"]):hover, .agc-chip:not([aria-pressed="true"]):focus { background: #fff !important; color: var(--agc-fest-ink) !important; border-color: var(--agc-fest) !important; }
 .agc-chip[aria-pressed="true"] small { color: rgba(255,255,255,.85); }
 .agc-chip:disabled { opacity: .45; cursor: not-allowed; text-decoration: line-through; }
 .agc-chip:focus-visible { outline: 3px solid var(--agc-fest-gold); outline-offset: 2px; }

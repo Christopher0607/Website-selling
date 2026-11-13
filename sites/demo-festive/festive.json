@@ -21,5 +21,6 @@
   "whatsapp_float": 0,
   "whatsapp_product_btn": 0,
   "business_address": "（示范地址）Petaling Jaya, Selangor",
-  "accent_color": "#8F1418"
+  "accent_color": "#8F1418",
+  "free_shipping_min": ""
 }

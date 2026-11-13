@@ -138,6 +138,28 @@ foreach ( array_values( $ids ) as $i => $id ) {
 	);
 }
 update_option( 'woocommerce_default_catalog_orderby', 'menu_order' );
+
+// Chinese store: WooCommerce's own pages get Chinese titles too (the menu follows the page titles).
+if ( 0 === strpos( get_locale(), 'zh' ) ) {
+	$titles = array(
+		'shop'      => '年饼 Shop',
+		'cart'      => '购物车',
+		'checkout'  => '结账',
+		'myaccount' => '我的账户',
+	);
+	foreach ( $titles as $page => $title ) {
+		$pid = wc_get_page_id( $page );
+		if ( $pid > 0 ) {
+			wp_update_post(
+				array(
+					'ID'         => $pid,
+					'post_title' => $title,
+				)
+			);
+		}
+	}
+	WP_CLI::log( '商店、购物车、结账页换成中文标题' );
+}
 WP_CLI::log( '产品排序：' . count( $ids ) . ' 样' );
 
 if ( ! $seed ) {
@@ -146,15 +168,10 @@ if ( ! $seed ) {
 }
 
 // Sample orders for the demo owner page (no emails).
-$old = wc_get_orders(
-	array(
-		'limit'      => -1,
-		'meta_key'   => '_agc_demo_seed', // phpcs:ignore WordPress.DB.SlowDBQuery
-		'meta_value' => '1', // phpcs:ignore WordPress.DB.SlowDBQuery
-	)
-);
-foreach ( $old as $o ) {
-	$o->delete( true );
+foreach ( wc_get_orders( array( 'limit' => -1, 'type' => 'shop_order', 'status' => array_keys( wc_get_order_statuses() ) ) ) as $o ) {
+	if ( '1' === (string) $o->get_meta( '_agc_demo_seed' ) ) {
+		$o->delete( true );
+	}
 }
 add_filter( 'pre_wp_mail', '__return_true' );
 $by_sku = static function ( $sku ) {
@@ -194,8 +211,8 @@ foreach ( $plan as $i => $p ) {
 		}
 	}
 	$name = $people[ $i % count( $people ) ];
-	$order->set_billing_first_name( preg_match( '/^[A-Za-z]/', $name ) ? 'Customer' : '顾客' );
-	$order->set_billing_last_name( $name . '（示范）' );
+	$order->set_billing_first_name( '' );
+	$order->set_billing_last_name( ( preg_match( '/^[A-Za-z]/', $name ) ? 'Ms ' . $name : $name . '小姐' ) . '（示范）' );
 	$order->set_billing_phone( '012-000 ' . str_pad( (string) ( 1000 + $i * 37 ), 4, '0', STR_PAD_LEFT ) );
 	$order->set_billing_email( 'demo-' . ( $i + 1 ) . '@example.com' );
 	$order->set_billing_city( 'Petaling Jaya' );
