@@ -95,7 +95,7 @@ function decodeURIComponentSafe(s) { try { return decodeURIComponent(s); } catch
 const demoOf = (h, p) => (h === 'demo-festive' ? 'demo-festive' : ((p.match(/^\/demo\/([\w-]+)/) || [])[1] || ''));
 export function sourceOf(row) {
   const s = row.s;
-  if (s) return /^(ig|insta)/.test(s) ? 'Instagram' : /^(wa|whatsapp)/.test(s) ? 'WhatsApp' : /^(fb|facebook)/.test(s) ? 'Facebook' : /^(tt|tiktok)/.test(s) ? 'TikTok' : s;
+  if (s) return /^(flyer|print)/.test(s) ? '价钱单（地推）' : /^(ig|insta)/.test(s) ? 'Instagram' : /^(wa|whatsapp)/.test(s) ? 'WhatsApp' : /^(fb|facebook)/.test(s) ? 'Facebook' : /^(tt|tiktok)/.test(s) ? 'TikTok' : s;
   const r = row.r;
   if (r === '-') return '站内点进来';
   if (r) {
