@@ -488,6 +488,70 @@ msgstr "这天还没有订单。"
 msgid "Asked to be told when you open again (%d)"
 msgstr "想在下次开放时收到通知（%d）"
 
+#. translators: %s: user name
+#: includes/class-owner-api.php:398
+#, php-format
+msgid "Changed in the shop dashboard by %s."
+msgstr "%s 在店家后台修改。"
+
+#. translators: 1: old, 2: new
+#: includes/class-owner-api.php:442
+#, php-format
+msgid "Collection / delivery moved: %1$s → %2$s"
+msgstr "取货 / 送货时间改了：%1$s → %2$s"
+
+#: includes/class-owner-app.php:92
+#: includes/class-owner-app.php:161
+#: includes/class-owner-app.php:208
+#: includes/class-owner-app.php:213
+#: includes/class-owner-app.php:266
+msgid "Shop dashboard"
+msgstr "店家后台"
+
+#: includes/class-owner-app.php:215
+msgid "This account cannot open the shop dashboard."
+msgstr "这个帐号不能打开店家后台。"
+
+#: includes/class-owner-app.php:216
+msgid "Log out"
+msgstr "登出"
+
+#: includes/class-owner-app.php:219
+msgid "Wrong username or password. Please try again."
+msgstr "用户名或密码不对，请再试一次。"
+
+#: includes/class-owner-app.php:221
+msgid "The page was open too long. Please log in again."
+msgstr "页面开太久了，请重新登录。"
+
+#: includes/class-owner-app.php:224
+msgid "Username or email"
+msgstr "用户名或电邮"
+
+#: includes/class-owner-app.php:225
+msgid "Password"
+msgstr "密码"
+
+#: includes/class-owner-app.php:226
+msgid "Keep me logged in on this phone"
+msgstr "在这部手机保持登录"
+
+#: includes/class-owner-app.php:229
+msgid "Log in"
+msgstr "登录"
+
+#: includes/class-owner-app.php:231
+msgid "Forgot password?"
+msgstr "忘记密码？"
+
+#: includes/class-owner-app.php:269
+msgid "Loading…"
+msgstr "载入中…"
+
+#: includes/class-owner-app.php:270
+msgid "Please turn on JavaScript to use the shop dashboard."
+msgstr "请开启 JavaScript 才能使用店家后台。"
+
 #: includes/class-receipts.php:94
 msgid "That file could not be used. Please upload a JPG, PNG, WebP or PDF under 5 MB."
 msgstr "这个文件不能用。请上传 5 MB 以内的 JPG、PNG、WebP 或 PDF。"
