@@ -2615,6 +2615,257 @@
     "sources": "Checked 2026-11-10: TheSmartLocal 'Siru' (12 Feb 2026) https://thesmartlocal.my/siru-sri-hartamas/ (menu, prices, hours: 10:30am-9pm, closed Wednesdays)."
    },
    "checked": "2026-11-10"
+  },
+  {
+   "code": "m-calebs-hideout",
+   "slug": "m-calebs-hideout-94211406",
+   "url": "https://previews.cartsmithstudio.com/m-calebs-hideout-94211406/",
+   "delete_by": "2026-11-27",
+   "lead_id": "v20261113-calebs-hideout",
+   "instagram": "caleb.hideout",
+   "name": "Caleb's Hideout",
+   "photos": "real: Malay Mail / CK Lim (Sep 2026), credited",
+   "enc": "eyJ2IjoyLCJlcGsiOiJCSnJIaWlpbW5oZXE1TitqY1RaOU85YXluTmtoWTlWQk1Nbi91bDdvV0R0NEJqOEd1YUdDYTFRSjRyVStWaTFtWGllNFRaNldMZUswRGJ0eVQ5TXhSb1k9IiwiaXYiOiJRQ0J6SXA1OXBGSVJXNVcxIiwiY3QiOiJYbWZqMDdhUEhpUUdadzg3ZlpYWFN0MVpqMkJXNHhhcVRBYmZESHB3V0ZWN1EzYkRqM2hHaVE9PSJ9",
+   "pitch": {
+    "mode": "pickup",
+    "items": [
+     "Tofu Oat Milk Chocolate Mousse Cake",
+     "Flat White (Emberwood beans)",
+     "Christmas cake pre-orders"
+    ]
+   },
+   "facts": {
+    "mode": "pickup",
+    "place": "24-1, Jalan Sepadu, Taman United, Kuala Lumpur (off Old Klang Road)",
+    "hours": "Open Fri & Sun 9am–6pm, Sat 9am–10pm; Mon–Thu closed",
+    "delivery": "",
+    "products": [
+     {
+      "n": "Flat White",
+      "p": null,
+      "per": "",
+      "cat": "coffee",
+      "ex": false,
+      "set": "",
+      "src": "Not published; ask the owner"
+     },
+     {
+      "n": "Sunlit Jasmine",
+      "p": null,
+      "per": "",
+      "cat": "tea",
+      "ex": false,
+      "set": "",
+      "src": "Not published; ask the owner"
+     },
+     {
+      "n": "Tofu Oat Milk Chocolate Mousse Cake",
+      "p": null,
+      "per": "",
+      "cat": "cakes",
+      "ex": false,
+      "set": "",
+      "src": "Not published; ask the owner"
+     },
+     {
+      "n": "Banana Cake with Walnuts & Prunes",
+      "p": null,
+      "per": "",
+      "cat": "cakes",
+      "ex": false,
+      "set": "",
+      "src": "Not published; ask the owner"
+     },
+     {
+      "n": "Tofu Brownie Cheesecake with Biscoff",
+      "p": null,
+      "per": "",
+      "cat": "cakes",
+      "ex": false,
+      "set": "",
+      "src": "Not published; ask the owner"
+     },
+     {
+      "n": "Rose Water Watermelon Cake",
+      "p": null,
+      "per": "",
+      "cat": "cakes",
+      "ex": false,
+      "set": "",
+      "src": "Not published; ask the owner"
+     }
+    ],
+    "faq": [],
+    "contact": "Phone 018-317 0986 · IG @caleb.hideout · FB Caleb’s Hideout",
+    "sources": "Malay Mail, 12 Sep 2026, \"Escape to Caleb’s Hideout, a dietitian-designed garden café in OUG\" (text and photos by CK Lim). No prices published."
+   },
+   "checked": ""
+  },
+  {
+   "code": "m-oui-bakehouse",
+   "slug": "m-oui-bakehouse-553b89a8",
+   "url": "https://previews.cartsmithstudio.com/m-oui-bakehouse-553b89a8/",
+   "delete_by": "2026-11-27",
+   "lead_id": "v20261113-oui-bakehouse-cafe",
+   "instagram": "ouibakehousecafe",
+   "name": "Oui Bakehouse & Café",
+   "photos": "real: Malay Mail / CK Lim (Nov 2024), credited",
+   "enc": "eyJ2IjoyLCJlcGsiOiJCR3gxQWJVeVpML0o0bGlOY1BTeE9Ra2NaYjlmUmxjY0syNEdLdFd1NTEzRHRPcjROUEVXVTkxZE1iN2RWOVprTHdwMTBxWHdDSzdLZnF1SG9xR3FySTQ9IiwiaXYiOiJhN0d2OVNIdDNCUXFaMHVrIiwiY3QiOiJ2YUVWZmNZL2h5UmxsekFGT2Q1ZmpDdExzM0FpU2NmQ2ZsT1BFaGRwLzUrdXBJUEFCeHM9In0=",
+   "pitch": {
+    "mode": "pickup",
+    "items": [
+     "Country Steak Sandwich",
+     "Peanut Butter Pain Suisse",
+     "office pastry orders"
+    ]
+   },
+   "facts": {
+    "mode": "pickup",
+    "place": "G02, Menara K1, Lorong 3/137C, Old Klang Road, 58000 Kuala Lumpur",
+    "hours": "Open daily 9am–6pm",
+    "delivery": "",
+    "products": [
+     {
+      "n": "Butter Croissant",
+      "p": null,
+      "per": "",
+      "cat": "pastries",
+      "ex": false,
+      "set": "",
+      "src": "Not published; ask the owner"
+     },
+     {
+      "n": "Pain au Chocolat",
+      "p": null,
+      "per": "",
+      "cat": "pastries",
+      "ex": false,
+      "set": "",
+      "src": "Not published; ask the owner"
+     },
+     {
+      "n": "Canelé",
+      "p": null,
+      "per": "",
+      "cat": "pastries",
+      "ex": false,
+      "set": "",
+      "src": "Not published; ask the owner"
+     },
+     {
+      "n": "Fruit Danish",
+      "p": null,
+      "per": "",
+      "cat": "pastries",
+      "ex": false,
+      "set": "",
+      "src": "Not published; ask the owner"
+     },
+     {
+      "n": "Peanut Butter Pain Suisse",
+      "p": null,
+      "per": "",
+      "cat": "pastries",
+      "ex": false,
+      "set": "",
+      "src": "Not published; ask the owner"
+     },
+     {
+      "n": "Chocolate Banana",
+      "p": null,
+      "per": "",
+      "cat": "pastries",
+      "ex": false,
+      "set": "",
+      "src": "Not published; ask the owner"
+     },
+     {
+      "n": "Country Steak Sandwich",
+      "p": null,
+      "per": "",
+      "cat": "brunch",
+      "ex": false,
+      "set": "",
+      "src": "Not published; ask the owner"
+     },
+     {
+      "n": "Summer French Toast",
+      "p": null,
+      "per": "",
+      "cat": "brunch",
+      "ex": false,
+      "set": "",
+      "src": "Not published; ask the owner"
+     },
+     {
+      "n": "Soft Shell Crab Burger",
+      "p": null,
+      "per": "",
+      "cat": "brunch",
+      "ex": false,
+      "set": "",
+      "src": "Not published; ask the owner"
+     },
+     {
+      "n": "Aglio Olio with Market Seafood",
+      "p": null,
+      "per": "",
+      "cat": "pasta",
+      "ex": false,
+      "set": "",
+      "src": "Not published; ask the owner"
+     },
+     {
+      "n": "Pizzas, made fresh",
+      "p": null,
+      "per": "",
+      "cat": "pasta",
+      "ex": false,
+      "set": "",
+      "src": "Not published; ask the owner"
+     },
+     {
+      "n": "Matcha Flan",
+      "p": null,
+      "per": "",
+      "cat": "pasta",
+      "ex": false,
+      "set": "",
+      "src": "Not published; ask the owner"
+     },
+     {
+      "n": "Long Black",
+      "p": null,
+      "per": "",
+      "cat": "coffee",
+      "ex": false,
+      "set": "",
+      "src": "Not published; ask the owner"
+     },
+     {
+      "n": "Flat White",
+      "p": null,
+      "per": "",
+      "cat": "coffee",
+      "ex": false,
+      "set": "",
+      "src": "Not published; ask the owner"
+     },
+     {
+      "n": "Caffè Latte",
+      "p": null,
+      "per": "",
+      "cat": "coffee",
+      "ex": false,
+      "set": "",
+      "src": "Not published; ask the owner"
+     }
+    ],
+    "faq": [],
+    "contact": "Phone 03-7770 9355 (landline) · IG @ouibakehousecafe · FB OuiBakehouseCafe",
+    "sources": "Malay Mail, 30 Nov 2024, \"For steak sandwiches, fancy French toast and other brunch favourites, drop by Oui Bakehouse & Café\" (Kenny Mah; photos CK Lim); Eat Drink KL, Feb 2023 opening post. No prices published."
+   },
+   "checked": ""
   }
  ]
 }
