@@ -70,6 +70,8 @@
   var WA = 'https://wa.me/?text=';
   var WA_ASK = WA; // a customer's mockup puts their own WhatsApp number here (wa.me/60…?text=)
   var SIGNATURE = ['nasi-lemak', 'laksa', 'rendang', 'satay', 'ayam-percik', 'cendol']; // the home page's "most ordered" dishes
+  var BOOK = { max: 12, depositFrom: 8, deposit: 50, counts: true, seats: ['Indoor', 'Outdoor terrace', 'No preference'],
+    bigGroup: 'More than 12? <a href="catering.html#private">Book the private dining room</a>.', cancel: 'Free cancellation up to 2 hours before. Demo: no table is held.' };
   var BRAND = 'Sireh & Salt', REF = 'SS', KEY = 'ss_'; // a customer's mockup: their name, order prefix, own storage key
   var PHOTO_NOTE = ' (placeholder photo)'; // a customer's mockup with their own photos: ''
 
@@ -162,7 +164,7 @@
   function bookings() { return load('bookings', []); }
   function tablesLeft(d, t) {
     var h = 7, s = d + ':' + t; for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
-    var n = h % 6; if (t >= 1140 && t <= 1230) n = Math.max(0, n - 2);
+    var n = BOOK.counts ? h % 6 : 4; if (BOOK.counts && t >= 1140 && t <= 1230) n = Math.max(0, n - 2);
     n -= bookings().filter(function (b) { return b.date === d && b.time === t; }).length;
     return Math.max(0, n);
   }
@@ -443,7 +445,7 @@
       'DESCRIPTION:Booking ' + b.ref + '. This is a demo booking on a concept website.', 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
   }
   function pageBook() {
-    var S = { date: '', time: 0, pax: 2, seat: 'Indoor', occ: '', name: '', phone: '', notes: '' };
+    var S = { date: '', time: 0, pax: 2, seat: BOOK.seats[0], occ: '', name: '', phone: '', notes: '' };
     var root = $('[data-book]');
     function paint() {
       // offer a day only while it still has a time that is neither past nor full (at 19:55 the last table of the night can be taken)
@@ -453,20 +455,20 @@
       HOURS[dowOf(S.date)].forEach(function (h) { for (var t = h[0]; t <= h[1] - 90; t += 30) slots.push(t); });
       var minT = S.date === today() ? nowMin() + 30 : 0;
       root.innerHTML = '<div class="co"><div>' +
-        '<section class="panel"><h2>How many?</h2><div class="seg" role="group" aria-label="Party size">' + [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(function (n) { return '<button type="button" data-pax="' + n + '" class="' + (n === S.pax ? 'is-on' : '') + '" aria-pressed="' + (n === S.pax) + '">' + n + '</button>'; }).join('') + '</div>' +
-        '<p class="small muted" style="margin:12px 0 0">More than 12? <a href="catering.html#private">Book the private dining room</a>.' + (S.pax >= 8 ? ' Groups of 8 or more pay a RM50 deposit, taken off the bill.' : '') + '</p></section>' +
+        '<section class="panel"><h2>How many?</h2><div class="seg" role="group" aria-label="Party size">' + Array.apply(null, Array(BOOK.max)).map(function (x, i) { return i + 1; }).map(function (n) { return '<button type="button" data-pax="' + n + '" class="' + (n === S.pax ? 'is-on' : '') + '" aria-pressed="' + (n === S.pax) + '">' + n + '</button>'; }).join('') + '</div>' +
+        '<p class="small muted" style="margin:12px 0 0">' + BOOK.bigGroup + (BOOK.depositFrom && S.pax >= BOOK.depositFrom ? ' Groups of ' + BOOK.depositFrom + ' or more pay a ' + rm(BOOK.deposit) + ' deposit, taken off the bill.' : '') + '</p></section>' +
         '<section class="panel"><h2>Which day?</h2><div class="days">' + days.map(function (d, i) { return '<button type="button" class="day' + (d === S.date ? ' is-on' : '') + '" data-day="' + d + '"><small>' + (i === 0 && d === today() ? 'Today' : DAY[dowOf(d)]) + '</small><b>' + d.slice(8).replace(/^0/, '') + '</b><small>' + MON[+d.slice(5, 7) - 1] + '</small></button>'; }).join('') + '</div><p class="small muted" style="margin:10px 0 0">Closed on Mondays.</p></section>' +
         '<section class="panel"><h2>What time?</h2><div class="slots">' + slots.map(function (t) {
           var left = tablesLeft(S.date, t), past = t < minT, full = left === 0;
-          return '<button type="button" class="slot' + (t === S.time ? ' is-on' : '') + '" data-time="' + t + '"' + (past || full ? ' disabled' : '') + '>' + fmtTime(t) + '<small>' + (past ? 'past' : full ? 'full' : left === 1 ? '1 table left' : left + ' tables') + '</small></button>';
+          return '<button type="button" class="slot' + (t === S.time ? ' is-on' : '') + '" data-time="' + t + '"' + (past || full ? ' disabled' : '') + '>' + fmtTime(t) + '<small>' + (past ? 'past' : full ? 'full' : !BOOK.counts ? 'open' : left === 1 ? '1 table left' : left + ' tables') + '</small></button>';
         }).join('') + '</div></section>' +
-        '<section class="panel"><h2>A few details</h2><div class="row2"><div class="field"><label for="b-seat">Seating</label><select class="input" id="b-seat" data-k="seat"><option' + (S.seat === 'Indoor' ? ' selected' : '') + '>Indoor</option><option' + (S.seat === 'Outdoor terrace' ? ' selected' : '') + '>Outdoor terrace</option><option' + (S.seat === 'No preference' ? ' selected' : '') + '>No preference</option></select></div>' +
+        '<section class="panel"><h2>A few details</h2><div class="row2"><div class="field"><label for="b-seat">Seating</label><select class="input" id="b-seat" data-k="seat">' + BOOK.seats.map(function (o) { return '<option' + (S.seat === o ? ' selected' : '') + '>' + esc(o) + '</option>'; }).join('') + '</select></div>' +
         '<div class="field"><label for="b-occ">Occasion <small>(optional)</small></label><select class="input" id="b-occ" data-k="occ"><option value="">—</option><option>Birthday</option><option>Anniversary</option><option>Business</option><option>Family gathering</option></select></div></div>' +
         '<div class="row2"><div class="field"><label for="b-name">Name</label><input class="input" id="b-name" autocomplete="name" data-k="name" value="' + esc(S.name) + '"></div><div class="field"><label for="b-phone">Mobile number</label><input class="input" id="b-phone" type="tel" autocomplete="tel" placeholder="012-345 6789" data-k="phone" value="' + esc(S.phone) + '"></div></div>' +
         '<div class="field"><label for="b-notes">Anything we should know? <small>(optional)</small></label><input class="input" id="b-notes" maxlength="160" placeholder="High chair, allergies, a birthday cake…" data-k="notes" value="' + esc(S.notes) + '"></div></section></div>' +
         '<aside class="summary panel"><h2>Your table</h2><img src="img/interior.webp" alt="" style="border-radius:14px;aspect-ratio:4/3;object-fit:cover;width:100%;margin-bottom:14px">' +
-        '<div class="totals"><div><span>Guests</span><b>' + S.pax + '</b></div><div><span>Day</span><b>' + fmtDay(S.date) + '</b></div><div><span>Time</span><b>' + (S.time ? fmtTime(S.time) : '—') + '</b></div><div><span>Seating</span><b>' + esc(S.seat) + '</b></div>' + (S.pax >= 8 ? '<div><span>Deposit</span><b>RM50.00</b></div>' : '') + '</div>' +
-        '<button class="btn btn--block" type="button" data-confirm style="margin-top:16px">Confirm booking</button><p class="small muted center" style="margin-top:10px">Free cancellation up to 2 hours before. Demo: no table is held.</p></aside></div>';
+        '<div class="totals"><div><span>Guests</span><b>' + S.pax + '</b></div><div><span>Day</span><b>' + fmtDay(S.date) + '</b></div><div><span>Time</span><b>' + (S.time ? fmtTime(S.time) : '—') + '</b></div><div><span>Seating</span><b>' + esc(S.seat) + '</b></div>' + (BOOK.depositFrom && S.pax >= BOOK.depositFrom ? '<div><span>Deposit</span><b>' + rm(BOOK.deposit) + '</b></div>' : '') + '</div>' +
+        '<button class="btn btn--block" type="button" data-confirm style="margin-top:16px">Confirm booking</button><p class="small muted center" style="margin-top:10px">' + BOOK.cancel + '</p></aside></div>';
     }
     root.addEventListener('click', function (e) {
       var t;
@@ -488,7 +490,7 @@
       var all = bookings(); all.unshift(b); save('bookings', all.slice(0, 30));
       var text = 'Booking request (demo website): ' + BRAND + '\n' + b.ref + ' · Table for ' + b.pax + ' · ' + fmtDay(b.date) + ', ' + fmtTime(b.time) + '\nSeating: ' + b.seat + (b.occ ? '\nOccasion: ' + b.occ : '') + (b.notes ? '\nNotes: ' + b.notes : '') + '\nName: ' + b.name + ' · ' + b.phone;
       root.innerHTML = '<div class="panel done" style="margin:30px 0 80px"><div class="done__icon">' + ICON.check + '</div><p class="kicker" style="justify-content:center">Booking received (demo)</p><p class="ref">' + b.ref + '</p>' +
-        '<h2 style="margin-top:10px">Table for ' + b.pax + ' · ' + fmtDay(b.date) + ', ' + fmtTime(b.time) + '</h2><p class="lead" style="margin:0 auto 16px">We’ll confirm on WhatsApp within 30 minutes during opening hours.' + (b.pax >= 8 ? ' A RM50 deposit link comes with the confirmation.' : '') + '</p>' +
+        '<h2 style="margin-top:10px">Table for ' + b.pax + ' · ' + fmtDay(b.date) + ', ' + fmtTime(b.time) + '</h2><p class="lead" style="margin:0 auto 16px">We’ll confirm on WhatsApp within 30 minutes during opening hours.' + (BOOK.depositFrom && b.pax >= BOOK.depositFrom ? ' A ' + rm(BOOK.deposit) + ' deposit link comes with the confirmation.' : '') + '</p>' +
         '<div class="btns" style="justify-content:center"><button class="btn" type="button" data-ics>Add to my calendar</button><a class="btn btn--ghost" href="owner.html">See it in the owner view</a></div>' +
         '<details style="max-width:520px;margin:22px auto 0;text-align:left"><summary class="linkbtn">What the restaurant receives</summary><div class="waprev" style="margin-top:10px">' + esc(text) + '</div></details></div>';
       window.scrollTo(0, 0);
