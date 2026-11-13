@@ -12,7 +12,7 @@
     {"id": "starter", "name": "Starter", "price": 800, "for": "Your own ordering website or online shop", "meta": "Up to 20 items · ~10 working days",
      "features": ["Home, Menu or Shop, About, Contact, FAQ, Delivery & Returns", "Orders for pick-up, delivery or shipping — paid online or sent to your WhatsApp", "1 payment gateway: FPX, cards & e-wallets", "Delivery areas, West / East Malaysia shipping rates", "WhatsApp / Instagram chat buttons", "Privacy & terms drafts (EN + BM)", "Mobile-first design, basic SEO, SSL", "Training video + 30-min handover", "First month of maintenance free"]},
     {"id": "growth", "name": "Growth", "price": 1600, "for": "Bookings, festive pre-orders, ready for ads", "meta": "Up to 80 items · ~15 working days", "highlight": true, "tag": "Most complete",
-     "features": ["Everything in Starter", "Table bookings or festive pre-orders with cut-off dates", "Bulk import + options (size, flavour, add-ons…)", "2 payment methods", "Campaign / festive landing page", "Free-delivery threshold & vouchers", "GA4 + Meta Pixel ad tracking", "Homepage copy written for you (EN or 中文) + 3 SEO articles", "2 training sessions", "First month of maintenance free"]},
+     "features": ["Everything in Starter", "Table bookings or festive pre-orders with cut-off dates", "Bulk import + options (size, flavour, add-ons…)", "2 payment methods", "Campaign / festive landing page", "Free-delivery threshold & vouchers", "Enter phone / WhatsApp orders in your shop dashboard", "GA4 + Meta Pixel ad tracking", "Homepage copy written for you (EN or 中文) + 3 SEO articles", "2 training sessions", "First month of maintenance free"]},
     {"id": "catalog", "name": "Catalog (B2B)", "price": 1200, "for": "Catering, wholesale & corporate orders", "meta": "Up to 50 items · ~12 working days",
      "features": ["Menu or product catalogue with enquiry, not checkout", "Pre-filled quotation requests (events, bulk, corporate gifts)", "Certificates / partners page", "GA4 tracking", "Mobile-first design, basic SEO, SSL", "First month of maintenance free"]}
   ],
@@ -42,7 +42,7 @@
     ["Simple text logo", "from RM300"],
     ["Meta ads account + Pixel setup", "RM500"],
     ["Move an existing website to us", "from RM500"],
-    ["Rush delivery (within 7 working days)", "+30%"]
+    ["Enter phone / WhatsApp orders in your shop dashboard (included in Growth)", "RM100"], ["Rush delivery (within 7 working days)", "+30%"]
   ],
   "compare": {
     "cols": ["Build it yourself on a store platform", "Cheap template website", "Freelancer or agency", "Cartsmith"],

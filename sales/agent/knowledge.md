@@ -40,7 +40,7 @@ All templates: phone-first design, slide-out cart with free-shipping bar, sticky
 *Counted from the day we receive the deposit AND all content.
 
 Starter includes: Home, Menu or Shop, About, Contact, FAQ, Delivery & Returns, Privacy & Terms drafts (EN + BM); orders for pick-up, local delivery or shipping (delivery areas, West / East Malaysia rates), paid online or sent to their WhatsApp already filled in; WhatsApp / Instagram chat buttons; printable QR card design (table or parcel); 1 training video + 30-min handover.
-Growth adds: table bookings (date, time, party size) or festive pre-orders with cut-off dates; options (size, flavour, add-ons); campaign / festive page; free-delivery threshold and vouchers; GA4 + Meta Pixel (ad tracking); homepage copy written by us (EN or 中文) + 3 SEO articles; 2 training sessions.
+Growth adds: table bookings (date, time, party size) or festive pre-orders with cut-off dates; options (size, flavour, add-ons); campaign / festive page; free-delivery threshold and vouchers; entering phone / WhatsApp / counter orders in their shop dashboard; GA4 + Meta Pixel (ad tracking); homepage copy written by us (EN or 中文) + 3 SEO articles; 2 training sessions.
 Catalog: Home, Catalogue (menu or products), About, Certificates/Partners, Contact; pre-filled quotation requests (events, bulk orders, corporate gifts); GA4.
 Every package: mobile-first design, basic SEO, speed optimisation, order/enquiry emails, SSL, **first month of maintenance free after launch; after that a monthly maintenance fee from RM150 (optional, always mention it with the setup price)**.
 Not included (add-ons): product / food photography, logo design, large copywriting jobs, running ads, extra languages.
@@ -60,7 +60,8 @@ Not included (add-ons): product / food photography, logo design, large copywriti
 After the free month: minimum 6 months, then month-to-month. Unused minutes don't roll over. If the client leaves, they get a full backup.
 
 ## Add-ons
-Extra items RM8 each · product copywriting RM15 each · extra language from RM900 · simple text logo from RM300 · Meta ads account + Pixel setup RM500 · website move from another host from RM500 · rush (within 7 working days) +30%.
+Extra items RM8 each · product copywriting RM15 each · extra language from RM900 · simple text logo from RM300 · Meta ads account + Pixel setup RM500 · website move from another host from RM500 · entering phone / WhatsApp / counter orders in the shop dashboard RM100 one-time (included in Growth) · rush (within 7 working days) +30%.
+Every website comes with its own modern shop dashboard (orders, payments to check, what to make each day, products and stock, customers, coupons, reports with Excel export, staff accounts, pause orders). Customers order on the website; entering orders by hand is the add-on above.
 
 ## Offers (the ONLY offers that exist — never invent others)
 - Free sample website (mockup) before signing: private (password-protected), uses the business's public information (menu, prices where published, address, hours), stock placeholder photos, deleted after 14 days if they don't go ahead. No obligation. Ready in 1–2 working days. Changes to it during that time are free (their own photos, current prices, wording).
