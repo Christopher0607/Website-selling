@@ -5,6 +5,8 @@
 // 用法（本机，加密前）：
 //   python3 -m http.server 8770 --directory clients &
 //   node site/tools/check-preview.js http://localhost:8770/<代号>/preview/site/ <密码> [截图资料夹]
+// 2026-11-13：样板也可以用 4 个精品示范网站做（scripts/local/flagship-preview.py）：自动认出来，页面从选单读，
+// 流程改成「没有价钱 → Ask（WhatsApp）→ 老板在后台填价钱 → 菜单可以下单 → 订单页有这个价钱」。
 // 用法（已发布的加密网址）：
 //   node site/tools/check-preview.js https://previews.cartsmithstudio.com/<slug>/ <密码> [截图资料夹]
 const { chromium } = require('playwright');
@@ -184,11 +186,19 @@ async function scan(page, url, vp, shotDir) {
   // 2) every page on every screen size
   const ctx0 = await browser.newContext(); const p0 = await ctx0.newPage();
   await p0.goto(BASE + 'index.html'); await unlock(p0);
-  await p0.goto(BASE + 'shop.html'); await unlock(p0);
-  const prod = await p0.$$eval('.card__title a', (as) => [...new Set(as.map((a) => a.getAttribute('href')))]);
+  const isFlag = await p0.evaluate(() => !!(document.body && document.body.dataset.page)); // built from a flagship demo
+  let pages;
+  if (isFlag) {
+    const nav = await p0.$$eval('.nav a[href$=".html"]', (as) => [...new Set(as.map((a) => a.getAttribute('href')))]);
+    pages = ['index.html', ...nav];
+    ok(nav.length >= 3, `flagship mockup: ${pages.length} pages from the menu (${pages.join(', ')})`);
+  } else {
+    await p0.goto(BASE + 'shop.html'); await unlock(p0);
+    const prod = await p0.$$eval('.card__title a', (as) => [...new Set(as.map((a) => a.getAttribute('href')))]);
+    ok(prod.length >= 1, `shop lists ${prod.length} products`);
+    pages = ['index.html', 'shop.html', ...prod, 'about.html', 'help.html', 'cart.html', 'checkout.html'];
+  }
   await ctx0.close();
-  ok(prod.length >= 1, `shop lists ${prod.length} products`);
-  const pages = ['index.html', 'shop.html', ...prod, 'about.html', 'help.html', 'cart.html', 'checkout.html'];
 
   for (const vp of VIEWPORTS) {
     console.log(`— ${vp.name} (${vp.width}×${vp.height})`);
@@ -224,8 +234,38 @@ async function scan(page, url, vp, shotDir) {
     await ctx.close();
   }
 
+  // 3a) flagship mockup: no price yet → Ask on WhatsApp; the owner types a price → it can be ordered
+  if (isFlag) {
+    console.log('— ordering flow (phone)');
+    const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+    const page = await ctx.newPage();
+    const errors = [];
+    page.on('pageerror', (e) => errors.push(e.message));
+    await page.goto(BASE + 'menu.html'); await unlock(page);
+    const id = await page.$eval('.mitem', (el) => el.id.replace(/^i-/, '')).catch(() => '');
+    const askHref = await page.getAttribute(`#i-${id} .addbtn--ask`, 'href').catch(() => null);
+    if (askHref) {
+      ok(/^https:\/\/wa\.me\/(60\d+)?\?text=/.test(askHref), 'no price yet: "Ask" opens WhatsApp with the question filled in');
+      await page.goto(BASE + 'owner.html'); await unlock(page);
+      await page.click('[data-tab="menu"]');
+      await page.fill(`[data-price="${id}"]`, '12.5');
+      await page.dispatchEvent(`[data-price="${id}"]`, 'change');
+      await page.goto(BASE + 'menu.html'); await unlock(page);
+      ok(/RM12\.50/.test(await page.textContent(`#i-${id}`)) && !!(await page.$(`#i-${id} [data-add]`)), 'owner types a price: the menu shows it and it can be added');
+      await page.click(`#i-${id} [data-add]`);
+      await page.waitForTimeout(400);
+      await page.goto(BASE + 'order.html'); await unlock(page);
+      ok(/RM12\.50/.test(await page.textContent('[data-order]')), 'the order page has it at the owner’s price');
+    } else {
+      const add = await page.$(`#i-${id} [data-add]`);
+      ok(!!add, 'the first menu item can be added');
+    }
+    ok(!errors.length, 'no JavaScript errors in the flow' + (errors.length ? ': ' + errors.join(' | ') : ''));
+    await ctx.close();
+  }
+
   // 3) buying flow on a phone, 3 times (a timing bug once made it fail only some of the time)
-  for (let run = 1; run <= 3; run++) {
+  for (let run = 1; run <= (isFlag ? 0 : 3); run++) {
   console.log(`— buying flow (phone, run ${run}/3)`);
   {
     const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });

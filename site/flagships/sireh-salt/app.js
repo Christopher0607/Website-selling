@@ -689,6 +689,7 @@
     shared();
     var fn = PAGES[document.body.getAttribute('data-page')];
     if (fn) fn();
+    document.documentElement.setAttribute('data-store', 'ready'); // the mockup checker (site/tools/check-preview.js) waits for this
     window.addEventListener('storage', function (e) { if (e.key === KEY + 'owner') location.reload(); }); // the owner view changed something in another tab
   });
 })();
