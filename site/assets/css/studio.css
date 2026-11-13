@@ -149,14 +149,18 @@ h1 .zh, h2 .zh { font-size: .42em; font-weight: 600; margin-top: .6em; color: in
 /* homepage: smaller ways to start */
 .starts-mini { max-width: 980px; margin: 30px auto 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
 .starts-mini > .kicker { grid-column: 1 / -1; justify-self: center; margin: 0; }
-.sm { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 10px 16px; background: var(--card); border: 1px solid var(--line); border-radius: var(--r); padding: 18px 20px; }
-.sm__txt { grid-row: span 2; min-width: 0; }
-.sm h3 { font-size: 1.15rem; margin: 0 0 4px; }
-.sm__txt p { margin: 0; color: var(--muted); font-size: .9rem; line-height: 1.45; }
-.sm__price { margin: 0; font: 800 1.7rem/1 var(--head); letter-spacing: -.03em; display: flex; align-items: baseline; justify-content: flex-end; gap: 3px; white-space: nowrap; }
+.sm { display: flex; flex-direction: column; gap: 10px; min-width: 0; background: var(--card); border: 1px solid var(--line); border-radius: var(--r); padding: 18px 20px; }
+.sm__top { display: flex; align-items: baseline; justify-content: space-between; gap: 6px 14px; flex-wrap: wrap; }
+.sm h3 { font-size: 1.15rem; margin: 0; }
+.sm__for { margin: 0; color: var(--muted); font-size: .9rem; line-height: 1.45; }
+.sm__price { margin: 0; font: 800 1.7rem/1 var(--head); letter-spacing: -.03em; display: flex; align-items: baseline; gap: 3px; white-space: nowrap; }
 .sm__price span { font-size: .85rem; font-weight: 700; }
 .sm__price small { font: 500 .78rem var(--body); color: var(--muted); letter-spacing: 0; margin-left: 4px; }
-.sm .s-btn { justify-self: end; }
+.sm__pts { gap: 7px; font-size: .9rem; line-height: 1.4; margin: 2px 0 4px; }
+.sm__pts .i { width: 18px; height: 18px; margin-top: 1px; flex: none; }
+.sm__btns { margin-top: auto; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; }
+.sm__link { color: var(--ember-d); font-size: .9rem; font-weight: 600; text-decoration: none; }
+.sm__link:hover { text-decoration: underline; }
 /* demo website cards (2026-11-12 v3): a desktop and a phone screenshot on the demo's own colour, like the template cards */
 .flag { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; display: flex; flex-direction: column; transition: transform .2s, box-shadow .2s; }
 .flag:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(20,23,28,.1); }
@@ -405,3 +409,6 @@ h1 .zh, h2 .zh { font-size: .42em; font-weight: 600; margin-top: .6em; color: in
   .p-index .s-qa:nth-child(n+5) { display: none; }
   .p-index .s-qa summary { padding: 15px 0; font-size: 1rem; }
 }
+
+/* anchors (e.g. pricing.html#start-monthly from the homepage cards) clear the sticky header */
+.pkg[id] { scroll-margin-top: 96px; }

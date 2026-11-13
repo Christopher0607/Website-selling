@@ -1126,7 +1126,7 @@ class Studio:
         out = []
         for p in self.d.get("starts", []):
             feats = "".join(f"<li>{icon('check')}{e(f)}</li>" for f in p["features"])
-            out.append(f"""<article class="pkg"><h3>{e(p['name'])}</h3><p class="pkg__for">{e(p['for'])}</p>
+            out.append(f"""<article class="pkg" id="start-{p['id']}"><h3>{e(p['name'])}</h3><p class="pkg__for">{e(p['for'])}</p>
 <p class="pkg__price"><span>RM</span>{p['price']:,}<small>{e(p['unit'])}</small></p>
 <p class="pkg__meta">{e(p['meta'])}</p><ul class="s-ticks">{feats}</ul>
 {f'<p class="pkg__after pkg__after--end">{e(p["after"])}</p>' if p.get("after") else ""}
@@ -1134,13 +1134,21 @@ class Studio:
         return '<div class="pkgs pkgs--2">' + "".join(out) + "</div>"
 
     def frag_starts_mini(self, root):
-        # homepage (2026-11-12): the RM399 festive shop and the RM199-a-month plan, one compact card each
+        # homepage: the RM399 festive shop and the RM199-a-month plan. 2026-11-13 (Junyu): show what each includes;
+        # RM399 goes straight to the demo (and the real WordPress shop), RM199 to the request form and the full terms.
         out = []
         for p in self.d.get("starts", []):
-            link = (f'<a class="s-btn s-btn--sm" href="{root}{p["demo"]}">See the demo</a>' if p.get("demo")
-                    else f'<a class="s-btn s-btn--sm s-btn--ghost" href="{root}start.html?package={p["id"]}">Ask about this</a>')
-            out.append(f'<article class="sm"><div class="sm__txt"><h3>{e(p["name"])}</h3><p>{e(p["for"])}</p></div>'
-                       f'<p class="sm__price"><span>RM</span>{p["price"]:,}<small>{e(p["unit"])}</small></p>{link}</article>')
+            pts = "".join(f"<li>{icon('check')}{e(x)}</li>" for x in p.get("short", []))
+            if p.get("demo"):
+                btns = f'<a class="s-btn s-btn--sm" href="{root}{p["demo"]}">See the demo</a>'
+                if p.get("real_shop"):
+                    btns += f'<a class="sm__link" href="{e(p["real_shop"])}">Try the real shop (CNY, in Chinese) →</a>'
+            else:
+                btns = (f'<a class="s-btn s-btn--sm" href="{root}start.html?package={p["id"]}">Get a free mockup first</a>'
+                        f'<a class="sm__link" href="{root}pricing.html#start-{p["id"]}">Full terms →</a>')
+            out.append(f'<article class="sm" id="sm-{p["id"]}"><div class="sm__top"><h3>{e(p["name"])}</h3>'
+                       f'<p class="sm__price"><span>RM</span>{p["price"]:,}<small>{e(p["unit"])}</small></p></div>'
+                       f'<p class="sm__for">{e(p["for"])}</p><ul class="s-ticks sm__pts">{pts}</ul><div class="sm__btns">{btns}</div></article>')
         return '<div class="starts-mini"><p class="kicker">Or start smaller</p>' + "".join(out) + "</div>"
 
     def frag_care(self, root):

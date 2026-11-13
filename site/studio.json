@@ -17,11 +17,13 @@
      "features": ["Menu or product catalogue with enquiry, not checkout", "Pre-filled quotation requests (events, bulk, corporate gifts)", "Certificates / partners page", "GA4 tracking", "Mobile-first design, basic SEO, SSL", "First month of maintenance free"]}
   ],
   "starts": [
-    {"id": "festive", "name": "Festive pre-order shop", "price": 399, "demo": "demo/butter-lantern/index.html?fest=cny", "unit": "one-time", "for": "Your own festive online shop for CNY, Raya, Christmas or Valentine's", "meta": "Up to 10 items · live in 3 working days",
+    {"id": "festive", "name": "Festive pre-order shop", "price": 399, "demo": "demo/butter-lantern/index.html?fest=cny", "unit": "one-time", "for": "Your own festive online shop for CNY, Raya, Christmas or Valentine's", "meta": "Up to 10 items · live in 3 working days", "real_shop": "https://demo-festive.cartsmithstudio.com/",
      "features": ["Up to 10 festive items, with photos, prices, options and how many are left", "Online payment (FPX, cards, e-wallets) through a gateway in your name, or DuitNow QR with a receipt upload from day one", "Collection or delivery days and time slots, cut-off date and early-bird price", "Order emails, order tracking and your own dashboard: what to bake each day", "Runs on WordPress + WooCommerce, in your name", "3 months of hosting and maintenance included"],
+     "short": ["Up to 10 festive items, with how many are left", "Online payment or DuitNow QR", "Collection or delivery days and time slots, with a cut-off date", "Order emails and your own dashboard on your phone", "Live in 3 working days; 3 months of hosting and maintenance included, then pause it for free or keep it open for RM49 a month"],
      "after": "After 3 months, you choose: pause it for free and reopen next season for RM149, or keep it open for RM49 a month. A new festival look: RM99. Upgrade to a full website within 60 days and the RM399 comes off."},
     {"id": "monthly", "name": "Monthly plan", "price": 199, "unit": "a month × 12", "for": "Your own website with nothing to pay upfront", "meta": "RM0 upfront · 12 monthly payments",
      "features": ["Everything in Starter", "Hosting and basic maintenance included", "First payment on launch day", "After 12 payments the website is yours", "Terms in a written agreement"],
+     "short": ["RM0 upfront: the first payment is on launch day", "A full Starter website: menu or shop, online orders and payments, up to 20 items", "Hosting and maintenance included every month", "After 12 payments the website is yours", "Terms in a written agreement"],
      "after": "After the 12 payments the website is yours; maintenance from RM150 a month if you want us to keep looking after it."}
   ],
   "care": {
