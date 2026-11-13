@@ -63,18 +63,22 @@
     { re: /^4[67]\d{3}$/, fee: 6, eta: '35–50 min', area: 'Petaling Jaya and Subang' },
     { re: /^5\d{4}$/, fee: 10, eta: '45–70 min', area: 'Kuala Lumpur' }
   ];
+  var DELIVERY = true; // a customer's mockup without a known delivery service: false (pick-up only)
   var DELIVERY_MIN = 40, FREE_DELIVERY = 120, PROMO = { code: 'SIREH10', pct: 10 };
   var ADDRESS = 'G-12, Jalan Demo 3/7, 46000 Petaling Jaya (demo address)';
   var MAPS = 'https://www.google.com/maps/search/?api=1&query=Petaling+Jaya';
   var WA = 'https://wa.me/?text=';
+  var WA_ASK = WA; // a customer's mockup puts their own WhatsApp number here (wa.me/60…?text=)
+  var BRAND = 'Sireh & Salt', REF = 'SS', KEY = 'ss_'; // a customer's mockup: their name, order prefix, own storage key
+  var PHOTO_NOTE = ' (placeholder photo)'; // a customer's mockup with their own photos: ''
 
   // ------------------------------------------------------------------ helpers
   function $(s, el) { return (el || document).querySelector(s); }
   function $$(s, el) { return Array.prototype.slice.call((el || document).querySelectorAll(s)); }
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
-  function rm(n) { return 'RM' + (Math.round(n * 100) / 100).toFixed(2); }
-  function load(k, d) { try { var v = localStorage.getItem('ss_' + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } }
-  function save(k, v) { try { localStorage.setItem('ss_' + k, JSON.stringify(v)); } catch (e) { /* private mode: the demo still works on this page */ } }
+  function rm(n) { return (n == null || isNaN(n)) ? 'Ask for price' : 'RM' + (Math.round(n * 100) / 100).toFixed(2); }
+  function load(k, d) { try { var v = localStorage.getItem(KEY + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } }
+  function save(k, v) { try { localStorage.setItem(KEY + k, JSON.stringify(v)); } catch (e) { /* private mode: the demo still works on this page */ } }
   function my() { return new Date(Date.now() + 8 * 3600e3); } // Malaysia time, read with getUTC*
   function today() { return my().toISOString().slice(0, 10); }
   function nowMin() { var d = my(); return d.getUTCHours() * 60 + d.getUTCMinutes(); }
@@ -102,8 +106,16 @@
   function setOwner(o) { save('owner', o); }
   function item(id) { for (var i = 0; i < MENU.length; i++) if (MENU[i].id === id) return MENU[i]; return null; }
   function priceOf(it) { var o = owner(); return typeof o.price[it.id] === 'number' ? o.price[it.id] : it.p; }
+  // 2026-11-13: mockups for real shops leave out prices we could not confirm (p: null). Those items show "Ask for price"
+  // and a WhatsApp button; in the owner view the shop can type its prices, and the item becomes orderable at once.
+  function hasPrice(it) { var v = priceOf(it); return typeof v === 'number' && !isNaN(v); }
+  function askLink(n) { return WA_ASK + encodeURIComponent('Hi, how much is the ' + n + '?'); }
+  function picOf(it) { return it.img === false ? '' : 'img/' + (it.img || it.id) + '.webp'; }
+  var NOPHOTO = '<div class="nophoto"><span>Your photo here</span></div>';
+  function askBtn(n) { return '<a class="addbtn addbtn--ask" href="' + askLink(n) + '" target="_blank" rel="noopener">' + ICON.wa + 'Ask</a>'; }
   function isOut(id) { return !!owner().sold[id]; }
   function fitem(id) { for (var i = 0; i < SEASONS.length; i++) for (var j = 0; j < SEASONS[i].items.length; j++) if (SEASONS[i].items[j].id === id) return { s: SEASONS[i], it: SEASONS[i].items[j] }; return null; }
+  function fp(fi) { var o = owner(); return typeof o.price[fi.id] === 'number' ? o.price[fi.id] : fi.p; }
   function leftOf(fi) { var o = owner(); return typeof o.left[fi.id] === 'number' ? o.left[fi.id] : fi.left; }
   function bag() { return load('bag', []); }
   function setBag(b) { save('bag', b); updateBag(); }
@@ -194,15 +206,15 @@
   }
   function dishCard(it) {
     var out = isOut(it.id);
-    return '<article class="dish' + (out ? ' is-out' : '') + '"><div class="dish__img"><img src="img/' + it.id + '.webp" alt="' + esc(it.n) + ' (placeholder photo)" loading="lazy" width="600" height="450"><div class="dish__tags">' + tagsHTML(it) + '</div></div>' +
+    return '<article class="dish' + (out ? ' is-out' : '') + '"><div class="dish__img">' + (picOf(it) ? '<img src="' + picOf(it) + '" alt="' + esc(it.n) + '' + PHOTO_NOTE + '" loading="lazy" width="600" height="450">' : NOPHOTO) + '<div class="dish__tags">' + tagsHTML(it) + '</div></div>' +
       '<div class="dish__body"><h3>' + esc(it.n) + '</h3><p>' + esc(it.d) + '</p><div class="dish__foot"><span class="price">' + rm(priceOf(it)) + (it.per ? ' <small class="muted">· ' + esc(it.per) + '</small>' : '') + '</span>' +
-      '<button class="addbtn" type="button" data-add="' + it.id + '"' + (out ? ' disabled' : '') + '>' + (out ? 'Sold out' : ICON.plus + 'Add') + '</button></div></div></article>';
+      (hasPrice(it) || out ? '<button class="addbtn" type="button" data-add="' + it.id + '"' + (out ? ' disabled' : '') + '>' + (out ? 'Sold out' : ICON.plus + 'Add') + '</button>' : askBtn(it.n)) + '</div></div></article>';
   }
   function menuItem(it) {
     var out = isOut(it.id);
     return '<article class="mitem' + (out ? ' is-out' : '') + '" id="i-' + it.id + '"><div><h3>' + esc(it.n) + '</h3><p>' + esc(it.d) + '</p><div class="mitem__meta">' + tagsHTML(it) + (it.per ? '<span class="tag">' + esc(it.per) + '</span>' : '') + '</div>' +
-      '<div class="mitem__foot"><span class="price">' + rm(priceOf(it)) + '</span><button class="addbtn" type="button" data-add="' + it.id + '"' + (out ? ' disabled' : '') + '>' + (out ? 'Sold out' : ICON.plus + 'Add') + '</button></div></div>' +
-      '<img src="img/' + it.id + '.webp" alt="' + esc(it.n) + ' (placeholder photo)" loading="lazy" width="112" height="112"></article>';
+      '<div class="mitem__foot"><span class="price">' + rm(priceOf(it)) + '</span>' + (hasPrice(it) || out ? '<button class="addbtn" type="button" data-add="' + it.id + '"' + (out ? ' disabled' : '') + '>' + (out ? 'Sold out' : ICON.plus + 'Add') + '</button>' : askBtn(it.n)) + '</div></div>' +
+      (picOf(it) ? '<img src="' + picOf(it) + '" alt="' + esc(it.n) + '' + PHOTO_NOTE + '" loading="lazy" width="112" height="112">' : '') + '</article>';
   }
   var sheetFocus = null;
   function openSheet(html, img) {
@@ -232,7 +244,7 @@
     }).join('');
     openSheet('<div class="sheet__body"><h2 id="sheet-title">' + esc(it.n) + '</h2><p class="muted">' + esc(it.d) + '</p>' + groups +
       '<div class="field" style="margin-top:14px"><label for="sh-note">Note for the kitchen <small>(optional)</small></label><input class="input" id="sh-note" maxlength="120" placeholder="e.g. less oil, no peanuts"></div></div>' +
-      '<div class="sheet__foot"><div class="qty"><button type="button" data-q="-1" aria-label="One less">−</button><output data-qv>1</output><button type="button" data-q="1" aria-label="One more">+</button></div><button class="btn btn--block" type="button" data-sheet-add></button></div>', 'img/' + it.id + '.webp');
+      '<div class="sheet__foot"><div class="qty"><button type="button" data-q="-1" aria-label="One less">−</button><output data-qv>1</output><button type="button" data-q="1" aria-label="One more">+</button></div><button class="btn btn--block" type="button" data-sheet-add></button></div>', picOf(it));
     var p = $('.sheet__panel');
     function total() { var u = priceOf(it); (it.o || []).forEach(function (g, gi) { (sel[gi] || []).forEach(function (vi) { u += g.v[vi][1]; }); }); return u * qty; }
     function paint() { $('[data-qv]', p).textContent = qty; $('[data-sheet-add]', p).textContent = 'Add to order · ' + rm(total()); }
@@ -250,7 +262,7 @@
   }
   function onAdd(e) {
     var b = e.target.closest('[data-add]'); if (!b) return;
-    var it = item(b.getAttribute('data-add')); if (!it || isOut(it.id)) return;
+    var it = item(b.getAttribute('data-add')); if (!it || isOut(it.id) || !hasPrice(it)) return;
     if (it.o && it.o.length) optionsSheet(it); else addDirect(it, 1, {}, '');
   }
 
@@ -311,7 +323,7 @@
     return { ok: false, msg: 'That code doesn’t work. Try ' + PROMO.code + ' (demo), or a gift voucher code from the vouchers page.' };
   }
   function orderText(o) {
-    var L = ['New order (demo website): Sireh & Salt', o.no + ' · ' + (o.mode === 'pickup' ? 'Pick-up' : 'Delivery') + ' · ' + fmtDay(o.date) + ', ' + fmtTime(o.time), ''];
+    var L = ['New order (demo website): ' + BRAND, o.no + ' · ' + (o.mode === 'pickup' ? 'Pick-up' : 'Delivery') + ' · ' + fmtDay(o.date) + ', ' + fmtTime(o.time), ''];
     o.items.forEach(function (l) { L.push(l.qty + ' × ' + l.n + (l.opts ? ' (' + l.opts + ')' : '') + (l.note ? ' [' + l.note + ']' : '') + ' — ' + rm(l.unit * l.qty)); });
     L.push('');
     if (o.disc) L.push('Discount: −' + rm(o.disc));
@@ -324,6 +336,7 @@
   }
   function pageOrder() {
     var S = load('checkout', { mode: 'pickup', date: '', time: 0, pc: '', addr: '', name: '', phone: '', notes: '', code: '', pay: 'online' });
+    if (!DELIVERY) S.mode = 'pickup';
     var root = $('[data-order]');
     function keep() { save('checkout', S); }
     function zone() { var pc = String(S.pc || '').trim(); for (var i = 0; i < ZONES.length; i++) if (ZONES[i].re.test(pc)) return ZONES[i]; return null; }
@@ -352,7 +365,7 @@
       }
       var st = status();
       root.innerHTML = '<div class="co"><div>' +
-        '<section class="panel"><h2>1. Pick-up or delivery</h2><div class="seg" role="group" aria-label="Pick-up or delivery"><button type="button" data-mode="pickup" class="' + (S.mode === 'pickup' ? 'is-on' : '') + '" aria-pressed="' + (S.mode === 'pickup') + '">Pick-up</button><button type="button" data-mode="delivery" class="' + (S.mode === 'delivery' ? 'is-on' : '') + '" aria-pressed="' + (S.mode === 'delivery') + '">Delivery</button></div>' +
+        (DELIVERY ? '<section class="panel"><h2>1. Pick-up or delivery</h2><div class="seg" role="group" aria-label="Pick-up or delivery"><button type="button" data-mode="pickup" class="' + (S.mode === 'pickup' ? 'is-on' : '') + '" aria-pressed="' + (S.mode === 'pickup') + '">Pick-up</button><button type="button" data-mode="delivery" class="' + (S.mode === 'delivery' ? 'is-on' : '') + '" aria-pressed="' + (S.mode === 'delivery') + '">Delivery</button></div>' : '<section class="panel"><h2>1. Pick-up</h2>') +
         (S.mode === 'pickup' ? '<p class="muted small" style="margin:12px 0 0">Collect at the counter: ' + esc(ADDRESS) + '.</p>' : '<div class="row2" style="margin-top:14px"><div class="field"><label for="o-pc">Postcode</label><input class="input" id="o-pc" inputmode="numeric" maxlength="5" placeholder="e.g. 46100" value="' + esc(S.pc) + '" data-k="pc"></div><div class="field"><label for="o-addr">Address</label><input class="input" id="o-addr" placeholder="Unit, street, area" value="' + esc(S.addr) + '" data-k="addr"></div></div>' + zoneMsg) +
         '</section>' +
         '<section class="panel"><h2>2. When</h2>' + (st.cls === 'busy' ? '<div class="note">' + ICON.clock + '<span>' + esc(st.long) + '</span></div>' : '') +
@@ -404,7 +417,7 @@
       else if (!S.name) err = 'Add your name, so we know whose order it is.';
       else if (!phoneOk(S.phone)) err = 'Add a mobile number we can reach you on.';
       if (err) { toast(err); return; }
-      var o = { no: 'SS-' + seq(), mode: S.mode, date: S.date, time: S.time, items: bag(), sub: c.sub, disc: c.disc, fee: c.fee, total: c.total, name: S.name, phone: S.phone, addr: S.addr, pc: S.pc, notes: S.notes, pay: S.pay, st: 'New', at: Date.now() };
+      var o = { no: REF + '-' + seq(), mode: S.mode, date: S.date, time: S.time, items: bag(), sub: c.sub, disc: c.disc, fee: c.fee, total: c.total, name: S.name, phone: S.phone, addr: S.addr, pc: S.pc, notes: S.notes, pay: S.pay, st: 'New', at: Date.now() };
       var orders = load('orders', []); orders.unshift(o); save('orders', orders.slice(0, 30));
       if (c.d.voucher) save('vouchers', vouchers().map(function (v) { if (v.code === c.d.voucher) v.used = true; return v; }));
       save('bag', []); S.code = ''; S.notes = ''; keep(); updateBag();
@@ -425,7 +438,7 @@
   function ics(b) {
     function utc(d, m) { var x = new Date(Date.parse(d + 'T00:00:00Z') + (m - 480) * 60e3); return x.toISOString().replace(/[-:]/g, '').slice(0, 15) + 'Z'; }
     return ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Sireh and Salt demo//EN', 'BEGIN:VEVENT', 'UID:' + b.ref + '@sireh-salt.demo', 'DTSTAMP:' + new Date().toISOString().replace(/[-:]/g, '').slice(0, 15) + 'Z',
-      'DTSTART:' + utc(b.date, b.time), 'DTEND:' + utc(b.date, b.time + 90), 'SUMMARY:Table for ' + b.pax + ' at Sireh & Salt (demo)', 'LOCATION:' + ADDRESS.replace(/,/g, '\\,'),
+      'DTSTART:' + utc(b.date, b.time), 'DTEND:' + utc(b.date, b.time + 90), 'SUMMARY:Table for ' + b.pax + ' at ' + BRAND + ' (demo)', 'LOCATION:' + ADDRESS.replace(/,/g, '\\,'),
       'DESCRIPTION:Booking ' + b.ref + '. This is a demo booking on a concept website.', 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
   }
   function pageBook() {
@@ -470,9 +483,9 @@
     function confirmBooking() {
       var err = !S.time ? 'Choose a time first.' : !S.name.trim() ? 'Add your name.' : !phoneOk(S.phone) ? 'Add a mobile number, so we can confirm on WhatsApp.' : '';
       if (err) { toast(err); return; }
-      var b = { ref: 'SS-B' + seq(), date: S.date, time: S.time, pax: S.pax, seat: S.seat, occ: S.occ, name: S.name.trim(), phone: S.phone.trim(), notes: S.notes, st: 'New', at: Date.now() };
+      var b = { ref: REF + '-B' + seq(), date: S.date, time: S.time, pax: S.pax, seat: S.seat, occ: S.occ, name: S.name.trim(), phone: S.phone.trim(), notes: S.notes, st: 'New', at: Date.now() };
       var all = bookings(); all.unshift(b); save('bookings', all.slice(0, 30));
-      var text = 'Booking request (demo website): Sireh & Salt\n' + b.ref + ' · Table for ' + b.pax + ' · ' + fmtDay(b.date) + ', ' + fmtTime(b.time) + '\nSeating: ' + b.seat + (b.occ ? '\nOccasion: ' + b.occ : '') + (b.notes ? '\nNotes: ' + b.notes : '') + '\nName: ' + b.name + ' · ' + b.phone;
+      var text = 'Booking request (demo website): ' + BRAND + '\n' + b.ref + ' · Table for ' + b.pax + ' · ' + fmtDay(b.date) + ', ' + fmtTime(b.time) + '\nSeating: ' + b.seat + (b.occ ? '\nOccasion: ' + b.occ : '') + (b.notes ? '\nNotes: ' + b.notes : '') + '\nName: ' + b.name + ' · ' + b.phone;
       root.innerHTML = '<div class="panel done" style="margin:30px 0 80px"><div class="done__icon">' + ICON.check + '</div><p class="kicker" style="justify-content:center">Booking received (demo)</p><p class="ref">' + b.ref + '</p>' +
         '<h2 style="margin-top:10px">Table for ' + b.pax + ' · ' + fmtDay(b.date) + ', ' + fmtTime(b.time) + '</h2><p class="lead" style="margin:0 auto 16px">We’ll confirm on WhatsApp within 30 minutes during opening hours.' + (b.pax >= 8 ? ' A RM50 deposit link comes with the confirmation.' : '') + '</p>' +
         '<div class="btns" style="justify-content:center"><button class="btn" type="button" data-ics>Add to my calendar</button><a class="btn btn--ghost" href="owner.html">See it in the owner view</a></div>' +
@@ -498,20 +511,21 @@
       var dates = []; for (var d = s.from; d <= s.to; d = addDays(d, 1)) dates.push(d);
       if (dates.indexOf(S.date) < 0) S.date = dates[0];
       var lines = s.items.filter(function (x) { return S.qty[x.id]; }).map(function (x) { return { it: x, q: S.qty[x.id] }; });
-      var total = lines.reduce(function (a, l) { return a + l.it.p * l.q; }, 0), dep = lines.reduce(function (a, l) { return a + l.it.p * l.q * l.it.dep; }, 0);
+      var ask = lines.some(function (l) { return fp(l.it) == null; });
+      var total = lines.reduce(function (a, l) { return a + (fp(l.it) || 0) * l.q; }, 0), dep = lines.reduce(function (a, l) { return a + (fp(l.it) || 0) * l.q * l.it.dep; }, 0);
       $('[data-fhero]').innerHTML = '<img src="img/' + s.img + '.webp" alt=""><div class="wrap"><p class="kicker">Festive pre-orders</p><h1>' + esc(s.name) + '</h1><p class="lead">' + esc(s.blurb) + '</p><p class="lead" style="margin-top:-6px"><b>Order by ' + fmtDay(s.cutoff) + '</b> · pick up ' + fmtDay(s.from) + ' to ' + fmtDay(s.to) + '</p>' + countdown(s) + '</div>';
       root.innerHTML = '<div class="seg" role="tablist" aria-label="Festive season" style="margin-bottom:22px">' + SEASONS.map(function (x) { return '<button type="button" role="tab" data-season="' + x.id + '" class="' + (x.id === S.season ? 'is-on' : '') + '" aria-selected="' + (x.id === S.season) + '">' + esc(x.name) + (x.cutoff < t ? ' (closed)' : '') + '</button>'; }).join('') + '</div>' +
         '<div class="co" style="padding-top:0"><div class="grid" style="gap:16px">' + s.items.map(function (x) {
           var left = leftOf(x), out = left <= 0 || closed, q = S.qty[x.id] || 0;
-          return '<article class="fset' + (out ? ' is-out' : '') + '"><img src="img/' + x.img + '.webp" alt="' + esc(x.n) + ' (placeholder photo)" loading="lazy"><div class="fset__body"><h3>' + esc(x.n) + '</h3><span class="price">' + rm(x.p) + '</span><ul>' + x.has.map(function (h) { return '<li>' + esc(h) + '</li>'; }).join('') + '</ul>' +
-            '<div class="fset__left"><span>' + (left <= 0 ? 'Sold out' : 'Only ' + left + ' left') + '</span><span>' + (x.dep < 1 ? '50% deposit' : 'Pay in full') + '</span></div><div class="bar bar--dark"><i style="width:' + Math.round(100 * Math.max(0, left) / x.total) + '%"></i></div>' +
+          return '<article class="fset' + (out ? ' is-out' : '') + '">' + (x.img === false ? NOPHOTO : '<img src="img/' + x.img + '.webp" alt="' + esc(x.n) + '' + PHOTO_NOTE + '" loading="lazy">') + '<div class="fset__body"><h3>' + esc(x.n) + '</h3><span class="price">' + rm(fp(x)) + '</span><ul>' + x.has.map(function (h) { return '<li>' + esc(h) + '</li>'; }).join('') + '</ul>' +
+            '<div class="fset__left"><span>' + (left <= 0 ? 'Sold out' : 'Only ' + left + ' left') + '</span><span>' + (fp(x) == null ? 'Price on request' : x.dep < 1 ? '50% deposit' : 'Pay in full') + '</span></div><div class="bar bar--dark"><i style="width:' + Math.round(100 * Math.max(0, left) / x.total) + '%"></i></div>' +
             '<div style="display:flex;justify-content:flex-end;margin-top:8px">' + (out ? '<span class="tag tag--out">' + (closed ? 'Orders closed' : 'Sold out') + '</span>' : '<div class="qty"><button type="button" data-fq="' + x.id + ':-1" aria-label="One less">−</button><output>' + q + '</output><button type="button" data-fq="' + x.id + ':1" aria-label="One more">+</button></div>') + '</div></div></article>';
         }).join('') + '</div>' +
-        '<aside class="summary panel"><h2>Your pre-order</h2>' + (lines.length ? lines.map(function (l) { return '<div class="line"><div><h4>' + l.q + ' × ' + esc(l.it.n) + '</h4></div><b>' + rm(l.it.p * l.q) + '</b></div>'; }).join('') : '<p class="muted">Choose a set on the left.</p>') +
+        '<aside class="summary panel"><h2>Your pre-order</h2>' + (lines.length ? lines.map(function (l) { return '<div class="line"><div><h4>' + l.q + ' × ' + esc(l.it.n) + '</h4></div><b>' + (fp(l.it) == null ? 'Ask for price' : rm(fp(l.it) * l.q)) + '</b></div>'; }).join('') : '<p class="muted">Choose a set on the left.</p>') +
         '<div class="field" style="margin-top:14px"><span>Pick-up day</span><div class="days">' + dates.map(function (d) { return '<button type="button" class="day' + (d === S.date ? ' is-on' : '') + '" data-fday="' + d + '"><small>' + DAY[dowOf(d)] + '</small><b>' + d.slice(8).replace(/^0/, '') + '</b><small>' + MON[+d.slice(5, 7) - 1] + '</small></button>'; }).join('') + '</div></div>' +
         '<div class="field"><label for="f-name">Name</label><input class="input" id="f-name" data-k="name" value="' + esc(S.name) + '"></div><div class="field"><label for="f-phone">Mobile number</label><input class="input" id="f-phone" type="tel" data-k="phone" placeholder="012-345 6789" value="' + esc(S.phone) + '"></div>' +
-        '<div class="pay"><label class="payopt"><input type="radio" name="fpay" value="deposit"' + (S.pay === 'deposit' ? ' checked' : '') + '><span><b>Pay the deposit now: ' + rm(dep) + '</b><small>Balance ' + rm(total - dep) + ' at pick-up.</small></span></label><label class="payopt"><input type="radio" name="fpay" value="full"' + (S.pay === 'full' ? ' checked' : '') + '><span><b>Pay in full: ' + rm(total) + '</b><small>Just collect on the day.</small></span></label></div>' +
-        '<div class="totals"><div class="grand"><span>Total</span><span>' + rm(total) + '</span></div></div><button class="btn btn--chili btn--block" type="button" data-forder style="margin-top:14px"' + (closed ? ' disabled' : '') + '>Reserve my sets</button><p class="small muted center" style="margin-top:10px">Demo: nothing is charged; the “left” counts are examples the owner can change.</p></aside></div>';
+        (ask ? '<p class="small" style="margin:12px 0 0">We’ll WhatsApp you the price to confirm before you pay anything.</p>' : '<div class="pay"><label class="payopt"><input type="radio" name="fpay" value="deposit"' + (S.pay === 'deposit' ? ' checked' : '') + '><span><b>Pay the deposit now: ' + rm(dep) + '</b><small>Balance ' + rm(total - dep) + ' at pick-up.</small></span></label><label class="payopt"><input type="radio" name="fpay" value="full"' + (S.pay === 'full' ? ' checked' : '') + '><span><b>Pay in full: ' + rm(total) + '</b><small>Just collect on the day.</small></span></label></div>') +
+        (ask ? '' : '<div class="totals"><div class="grand"><span>Total</span><span>' + rm(total) + '</span></div></div>') + '<button class="btn btn--chili btn--block" type="button" data-forder style="margin-top:14px"' + (closed ? ' disabled' : '') + '>' + (ask ? 'Send my pre-order request' : 'Reserve my sets') + '</button><p class="small muted center" style="margin-top:10px">Demo: nothing is charged; the “left” counts are examples the owner can change.</p></aside></div>';
     }
     root.addEventListener('click', function (e) {
       var x;
@@ -530,8 +544,8 @@
         if (err) { toast(err); return; }
         var o = owner(), lines = ids.map(function (id) { var f = fitem(id); o.left[id] = leftOf(f.it) - S.qty[id]; return S.qty[id] + ' × ' + f.it.n; });
         setOwner(o);
-        var total = ids.reduce(function (a, id) { return a + fitem(id).it.p * S.qty[id]; }, 0);
-        var ord = { no: 'SS-F' + seq(), mode: 'festive', date: S.date, time: 660, items: ids.map(function (id) { var f = fitem(id).it; return { n: f.n, qty: S.qty[id], unit: f.p, opts: '' }; }), total: total, name: S.name.trim(), phone: S.phone.trim(), pay: S.pay, st: 'New', at: Date.now(), season: s.name };
+        var total = ids.reduce(function (a, id) { return a + (fp(fitem(id).it) || 0) * S.qty[id]; }, 0);
+        var ord = { no: REF + '-F' + seq(), mode: 'festive', date: S.date, time: 660, items: ids.map(function (id) { var f = fitem(id).it; return { n: f.n, qty: S.qty[id], unit: fp(f), opts: '' }; }), total: total, name: S.name.trim(), phone: S.phone.trim(), pay: S.pay, st: 'New', at: Date.now(), season: s.name };
         var orders = load('orders', []); orders.unshift(ord); save('orders', orders.slice(0, 30));
         root.innerHTML = '<div class="panel done"><div class="done__icon">' + ICON.check + '</div><p class="kicker" style="justify-content:center">Pre-order reserved (demo)</p><p class="ref">' + ord.no + '</p><h2 style="margin-top:10px">' + esc(s.name) + ' · pick up ' + fmtDay(S.date) + '</h2><p class="lead" style="margin:0 auto 10px">' + esc(lines.join(', ')) + '</p><p class="muted">We’ll send a reminder on WhatsApp the day before. Demo: nothing was charged.</p><div class="btns" style="justify-content:center;margin-top:16px"><a class="btn btn--ghost" href="owner.html">See it in the owner view</a><a class="btn btn--ghost" href="festive.html">Back to festive sets</a></div></div>';
         S.qty = {};
@@ -552,8 +566,8 @@
       if (!form.reportValidity()) return;
       var f = {}; new FormData(form).forEach(function (v, k) { f[k] = String(v).trim(); });
       if (!phoneOk(f.phone)) { toast('Add a mobile number we can reach you on.'); return; }
-      var ref = 'SS-E' + seq();
-      var text = 'Catering enquiry (demo website): Sireh & Salt\n' + ref + '\n' + f.type + ' · ' + f.pax + ' guests · ' + (f.date ? fmtDay(f.date) : 'date to confirm') + (f.time ? ', ' + f.time : '') + '\nWhere: ' + (f.where || '-') + '\nBudget: ' + (f.budget || '-') + '\nDiet: ' + (f.diet || '-') + (f.notes ? '\nNotes: ' + f.notes : '') + '\nName: ' + f.name + ' · ' + f.phone + (f.email ? ' · ' + f.email : '');
+      var ref = REF + '-E' + seq();
+      var text = 'Catering enquiry (demo website): ' + BRAND + '\n' + ref + '\n' + f.type + ' · ' + f.pax + ' guests · ' + (f.date ? fmtDay(f.date) : 'date to confirm') + (f.time ? ', ' + f.time : '') + '\nWhere: ' + (f.where || '-') + '\nBudget: ' + (f.budget || '-') + '\nDiet: ' + (f.diet || '-') + (f.notes ? '\nNotes: ' + f.notes : '') + '\nName: ' + f.name + ' · ' + f.phone + (f.email ? ' · ' + f.email : '');
       var all = load('enquiries', []); all.unshift({ ref: ref, type: f.type, pax: f.pax, date: f.date, name: f.name, at: Date.now() }); save('enquiries', all.slice(0, 20));
       form.outerHTML = '<div class="panel done"><div class="done__icon">' + ICON.check + '</div><p class="kicker" style="justify-content:center">Enquiry sent (demo)</p><p class="ref">' + ref + '</p><h2 style="margin-top:10px">Thank you, ' + esc(f.name) + '</h2><p class="lead" style="margin:0 auto 14px">You’ll get a written quote within one working day, with the menu, the price per head and what’s included.</p>' +
         '<details style="max-width:520px;margin:0 auto;text-align:left"><summary class="linkbtn">What the restaurant receives</summary><div class="waprev" style="margin-top:10px">' + esc(text) + '</div></details></div>';
@@ -627,7 +641,7 @@
           return '<div class="ocard"><div class="ocard__top"><b>' + fmtTime(x.time) + ' · ' + x.pax + ' pax · ' + esc(x.name) + '</b><button type="button" class="ost ost--' + x.st + '" data-ost="' + esc(x.ref) + '" data-kind="b">' + x.st + '</button></div><span class="muted">' + (x.date && x.date !== today() ? fmtDay(x.date) + ' · ' : 'Tonight · ') + esc(x.notes || '') + '</span>' + (x.mine ? '<span class="tag tag--new" style="justify-self:start">You booked this one</span>' : '') + '</div>';
         }).join(''),
         menu: '<p class="small muted" style="margin:0">Change a price or switch a dish to sold out. The website changes at once.</p>' + MENU.map(function (it) {
-          return '<div class="orow"><span><b>' + esc(it.n) + '</b></span><input type="number" min="1" step="0.1" value="' + priceOf(it).toFixed(2) + '" data-price="' + it.id + '" aria-label="Price of ' + esc(it.n) + '"><label class="switch" title="Sold out"><input type="checkbox" data-sold="' + it.id + '"' + (o.sold[it.id] ? ' checked' : '') + ' aria-label="' + esc(it.n) + ' sold out"><span></span></label></div>';
+          return '<div class="orow"><span><b>' + esc(it.n) + '</b></span><input type="number" min="1" step="0.1" value="' + (hasPrice(it) ? priceOf(it).toFixed(2) : '') + '" placeholder="Set price" data-price="' + it.id + '" aria-label="Price of ' + esc(it.n) + '"><label class="switch" title="Sold out"><input type="checkbox" data-sold="' + it.id + '"' + (o.sold[it.id] ? ' checked' : '') + ' aria-label="' + esc(it.n) + ' sold out"><span></span></label></div>';
         }).join('') + '<p class="small muted">Red switch = sold out today.</p>',
         festive: SEASONS.map(function (s) {
           return '<p style="margin:6px 0 0;font-weight:800">' + esc(s.name) + '</p>' + s.items.map(function (x) {
@@ -638,7 +652,7 @@
           return '<button type="button" data-status-set="' + s[0] + '" class="' + (o.status === s[0] ? 'is-on' : '') + '">' + s[1] + '<small>' + s[2] + '</small></button>';
         }).join('') + '</div><p class="small muted">Right now the website says: <b>' + esc(status().text) + '</b></p>'
       };
-      root.innerHTML = '<div class="phone"><div class="phone__screen"><div class="phone__top"><small>Sireh &amp; Salt · ' + fmtDay(today()) + '</small><h3>' + (newCount ? newCount + ' new order' + (newCount === 1 ? '' : 's') : 'All caught up') + '</h3><div class="otabs" role="tablist">' + [['orders', 'Orders'], ['bookings', 'Bookings'], ['menu', 'Menu'], ['festive', 'Festive'], ['status', 'Status']].map(function (x) { return '<button type="button" role="tab" data-tab="' + x[0] + '" class="' + (tab === x[0] ? 'is-on' : '') + '" aria-selected="' + (tab === x[0]) + '">' + x[1] + '</button>'; }).join('') + '</div></div><div class="opane">' + panes[tab] + '</div></div></div>';
+      root.innerHTML = '<div class="phone"><div class="phone__screen"><div class="phone__top"><small>' + esc(BRAND) + ' · ' + fmtDay(today()) + '</small><h3>' + (newCount ? newCount + ' new order' + (newCount === 1 ? '' : 's') : 'All caught up') + '</h3><div class="otabs" role="tablist">' + [['orders', 'Orders'], ['bookings', 'Bookings'], ['menu', 'Menu'], ['festive', 'Festive'], ['status', 'Status']].map(function (x) { return '<button type="button" role="tab" data-tab="' + x[0] + '" class="' + (tab === x[0] ? 'is-on' : '') + '" aria-selected="' + (tab === x[0]) + '">' + x[1] + '</button>'; }).join('') + '</div></div><div class="opane">' + panes[tab] + '</div></div></div>';
     }
     root.addEventListener('click', function (e) {
       var x;
@@ -656,12 +670,12 @@
     root.addEventListener('change', function (e) {
       var o = owner(), x = e.target;
       if (x.hasAttribute('data-sold')) { var id = x.getAttribute('data-sold'); if (x.checked) o.sold[id] = 1; else delete o.sold[id]; setOwner(o); toast(item(id).n + (x.checked ? ' is now sold out on the menu.' : ' is back on the menu.')); return; }
-      if (x.hasAttribute('data-price')) { var pid = x.getAttribute('data-price'), v = Math.round(parseFloat(x.value) * 100) / 100; if (v > 0 && v < 1000) { o.price[pid] = v; setOwner(o); toast(item(pid).n + ' now costs ' + rm(v) + ' on the website.'); } else paint(); }
+      if (x.hasAttribute('data-price')) { var pid = x.getAttribute('data-price'), v = Math.round(parseFloat(x.value) * 100) / 100; if (v > 0 && v < 1000) { o.price[pid] = v; setOwner(o); toast((item(pid) || (fitem(pid) || {}).it || { n: 'This item' }).n + ' now costs ' + rm(v) + ' on the website.'); } else paint(); }
     });
     var reset = $('[data-reset]');
     if (reset) reset.addEventListener('click', function () {
       if (!confirm('Reset the demo? This clears the orders, bookings, vouchers and owner changes made in this browser.')) return;
-      ['owner', 'orders', 'bookings', 'vouchers', 'ost', 'bag', 'checkout', 'enquiries', 'seq'].forEach(function (k) { try { localStorage.removeItem('ss_' + k); } catch (err) { /* ignore */ } });
+      ['owner', 'orders', 'bookings', 'vouchers', 'ost', 'bag', 'checkout', 'enquiries', 'seq'].forEach(function (k) { try { localStorage.removeItem(KEY + k); } catch (err) { /* ignore */ } });
       tab = 'orders'; paint(); shared.refresh(); toast('Demo reset.');
     });
     paint();
@@ -674,6 +688,6 @@
     shared();
     var fn = PAGES[document.body.getAttribute('data-page')];
     if (fn) fn();
-    window.addEventListener('storage', function (e) { if (e.key === 'ss_owner') location.reload(); }); // the owner view changed something in another tab
+    window.addEventListener('storage', function (e) { if (e.key === KEY + 'owner') location.reload(); }); // the owner view changed something in another tab
   });
 })();

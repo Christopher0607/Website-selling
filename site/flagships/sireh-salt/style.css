@@ -145,6 +145,8 @@ p { margin: 0 0 1em; }
 .price s { color: var(--muted); font-weight: 600; font-size: .85rem; margin-right: 4px; }
 .addbtn { min-height: 40px; padding: 0 16px; border-radius: 999px; border: 0; background: var(--leaf); color: #fff; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
 .addbtn:hover { background: var(--leaf-2); }
+.addbtn--ask { background: #1a8f4c; text-decoration: none; }
+.addbtn--ask:hover { background: #157a40; }
 .addbtn[disabled] { background: #d8d2c6; color: #6d675d; cursor: not-allowed; }
 .dish.is-out .dish__img img { filter: grayscale(.85) opacity(.75); }
 
@@ -411,3 +413,8 @@ textarea.input { min-height: 90px; resize: vertical; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
 /* desktop: every day visible, no sideways scrolling (2026-11-12) */
 @media (min-width: 900px) { .days { flex-wrap: wrap; overflow: visible; } }
+
+/* mockups for real shops: an item with no photo yet (2026-11-13) */
+.nophoto { width: 100%; height: 100%; min-height: 160px; display: grid; place-items: center; background: repeating-linear-gradient(135deg, var(--cream) 0 14px, var(--paper) 14px 28px); border: 1.5px dashed var(--line); border-radius: inherit; color: var(--muted); font-weight: 700; font-size: .9rem; }
+.mitem:not(:has(> img)) { grid-template-columns: 1fr; }
+.fset > .nophoto { aspect-ratio: 4 / 3; height: auto; border-radius: var(--r) var(--r) 0 0; }

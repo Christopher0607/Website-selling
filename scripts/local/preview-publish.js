@@ -279,8 +279,11 @@ if (cmd === 'desk-note') {
   // (2026-11-11: after the domain change a republish encrypted pages built earlier, still linking to the old address)
   const cfgRel = path.join('clients', code || '', 'preview', 'preview.json');
   if (/^[a-z0-9-]{2,40}$/.test(code || '') && fs.existsSync(path.join(ROOT, cfgRel))) {
-    try { execFileSync('python3', [path.join('site', 'build.py'), '--preview', cfgRel], { cwd: ROOT, stdio: ['ignore', 'ignore', 'pipe'] }); }
-    catch (e) { die(`build 失败：python3 site/build.py --preview ${cfgRel}\n${String(e.stderr || e.message).slice(-800)}`); }
+    // 2026-11-13: a mockup made from one of the 4 flagship demos ("flagship" in preview.json) is put together by flagship-preview.py
+    const flag = !!JSON.parse(fs.readFileSync(path.join(ROOT, cfgRel), 'utf8')).flagship;
+    const args = flag ? [path.join('scripts', 'local', 'flagship-preview.py'), cfgRel] : [path.join('site', 'build.py'), '--preview', cfgRel];
+    try { execFileSync('python3', args, { cwd: ROOT, stdio: ['ignore', 'ignore', 'pipe'] }); }
+    catch (e) { die(`build 失败：python3 ${args.join(' ')}\n${String(e.stderr || e.message).slice(-800)}`); }
   }
   const p = previewOf(code);
   const today = new Date(Date.now() + 8 * 3600e3).toISOString().slice(0, 10);
