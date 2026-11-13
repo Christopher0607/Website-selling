@@ -128,6 +128,10 @@ function encryptSite(p, out) {
       const { iv, ct } = seal(key, Buffer.from(h, 'utf8'));
       fs.writeFileSync(dest, shell(p.slug, salt, iv, ct, 'Private mockup'));
       pages++;
+    } else if (p.cfg.flagship && rel.endsWith('.js')) {
+      // mockups built from a flagship demo draw photos from app.js: point those at the decrypting loader (data-pv-src),
+      // so the browser does not first ask for the unencrypted file, which is not published (404)
+      fs.writeFileSync(dest, fs.readFileSync(f, 'utf8').replace(/(<img\b[^>]*?)\ssrc="/g, '$1 data-pv-src="'));
     } else if (rel === 'data.js') {
       continue; // inlined above
     } else if (/(^|\/)img\//.test(rel) && IMG.test(rel)) {
