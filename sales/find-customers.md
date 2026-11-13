@@ -2,7 +2,7 @@
 
 > 完整版在 `sales/playbook.md` 和 `docs/04-sales-kit.md`。话术在 `sales/scripts.md`。
 > 原则：**一个一个手动找、一个一个手动发**。不用程式抓资料、不群发、对方说不要就停。
-> **2026-11-08 起用销售工作台**：https://cartsmith.netlify.app/desk/ （设定和用法：`docs/11-sales-desk.md`）。下面的「贴给 Claude Code 的格式」，现在直接贴进工作台的「加商家」。
+> **2026-11-08 起用销售工作台**：https://cartsmithstudio.com/desk/ （设定和用法：`docs/11-sales-desk.md`）。下面的「贴给 Claude Code 的格式」，现在直接贴进工作台的「加商家」。
 
 ## 每天的节奏（约 1 小时）
 

@@ -1,0 +1,85 @@
+/* Agency Core — 节日预购（2026-11-13） */
+:root {
+  --agc-fest: var(--agc-accent, #8f1418);
+  --agc-fest-ink: #1d1d1f;
+  --agc-fest-soft: rgba(143, 20, 24, .07);
+  --agc-fest-gold: #d9a441;
+}
+
+/* 季节资讯：hero（首页短代码）和 bar（商店 / 购物车 / 结账上方） */
+.agc-fest { margin: 0 0 20px; }
+.agc-fest p, .agc-fest .agc-fest__row > p { margin: 0 !important; }
+.agc-fest__row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; }
+.agc-fest__kicker { font-size: .78rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--agc-fest-gold); margin-bottom: 8px !important; }
+.agc-fest__cut { font-weight: 800; }
+.agc-fest__count { display: inline-flex; gap: 6px; }
+.agc-fest__count span { display: inline-flex; align-items: baseline; gap: 4px; background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.25); border-radius: 10px; padding: 6px 10px; font-size: .8rem; }
+.agc-fest__count b { font-size: 1.3rem; line-height: 1; font-variant-numeric: tabular-nums; }
+.agc-fest__early { background: var(--agc-fest-gold); color: var(--agc-fest-ink); border-radius: 999px; padding: 6px 14px; font-weight: 800; font-size: .88rem; }
+.agc-fest__days { opacity: .9; }
+
+.agc-fest--hero { color: inherit; }
+.agc-fest--bar { background: var(--agc-fest-soft); border: 1px solid rgba(143, 20, 24, .18); border-radius: 12px; padding: 10px 14px; font-size: .92rem; }
+.agc-fest--bar .agc-fest__count span { background: #fff; border-color: rgba(0,0,0,.08); padding: 3px 8px; }
+.agc-fest--bar .agc-fest__count b { font-size: 1rem; }
+.agc-fest--bar .agc-fest__early { padding: 3px 10px; font-size: .8rem; }
+.agc-fest--closed .agc-fest__title { font-weight: 800; font-size: 1.05rem; }
+.agc-fest__notify { margin-top: 12px; display: grid; gap: 8px; max-width: 460px; }
+.agc-fest__notify-row { display: flex; gap: 8px; }
+.agc-fest__notify-row input { flex: 1; min-width: 0; }
+.agc-fest__ok { margin-top: 10px !important; font-weight: 700; }
+.agc-hp { position: absolute !important; left: -9999px !important; width: 1px; height: 1px; overflow: hidden; }
+
+/* 剩几份 */
+.agc-left { margin: 4px 0 8px; font-size: .85rem; font-weight: 700; color: #50575e; }
+.agc-left--low { color: var(--agc-fest); }
+.agc-left--out { color: #8a8a8a; }
+
+/* 结账：日子和时段 */
+.agc-fest-pick-row td { padding-top: 14px !important; padding-bottom: 14px !important; }
+.agc-fest-pick__title { display: block; font-weight: 800; margin-bottom: 8px; }
+.agc-fest-pick__select { width: 100%; max-width: 100%; }
+.agc-fest-pick.is-enhanced .agc-fest-pick__select { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+.agc-fest-pick__days, .agc-fest-pick__slots { display: flex; flex-wrap: wrap; gap: 8px; padding: 2px 2px 8px; }
+.agc-chip { flex: none; display: inline-flex; flex-direction: column; align-items: center; gap: 2px; min-width: 68px; border: 1.5px solid rgba(0,0,0,.16); background: #fff; color: var(--agc-fest-ink); border-radius: 12px; padding: 8px 10px; font: inherit; font-size: .85rem; line-height: 1.2; cursor: pointer; }
+.agc-chip small { font-size: .74rem; color: #646970; font-weight: 600; }
+.agc-chip[aria-pressed="true"], .agc-chip[aria-pressed="true"]:hover, .agc-chip[aria-pressed="true"]:focus { border-color: var(--agc-fest) !important; background: var(--agc-fest) !important; color: #fff !important; opacity: 1 !important; }
+.agc-chip:not([aria-pressed="true"]):hover, .agc-chip:not([aria-pressed="true"]):focus { background: #fff !important; color: var(--agc-fest-ink) !important; border-color: var(--agc-fest) !important; }
+.agc-chip[aria-pressed="true"] small { color: rgba(255,255,255,.85); }
+.agc-chip:disabled { opacity: .45; cursor: not-allowed; text-decoration: line-through; }
+.agc-chip:focus-visible { outline: 3px solid var(--agc-fest-gold); outline-offset: 2px; }
+.agc-fest-pick__note, .agc-fest-pick__none { margin: 8px 0 0; font-size: .85rem; color: #50575e; }
+
+/* 付款：DuitNow QR + 收据 */
+.agc-pay { border: 1px solid rgba(0,0,0,.12); border-radius: 16px; padding: 18px 20px; margin: 0 0 28px; background: #fff; }
+.agc-pay h2 { margin: 0 0 12px; font-size: 1.25rem; }
+.agc-pay__in { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 20px; align-items: start; }
+.agc-pay__qr { margin: 0; text-align: center; }
+.agc-pay__qr img { width: 220px; height: auto; border-radius: 12px; border: 1px solid rgba(0,0,0,.08); }
+.agc-pay__qr figcaption { font-size: .85rem; margin-top: 6px; font-weight: 700; }
+.agc-pay__steps { margin: 0; padding-left: 20px; display: grid; gap: 8px; }
+.agc-pay__note { font-size: .88rem; color: #50575e; margin: 12px 0 0; }
+.agc-receipt { margin-top: 16px; padding-top: 16px; border-top: 1px dashed rgba(0,0,0,.15); }
+.agc-receipt form { display: grid; gap: 10px; max-width: 520px; }
+.agc-receipt input[type=file] { max-width: 100%; }
+.agc-receipt__ok { background: #edfaef; border-left: 4px solid #00a32a; padding: 10px 12px; margin: 0 0 10px; }
+.agc-receipt__err { background: #fcf0f1; border-left: 4px solid #d63638; padding: 10px 12px; margin: 0 0 10px; }
+@media (max-width: 600px) {
+  .agc-pay { padding: 16px; }
+  .agc-pay__in { grid-template-columns: minmax(0, 1fr); }
+  .agc-pay__qr img { width: 200px; }
+}
+
+/* 订单页：时间线 */
+.agc-ord { border: 1px solid rgba(0,0,0,.1); border-radius: 16px; padding: 16px 18px; margin: 0 0 24px; }
+.agc-ord__when { margin: 0 0 12px; font-size: 1.05rem; }
+.agc-tl { list-style: none; margin: 0 0 12px; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; counter-reset: agc; }
+.agc-tl li { counter-increment: agc; position: relative; padding-top: 34px; font-size: .82rem; line-height: 1.3; color: #8a8a8a; text-align: center; }
+.agc-tl li::before { content: counter(agc); position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; background: #f0f0f1; color: #646970; font-weight: 800; font-size: .78rem; z-index: 1; }
+.agc-tl li::after { content: ""; position: absolute; top: 12px; left: -50%; width: 100%; height: 3px; background: #f0f0f1; }
+.agc-tl li:first-child::after { display: none; }
+.agc-tl li.is-done, .agc-tl li.is-now { color: var(--agc-fest-ink); font-weight: 700; }
+.agc-tl li.is-done::before { content: "✓"; background: var(--agc-fest); color: #fff; }
+.agc-tl li.is-now::before { background: var(--agc-fest); color: #fff; box-shadow: 0 0 0 4px var(--agc-fest-soft); }
+.agc-tl li.is-done::after, .agc-tl li.is-now::after { background: var(--agc-fest); }
+.agc-ord__cal { margin-top: 4px; }

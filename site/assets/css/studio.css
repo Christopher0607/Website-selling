@@ -141,6 +141,39 @@ h1 .zh, h2 .zh { font-size: .42em; font-weight: 600; margin-top: .6em; color: in
 
 /* packages */
 .pkgs { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(16px, 2vw, 24px); align-items: stretch; }
+.pkgs--2 { grid-template-columns: repeat(2, 1fr); max-width: 860px; margin: 0 auto; }
+.flags { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(16px, 2.4vw, 28px); }
+.s-more { text-align: center; margin: 14px 0 0; font-weight: 600; }
+.s-more a { color: var(--ember-d); text-decoration: none; }
+.s-more a:hover { text-decoration: underline; }
+/* homepage: smaller ways to start */
+.starts-mini { max-width: 980px; margin: 30px auto 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.starts-mini > .kicker { grid-column: 1 / -1; justify-self: center; margin: 0; }
+.sm { display: flex; flex-direction: column; gap: 10px; min-width: 0; background: var(--card); border: 1px solid var(--line); border-radius: var(--r); padding: 18px 20px; }
+.sm__top { display: flex; align-items: baseline; justify-content: space-between; gap: 6px 14px; flex-wrap: wrap; }
+.sm h3 { font-size: 1.15rem; margin: 0; }
+.sm__for { margin: 0; color: var(--muted); font-size: .9rem; line-height: 1.45; }
+.sm__price { margin: 0; font: 800 1.7rem/1 var(--head); letter-spacing: -.03em; display: flex; align-items: baseline; gap: 3px; white-space: nowrap; }
+.sm__price span { font-size: .85rem; font-weight: 700; }
+.sm__price small { font: 500 .78rem var(--body); color: var(--muted); letter-spacing: 0; margin-left: 4px; }
+.sm__pts { gap: 7px; font-size: .9rem; line-height: 1.4; margin: 2px 0 4px; }
+.sm__pts .i { width: 18px; height: 18px; margin-top: 1px; flex: none; }
+.sm__btns { margin-top: auto; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; }
+.sm__link { color: var(--ember-d); font-size: .9rem; font-weight: 600; text-decoration: none; }
+.sm__link:hover { text-decoration: underline; }
+/* demo website cards (2026-11-12 v3): a desktop and a phone screenshot on the demo's own colour, like the template cards */
+.flag { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; display: flex; flex-direction: column; transition: transform .2s, box-shadow .2s; }
+.flag:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(20,23,28,.1); }
+.flag__media { position: relative; display: block; aspect-ratio: 16 / 10; background: var(--flag-bg, #222); overflow: hidden; }
+.flag__desk { position: absolute; left: 6%; top: 9%; width: 82%; height: 100%; object-fit: cover; object-position: left top; border-radius: 8px 8px 0 0; box-shadow: 0 14px 40px rgba(0,0,0,.35); }
+.flag__phone { position: absolute; right: 5%; bottom: -16%; width: 23%; border-radius: 16px; border: 4px solid #111; background: #111; box-shadow: 0 14px 40px rgba(0,0,0,.4); }
+.flag__body { padding: 22px 24px 24px; display: flex; flex-direction: column; flex: 1; }
+.flag__body .kicker { margin-bottom: 8px; }
+.flag__body h3 { font-size: 1.5rem; margin: 0 0 4px; }
+.flag__line { color: var(--muted); margin: 0 0 14px; }
+.flag__body .s-ticks { margin: 0 0 20px; font-size: .94rem; }
+.flag__body .s-btns { margin-top: auto; }
+@media (max-width: 860px) { .flags { grid-template-columns: minmax(0, 1fr); } }
 .pkg { position: relative; background: var(--card); border: 1px solid var(--line); border-radius: var(--r); padding: 30px 26px; display: flex; flex-direction: column; }
 .pkg--hl { border: 2px solid var(--ink); box-shadow: 0 20px 50px rgba(20,23,28,.12); }
 .pkg__tag { position: absolute; top: -13px; left: 26px; background: var(--ember); color: #fff; font-size: .75rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; padding: 5px 12px; border-radius: 999px; }
@@ -149,6 +182,9 @@ h1 .zh, h2 .zh { font-size: .42em; font-weight: 600; margin-top: .6em; color: in
 .pkg__price { font: 800 2.8rem/1 var(--head); letter-spacing: -.04em; margin: 0 0 6px; display: flex; align-items: baseline; gap: 4px; }
 .pkg__price span { font-size: 1.1rem; font-weight: 700; }
 .pkg__price small { font: 500 .85rem var(--body); color: var(--muted); letter-spacing: 0; margin-left: 6px; }
+.pkg__after { font-size: .86rem; line-height: 1.45; background: var(--soft); border-radius: 10px; padding: 8px 12px; margin: 2px 0 12px; }
+.pkg__after b { color: var(--ink); }
+.pkg__after--end { margin: -6px 0 16px; }
 .pkg__meta { font-size: .88rem; color: var(--muted); border-bottom: 1px solid var(--line); padding-bottom: 16px; margin-bottom: 18px; }
 .pkg .s-ticks { font-size: .93rem; margin-bottom: 24px; }
 .pkg .s-btn { margin-top: auto; }
@@ -165,6 +201,19 @@ h1 .zh, h2 .zh { font-size: .42em; font-weight: 600; margin-top: .6em; color: in
 .s-tbl--compare td, .s-tbl--compare th { width: 20%; }
 .s-tbl--compare .us { background: #fff4ec; font-weight: 600; }
 .s-tbl--compare thead .us { background: var(--ink); color: #fff; }
+/* phones (2026-11-12): one block per question, every option labelled, instead of a table you have to swipe */
+@media (max-width: 760px) {
+  .s-tbl-wrap:has(.s-tbl--compare) { overflow: visible; }
+  .s-tbl--compare { min-width: 0; }
+  .s-tbl--compare thead { display: none; }
+  .s-tbl--compare, .s-tbl--compare tbody, .s-tbl--compare tr, .s-tbl--compare tbody th, .s-tbl--compare td { display: block; width: auto; }
+  .s-tbl--compare tr { border-bottom: 1px solid var(--line); padding: 4px 0 10px; }
+  .s-tbl--compare tbody tr:last-child { border-bottom: 0; }
+  .s-tbl--compare tbody th { font-family: var(--head); font-size: 1.05rem; padding: 14px 16px 6px; border: 0; min-width: 0; }
+  .s-tbl--compare td { display: grid; grid-template-columns: minmax(0, 40%) minmax(0, 1fr); gap: 12px; padding: 6px 16px; border: 0; }
+  .s-tbl--compare td::before { content: attr(data-label); font-size: .82rem; font-weight: 600; color: var(--muted); }
+  .s-tbl--compare td.us { margin: 6px 10px 0; padding: 10px 8px; border-radius: 10px; }
+}
 .s-sources { font-size: .82rem; color: var(--muted); margin-top: 14px; }
 .s-sources a { color: inherit; }
 
@@ -316,8 +365,50 @@ h1 .zh, h2 .zh { font-size: .42em; font-weight: 600; margin-top: .6em; color: in
   .s-step__n { width: 44px; height: 44px; font-size: 1.1rem; }
   .s-f2 { grid-template-columns: 1fr; }
   .calc__f { grid-template-columns: 1fr 110px; }
-  .s-ftr__grid { grid-template-columns: 1fr; }
+  .s-ftr__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 20px; }
+  .s-ftr__grid > :first-child { grid-column: 1 / -1; }
   .chat__fab span { display: none; }
   .chat__fab { width: 56px; padding: 0; justify-content: center; }
   .chat__panel { right: 0; bottom: 0; width: 100vw; height: 100dvh; border-radius: 0; }
+
+  /* homepage on phones (2026-11-12): was 27 screens long. Same content, shorter: one line per demo,
+     template tiles, package cards with their first features, titles only where a page has the details. */
+  .hide-sm { display: none; }
+  .p-index .s-sec { padding: 46px 0; }
+  .p-index .s-head { margin-bottom: 22px; }
+  .p-index .s-hero__proof { margin-top: 18px; gap: 6px 16px; font-size: .88rem; }
+  .p-index .s-strip { display: none; }
+  .p-index .s-grid--3 { gap: 10px; }
+  .p-index .s-grid--3 .s-card { padding: 14px 16px; display: flex; align-items: center; gap: 14px; }
+  .p-index .s-grid--3 .s-card > p:not(.s-num) { display: none; }
+  .p-index .s-grid--3 .s-card h3 { margin: 0; font-size: 1.05rem; }
+  .p-index .s-grid--3 .s-ico .i { width: 26px; height: 26px; margin: 0; }
+  .p-index .s-sec--ink .s-grid--3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .p-index .s-sec--ink .s-card { flex-direction: column; align-items: flex-start; gap: 6px; }
+  .p-index .s-num { font-size: 1.5rem; margin: 0; }
+  .p-index #demos .s-head .lead { display: none; }
+  .p-index .flags { gap: 12px; }
+  .p-index .flag { display: grid; grid-template-columns: 112px minmax(0, 1fr); }
+  .p-index .flag:hover { transform: none; box-shadow: none; }
+  .p-index .flag__media { aspect-ratio: auto; height: 100%; min-height: 150px; }
+  .p-index .flag__desk { display: none; }
+  .p-index .flag__phone { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top; border: 0; border-radius: 0; box-shadow: none; }
+  .p-index .flag__body { padding: 14px 16px; gap: 0; }
+  .p-index .flag__body .kicker { font-size: .72rem; letter-spacing: .08em; margin: 0 0 4px; }
+  .p-index .flags .flag__body h3 { font-size: 1.2rem; margin: 0 0 4px; }
+  .p-index .flag__line { margin: 0 0 10px; font-size: .88rem; line-height: 1.45; }
+  .p-index .flag__body .s-ticks, .p-index .flag .s-btn--ghost { display: none; }
+  .p-index .flag .s-btn { min-height: 38px; padding: 0 1em; font-size: .86rem; }
+  .p-index .flags + .s-hero__note { font-size: .82rem; }
+  .p-index .pkg { padding: 22px 20px; }
+  .p-index .pkg__for { margin-bottom: 8px; }
+  .p-index .pkg__meta { padding-bottom: 10px; margin-bottom: 12px; }
+  .p-index .pkg .s-ticks li:nth-child(n+3) { display: none; }
+  .p-index .pkg .s-ticks { margin-bottom: 14px; }
+  .p-index .starts-mini { grid-template-columns: minmax(0, 1fr); gap: 10px; margin-top: 22px; }
+  .p-index .s-qa:nth-child(n+5) { display: none; }
+  .p-index .s-qa summary { padding: 15px 0; font-size: 1rem; }
 }
+
+/* anchors (e.g. pricing.html#start-monthly from the homepage cards) clear the sticky header */
+.pkg[id] { scroll-margin-top: 96px; }

@@ -52,7 +52,7 @@ mkdir -p "$AGENCY_SITES_DIR" "$AGENCY_SECRETS_DIR"; chmod 700 "$AGENCY_SECRETS_D
 
 info "1/7 Linux 用户和目录"
 id "$SITE_USER" >/dev/null 2>&1 || useradd --system --home-dir "$SITE_HOME" --no-create-home --shell /usr/sbin/nologin "$SITE_USER"
-mkdir -p "$SITE_PUBLIC" "$SITE_HOME/logs" "$SITE_HOME/tmp" "$SITE_HOME/acme" "$SITE_HOME/.wp-cli/cache"
+mkdir -p "$SITE_PUBLIC" "$SITE_HOME/logs" "$SITE_HOME/tmp" "$SITE_HOME/acme" "$SITE_HOME/.wp-cli/cache" "$SITE_HOME/private"
 fix_perms "$SLUG"
 chown -R "$SITE_USER:www-data" "$SITE_HOME/acme"
 ok "$SITE_USER → $SITE_HOME"

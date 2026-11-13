@@ -65,7 +65,7 @@
 ## 技术说明（给 Claude Code）
 
 - 程式：`site/server/`（不分平台：`desk.mjs`、`chat.mjs`、自动产生的 `knowledge.mjs` / `brief.mjs` / `scripts.mjs` / `inbox.mjs`、
-  存储 `store-d1.mjs` / `store-file.mjs`）；Worker 入口 `site/worker.mjs`；设定 `site/wrangler.jsonc`（静态档案 `dist/`、D1 binding `DB`、`keep_vars`）。
+  存储 `store-d1.mjs` / `store-file.mjs`；网站访客 `/api/hit` → `traffic.mjs`，D1 表 `hits`，第一次用时自动建立）；Worker 入口 `site/worker.mjs`；设定 `site/wrangler.jsonc`（静态档案 `dist/`、D1 binding `DB`、`keep_vars`）。
   回应标头由 build.py 写进 `dist/_headers`。样板分支的设定 `site/wrangler.jsonc` 由 `preview-publish.js` 放（`cartsmith-previews`，只有静态档案）。
 - Workers 会把 `xxx.html` 307 转到 `xxx`（`html_handling: auto-trailing-slash`），所有链接照样能用；浏览监控把两种写法算成同一页。
 - 资料表 `kv(k, v, t)`：`prospects-v1`（工作台全部资料，超过 50 万字自动分段 `#000`…）、`preview-keys-v2`、`view:<样板>`、`form:<编号>`。

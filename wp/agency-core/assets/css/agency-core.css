@@ -124,3 +124,6 @@
 .agc-ai-send { border: 0; border-radius: 10px; width: 44px; background: var(--global-palette1, #2f5d50); color: #fff; cursor: pointer; }
 .agc-ai-note { margin: 0; padding: 0 12px 10px; font-size: 11px; opacity: .6; }
 @media (max-width: 767px) { .agc-ai-chat { left: 16px; bottom: 16px; } .agc-ai-toggle span { display: none; } .agc-ai-toggle { padding: 14px; } .agc-ai-chat.is-open { left: 8px; right: 8px; bottom: 8px; } .agc-ai-panel { width: 100%; height: min(75vh, 560px); } }
+
+/* 暂停接单（2026-11-13） */
+.agc-paused { background: #2a1f1a; color: #fff; text-align: center; font-weight: 700; font-size: 14px; line-height: 1.45; padding: 10px 16px; position: relative; z-index: 100; }

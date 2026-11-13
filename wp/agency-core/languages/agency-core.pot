@@ -1,0 +1,1050 @@
+# Copyright (C) 2026 Cartsmith
+# This file is distributed under the GPL-2.0-or-later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Agency Core 1.6.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/agency-core\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-11-13T14:14:07+08:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: agency-core\n"
+
+#. Plugin Name of the plugin
+#: agency-core.php
+msgid "Agency Core"
+msgstr ""
+
+#. Description of the plugin
+#: agency-core.php
+msgid "WhatsApp buttons, demo mode, tracking codes, business details and Malaysian checkout tweaks for studio-built stores."
+msgstr ""
+
+#. Author of the plugin
+#: agency-core.php
+msgid "Cartsmith"
+msgstr ""
+
+#: includes/class-ai-chat.php:61
+msgid "AI assistant · a real person follows up on WhatsApp"
+msgstr ""
+
+#: includes/class-ai-chat.php:62
+msgid "Sorry, the assistant is not available right now. Please WhatsApp us."
+msgstr ""
+
+#: includes/class-checkout.php:35
+msgid "Phone (WhatsApp)"
+msgstr ""
+
+#: includes/class-fee-calculator.php:89
+msgid "Own website"
+msgstr ""
+
+#: includes/class-festive-email.php:21
+msgid "Order ready"
+msgstr ""
+
+#: includes/class-festive-email.php:22
+msgid "Sent to the customer when you mark an order \"Ready\" (ready for collection, or out for delivery)."
+msgstr ""
+
+#: includes/class-festive-email.php:40
+msgid "Your {site_title} order #{order_number} is ready"
+msgstr ""
+
+#: includes/class-festive-email.php:49
+msgid "Your order is ready"
+msgstr ""
+
+#: includes/class-festive-email.php:58
+msgid "Thank you, and happy celebrating!"
+msgstr ""
+
+#: includes/class-festive-gateways.php:30
+msgid "DuitNow QR (manual)"
+msgstr ""
+
+#: includes/class-festive-gateways.php:31
+msgid "Shows your DuitNow QR and the amount. The order waits on hold until the customer uploads the receipt and you press \"Payment received\"."
+msgstr ""
+
+#: includes/class-festive-gateways.php:49
+#: includes/class-festive-gateways.php:208
+msgid "Enable"
+msgstr ""
+
+#: includes/class-festive-gateways.php:51
+msgid "Accept DuitNow QR payments"
+msgstr ""
+
+#: includes/class-festive-gateways.php:55
+#: includes/class-festive-gateways.php:214
+msgid "Title"
+msgstr ""
+
+#: includes/class-festive-gateways.php:57
+msgid "DuitNow QR (any banking or e-wallet app)"
+msgstr ""
+
+#: includes/class-festive-gateways.php:60
+#: includes/class-festive-gateways.php:219
+msgid "Description"
+msgstr ""
+
+#: includes/class-festive-gateways.php:62
+msgid "After you place the order you will see our DuitNow QR and the amount. Pay with any banking or e-wallet app, then upload the receipt."
+msgstr ""
+
+#: includes/class-festive-gateways.php:65
+msgid "DuitNow QR image (URL)"
+msgstr ""
+
+#: includes/class-festive-gateways.php:67
+msgid "Upload your shop's DuitNow QR to Media, copy its URL here."
+msgstr ""
+
+#: includes/class-festive-gateways.php:71
+msgid "Account name shown under the QR"
+msgstr ""
+
+#: includes/class-festive-gateways.php:76
+msgid "Extra note"
+msgstr ""
+
+#: includes/class-festive-gateways.php:78
+msgid "We confirm payments within the same day (9am–9pm)."
+msgstr ""
+
+#: includes/class-festive-gateways.php:113
+msgid "Waiting for the DuitNow payment and receipt."
+msgstr ""
+
+#: includes/class-festive-gateways.php:129
+msgid "Pay by DuitNow QR"
+msgstr ""
+
+#: includes/class-festive-gateways.php:130
+#: includes/class-festive-gateways.php:177
+msgid "DuitNow QR"
+msgstr ""
+
+#: includes/class-festive-gateways.php:135
+msgid "Scan the QR with your banking or e-wallet app (or save it and choose it from your photos)."
+msgstr ""
+
+#. translators: 1: amount, 2: order number
+#: includes/class-festive-gateways.php:137
+#, php-format
+msgid "Pay <strong>%1$s</strong>, reference <strong>%2$s</strong>."
+msgstr ""
+
+#: includes/class-festive-gateways.php:138
+msgid "Upload the receipt below. We will email you when the payment is confirmed."
+msgstr ""
+
+#. translators: 1: amount, 2: order number
+#: includes/class-festive-gateways.php:170
+#, php-format
+msgid "Pay %1$s by DuitNow QR, reference %2$s, then upload the receipt here:"
+msgstr ""
+
+#: includes/class-festive-gateways.php:176
+msgid "Upload my receipt"
+msgstr ""
+
+#: includes/class-festive-gateways.php:192
+msgid "Demo online payment (nothing is charged)"
+msgstr ""
+
+#: includes/class-festive-gateways.php:193
+msgid "Only appears in demo mode with test orders allowed. The order is marked paid without charging anything."
+msgstr ""
+
+#: includes/class-festive-gateways.php:210
+msgid "Offer in demo mode"
+msgstr ""
+
+#: includes/class-festive-gateways.php:216
+msgid "Online banking (FPX), card or e-wallet"
+msgstr ""
+
+#: includes/class-festive-gateways.php:221
+msgid "Demo store: the order is marked paid and nothing is charged. A real shop connects its own payment gateway here."
+msgstr ""
+
+#: includes/class-festive-gateways.php:243
+msgid "Demo payment: nothing was charged."
+msgstr ""
+
+#: includes/class-festive.php:315
+msgctxt "festive day label"
+msgid "D j M"
+msgstr ""
+
+#: includes/class-festive.php:326
+msgid "Self-collect"
+msgstr ""
+
+#: includes/class-festive.php:327
+msgid "Delivery"
+msgstr ""
+
+#: includes/class-festive.php:328
+#: includes/class-festive.php:1137
+msgid "Courier"
+msgstr ""
+
+#: includes/class-festive.php:366
+#: includes/class-festive.php:516
+msgid "days"
+msgstr ""
+
+#: includes/class-festive.php:367
+#: includes/class-festive.php:517
+msgid "hrs"
+msgstr ""
+
+#: includes/class-festive.php:368
+#: includes/class-festive.php:518
+msgid "min"
+msgstr ""
+
+#. translators: %d: how many are left
+#. translators: %d: places left
+#: includes/class-festive.php:369
+#: includes/class-festive.php:407
+#: includes/class-festive.php:643
+#, php-format
+msgid "%d left"
+msgstr ""
+
+#. translators: %d: places left
+#: includes/class-festive.php:370
+#: includes/class-festive.php:643
+msgid "Full"
+msgstr ""
+
+#: includes/class-festive.php:399
+msgid "Sold out"
+msgstr ""
+
+#. translators: %d: how many are left
+#: includes/class-festive.php:407
+#, php-format
+msgid "Only %d left"
+msgstr ""
+
+#. translators: %s: season name
+#: includes/class-festive.php:499
+#, php-format
+msgid "Pre-orders for %s have closed. Thank you!"
+msgstr ""
+
+#. translators: %s: date
+#: includes/class-festive.php:513
+#, php-format
+msgid "Order by %s"
+msgstr ""
+
+#. translators: %s: date
+#: includes/class-festive.php:513
+#: includes/class-owner-api.php:265
+msgctxt "festive cut-off"
+msgid "j M, g:i a"
+msgstr ""
+
+#: includes/class-festive.php:515
+msgid "Time left to order"
+msgstr ""
+
+#. translators: %s: date range
+#: includes/class-festive.php:522
+#, php-format
+msgid "Collection & delivery: %s"
+msgstr ""
+
+#. translators: 1: percent, 2: date
+#: includes/class-festive.php:528
+#, php-format
+msgid "Early-bird %1$s%% off until %2$s"
+msgstr ""
+
+#: includes/class-festive.php:541
+msgid "Thank you. We will message you when the next season opens."
+msgstr ""
+
+#: includes/class-festive.php:544
+msgid "Leave your WhatsApp number and we will tell you when we open again."
+msgstr ""
+
+#: includes/class-festive.php:546
+msgid "Notify me"
+msgstr ""
+
+#. translators: %s: percent
+#: includes/class-festive.php:592
+#, php-format
+msgid "Early-bird %s%% off"
+msgstr ""
+
+#: includes/class-festive.php:630
+msgid "Delivery day and time"
+msgstr ""
+
+#: includes/class-festive.php:630
+msgid "Collection day and time"
+msgstr ""
+
+#: includes/class-festive.php:632
+msgid "required"
+msgstr ""
+
+#: includes/class-festive.php:634
+msgid "No days left to choose. Please contact the shop."
+msgstr ""
+
+#: includes/class-festive.php:637
+msgid "Choose a day and time"
+msgstr ""
+
+#. translators: %s: address
+#: includes/class-festive.php:661
+#: includes/class-festive.php:822
+#: includes/class-festive.php:829
+#, php-format
+msgid "Collect from: %s"
+msgstr ""
+
+#: includes/class-festive.php:671
+msgid "Pre-orders for this season have closed."
+msgstr ""
+
+#: includes/class-festive.php:689
+msgid "Please choose a delivery day and time."
+msgstr ""
+
+#: includes/class-festive.php:689
+msgid "Please choose a collection day and time."
+msgstr ""
+
+#: includes/class-festive.php:695
+msgid "That day or time can no longer be chosen. Please choose another."
+msgstr ""
+
+#: includes/class-festive.php:697
+msgid "That time has just filled up. Please choose another."
+msgstr ""
+
+#: includes/class-festive.php:732
+msgid "Order received"
+msgstr ""
+
+#: includes/class-festive.php:733
+msgid "Paid · being made"
+msgstr ""
+
+#: includes/class-festive.php:734
+msgid "Ready for collection"
+msgstr ""
+
+#: includes/class-festive.php:734
+msgid "On its way"
+msgstr ""
+
+#: includes/class-festive.php:735
+#: includes/class-festive.php:1197
+msgid "Done"
+msgstr ""
+
+#. translators: %s: order status
+#: includes/class-festive.php:754
+#, php-format
+msgid "Order status: %s"
+msgstr ""
+
+#: includes/class-festive.php:761
+msgid "Add to my calendar"
+msgstr ""
+
+#: includes/class-festive.php:785
+msgid "Collect order"
+msgstr ""
+
+#: includes/class-festive.php:785
+msgid "Delivery of order"
+msgstr ""
+
+#: includes/class-festive.php:843
+#: includes/class-festive.php:865
+#: includes/class-festive.php:917
+msgctxt "order status"
+msgid "Ready"
+msgstr ""
+
+#. translators: %s: number of orders
+#: includes/class-festive.php:849
+#, php-format
+msgid "Ready <span class=\"count\">(%s)</span>"
+msgid_plural "Ready <span class=\"count\">(%s)</span>"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/class-festive.php:943
+msgid "Change status to Ready"
+msgstr ""
+
+#: includes/class-festive.php:960
+#: includes/class-festive.php:1001
+msgid "Collect / deliver"
+msgstr ""
+
+#: includes/class-festive.php:976
+msgid "Receipt uploaded"
+msgstr ""
+
+#. translators: 1: limit, 2: count
+#: includes/class-festive.php:1017
+#, php-format
+msgid "Your festive shop plan includes up to %1$d items; %2$d are published. Ask your web studio before adding more."
+msgstr ""
+
+#: includes/class-festive.php:1028
+#: includes/class-festive.php:1109
+msgid "Festive orders"
+msgstr ""
+
+#: includes/class-festive.php:1113
+msgid "Pre-orders are closed."
+msgstr ""
+
+#. translators: %s: date
+#: includes/class-festive.php:1113
+#, php-format
+msgid "Pre-orders close %s."
+msgstr ""
+
+#. translators: %s: date
+#: includes/class-festive.php:1113
+msgid "Change dates and times"
+msgstr ""
+
+#: includes/class-festive.php:1116
+msgid "orders this season"
+msgstr ""
+
+#: includes/class-festive.php:1117
+msgid "payments to check"
+msgstr ""
+
+#: includes/class-festive.php:1118
+msgid "paid, to make"
+msgstr ""
+
+#: includes/class-festive.php:1119
+msgid "paid so far"
+msgstr ""
+
+#: includes/class-festive.php:1123
+msgid "No orders yet."
+msgstr ""
+
+#: includes/class-festive.php:1126
+msgid "Days"
+msgstr ""
+
+#: includes/class-festive.php:1162
+msgid "What to make"
+msgstr ""
+
+#: includes/class-festive.php:1164
+msgid "Item"
+msgstr ""
+
+#: includes/class-festive.php:1164
+msgid "Paid"
+msgstr ""
+
+#: includes/class-festive.php:1164
+msgid "Payment to check"
+msgstr ""
+
+#: includes/class-festive.php:1170
+msgid "Nothing for this day yet."
+msgstr ""
+
+#: includes/class-festive.php:1172
+msgid "Print"
+msgstr ""
+
+#: includes/class-festive.php:1174
+msgid "Orders"
+msgstr ""
+
+#: includes/class-festive.php:1176
+msgid "Time"
+msgstr ""
+
+#: includes/class-festive.php:1176
+msgid "Order"
+msgstr ""
+
+#: includes/class-festive.php:1176
+msgid "Customer"
+msgstr ""
+
+#: includes/class-festive.php:1176
+msgid "Items"
+msgstr ""
+
+#: includes/class-festive.php:1176
+msgid "Status"
+msgstr ""
+
+#: includes/class-festive.php:1191
+msgid "See receipt"
+msgstr ""
+
+#: includes/class-festive.php:1193
+msgid "Payment received"
+msgstr ""
+
+#: includes/class-festive.php:1195
+msgid "Ready"
+msgstr ""
+
+#: includes/class-festive.php:1215
+msgid "No orders for this day yet."
+msgstr ""
+
+#. translators: %d: count
+#: includes/class-festive.php:1222
+#, php-format
+msgid "Asked to be told when you open again (%d)"
+msgstr ""
+
+#: includes/class-lead-form.php:41
+msgid "Your name"
+msgstr ""
+
+#: includes/class-lead-form.php:42
+msgid "Brand / shop name"
+msgstr ""
+
+#: includes/class-lead-form.php:43
+msgid "Shop link (Shopee / TikTok / Instagram)"
+msgstr ""
+
+#: includes/class-lead-form.php:44
+msgid "WhatsApp number"
+msgstr ""
+
+#: includes/class-lead-form.php:46
+#: includes/class-lead-form.php:224
+msgid "Budget"
+msgstr ""
+
+#: includes/class-lead-form.php:51
+msgid "What would you like the website to do for you?"
+msgstr ""
+
+#: includes/class-lead-form.php:63
+msgid "Leads"
+msgstr ""
+
+#: includes/class-lead-form.php:86
+msgid "Thank you! We received your message."
+msgstr ""
+
+#: includes/class-lead-form.php:86
+msgid "We will WhatsApp you within one working day."
+msgstr ""
+
+#: includes/class-lead-form.php:89
+msgid "Please fill in the required fields and try again."
+msgstr ""
+
+#: includes/class-lead-form.php:92
+msgid "Too many messages — please wait a few minutes or WhatsApp us."
+msgstr ""
+
+#: includes/class-lead-form.php:119
+msgid "I agree that you may contact me about my enquiry"
+msgstr ""
+
+#: includes/class-lead-form.php:119
+msgid "Privacy Notice"
+msgstr ""
+
+#: includes/class-lead-form.php:120
+msgid "Send"
+msgstr ""
+
+#: includes/class-lead-form.php:222
+msgid "Lead"
+msgstr ""
+
+#: includes/class-lead-form.php:225
+msgid "Date"
+msgstr ""
+
+#. translators: %s: user name
+#: includes/class-owner-api.php:421
+#: includes/class-owner-api.php:1206
+#, php-format
+msgid "Changed in the shop dashboard by %s."
+msgstr ""
+
+#. translators: 1: old, 2: new
+#: includes/class-owner-api.php:465
+#, php-format
+msgid "Collection / delivery moved: %1$s → %2$s"
+msgstr ""
+
+#: includes/class-owner-api.php:1123
+msgid "Choose a product (and its option)."
+msgstr ""
+
+#. translators: 1: product, 2: left
+#: includes/class-owner-api.php:1127
+#, php-format
+msgid "Only %2$d left of %1$s."
+msgstr ""
+
+#: includes/class-owner-api.php:1133
+msgid "A name and at least one item are needed."
+msgstr ""
+
+#: includes/class-owner-api.php:1175
+msgid "Cash"
+msgstr ""
+
+#: includes/class-owner-api.php:1176
+msgid "Bank transfer"
+msgstr ""
+
+#: includes/class-owner-api.php:1178
+#: includes/class-settings.php:205
+msgid "Other"
+msgstr ""
+
+#. translators: %s: user name
+#: includes/class-owner-api.php:1186
+#, php-format
+msgid "Order added in the shop dashboard by %s."
+msgstr ""
+
+#: includes/class-owner-api.php:1274
+msgid "Enter a code."
+msgstr ""
+
+#: includes/class-owner-api.php:1278
+msgid "That code is already used."
+msgstr ""
+
+#: includes/class-owner-api.php:1347
+msgid "Enter a name and a valid email."
+msgstr ""
+
+#: includes/class-owner-api.php:1350
+msgid "That email already has an account."
+msgstr ""
+
+#: includes/class-owner-app.php:92
+#: includes/class-owner-app.php:170
+#: includes/class-owner-app.php:217
+#: includes/class-owner-app.php:222
+#: includes/class-owner-app.php:275
+msgid "Shop dashboard"
+msgstr ""
+
+#: includes/class-owner-app.php:224
+msgid "This account cannot open the shop dashboard."
+msgstr ""
+
+#: includes/class-owner-app.php:225
+msgid "Log out"
+msgstr ""
+
+#: includes/class-owner-app.php:228
+msgid "Wrong username or password. Please try again."
+msgstr ""
+
+#: includes/class-owner-app.php:230
+msgid "The page was open too long. Please log in again."
+msgstr ""
+
+#: includes/class-owner-app.php:233
+msgid "Username or email"
+msgstr ""
+
+#: includes/class-owner-app.php:234
+msgid "Password"
+msgstr ""
+
+#: includes/class-owner-app.php:235
+msgid "Keep me logged in on this phone"
+msgstr ""
+
+#: includes/class-owner-app.php:238
+msgid "Log in"
+msgstr ""
+
+#: includes/class-owner-app.php:240
+msgid "Forgot password?"
+msgstr ""
+
+#: includes/class-owner-app.php:278
+msgid "Loading…"
+msgstr ""
+
+#: includes/class-owner-app.php:279
+msgid "Please turn on JavaScript to use the shop dashboard."
+msgstr ""
+
+#: includes/class-receipts.php:94
+msgid "That file could not be used. Please upload a JPG, PNG, WebP or PDF under 5 MB."
+msgstr ""
+
+#: includes/class-receipts.php:97
+msgid "Receipt received. We will check it and email you when your payment is confirmed."
+msgstr ""
+
+#: includes/class-receipts.php:101
+msgid "Upload a different receipt"
+msgstr ""
+
+#: includes/class-receipts.php:104
+msgid "Upload your payment receipt"
+msgstr ""
+
+#: includes/class-receipts.php:104
+msgid "(screenshot or PDF, up to 5 MB)"
+msgstr ""
+
+#: includes/class-receipts.php:109
+msgid "Send receipt"
+msgstr ""
+
+#: includes/class-receipts.php:124
+msgid "This link has expired. Please open your order again."
+msgstr ""
+
+#: includes/class-receipts.php:153
+msgid "The customer uploaded a payment receipt. Check it, then mark the order \"Processing\" (payment received)."
+msgstr ""
+
+#. translators: 1: order number, 2: shop name
+#: includes/class-receipts.php:169
+#, php-format
+msgid "Payment receipt for order #%1$s – %2$s"
+msgstr ""
+
+#. translators: 1: customer name, 2: amount
+#: includes/class-receipts.php:171
+#, php-format
+msgid "%1$s uploaded a payment receipt for %2$s."
+msgstr ""
+
+#: includes/class-receipts.php:172
+msgid "Check it in your bank app, then press \"Payment received\":"
+msgstr ""
+
+#: includes/class-receipts.php:198
+msgid "Receipt not found."
+msgstr ""
+
+#: includes/class-settings.php:110
+msgid "WhatsApp"
+msgstr ""
+
+#: includes/class-settings.php:112
+msgid "WhatsApp number (international format, no +, e.g. 60123456789)"
+msgstr ""
+
+#: includes/class-settings.php:113
+msgid "Show floating button"
+msgstr ""
+
+#: includes/class-settings.php:114
+msgid "Floating button position"
+msgstr ""
+
+#: includes/class-settings.php:115
+msgid "Floating button label (screen readers)"
+msgstr ""
+
+#: includes/class-settings.php:116
+msgid "Show button on product pages"
+msgstr ""
+
+#: includes/class-settings.php:117
+msgid "Product button text"
+msgstr ""
+
+#: includes/class-settings.php:118
+msgid "Product message template — variables: {product} {url} {site}"
+msgstr ""
+
+#: includes/class-settings.php:119
+msgid "General message (floating button) — variables: {site} {url}"
+msgstr ""
+
+#: includes/class-settings.php:123
+msgid "Demo mode"
+msgstr ""
+
+#: includes/class-settings.php:125
+msgid "Demo mode on (banner, no payments, orders blocked, noindex, no customer emails)"
+msgstr ""
+
+#: includes/class-settings.php:126
+msgid "Banner text"
+msgstr ""
+
+#: includes/class-settings.php:127
+msgid "Checkout notice"
+msgstr ""
+
+#: includes/class-settings.php:128
+msgid "Allow test orders in demo mode (only DuitNow QR and the demo online payment; nothing is charged)"
+msgstr ""
+
+#: includes/class-settings.php:129
+msgid "Footer label (e.g. \"Concept Project\")"
+msgstr ""
+
+#: includes/class-settings.php:133
+msgid "Tracking"
+msgstr ""
+
+#: includes/class-settings.php:135
+msgid "GA4 Measurement ID (G-XXXXXXX) — leave empty to disable"
+msgstr ""
+
+#: includes/class-settings.php:136
+msgid "Meta Pixel ID — leave empty to disable"
+msgstr ""
+
+#: includes/class-settings.php:140
+msgid "Business details"
+msgstr ""
+
+#: includes/class-settings.php:142
+msgid "Registered business name"
+msgstr ""
+
+#: includes/class-settings.php:143
+msgid "SSM registration no."
+msgstr ""
+
+#: includes/class-settings.php:144
+msgid "Email"
+msgstr ""
+
+#: includes/class-settings.php:145
+msgid "Phone"
+msgstr ""
+
+#: includes/class-settings.php:146
+msgid "Address"
+msgstr ""
+
+#: includes/class-settings.php:147
+msgid "Business hours"
+msgstr ""
+
+#: includes/class-settings.php:151
+msgid "Social links"
+msgstr ""
+
+#: includes/class-settings.php:162
+msgid "Store UX"
+msgstr ""
+
+#: includes/class-settings.php:164
+msgid "Announcement bar text (empty = hidden)"
+msgstr ""
+
+#: includes/class-settings.php:165
+msgid "Pause online orders (the shop stays open to browse)"
+msgstr ""
+
+#: includes/class-settings.php:166
+msgid "Message while paused"
+msgstr ""
+
+#: includes/class-settings.php:167
+msgid "Announcement link (optional)"
+msgstr ""
+
+#: includes/class-settings.php:168
+msgid "Trust badges, one per line: icon|Title|Subtitle (icons: truck, card, return, leaf, shield, chat, heart, gift, clock, star)"
+msgstr ""
+
+#: includes/class-settings.php:169
+msgid "Free-shipping amount for the progress bar (RM, empty = hidden)"
+msgstr ""
+
+#: includes/class-settings.php:170
+msgid "Sticky add-to-cart bar on mobile product pages"
+msgstr ""
+
+#: includes/class-settings.php:171
+msgid "Button & card corner radius (e.g. 0px, 8px, 999px)"
+msgstr ""
+
+#: includes/class-settings.php:172
+msgid "Product image shape"
+msgstr ""
+
+#: includes/class-settings.php:176
+msgid "Festive pre-orders"
+msgstr ""
+
+#: includes/class-settings.php:178
+msgid "Festive pre-order season on"
+msgstr ""
+
+#: includes/class-settings.php:179
+msgid "Season name shown to customers (e.g. Chinese New Year 2027)"
+msgstr ""
+
+#: includes/class-settings.php:180
+msgid "Last day to order: YYYY-MM-DD (until 23:59) or YYYY-MM-DD HH:MM"
+msgstr ""
+
+#: includes/class-settings.php:181
+msgid "First collection / delivery day (YYYY-MM-DD)"
+msgstr ""
+
+#: includes/class-settings.php:182
+msgid "Last collection / delivery day (YYYY-MM-DD)"
+msgstr ""
+
+#: includes/class-settings.php:183
+msgid "Days off in between (YYYY-MM-DD, separated by commas)"
+msgstr ""
+
+#: includes/class-settings.php:184
+msgid "Self-collect times, one per line: time|orders per day (e.g. 10:00–13:00|6)"
+msgstr ""
+
+#: includes/class-settings.php:185
+msgid "Delivery times, one per line: time|orders per day"
+msgstr ""
+
+#: includes/class-settings.php:186
+msgid "Shipping zone for local delivery (its name contains this word)"
+msgstr ""
+
+#: includes/class-settings.php:187
+msgid "Note shown for courier orders (e.g. Posted by 3 Feb, arrives in 1–3 working days)"
+msgstr ""
+
+#: includes/class-settings.php:188
+msgid "Early-bird price until (YYYY-MM-DD, empty = none)"
+msgstr ""
+
+#: includes/class-settings.php:189
+msgid "Early-bird discount (%)"
+msgstr ""
+
+#: includes/class-settings.php:190
+msgid "Show how many are left (from your stock numbers)"
+msgstr ""
+
+#: includes/class-settings.php:191
+msgid "Say \"Only X left\" at or below"
+msgstr ""
+
+#: includes/class-settings.php:192
+msgid "After the cut-off, ask for a WhatsApp number to tell them when you open again"
+msgstr ""
+
+#: includes/class-settings.php:193
+msgid "Items included in the plan (a warning above this; 0 = no warning)"
+msgstr ""
+
+#: includes/class-settings.php:197
+msgid "AI chat assistant"
+msgstr ""
+
+#: includes/class-settings.php:199
+msgid "Show the AI chat (also needs AGC_AI_CHAT_URL and AGC_AI_CHAT_TOKEN in wp-config.php and the sales-agent service running)"
+msgstr ""
+
+#: includes/class-settings.php:200
+msgid "Chat window title"
+msgstr ""
+
+#: includes/class-settings.php:201
+msgid "First message shown to visitors"
+msgstr ""
+
+#: includes/class-settings.php:207
+msgid "Accent colour (HEX)"
+msgstr ""
+
+#: includes/class-settings.php:208
+msgid "Malaysian checkout tweaks (phone required, hide company & address line 2)"
+msgstr ""
+
+#: includes/class-settings.php:252
+msgid "Agency"
+msgstr ""
+
+#: includes/class-settings.php:388
+msgid "Agency settings"
+msgstr ""
+
+#: includes/class-settings.php:390
+msgid "Demo mode is ON: payments are hidden and orders are blocked."
+msgstr ""
+
+#: includes/class-shop-pause.php:38
+msgid "We are not taking online orders right now. Please check back soon."
+msgstr ""
+
+#: includes/class-store-ux.php:95
+msgid "Announcement"
+msgstr ""
+
+#. translators: %s: amount
+#: includes/class-store-ux.php:148
+#, php-format
+msgid "You are %s away from free shipping"
+msgstr ""
+
+#: includes/class-store-ux.php:149
+msgid "You get free shipping!"
+msgstr ""
+
+#: includes/class-store-ux.php:193
+msgid "Choose options"
+msgstr ""
+
+#: includes/class-store-ux.php:193
+msgid "Add to cart"
+msgstr ""
+
+#. translators: %s: customer first name
+#: templates/emails/customer-agc-ready.php:15
+#: templates/emails/plain/customer-agc-ready.php:12
+#, php-format
+msgid "Hi %s,"
+msgstr ""
+
+#: templates/emails/customer-agc-ready.php:16
+#: templates/emails/plain/customer-agc-ready.php:13
+msgid "Your order is ready for collection. Please show this email or your order number when you come."
+msgstr ""
+
+#: templates/emails/customer-agc-ready.php:16
+#: templates/emails/plain/customer-agc-ready.php:13
+msgid "Your order is on its way to you."
+msgstr ""

@@ -136,7 +136,7 @@ if ( $hfont ) {
 			'family'  => $hfont,
 			'google'  => true,
 			'weight'  => '600',
-			'variant' => '600',
+			'variant' => array( '600' ), // Kadence wants a list here (a plain '600' gives a PHP warning on every page).
 		)
 	);
 }

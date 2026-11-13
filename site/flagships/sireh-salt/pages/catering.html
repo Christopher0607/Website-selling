@@ -1,0 +1,54 @@
+<!--
+title: Catering & events — Sireh & Salt (demo website)
+description: Office lunch boxes, buffets and a private dining room. Send an enquiry and get a written quote. Demo restaurant website by Cartsmith Studio.
+page: catering
+-->
+<section class="sec" style="padding-bottom:30px">
+  <div class="wrap story">
+    <div>
+      <p class="kicker">Catering &amp; events</p>
+      <h1 style="font-size:clamp(2.1rem,5.4vw,3.4rem)">Feed the office, the family or the whole open house</h1>
+      <p class="lead">Tell us the date, how many people and roughly your budget. You’ll get a written quote within one working day, with the menu and exactly what’s included.</p>
+      <div class="btns"><a class="btn" href="#enquire">Send an enquiry</a><a class="btn btn--ghost" href="menu.html">See the menu</a></div>
+    </div>
+    <img src="img/lunchbox.webp" alt="Packed lunch boxes (placeholder photo)" loading="lazy" width="1600" height="900">
+  </div>
+</section>
+<section class="sec" style="padding-top:20px">
+  <div class="wrap">
+    <div class="grid grid--3">
+      <article class="pack"><h3>Office lunch boxes</h3><span class="price">from RM16 / person</span><ul><li>Minimum 20 boxes, labelled by name</li><li>Rice or noodles, a main, sides and a drink</li><li>Delivered in PJ and KL by 12pm</li></ul><button class="btn btn--ghost btn--sm" type="button" data-pick="Office lunch boxes" style="margin-top:auto">Choose this</button></article>
+      <article class="pack"><h3>Buffet</h3><span class="price">from RM32 / person</span><ul><li>Minimum 30 people</li><li>Rendang, ayam percik, satay station and kuih</li><li>Chafing dishes, set-up and clear-up</li></ul><button class="btn btn--ghost btn--sm" type="button" data-pick="Buffet" style="margin-top:auto">Choose this</button></article>
+      <article class="pack" id="private"><h3>Private dining room</h3><span class="price">up to 20 guests</span><ul><li>Minimum spend RM1,200</li><li>Set menu chosen with the chef</li><li>Screen for slides and a birthday cake plate</li></ul><button class="btn btn--ghost btn--sm" type="button" data-pick="Private dining room" style="margin-top:auto">Choose this</button></article>
+    </div>
+  </div>
+</section>
+<section class="sec sec--cream" id="enquire">
+  <div class="wrap" style="max-width:760px">
+    <p class="kicker">Enquiry</p>
+    <h2>Tell us about your event</h2>
+    <form class="panel" data-catering novalidate>
+      <div class="row2">
+        <div class="field"><label for="c-type">What do you need?</label><select class="input" id="c-type" name="type" required><option>Office lunch boxes</option><option>Buffet</option><option>Private dining room</option><option>Something else</option></select></div>
+        <div class="field"><label for="c-pax">How many people?</label><input class="input" id="c-pax" name="pax" type="number" min="10" max="500" required placeholder="e.g. 40"></div>
+      </div>
+      <div class="row2">
+        <div class="field"><label for="c-date">Date</label><input class="input" id="c-date" name="date" type="date" required></div>
+        <div class="field"><label for="c-time">Time</label><input class="input" id="c-time" name="time" type="time"></div>
+      </div>
+      <div class="row2">
+        <div class="field"><label for="c-where">Where? <small>(office, home, hall + postcode)</small></label><input class="input" id="c-where" name="where" placeholder="e.g. office in Damansara, 47400"></div>
+        <div class="field"><label for="c-budget">Budget per person</label><select class="input" id="c-budget" name="budget"><option value="">Not sure yet</option><option>RM15–20</option><option>RM20–35</option><option>RM35–60</option><option>RM60+</option></select></div>
+      </div>
+      <div class="field"><label for="c-diet">Dietary needs <small>(optional)</small></label><input class="input" id="c-diet" name="diet" placeholder="e.g. 5 vegetarian, no seafood for 2"></div>
+      <div class="field"><label for="c-notes">Anything else? <small>(optional)</small></label><textarea class="input" id="c-notes" name="notes" maxlength="400"></textarea></div>
+      <div class="row2">
+        <div class="field"><label for="c-name">Your name</label><input class="input" id="c-name" name="name" autocomplete="name" required></div>
+        <div class="field"><label for="c-phone">Mobile number</label><input class="input" id="c-phone" name="phone" type="tel" autocomplete="tel" required placeholder="012-345 6789"></div>
+      </div>
+      <div class="field"><label for="c-email">Email <small>(for the written quote, optional)</small></label><input class="input" id="c-email" name="email" type="email" autocomplete="email"></div>
+      <button class="btn btn--block" type="submit">Send enquiry</button>
+      <p class="small muted center" style="margin:10px 0 0">Demo website: nothing is sent anywhere.</p>
+    </form>
+  </div>
+</section>

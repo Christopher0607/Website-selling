@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{{TITLE}}</title>
+<meta name="description" content="{{DESC}}">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#123c3a">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23123c3a'/%3E%3Cellipse cx='32' cy='40' rx='20' ry='7' fill='%23c9a24a'/%3E%3Cpath d='M32 34c-9-3-13-11-11-20 9 1 14 8 11 20z' fill='%23e8d9bd'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&amp;family=Outfit:wght@400;500;600;700;800&amp;display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-page="{{PAGE}}">
+<a class="skip" href="#main">Skip to content</a>
+<div class="demobar">
+  <p><b>Demo website.</b> <span class="dm-long">Dulang &amp; Daun is a fictional food gift brand made by Cartsmith Studio. Orders and payments here are not real.</span><span class="dm-short">Not a real shop; nothing here is charged or sent.</span></p>
+  <a href="https://cartsmithstudio.com/start.html?package=starter">Get one like this <span aria-hidden="true">&rarr;</span></a>
+</div>
+<div class="announce" data-announce>Free shipping in West Malaysia over RM150 · East Malaysia over RM250</div>
+<header class="hdr">
+  <div class="wrap hdr__in">
+    <a class="logo" href="index.html" aria-label="Dulang &amp; Daun, home">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><ellipse cx="20" cy="29" rx="15" ry="5" fill="var(--turmeric)"/><path d="M20 25c-7-2-10-9-8-16 7 1 10 6 8 16z" fill="currentColor"/><path d="M20 25c6-3 8-9 6-14-6 2-8 7-6 14z" fill="currentColor" opacity=".55"/></svg>
+      <span>Dulang <i>&amp;</i> Daun</span>
+    </a>
+    <nav class="nav" id="nav" aria-label="Main">
+      <a href="shop.html" data-nav="shop">Shop all</a>
+      <a href="shop.html#hampers" data-nav="hampers">Hampers</a>
+      <a href="hamper.html" data-nav="hamper">Build a hamper</a>
+      <a href="corporate.html" data-nav="corporate">Corporate gifts</a>
+      <a href="track.html" data-nav="track">Track order</a>
+      <a href="owner.html" data-nav="owner" class="nav__owner">Owner view</a>
+    </nav>
+    <div class="hdr__right">
+      <a class="wabtn" data-wa-chat href="#" target="_blank" rel="noopener" aria-label="Chat on WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 0 0-7.8 13.5L3 21l4.6-1.2A9 9 0 1 0 12 3z" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/><path d="M8.8 8.6c.3-.6.6-.6.9-.6h.6c.2 0 .4 0 .6.5l.7 1.7c.1.2 0 .4-.1.6l-.5.6c-.1.2-.2.3 0 .6.3.5.8 1.1 1.3 1.6.6.5 1.2.9 1.8 1.1.2.1.4.1.6-.1l.7-.8c.2-.2.4-.2.6-.1l1.6.8c.3.1.4.3.4.4 0 .3-.1 1-.6 1.4-.4.4-1.2.8-2 .7-.8-.1-2-.5-3.4-1.6-1.6-1.3-2.5-2.9-2.8-3.5-.3-.7-.4-1.6 0-2.4z" fill="currentColor"/></svg></a>
+      <button class="bagbtn" type="button" data-cart-open aria-label="Open cart"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8h12l-1 12H7L6 8z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 8V6a3 3 0 0 1 6 0v2" fill="none" stroke="currentColor" stroke-width="1.8"/></svg><b data-bag-count hidden>0</b></button>
+      <button class="burger" type="button" aria-label="Open menu" aria-controls="nav" aria-expanded="false" data-burger><span></span></button>
+    </div>
+  </div>
+</header>
+<main id="main">
+{{BODY}}
+</main>
+<footer class="ftr">
+  <div class="wrap ftr__grid">
+    <div>
+      <a class="logo logo--light" href="index.html"><svg viewBox="0 0 40 40" aria-hidden="true"><ellipse cx="20" cy="29" rx="15" ry="5" fill="var(--turmeric)"/><path d="M20 25c-7-2-10-9-8-16 7 1 10 6 8 16z" fill="currentColor"/></svg><span>Dulang <i>&amp;</i> Daun</span></a>
+      <p>Sambal, kuih and gift boxes made in small batches in a home kitchen, packed by hand and shipped across Malaysia.</p>
+      <p class="ftr__demo">Demo contact: hello@example.com · WhatsApp +60 12-000 0000</p>
+    </div>
+    <div>
+      <h3>Shop</h3>
+      <ul class="ftr__links"><li><a href="shop.html">Shop all</a></li><li><a href="shop.html#hampers">Hampers &amp; gift boxes</a></li><li><a href="hamper.html">Build your own hamper</a></li><li><a href="corporate.html">Corporate gifts</a></li></ul>
+    </div>
+    <div>
+      <h3>Help</h3>
+      <ul class="ftr__links"><li><a href="track.html">Track your order</a></li><li><a href="index.html#shipping">Shipping &amp; delivery</a></li><li><a href="index.html#faq">Questions</a></li><li><a data-wa-chat href="#" target="_blank" rel="noopener">Chat on WhatsApp</a></li></ul>
+    </div>
+  </div>
+  <div class="wrap ftr__base">
+    <p>A concept website by <a href="https://cartsmithstudio.com/">Cartsmith Studio</a>. Dulang &amp; Daun is not a real brand. Photos are Pexels placeholders; reviews are samples written for this demo.</p>
+    <a class="ftr__cta" href="https://cartsmithstudio.com/pricing.html">Online shops like this from RM800</a>
+  </div>
+</footer>
+<div class="drawer" data-drawer hidden>
+  <div class="drawer__back" data-cart-close></div>
+  <aside class="drawer__panel" role="dialog" aria-modal="true" aria-labelledby="cart-title" tabindex="-1">
+    <div class="drawer__head"><h2 id="cart-title">Your cart</h2><button class="sheet__x" type="button" data-cart-close aria-label="Close cart">&times;</button></div>
+    <div class="drawer__body" data-cart-body></div>
+  </aside>
+</div>
+<div class="sheet" data-sheet hidden>
+  <div class="sheet__back" data-close></div>
+  <div class="sheet__panel" role="dialog" aria-modal="true" aria-labelledby="sheet-title" tabindex="-1"></div>
+</div>
+<div class="toast" data-toast role="status" aria-live="polite"></div>
+<script src="app.js"></script>
+</body>
+</html>

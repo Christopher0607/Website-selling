@@ -4,10 +4,15 @@
 // and the main row only says how many parts there are.
 const PART = 500000; // characters per row: JSON text with Chinese can be 3 bytes a character, so well under 2 MB
 let ready = null;
+let hitsReady = null;
 
 export function d1Store(db) {
   if (!db) throw new Error('D1 binding "DB" is missing (Pages project → Settings → Bindings)');
   const init = () => (ready = ready || db.prepare('CREATE TABLE IF NOT EXISTS kv (k TEXT PRIMARY KEY, v TEXT NOT NULL, t INTEGER NOT NULL)').run());
+  const initHits = () => (hitsReady = hitsReady || db.batch([
+    db.prepare('CREATE TABLE IF NOT EXISTS hits (t INTEGER NOT NULL, e TEXT, h TEXT, p TEXT, r TEXT, s TEXT, v TEXT, n INTEGER, k TEXT, app TEXT, c TEXT, g TEXT, a TEXT, sec INTEGER)'),
+    db.prepare('CREATE INDEX IF NOT EXISTS hits_t ON hits (t)'),
+  ]));
   const parse = (v) => { try { return JSON.parse(v); } catch (e) { return null; } };
   const partsOf = async (k) => (await db.prepare('SELECT v FROM kv WHERE k >= ? AND k < ? ORDER BY k').bind(k + '#', k + '#~').all()).results.map((r) => r.v).join('');
 
@@ -48,6 +53,20 @@ export function d1Store(db) {
       await init();
       const rows = (await db.prepare('SELECT k, v FROM kv WHERE k >= ? AND k < ? ORDER BY k DESC LIMIT ?').bind(prefix, prefix + '~', limit).all()).results;
       return rows.map((r) => ({ key: r.k, value: parse(r.v) }));
+    },
+    // website visitors (site/server/traffic.mjs): one row per page view / time / action, in its own table
+    async hitAdd(r) {
+      await initHits();
+      await db.prepare('INSERT INTO hits (t, e, h, p, r, s, v, n, k, app, c, g, a, sec) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)')
+        .bind(r.t, r.e, r.h, r.p, r.r, r.s, r.v, r.n, r.k, r.app, r.c, r.g, r.a, r.sec).run();
+    },
+    async hitsSince(t, limit = 60000) {
+      await initHits();
+      return (await db.prepare('SELECT t, e, h, p, r, s, v, n, k, app, c, g, a, sec FROM hits WHERE t >= ? ORDER BY t LIMIT ?').bind(t, limit).all()).results;
+    },
+    async hitsPrune(t) {
+      await initHits();
+      await db.prepare('DELETE FROM hits WHERE t < ?').bind(t).run();
     },
     async del(k) {
       await init();

@@ -1,4 +1,4 @@
-# How our system works (for the sales desk AI) — updated 2026-11-11
+# How our system works (for the sales desk AI) — updated 2026-11-12
 
 This is the current, complete picture of how Cartsmith Studio finds and talks to customers. It is newer than the
 "approved sales scripts" (written 2026-11-08 for Shopee sellers): when they disagree, follow THIS document.
@@ -30,17 +30,82 @@ Built into the desk by `python3 site/build.py` (file: `sales/agent/desk-brief.md
    不需要 (no — never contact again) / 已经有网站 (they have a website — close politely, never pitch).
 4. **Send the mockup** by WhatsApp (or email) right after the call: short message = who we are, the sample website is
    already made for them, link + password, private and deleted on the date, no cost or obligation, our own site at the
-   end (https://cartsmithstudio.com/). If we wrote to them on Instagram before, the message says so.
-5. **Follow-up 2 days later**: send the link and password again so it is easy to find, and say we can put THEIR own
-   photos and current prices in for free so it looks like their own site. One follow-up, then a last polite message
-   later. Never chase more.
+   end (https://cartsmithstudio.com/). If we were in touch before (a call or a message), the message says so.
+5. **Second call 1–2 days later**, and written follow-ups if the call does not connect — see section 2b. At most
+   three written follow-ups after the mockup, then stop.
 6. **Interested** → a 15-minute call → written quotation within 24 hours (valid 14 days) → 50% deposit → build →
-   balance → launch. Prices and offers ONLY from the knowledge base (Starter RM2,800, Catalog RM3,500, Growth RM4,800;
-   Care from RM150 / month; founding-client offer for the first 3 clients only).
+   balance → launch. Prices and offers ONLY from the knowledge base (Starter RM800, Catalog RM1,200, Growth RM1,600;
+   festive pre-order shop RM399 (up to 10 items, online payment or DuitNow QR, order emails, own dashboard; 3 months of hosting and maintenance, then pause free or RM49/month); monthly plan RM0 upfront + RM199 × 12; maintenance from RM150 / month after the free first month (always say it with the setup price); founding-client terms
+   for the first 3 clients only: balance only when happy, live in 7 working days or RM50 off per late day).
 7. Lost / not interested / already has a website → close politely; the mockup is deleted by its date.
 
+## 2b. After the mockup is sent: the follow-up playbook (2026-11-12)
+What the first 11 calls taught us: on the phone almost every owner says "send it over, I'll have a look" — often just
+to end the call politely — and then nothing happens. Seven mockups went out; one owner replied in detail, one said
+"Ok", none asked about price. The missing step is the second conversation, and the price nobody has heard.
+- **On the first call, set up the second one** (a statement): "I'll WhatsApp it now, and give you a quick call on
+  Thursday afternoon to hear what you think."
+- **Second call, 1–2 days after sending** (the desk shows "第二通电话" with the script). Questions are fine on the phone.
+  Ask what they thought and listen. Then three short points:
+  1. **Price, plainly**: their own website from RM800 one-off, fixed and written down (or RM0 upfront and RM199 a month
+     for 12 months). As one of our first 3 clients they pay the second half only when happy, live in 7 working days.
+  2. **Timing**: Christmas (25 Dec), Chinese New Year (6 Feb 2027), Hari Raya (expected 10 Mar 2027). Customers ask about
+     festive orders weeks before; pick the one that fits THEIR shop (Malay kuih → Raya; Chinese bakery → CNY).
+  3. **A small first step**: a festive pre-order shop for RM399, live in 3 working days; the RM399 comes off a full
+     website within 60 days. Sample: https://cartsmithstudio.com/demo/butter-lantern/ (?fest=cny / raya / xmas).
+  Then ONE concrete next step: a written quotation today (WhatsApp), or a 15-minute visit / call at a set day and time.
+- **They have not opened it** (desk shows no visits, or the link opened but no password entered): resend the link and
+  password, call again in 2 days. Never say we can see this.
+- **Written follow-ups** (only when the call did not connect, or as the message after the call):
+  1. 1–2 days after sending (a ready-made template on the card since 2026-11-13, Junyu: "push RM199 / RM399 and the new
+     website"): link + password again; their own photos and current prices go in for free; the full demo website that
+     fits them (the card file says which one); three ways to start: RM800 one-off (then RM150 a month maintenance, first
+     month free), nothing upfront and RM199 a month for 12 months, or the RM399 festive pre-order shop (live in 3 working
+     days, 3 months of hosting and maintenance included) with its link; every website comes with a simple shop dashboard
+     on the phone (new orders, payments to check, what to make each day, stock, Excel export); our own site at the end.
+  2. About 4 days later: one new useful angle for their kind of shop (festive sets with cut-off dates and slots left so
+     they stop answering the same DM; bookings that arrive with date, time and party size; regulars ordering without
+     platform commission), the price again in one line (RM800 one-off or RM199 a month), the RM399 festive shop as the
+     small first step with its link, the mockup link again, door open.
+  3. About a week later: the last short, polite message — the sample stays up until its delete date; if the timing is
+     not right, they can message us any time. Then stop.
+- **All contact is on WhatsApp (2026-11-13, Junyu).** Instagram is no longer used to reach owners. Follow-ups go as a
+  WhatsApp message first; a call is optional after it, never instead of it. Never write "we messaged you on Instagram".
+  Shops with no WhatsApp number are parked until someone adds one.
+- **Contacted before, no mockup yet** (mostly Instagram-only shops, 2026-11-13): the 2nd message is a ready-made template
+  on the card — the free sample website offer, the three ways to start (RM199 a month, the RM399 festive shop with its
+  link, RM800 one-off + maintenance), the phone dashboard, the demo that fits them. It stays under 1,000 characters
+  because an Instagram DM holds about that much. Later messages are AI-written: short, one useful point, the free mockup
+  offer, RM199 / RM399 in one or two lines.
+- **Respect "not ready" and "no".** Thank them, close, never chase. Example (Hideaway Café, 11-11): "menu changes daily,
+  whole cakes are old-school manual pre-orders, not ready to go online yet, will remember you" → we thanked them, said
+  the sample stays up until 23 Nov, and stopped. Baba Beng already had an online store → closed, no more messages.
+- Never invent urgency: no "today only" price, no made-up slots or deadlines. Festive dates are real; prices are fixed.
+- When an owner says something new (an objection, what they want), write it in the conversation so the next message
+  and the quotation use it.
+
+## 2c. Full demo websites to show (2026-11-12)
+When an owner wants to see what a finished website does (beyond their own sample), point them to one of the four
+complete demos — fictional brands, everything clickable, nothing charged. The customer file says which one fits this
+business ("Full demo website that fits them"); use that one:
+- Fine dining, chef-led or upmarket restaurants: https://cartsmithstudio.com/demo/maison-cendre/ (tasting menus,
+  reservations with deposits and a waitlist, private dining, seasonal dinners; owner side at /demo/maison-cendre/owner.html).
+- Everyday restaurants, cafés, caterers: https://cartsmithstudio.com/demo/sireh-salt/ (ordering, bookings, festive pre-orders,
+  catering, vouchers; the owner side at /demo/sireh-salt/owner.html shows how they would run it from their phone).
+- The small first step (RM399 festive pre-order shop), two versions:
+  - **The real one** (2026-11-13): https://demo-festive.cartsmithstudio.com/ — the actual WordPress shop a client gets
+    (Chinese New Year, in Chinese; fictional bakery, nothing is charged). People can place a test order and see the order
+    email and tracking. Behind it is the owner's phone dashboard (new-order alerts, payments to check, what to make each
+    day, stock, customers, reports with an Excel export, coupons, pause orders, staff logins). Best link for Chinese
+    shops and Chinese-speaking owners; the card file picks it for them.
+  - The demo page: https://cartsmithstudio.com/demo/butter-lantern/ (?fest=raya for Malay bakeries, ?fest=xmas for
+    Christmas bakes, ?fest=val for Valentine's) — in English or Malay, shows every festival, with an owner page.
+- Bakeries, kuih and cookie makers, sambal and gift brands: https://cartsmithstudio.com/demo/dulang-daun/ (shop, gift
+  boxes, build-your-own hamper, West/East shipping, WhatsApp orders, tracking; owner side at /demo/dulang-daun/owner.html).
+Use at most one demo link per message, as a statement ("Here is a full example of what the finished website does: …").
+
 ## 3. Statuses on a card
-new = not contacted yet · contacted = we sent a message (often on Instagram) but no reply · replied = they replied
+new = not contacted yet · contacted = we sent a message or called but no reply · replied = they replied
 (or said yes on the phone: "call_ok") · preview_sent = mockup sent, waiting · call_booked · proposal_sent · won ·
 lost · no_response · do_not_contact. "Next follow-up" and "next call" dates are on the card.
 
@@ -73,10 +138,20 @@ lost · no_response · do_not_contact. "Next follow-up" and "next call" dates ar
 ## 5. Phone answers we use (keep consistent with the desk)
 - Owner not in → ask what time the owner is usually in, call back then.
 - Busy → "I'll WhatsApp you the link so you can look later." (a statement)
-- How much? → the sample is free; a full website starts from RM2,800, fixed and written down; details come with the link.
+- How much? → the sample is free; a full website starts from RM800 one-off, fixed and written down; a festive
+  pre-order shop is RM399; or RM0 upfront and RM199 a month for 12 months. Details come with the link.
 - We already have Shopee / Instagram / foodpanda → keep them; this gives regulars one link to order directly, without
   paying commission on every order.
 - We already have a website → apologise, close, mark 已经有网站.
 - Not interested → thank them, close, mark 不需要.
 - How did you get my number? → from a public article / listing about their shop; apologise for the cold call.
 - Email instead → take the email and send the link there.
+- (Second call) Need to ask my partner / boss → "I'll WhatsApp a short summary with the price so you can forward it" +
+  a set time to call back.
+- (Second call) Not now / after the festive season → the RM399 festive shop is the small step; otherwise no problem,
+  the sample stays up until its date.
+- (Second call) Too expensive → RM0 upfront and RM199 a month, or start with the RM399 festive shop. Never lower prices.
+- (Second call) WhatsApp / phone orders are enough → orders still come to their WhatsApp, already filled in (items,
+  date, name), so less back and forth.
+- (Second call) Menu changes every day → "today's menu" changed from the phone in a minute, or only fixed items and
+  festive sets.

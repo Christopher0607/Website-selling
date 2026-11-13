@@ -12,14 +12,16 @@ import { fileURLToPath } from 'node:url';
 import { handleDesk, handleTrack, handleForm } from '../server/desk.mjs';
 import { handleChat } from '../server/chat.mjs';
 import { fileStore } from '../server/store-file.mjs';
+import { handleHit } from '../server/traffic.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const DIST = path.join(HERE, '..', 'dist');
 const PORT = Number(process.argv[2] || 8769);
 const FILE = process.env.DESK_LOCAL_FILE;
 if (!FILE) { console.error('set DESK_LOCAL_FILE=/path/to/desk.json'); process.exit(1); }
-const plat = { env: (k) => process.env[k], store: fileStore(FILE), ip: '127.0.0.1' };
-const routes = { '/api/desk': handleDesk, '/api/track': handleTrack, '/api/form': handleForm, '/api/chat': handleChat };
+// country / region: Cloudflare fills these in production; locally DEV_COUNTRY / DEV_REGION (tests)
+const plat = { env: (k) => process.env[k], store: fileStore(FILE), ip: '127.0.0.1', country: process.env.DEV_COUNTRY || '', region: process.env.DEV_REGION || '' };
+const routes = { '/api/desk': handleDesk, '/api/track': handleTrack, '/api/form': handleForm, '/api/chat': handleChat, '/api/hit': handleHit };
 const types = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.svg': 'image/svg+xml', '.webp': 'image/webp', '.jpg': 'image/jpeg', '.png': 'image/png', '.txt': 'text/plain', '.json': 'application/json', '.xml': 'application/xml' };
 
 http.createServer(async (req, res) => {

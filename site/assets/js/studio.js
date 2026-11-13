@@ -49,7 +49,7 @@
         .catch(() => {
           // Fallback so the request is never lost: show the details, copy them, open the Instagram DM.
           btn.disabled = false;
-          const label = { name: 'Name', brand: 'Brand', instagram: 'Instagram', email: 'Email', shop_url: 'Shop', template: 'Template', package: 'Package', products: 'Products', message: 'Note' };
+          const label = { name: 'Name', brand: 'Brand', whatsapp: 'WhatsApp', instagram: 'Instagram', email: 'Email', shop_url: 'Shop', template: 'Template', package: 'Package', products: 'Products', message: 'Note' };
           const summary = 'Hi Cartsmith! Free mockup request:\n' + Object.keys(label).filter((k) => data[k]).map((k) => label[k] + ': ' + data[k]).join('\n');
           const dm = form.getAttribute('data-dm');
           msg.className = 's-form__msg s-form__msg--bad';
@@ -91,7 +91,7 @@
   }
   function render() {
     log.innerHTML = '';
-    bubble('bot', 'Hi! I’m Cartsmith’s AI assistant. Ask me about prices, the 6 templates, timelines or how it works — in English, 中文 or Bahasa Malaysia.');
+    bubble('bot', 'Hi! I’m Cartsmith’s AI assistant. Ask me about prices, the demo websites, timelines or how it works — in English, 中文 or Bahasa Malaysia.');
     state.msgs.forEach((m) => bubble(m.role === 'user' ? 'me' : 'bot', m.content));
     if (state.lead) bubble('note', '✓ Your details were sent to the Cartsmith team. We’ll reply on Instagram within 1 working day.');
     quick.hidden = state.msgs.length > 0;
@@ -130,6 +130,7 @@
     if (state.msgs.length >= MAX_TURNS) { bubble('note', 'Let’s continue on Instagram — <a href="' + esc(dm) + '" target="_blank" rel="noopener">open DM</a>.', true); return; }
     quick.hidden = true;
     state.msgs.push({ role: 'user', content: text });
+    if (window.csHit && state.msgs.filter((m) => m.role === 'user').length === 1) window.csHit('chat'); // the desk's 流量 tab counts chats started
     store.set(KEY, state);
     bubble('me', text);
     busy = true;

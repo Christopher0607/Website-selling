@@ -1,0 +1,49 @@
+<!--
+title: Private dining & events — Maison Cendre (demo website)
+description: The private salon, a counter takeover, a full buyout, or catering away from the restaurant. Send an enquiry for menus and a quote. Demo by Cartsmith Studio.
+page: private
+-->
+<section class="page-hero">
+  <img src="img/private.webp" alt="" width="1600" height="900">
+  <div class="wrap">
+    <p class="kicker">Private dining &amp; events</p>
+    <h1>Your evening, <em>your room</em></h1>
+    <p class="lead">Birthdays, anniversaries, client dinners and launches. A set menu chosen with the kitchen, printed menus with your name, and a team that looks after the details.</p>
+    <a class="btn btn--gold" href="#enquire">Send an enquiry</a>
+  </div>
+</section>
+<section class="sec">
+  <div class="wrap">
+    <div class="grid" style="grid-template-columns:repeat(4,minmax(0,1fr))" data-spaces>
+      <article class="pack"><h3>The salon</h3><span class="price">8 to 14 guests</span><ul><li>A private room with its own table</li><li>Set menus from RM328 per guest</li><li>Minimum spend RM3,000</li></ul><button class="linkbtn" type="button" data-space="The salon" style="margin-top:auto;align-self:flex-start">Enquire</button></article>
+      <article class="pack"><h3>The counter</h3><span class="price">Up to 8 guests</span><ul><li>All eight counter seats</li><li>Ten courses from the chef</li><li>RM4,200 for the counter</li></ul><button class="linkbtn" type="button" data-space="The counter" style="margin-top:auto;align-self:flex-start">Enquire</button></article>
+      <article class="pack"><h3>Full buyout</h3><span class="price">Up to 60 guests</span><ul><li>The whole restaurant</li><li>Seated dinner or standing reception</li><li>From RM18,000</li></ul><button class="linkbtn" type="button" data-space="Full buyout" style="margin-top:auto;align-self:flex-start">Enquire</button></article>
+      <article class="pack"><h3>Off-site</h3><span class="price">From 20 guests</span><ul><li>Our kitchen at your home or office</li><li>Canapés or a seated menu</li><li>From RM180 per guest</li></ul><button class="linkbtn" type="button" data-space="Off-site catering" style="margin-top:auto;align-self:flex-start">Enquire</button></article>
+    </div>
+  </div>
+</section>
+<section class="sec sec--stone" id="enquire">
+  <div class="narrow">
+    <p class="kicker">Enquiry</p>
+    <h2>Tell us about the occasion</h2>
+    <form class="panel" data-private novalidate>
+      <div class="row2">
+        <div class="field"><label for="p-space">Space</label><select class="input" id="p-space" name="space" required><option>The salon</option><option>The counter</option><option>Full buyout</option><option>Off-site catering</option><option>Not sure yet</option></select></div>
+        <div class="field"><label for="p-guests">Guests</label><input class="input" id="p-guests" name="guests" type="number" min="2" max="200" required placeholder="e.g. 12"></div>
+      </div>
+      <div class="row2">
+        <div class="field"><label for="p-date">Preferred date</label><input class="input" id="p-date" name="date" type="date"></div>
+        <div class="field"><label for="p-occ">Occasion</label><select class="input" id="p-occ" name="occasion"><option value="">—</option><option>Birthday</option><option>Anniversary</option><option>Client dinner</option><option>Launch or reception</option><option>Wedding or rehearsal dinner</option></select></div>
+      </div>
+      <div class="field"><label for="p-budget">Budget per guest</label><select class="input" id="p-budget" name="budget"><option value="">Not sure yet</option><option>RM180–300</option><option>RM300–450</option><option>RM450+</option></select></div>
+      <div class="field"><label for="p-notes">Anything else? <small>(optional)</small></label><textarea class="input" id="p-notes" name="notes" maxlength="400" placeholder="Dietary needs, wine, a cake, a screen for speeches…"></textarea></div>
+      <div class="row2">
+        <div class="field"><label for="p-name">Your name</label><input class="input" id="p-name" name="name" autocomplete="name" required></div>
+        <div class="field"><label for="p-phone">Mobile</label><input class="input" id="p-phone" name="phone" type="tel" autocomplete="tel" required placeholder="012-345 6789"></div>
+      </div>
+      <div class="field"><label for="p-email">Email <small>(for the quote, optional)</small></label><input class="input" id="p-email" name="email" type="email" autocomplete="email"></div>
+      <button class="btn btn--block" type="submit">Send enquiry</button>
+      <p class="small muted center" style="margin:12px 0 0">Demo website: nothing is sent anywhere.</p>
+    </form>
+  </div>
+</section>

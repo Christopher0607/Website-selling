@@ -13,19 +13,19 @@
 
 | # | 决定 | 默认建议 | 已决定 |
 |---|---|---|---|
-| 1 ★ | 主攻行业（只选一个） | 本地护肤 / 美妆品牌 | **Shopee / TikTok Shop 上有自己品牌的中小型卖家**；6 个模板覆盖护肤、服装、食品、咖啡、宠物、3C 配件，30 天后看哪一类回复率最高再收窄 |
+| 1 ★ | 主攻行业（只选一个） | 本地护肤 / 美妆品牌 | **Shopee / TikTok Shop 上有自己品牌的中小型卖家**；6 个模板覆盖护肤、服装、食品、咖啡、宠物、3C 配件，30 天后看哪一类回复率最高再收窄。**2026-11-12 实际情况：** 打电话和发样板的对象几乎都是餐饮（餐厅、咖啡馆、烘焙、糕点），工作室网站和精品样板改成以餐饮为主（见第 29 项） |
 | 2 ★ | 工作室名字 | Claude Code 提 10 个名字，查域名和社交账号是否可用 | **Cartsmith Studio**（2026-11-07 改；cart = 购物车，smith = 工匠，"做网店的工匠"；英文名，中英马都好念）。2026-11-07 网上搜过，马来西亚没有同名的网站设计公司。注册 SSM 时再到 ezBiz 查名字、MyIPO 查商标 |
 | 3 ★ | 工作室域名 | `.com`（有 SSM 注册后可以再加 `.com.my`） | **买 `cartsmithstudio.com`**（2026-11-11 俊宇决定；原因：发样板链接带 `netlify.app`，看起来像临时网址、不专业）。在 Porkbun 买，USD 11.81 / 年，续费同价（2026-11-11 查 https://porkbun.com/tld/com ）；`cartsmith.com` 已被注册，`.com.my` 要 SSM。买好后交给 Netlify DNS 管理：工作室网站 `cartsmithstudio.com`，样板 `previews.cartsmithstudio.com/<代号>/`（Netlify branch subdomain，所有方案都可以用，要 Netlify DNS）。旧的 `cartsmith.netlify.app` 链接照样能打开。（2026-11-07 原本决定暂时不买，先用 `cartsmith.netlify.app`。）服务器文件里的 `yourdomain.com` 以后也换成新域名 |
 | 4 | 服务语言 | 中文 + 英文；马来文用话术模板 | 用默认 |
-| 5 | 套餐价格 | 用 `01-business-plan.md` 的价格 | **一次性建站费 + 月费**（Starter RM2,800 / Growth RM4,800 / Catalog RM3,500；Care RM150 / RM300）。**试用：上线后第 1 个月维护免费** |
-| 6 | 首批客户优惠 | 前 3 个客户 7 折，换真实评价和案例授权 | 前 3 个客户：建站 7 折 **+ 维护免费 2 个月**（代替 1 个月），换真实评价、案例授权、介绍朋友 |
+| 5 | 套餐价格 | 用 `01-business-plan.md` 的价格 | **2026-11-12 改：Starter RM800 / Catalog RM1,200 / Growth RM1,600，内容不变**（俊宇：「我们直接交付原本的东西，这样子起码我们卖的东西是完整的」）；maintenance RM150 / RM300 不变；上线后第 1 个月维护免费。**另外两种开始方式：节日预购网店 RM399**（3 个工作天上线，60 天内升级正式网站全额抵扣）、**月付 RM0 开始、RM199 × 12 个月**（Starter + 主机 + 基础维护，满 12 期网站归客户）。听过旧价钱的商家直接给新价钱。细节见下面第 5 节（原本：Starter RM2,800 / Growth RM4,800 / Catalog RM3,500） |
+| 6 | 首批客户优惠 | 前 3 个客户 7 折，换真实评价和案例授权 | **2026-11-12 改：不打折，改成降低风险**：50% 订金、满意才付尾款；7 个工作天上线，迟一天减 RM50；维护免费 2 个月；送桌上 QR 卡设计。换真实评价和案例授权（销售数字可以不公开）。保证条款和月付要写进合约，合约草稿请律师看（原本：建站 7 折 + 维护免费 2 个月） |
 | 7 | 每月启动预算 | RM300 以内（服务器、域名、工具）；前 30 天广告 RM0 | 用默认 |
 | 8 | 每周投入时间 | 15–20 小时 | 用默认 |
 | 9 ★ | 联系方式 | WhatsApp Business 号码 | **Instagram `@cartsmith.studio`**（2026-11-08 俊宇改好；暂时不开 WhatsApp）。网站上：Instagram 私信按钮 + 免费样板申请表（Netlify Forms）+ AI 客服。以后改成品牌名的话，只要改 `site/studio.json` 的 instagram 再重新 build |
 | 10 | SSM 注册 | 先做样板和找客户，收第一笔订金之前完成 SSM 注册（独资 Enterprise）+ 开商业户口 | **暂时不注册**（2026-11-07）——找客户、做免费样板可以先做；但**收第一笔订金之前一定要注册**（见下面第 10 节）。网站上不显示 SSM 号码 |
 | 11 | 服务器 | DigitalOcean，新加坡机房，2GB 内存起步 | DigitalOcean 新加坡，**Ubuntu 24.04 LTS**、2 GB（脚本已在 24.04 完整测试；26.04 默认 PHP 8.5，等插件兼容稳定后再升级） |
 | 12 | 视频要不要露脸 | 不露脸：录屏 + 自己的声音 | 用默认 |
-| 13 | 工作室网站放哪里 | 服务器（WordPress） | **Netlify**（静态网站 + 免费表单 + 一个聊天函数），程式在 `site/`。DigitalOcean 服务器等第一个客户签约再开，用来放客户的 WooCommerce 网店 |
+| 13 | 工作室网站放哪里 | 服务器（WordPress） | **Cloudflare Workers（免费）**（2026-11-12 从 Netlify 搬过来：Netlify 免费额度不够、新帐号还会加标志）。程式在 `site/`，说明 `docs/12-cloudflare-guide.md`。DigitalOcean 服务器等第一个客户签约再开，用来放客户的 WooCommerce 网店（原本：Netlify） |
 | 14 | 给客户选的模板 | 3 个样板站 | **6 个模板**（全部虚构品牌、Pexels 照片）：Dewlane 护肤（简约）、Plainfold 服装（大胆杂志风）、Little Chili Pantry 食品（温暖手作）、Lowlight Roasters 咖啡（深色高级）、Tailmate 宠物（活泼彩色）、Voltnest 3C 配件（科技规格）。2026-11-07 网上搜过都没有同名品牌 |
 | 15 | AI | Claude | **DeepSeek API**（`deepseek-flash`，预付制）：网站 AI 客服 + 销售助理 |
 | 17 | 标志 | — | **2 号：几何 C + 橙色小方块**（2026-11-08 俊宇选，已用在 IG 头像和网站）。档案在 `content/brand/` |
@@ -41,6 +41,14 @@
 | 23 | 自动抓联系方式、哪里都发 | — | 2026-11-08 俊宇想自动抓商家的 Gmail / WhatsApp、所有渠道都发。**做：** 每日任务多一步，帮还没有 WhatsApp / Email 的商家从公开网页（报道、商家自己的网站、Linktree、搜索结果里的商家资料）找，找到自动补进工作台；跟进时建议换一个对方还没看过的渠道。**不做：** 写程式抓 IG / Google Maps（违反它们的条款）、自动发信息、同一条信息几个渠道同时发（容易被封号和检举，也违反「不群发」）。试跑结果：现有 11 家只经营 IG 的商家，公开网页都找不到可靠号码 |
 | 22 | 每天的量 | 10–20 个 | **目标每天 50 个**（2026-11-08 俊宇：IG 效果不大，改用 WhatsApp / Email）。每天的新商家一定要有 WhatsApp 或 Email，范围放宽到餐厅、咖啡馆、烘焙、在家做的食品品牌、自有品牌产品卖家。工作台加「连续发送」：一家一家打开已经填好的 WhatsApp / Email，俊宇按发送再按「下一家」；每天上限最多 60。**不做自动发 WhatsApp / Gmail**（自动群发陌生人会被封号，也违反「不群发」守则）。建议 WhatsApp 第一周每天 15–20 个、慢慢加 |
 | 19 | Instagram 私信 | 手动发 | **还是手动发**（工作台「复制并打开」+「已发送」提示条）。2026-11-08 俊宇想用 instagram_dm_mcp（非官方 instagrapi，用帐号密码登入）自动发；Claude Code 不做自动发陌生私信的工具 |
+| 29 | 样板怎么做 | 每一家专属样板 | **2026-11-12：不再一家一家做专属样板，改做精品示范网站**（俊宇：「我们直接做不一样的样板」）。先做 2 个：**餐厅**（重点：订位、节日套餐、菜单选项、自取外送、WhatsApp 下单、外烩询价、礼券、营业时间和地图、老板后台示范）和 **靠 IG / WhatsApp 卖货的本地食品礼盒品牌**（选项、组合礼盒、满额免运、优惠券、东西马运费、订单查询、WhatsApp 下单、补货通知、公司送礼询价）。虚构品牌（上网查过不是现有品牌）、noindex、顶部写明 Demo、不开真实付款。已经做好的 17 个专属样板照常用到 11-23。**做好了（2026-11-12）：** 餐厅 **Sireh &amp; Salt** https://cartsmithstudio.com/demo/sireh-salt/ 、食品礼盒网店 **Dulang &amp; Daun** https://cartsmithstudio.com/demo/dulang-daun/ （店名都上网查过；程式在 `site/flagships/`，检查 `site/tools/check-flagships.js`）；工作室首页改成以餐饮为主。**同日俊宇改：** 餐厅要有高级的那种、不用马来文名字、一般餐厅也能用 → 餐厅做两种：**精品餐厅 Maison Cendre** https://cartsmithstudio.com/demo/maison-cendre/ （品尝菜单、订位订金和候补、主厨吧台、包厢、节日晚宴）+ 保留 Sireh &amp; Salt 当一般餐厅；再加 RM399 节日预购网店的示范 **Butter &amp; Lantern** https://cartsmithstudio.com/demo/butter-lantern/ （同一页换农历新年、开斋节、圣诞、屠妖节四种装扮）。一共 4 个示范网站。**同日俊宇：** 首页不放「From DM to live store in about 2 weeks」（怎么做）和 6 个商店模板；4 个示范下面留一行连到模板页。模板页和模板程式保留（每天的免费样板用模板做；非餐饮的商家看模板页）。**同日（俊宇：设计做好、端到端检查）** 用默认：How it works 拿掉「about 2 weeks」、首页第二块和全站说法改成餐饮版、申请表必填 WhatsApp |
+| 30 | 示范网站的评价区 | 没有评价就空白 | **2026-11-12 俊宇：示范网站可以放评价的例子**（虚构品牌）。规则：每一则都标明「示范评价 / Sample review」、名字是虚构的、区块标题写明是示范；**客户的专属样板和正式网站不放编出来的评价** |
+| 31 | 发样板之后怎么跟进 | 2 天后发一次信息 | **2026-11-12：发样板后 1–2 天打第二通电话**（电话里大多说「先发来看看」，之后没有下文）。第二通电话讲三件事：价钱（RM800 起，一次付清）、节日（现在做刚好赶上圣诞 / 农历新年 2027-02-06 / 开斋节约 2027-03-10）、更小的第一步（节日预购网店 RM399）。第一通电话就约好第二通的时间。跟进信息写出价钱，用陈述句。没打开样板的重发网址和密码。AI 先用 DeepSeek；**跟进写得不好、谈满 50 位老板还是没成交，再考虑换 Claude API**（要先问俊宇、Key 放 Cloudflare Secret）。**同日俊宇加：** 已经发了样板的商家，第一条跟进信息要告诉他们：适合他们的示范网站（工作台按卡片的行业自动选：精品餐厅 Maison Cendre / 一般餐厅 Sireh &amp; Salt / 烘焙糕点和食品 Dulang &amp; Daun）、Butter &amp; Lantern 节日预购网店 RM399、每月 RM199 × 12 的月付 |
+| 33 | RM399 节日预购网店长什么样 | 一页节日套餐，订单发到 WhatsApp | **2026-11-13 俊宇：「399 的网站不要用 WhatsApp……做得消费者不仅愿意买单，还认为自己花少少钱，做到了大几千的效果」**。改成真正的网店（WordPress + WooCommerce）：最多 10 样产品、网上付款**和** DuitNow QR 两种都支持、订单电邮、查订单、店家后台（订单、待确认付款、每天要做多少、库存）。示范 Butter & Lantern 有 4 个节日：农历新年（中文为主、英文小字，真的华人年饼）、Hari Raya（马来文为主）、Christmas、Valentine's Day（取代 Deepavali，刚过完）。节日过后怎么收费俊宇说「要看商家需求」（有的一年只做过年，有的每个节日上新品）→ 默认：包 3 个月，之后免费暂停、下个节日 RM149 重开，或 RM49 / 月继续开；换节日造型 RM99（**俊宇 2026-11-13：「用默认」**）。**所有「Care」改叫 maintenance（维护费），价钱旁边都写明之后每个月 RM150 维护费、第一个月免费** |
+| 34 | WordPress 网站放哪里 | 等第一个客户签约再开服务器 | **2026-11-13：DigitalOcean 服务器 `agency-dev` 留着（俊宇「用默认」，USD 12/月，没有备份）**，放母版站和节日网店示范 + 新店家后台；API Token 由俊宇删掉。俊宇问能不能搬去 Cloudflare：不行，Cloudflare 跑不了 WordPress（没有 PHP 和 MySQL）；工作室网站、工作台、静态示范、客户样板继续放 Cloudflare。要省钱再比较其他主机（先查价钱、问俊宇） |
+| 35 | 店家后台的「代客下单」 | 包括在后台 | **2026-11-13 俊宇：「代客下单可以额外做，不然的话我们做网站给顾客下单就没有意义了」** → 改成附加功能，默认关闭；客户另外付费才打开（WordPress Settings → Agency → Other，或 `wp agc set owner_manual_orders 1`）。**价钱（2026-11-13，俊宇：「你决定」）：Growth 套餐包括；其他套餐另加 RM100 一次性**（理由：网站才是接单管道，免费送会让店家继续手动接单；Growth 多一个升级理由；对我们零成本）。已写进价钱页附加项目和 `sales/agent/knowledge.md` |
+| 36 | 联系渠道 | 先打电话，IG 当跟进 | **2026-11-13 俊宇：全部改用 WhatsApp，不再用 Instagram 联系；跟进 WhatsApp 先发信息。新商家照旧先打电话（默认），不另外找号码；没有 WhatsApp 号码的 19 家标成「没成交」** |
+| 32 | 什么时候检讨 | — | **两周后（约 2026-11-26）或谈满 50 位老板，一起看数字**：很多人说太贵 → 调价钱；很多人说不需要 → 改说法或换客群；很多人没回 → 改跟进方式 |
 
 ---
 
@@ -70,6 +78,21 @@ Claude Code 会：
 ### 5. 套餐价格
 
 默认价格见 `01-business-plan.md` 第 5 节。想改的话直接告诉 Claude Code，它会同步更新所有文件（套餐单、报价单、网站文案、话术）。
+
+**2026-11-12 价钱和开始方式**（俊宇决定；改价钱要同时改 `site/studio.json`、`sales/agent/knowledge.md`、`site/desk/desk.js` 的 STUDIO_PRICE、`sales/agent/desk-brief.md`）：
+
+| 产品 | 价钱 | 内容 |
+|---|---|---|
+| Starter | RM800 一次性 | 点单网站或网店，最多 20 项；自取 / 外送 / 寄送；网上付款或订单直接发到 WhatsApp；约 10 个工作天 |
+| Catalog (B2B) | RM1,200 一次性 | 外烩、批发、公司订单：目录 + 询价，不结账；约 12 个工作天 |
+| Growth | RM1,600 一次性 | Starter 全部 + 订位或节日预购（截止日）+ 选项、优惠券、免运门槛、广告追踪、代写文案；约 15 个工作天 |
+| 节日预购网店 | RM399 一次性 | **2026-11-13 改成真正的网店（见第 33 项）**：WordPress + WooCommerce，最多 10 样产品（剩余数量、早鸟价、截止倒数）；自取 / 外送时段；网上付款（店家自己名义的付款网关）或 DuitNow QR + 上传收据；订单电邮、查订单、店家后台；收到资料后 3 个工作天上线；包 3 个月主机和维护；之后免费暂停、下个节日 RM149 重开，或 RM49 / 月继续开；换节日造型 RM99；60 天内升级正式网站，RM399 全额抵扣；付款网关每笔手续费由店家付 |
+| 月付 | RM0 开始，RM199 / 月 × 12 | Starter 全部 + 主机 + 基础维护；上线当天付第 1 期；满 12 期网站归客户（之后可以续维护 RM150 / 月，或拿完整备份）；提早停止等条款写进合约 |
+| 维护 Maintenance | RM150 / RM300 一个月 | 不变；上线后第 1 个月免费 |
+
+为什么这样定（2026-11-12 查的第三方资料，当参考）：公司做的餐饮网站约 RM3,000–15,000（[KeepDesign](https://keepdesign.com.my/website-design-malaysia-price-2026-complete-guide/)、[MediaPlus](https://mediaplusdigital.com.my/restaurant-web-design/)），便宜的模板网站约 RM999–2,500（[Blissaura](https://blissaura.vip/web-design/)、[DigitalBina](https://digitalbina.my/restaurant-cafe/)），外卖平台抽成约 20–30%（[Eats365](https://www.eats365pos.com/my/blog/post/top-food-delivery-malaysia)、[Klikit](https://klikit.io/en/learn/food-delivery-commission-fees-malaysia-guide)）。RM800 已经在市场最底层，不再往下降；卖不出去的原因先看信任和跟进。
+
+节日预购网店的细节（最多 10 项、包 3 个月、之后 RM149 重开 / RM49 一个月 / 换造型 RM99）和月付的细节（上线当天付第 1 期）是 Claude Code 定的默认，俊宇 2026-11-13 确认「用默认」；以后要改就改 `site/studio.json` 和 `sales/agent/knowledge.md`。
 
 ### 7. 启动预算（参考）
 

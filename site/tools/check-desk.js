@@ -66,16 +66,34 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
   it.last_channel = 'ig'; it.channels = ['ig']; it.whatsapp = it.whatsapp || '60123456789';
   fs.writeFileSync(STORE, JSON.stringify(doc));
   await p.reload();
-  await p.waitForSelector('#c-p001 [data-act="followup"]');
-  ok(true, 'p001 appears under follow-ups when due');
-  await p.click('#c-p001 [data-act="followup"]');
   await p.waitForSelector('#c-p001 textarea[data-field="followup"]');
-  ok(true, 'AI follow-up drafted');
+  ok(true, 'p001 appears under follow-ups when due');
+  // contacted, no mockup yet: the 2nd message is a ready-made template (2026-11-13), short enough for an Instagram DM
+  const tplFu = await p.inputValue('#c-p001 textarea[data-field="followup"]');
+  ok(/免费帮 Glow Lab 做一个样板网站/.test(tplFu) && /每个月 RM199/.test(tplFu) && /RM399/.test(tplFu) && tplFu.includes('https://demo-festive.cartsmithstudio.com/') && /店家后台/.test(tplFu) && /每月维护费 RM150/.test(tplFu)
+    && tplFu.length <= 1000 && !/[?？]/.test(tplFu.replace(/https?:\/\/\S+/g, '')) && !(await p.$('#c-p001 [data-ig-long]')),
+    'contacted, no mockup: the 2nd message is ready (free sample, RM199, RM399 festive shop, dashboard, under 1,000 characters, no questions)');
+  ok(/免费样板、每月 RM199、节日预购网店 RM399/.test(await p.textContent('#c-p001')), 'the card says what the ready-made message covers');
   const order = await p.$$eval('#c-p001 .send__btns button', (bs) => bs.map((x) => x.dataset.act));
-  const hint = await p.textContent('#c-p001 [data-send-hint]');
-  ok(order[0] === 'call' && order.indexOf('wa') < order.indexOf('copyopen') && /上次用 Instagram/.test(hint) && /换 电话/.test(hint), 'follow-up after an IG message: call first, then WhatsApp, Instagram last');
+  ok(order[0] === 'wa' && order.includes('call') && !order.includes('copyopen') && !(await p.$('#c-p001 [data-send-hint]')), 'follow-up (2026-11-13, all on WhatsApp): WhatsApp first, call after, no Instagram button: ' + order.join(','));
   await p.click('#c-p001 [data-act="sent"]');
   await p.waitForTimeout(500);
+  // the next one (third message) is AI-written
+  const doc2 = JSON.parse(fs.readFileSync(STORE, 'utf8'));
+  const it2 = doc2.items.find((x) => x.id === 'p001');
+  ok(it2.touches === 2 && !it2.followup, 'template sent: touches 2, the template does not come back');
+  it2.next_followup_date = '2000-01-01';
+  fs.writeFileSync(STORE, JSON.stringify(doc2));
+  await p.reload();
+  await p.waitForSelector('#c-p001 [data-act="followup"]');
+  await p.click('#c-p001 [data-act="followup"]');
+  await p.waitForSelector('#c-p001 textarea[data-field="followup"]');
+  ok(true, 'AI follow-up drafted for the third message');
+  const doc3 = JSON.parse(fs.readFileSync(STORE, 'utf8'));
+  doc3.items.find((x) => x.id === 'p001').followup = ''; // not sent: the reply below comes first
+  fs.writeFileSync(STORE, JSON.stringify(doc3));
+  await p.reload();
+  await p.waitForSelector('[data-tab="list"]');
 
   // their reply → AI draft → back to waiting
   await p.click('[data-tab="list"]');
@@ -451,6 +469,7 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
     await v.goto(BASE + '/start.html');
     await v.fill('form[name="mockup-request"] [name="name"]', 'Mei');
     await v.fill('form[name="mockup-request"] [name="brand"]', 'Kopi Mei');
+    await v.fill('form[name="mockup-request"] [name="whatsapp"]', '012-345 6789');
     await v.fill('form[name="mockup-request"] [name="instagram"]', '@kopi.mei');
     await v.fill('form[name="mockup-request"] [name="shop_url"]', 'https://instagram.com/kopi.mei');
     await v.check('form[name="mockup-request"] [name="consent"]');
@@ -520,14 +539,15 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
     ok(/现在最适合打电话/.test(plan) && /开始连续打电话（\d+ 家）/.test(plan) && /今天已经：打了 \d+ 通电话/.test(plan), "today's plan: time advice, how many calls, what's done today");
     const s6 = JSON.parse(fs.readFileSync(STORE, 'utf8')).items;
     const g = s6.find((x) => x.id === 'p907'), ny = s6.find((x) => x.id === 'p908');
-    ok(/We messaged you on Instagram/.test(g.preview_msg) && g.preview_msg.includes('gelato5523'), 'shop already written to on Instagram: the mockup message says so');
+    ok(/We got in touch a few days ago/.test(g.preview_msg) && !/Instagram/.test(g.preview_msg) && g.preview_msg.includes('gelato5523'), 'shop we wrote to before: the mockup message says so (no "on Instagram")');
+    ok(ny.followup.includes('https://demo-festive.cartsmithstudio.com/') && /place a test order/.test(ny.followup), 'Chinese / Nyonya shop: the festive part links the real WordPress shop');
     ok(ny.followup.includes('m-nyonya-test-1234abcd') && ny.followup.includes('beng6840') && /easy to find/.test(ny.followup) && !/[?？]/.test(ny.followup.replace(/https?:\/\/\S+/g, '')), 'mockup sent: the follow-up nudge is ready with the link (no AI needed)');
     await p.click('[data-act="cs-start"]');
     await p.waitForSelector('[data-cs="p907"]');
     const cs = await p.textContent('[data-cs="p907"]');
     ok(/连续打电话 · 1 \//.test(await p.textContent('[data-sheet-panel]')), 'call session starts with the callback that is due');
     ok(/May I speak to the owner/.test(cs) && /with your Salted Pistachio, Affogato, where customers can order and choose a pick-up date online/.test(cs) && /意思：你好，请问老板在吗/.test(cs), 'script in their language, with what is in their mockup, and the Chinese meaning under each line');
-    ok(/多少钱/.test(cs) && /RM2,800/.test(cs) && /已经有网站/.test(cs) && /样板已检查 2026-11-10/.test(cs), 'usual answers (price, already have a website...) and the mockup-checked badge are on screen');
+    ok(/多少钱/.test(cs) && /RM800/.test(cs) && /已经有网站/.test(cs) && /样板已检查 2026-11-10/.test(cs), 'usual answers (price, already have a website...) and the mockup-checked badge are on screen');
     ok(/拨打 \+60 17-202 2162/.test(cs), 'big dial button with the number');
     await p.click('[data-cs="p907"] .callout [data-act="cs-out"][data-out="ok"]');
     await p.waitForSelector('[data-cs="p907"] [data-act="cs-wa"]');
@@ -650,6 +670,81 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
     fs.writeFileSync(STORE, before);
     await p.reload();
     await p.click('[data-tab="stats"]');
+  }
+
+  // after the mockup (2026-11-12): the second call with its script, the first follow-up with the price, outcomes
+  {
+    const api4 = (body) => fetch(`${BASE}/api/desk`, { method: 'POST', headers: { 'content-type': 'application/json', 'x-desk-key': KEY }, body: JSON.stringify(body) }).then((r) => r.json());
+    const before = fs.readFileSync(STORE, 'utf8');
+    const d7 = JSON.parse(before);
+    const base7 = { created: '2026-11-10', platform: 'other', store_url: '', instagram: '', email: '', niche: 'bakery', input: 'x', notes: '', brand_clear: true, sales_signal: true, active_social: true, no_or_weak_website: true, budget_signal: true, score: 5, fit: 'good', template: 'chili-pantry', history: [], language: 'en', touches: 1, status: 'preview_sent', preview_delete_by: '2099-01-01', followup: '' };
+    d7.items.unshift({ ...base7, id: 'p961', business_name: 'Second Call Bakery', phone: '60122887449', whatsapp: '60122887449', next_followup_date: '2000-01-01',
+      preview_url: 'https://previews.cartsmithstudio.com/m-second-call-1234abcd/', preview_password: 'second1234', preview_slug: 'm-second-call-1234abcd' });
+    d7.items.unshift({ ...base7, id: 'p962', business_name: 'Warm Lead Cafe', phone: '60123334445', whatsapp: '60123334445', next_followup_date: '2099-01-01', next_call_date: '2000-01-01',
+      preview_url: 'https://previews.cartsmithstudio.com/m-warm-lead-1234abcd/', preview_password: 'warm1234', preview_slug: 'm-warm-lead-1234abcd' });
+    fs.writeFileSync(STORE, JSON.stringify(d7));
+    await p.reload();
+    await p.evaluate(() => { window.DESK_NOW = '2026-11-10T07:00:00Z'; }); // 15:00
+    await p.click('[data-tab="list"]'); await p.click('[data-tab="today"]');
+    await p.waitForSelector('#c-p961 [data-act="call"]');
+    const c1 = await p.textContent('#c-p961');
+    ok(/第二通电话/.test(c1) && /Did you get a chance to look/.test(c1) && /RM800/.test(c1) && /RM399/.test(c1) && /RM199 a month/.test(c1), 'mockup sent and follow-up due: the card shows the second call and its script (price, festive page, monthly)');
+    ok((await p.$$('#c-p961 [data-act="call"]')).length === 1, 'one call button on the card');
+    ok(await p.evaluate(() => {
+      const c = document.querySelector('#c-p961');
+      const ta = c.querySelector('textarea[data-field="followup"]');
+      const callLbl = [...c.querySelectorAll('.send__label')].find((x) => /也可以打电话/.test(x.textContent));
+      const first = c.querySelector('.msg + .send .send__btns button');
+      return !!ta && !!callLbl && !!(ta.compareDocumentPosition(callLbl) & Node.DOCUMENT_POSITION_FOLLOWING) && !!first && first.dataset.act === 'wa';
+    }), 'message first (2026-11-13): the WhatsApp follow-up is above the call, WhatsApp is its first button');
+    ok(!!(await p.$('#c-p962 [data-act="call"]')), 'mockup sent and only the call date is due: the card is on today\'s list too');
+    const fu = JSON.parse(fs.readFileSync(STORE, 'utf8')).items.find((x) => x.id === 'p961').followup || '';
+    ok(fu.includes('second1234') && /from RM800 one-off/.test(fu) && /RM399/.test(fu) && /\/demo\/butter-lantern\//.test(fu) && /RM199 a month/.test(fu) && /\/demo\/dulang-daun\//.test(fu) && /second half only when you're happy/.test(fu) && /RM150 a month/.test(fu) && /shop dashboard on your phone/.test(fu) && /All our demos and prices: https:\/\/cartsmithstudio\.com\//.test(fu) && !/[?？]/.test(fu.replace(/https?:\/\/\S+/g, '')),
+      'first follow-up after the mockup: link, password, the price + maintenance, the monthly plan, the fitting demo (bakery → Dulang & Daun), the festive page, the phone dashboard, our site, no questions');
+    ok(/Dulang &(amp;)? Daun/.test(c1) && /2b 完整示范/.test(c1), 'the card and the second-call script name the demo that fits (bakery → Dulang & Daun)');
+    await p.click('#c-p961 [data-act="call"]');
+    await p.waitForSelector('#c-p961 [data-callout]');
+    const co = await p.textContent('#c-p961 [data-callout]');
+    ok(/有兴趣/.test(co) && /还没看：重发/.test(co) && !/可以发样板/.test(co), 'second call: its own outcome buttons (interested / not looked yet)');
+    await p.click('#c-p961 [data-act="call-cancel"]');
+    // not looked yet → link again now, call again on the date
+    const n1 = await api4({ action: 'call', id: 'p962', outcome: 'notyet', date: '2099-01-03' });
+    ok(n1.item && n1.item.next_call_date === '2099-01-03' && n1.item.next_followup_date <= '2099-01-01' && n1.item.followup.includes('warm1234') && n1.item.status === 'preview_sent', 'not looked yet: follow-up with the link is ready now, the next call is on the date');
+    // the first follow-up is sent → the next one in 4 days (AI), then 7, then stop
+    const s1 = await api4({ action: 'mark', id: 'p962', event: 'sent', channel: 'wa' });
+    ok(s1.item && s1.item.pv_followups === 1 && s1.item.next_followup_date > n1.item.next_followup_date && !s1.item.followup && !s1.item.next_call_date, 'first follow-up sent: the card waits 4 days, the canned message is not repeated, the call reminder is replaced by the message');
+    const l1 = await api4({ action: 'list' });
+    ok(!(l1.items.find((x) => x.id === 'p962') || {}).followup, 'the canned follow-up does not come back after it was sent');
+    await api4({ action: 'mark', id: 'p962', event: 'sent', channel: 'wa' });
+    const s3 = await api4({ action: 'mark', id: 'p962', event: 'sent', channel: 'wa' });
+    ok(s3.item.pv_followups === 3 && s3.item.status === 'no_response' && !s3.item.next_followup_date, 'after the third follow-up: no more reminders (no response)');
+    const w = await api4({ action: 'call', id: 'p961', outcome: 'warm' });
+    ok(w.item && w.item.status === 'replied' && /有兴趣/.test(w.item.reply_summary) && /报价/.test(w.item.reply_next) && !w.item.call_ok, 'second call, interested: the card moves to replied with "send the quotation today"');
+    fs.writeFileSync(STORE, before);
+  }
+
+  // corrections by Claude Code: calls and replies that happened outside the desk, with their real dates
+  {
+    const api3 = (body) => fetch(`${BASE}/api/desk`, { method: 'POST', headers: { 'content-type': 'application/json', 'x-desk-key': KEY }, body: JSON.stringify(body) }).then((r) => r.json());
+    const before = fs.readFileSync(STORE, 'utf8');
+    const d0 = JSON.parse(before);
+    const c = d0.items[0];
+    c.history = [{ d: '2026-11-08', e: 'sent', n: 'ig' }, { d: '2026-11-10', e: 'sent', n: 'first message' }, { d: '2026-11-11', e: 'call', n: '没接' }];
+    fs.writeFileSync(STORE, JSON.stringify(d0));
+    const r = await api3({ action: 'correct', id: c.id, why: 'test', fields: { status: 'preview_sent', calls: 2, last_call_date: '2026-11-11', next_followup_date: '2026-11-12', channels: ['call', 'wa', 'nope'] },
+      history: [{ d: '2026-11-10', e: 'call', n: '15:10 ok', first: true }, { d: '2026-11-10', e: 'preview_sent', n: 'link', first: true }, { d: '2026-11-11', e: 'their_reply', n: 'Ok' }] });
+    const h = (r.item && r.item.history) || [];
+    const order = h.map((x) => x.d + ' ' + x.e).join(' | ');
+    ok(r.item && r.item.status === 'preview_sent' && r.item.calls === 2 && r.item.next_followup_date === '2026-11-12' && r.item.channels.join() === 'call,wa',
+      'correct: fields set (status, calls, dates; unknown channel dropped)');
+    ok(/^2026-11-08 sent \| 2026-11-10 call \| 2026-11-10 preview_sent \| 2026-11-10 sent \| 2026-11-11 call \| 2026-11-11 their_reply \| \d{4}-\d\d-\d\d corrected$/.test(order),
+      'correct: history goes in date order ("first" before that day\'s entries, in the order given): ' + order);
+    ok(h.filter((x) => x.fix).length === 3, 'correct: added entries are marked');
+    const fut = await api3({ action: 'correct', id: c.id, history: [{ d: '2099-01-01', e: 'call', n: 'x' }] });
+    const badSt = await api3({ action: 'correct', id: c.id, fields: { status: 'paid' } });
+    const badEv = await api3({ action: 'correct', id: c.id, history: [{ d: '2026-11-10', e: 'won', n: 'x' }] });
+    ok(fut.error === 'bad_input' && badSt.error === 'bad_input' && badEv.error === 'bad_input', 'correct: future dates, unknown statuses and other events are refused');
+    fs.writeFileSync(STORE, before);
   }
 
   // restore from a CSV backup (moving to a new Netlify account)

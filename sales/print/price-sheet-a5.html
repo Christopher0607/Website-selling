@@ -1,0 +1,120 @@
+<!doctype html>
+<!-- A5 价钱单（2026-11-13，地推用）。改完跑：node sales/print/render.js → price-sheet-a5.pdf / .png
+     价钱跟 site/studio.json、sales/agent/knowledge.md 一致；改价钱三个地方一起改。二维码：cartsmithstudio.com/?ref=flyer
+     （扫码的人在工作台「流量」的来源显示「价钱单（地推）」）。 -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Cartsmith Studio — price sheet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap">
+<style>
+  @page { size: 148mm 210mm; margin: 0; }
+  :root { --ink: #14171c; --muted: #5d6470; --line: #e4ddd1; --soft: #f7f4ee; --ember: #ff5a2c; --ember-d: #d93f15; --ok: #1f9d6b; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #fff; }
+  body { width: 148mm; height: 210mm; overflow: hidden; color: var(--ink); font: 400 7.8pt/1.36 Inter, "Noto Sans SC", sans-serif; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .page { position: relative; height: 210mm; padding: 8mm 9mm 6.5mm; display: flex; flex-direction: column; }
+  .zh { font-family: "Noto Sans SC", Inter, sans-serif; }
+  .top { display: flex; align-items: center; justify-content: space-between; gap: 4mm; }
+  .brand { display: flex; align-items: center; gap: 2.2mm; font: 800 13pt/1 "Bricolage Grotesque", Inter, sans-serif; letter-spacing: -.02em; }
+  .brand svg { width: 8.5mm; height: 8.5mm; }
+  .brand span { color: var(--muted); font-weight: 600; }
+  .tag { text-align: right; color: var(--muted); font-size: 7.2pt; line-height: 1.35; }
+  h1 { margin: 5mm 0 0; font: 800 18pt/1.05 "Bricolage Grotesque", Inter, sans-serif; letter-spacing: -.03em; }
+  h1 .zh { display: block; font: 700 11.5pt/1.3 "Noto Sans SC", sans-serif; letter-spacing: 0; margin-top: 1mm; }
+  .lead { margin: 1.8mm 0 0; color: #2b3038; }
+  .lead .zh { display: block; color: var(--muted); }
+  .free { margin-top: 3mm; display: flex; gap: 2.6mm; align-items: center; background: var(--ink); color: #fff; border-radius: 3mm; padding: 2.2mm 3.4mm; }
+  .free b { font: 800 10.5pt/1 "Bricolage Grotesque", Inter, sans-serif; color: var(--ember); white-space: nowrap; }
+  .free p { margin: 0; font-size: 7.5pt; line-height: 1.35; }
+  .free .zh { display: block; opacity: .82; }
+  .offers { margin-top: 3mm; display: grid; gap: 2mm; }
+  .o { border: .3mm solid var(--line); border-radius: 3mm; padding: 2.3mm 3.4mm 2.2mm; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: baseline; gap: .4mm 3mm; }
+  .o--hl { border-color: var(--ember); box-shadow: inset .9mm 0 0 var(--ember); }
+  .o h2 { margin: 0; font: 800 10.6pt/1.15 "Bricolage Grotesque", Inter, sans-serif; letter-spacing: -.01em; }
+  .o h2 .zh { font: 700 8.6pt/1 "Noto Sans SC", sans-serif; color: var(--muted); margin-left: 1.4mm; letter-spacing: 0; }
+  .price { grid-row: span 1; text-align: right; font: 800 15pt/1 "Bricolage Grotesque", Inter, sans-serif; letter-spacing: -.03em; white-space: nowrap; }
+  .price small { font: 500 6.8pt/1.25 Inter, "Noto Sans SC", sans-serif; color: var(--muted); letter-spacing: 0; margin-left: 1.2mm; }
+  .price .rm { font-size: 8.5pt; margin-right: .4mm; }
+  .o ul { grid-column: 1 / -1; list-style: none; margin: .8mm 0 0; padding: 0; display: grid; gap: .5mm; }
+  .o li { display: grid; grid-template-columns: 3.4mm minmax(0, 1fr); gap: 1.2mm; }
+  .o li::before { content: ""; width: 2.4mm; height: 1.3mm; margin-top: 1.1mm; border-left: .45mm solid var(--ok); border-bottom: .45mm solid var(--ok); transform: rotate(-45deg); }
+  .o li .zh { color: var(--muted); }
+  .dash { margin-top: 2.2mm; display: grid; grid-template-columns: 6mm minmax(0, 1fr); gap: 2.4mm; align-items: center; background: var(--soft); border-radius: 3mm; padding: 2mm 3.2mm; font-size: 7.4pt; }
+  .dash svg { width: 6mm; height: 6mm; }
+  .dash .zh { display: block; color: var(--muted); }
+  .bottom { margin-top: auto; display: grid; grid-template-columns: 25mm minmax(0, 1fr); gap: 3.6mm; align-items: center; padding-top: 2.6mm; border-top: .3mm solid var(--line); }
+  .qr { width: 25mm; height: 25mm; padding: 1.2mm; border: .3mm solid var(--line); border-radius: 2mm; background: #fff; }
+  .qr svg { width: 100%; height: 100%; display: block; }
+  .scan { margin: 0; font-weight: 600; font-size: 8.2pt; }
+  .scan .zh { display: block; font-weight: 500; color: var(--muted); }
+  .links { margin: 1.6mm 0 0; font-size: 8pt; }
+  .links b { font-weight: 700; }
+  .wa { margin: 1.6mm 0 0; font-size: 8pt; display: flex; gap: 1.6mm; align-items: baseline; }
+  .wa span.line { flex: 1; border-bottom: .3mm solid var(--ink); min-width: 20mm; height: 3.6mm; }
+  .wa span.num { font-weight: 700; letter-spacing: .02em; }
+  .who { margin: 1.4mm 0 0; color: var(--muted); font-size: 7.1pt; }
+  .fine { margin: 2mm 0 0; color: var(--muted); font-size: 6.3pt; line-height: 1.35; }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="top">
+    <div class="brand"><svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="14" fill="#f4efe6"/><g transform="translate(6.4 6.4) scale(.512)"><path d="M72.98 30.72A30 30 0 1 0 72.98 69.28" fill="none" stroke="#14171c" stroke-width="14"/><rect x="66" y="43" width="14" height="14" fill="#ff5a2c"/></g></svg>cartsmith <span>studio</span></div>
+    <div class="tag">Websites for local food businesses<br><span class="zh">帮本地餐饮做能接单的网站</span></div>
+  </div>
+
+  <h1>Your own website that takes orders.<span class="zh">你自己的网站，客人直接下单。</span></h1>
+  <p class="lead">Pre-orders, festive sets, bookings and catering, without answering every message by hand.<span class="zh">预订、节日套餐、订位、外烩：不用一则一则回信息。</span></p>
+
+  <div class="free"><b>Free first</b><p>We make a sample website of your shop before you pay anything. No obligation.<span class="zh">先免费帮你的店做一个样板网站，看了满意再谈，不用钱。</span></p></div>
+
+  <div class="offers">
+    <section class="o o--hl">
+      <h2>Festive pre-order shop<span class="zh">节日预购网店</span></h2>
+      <div class="price"><span class="rm">RM</span>399<small>one-time · 一次性</small></div>
+      <ul>
+        <li><span>Up to 10 items, online payment or DuitNow QR <span class="zh">· 最多 10 样，网上付款或 DuitNow QR</span></span></li>
+        <li><span>Collection / delivery time slots and a cut-off date <span class="zh">· 自取 / 送货时段、截止日期</span></span></li>
+        <li><span>Live in 3 working days, 3 months of hosting and maintenance included <span class="zh">· 3 个工作天上线，含 3 个月主机和维护</span></span></li>
+      </ul>
+    </section>
+    <section class="o">
+      <h2>Monthly plan<span class="zh">月付</span></h2>
+      <div class="price"><span class="rm">RM</span>199<small>a month × 12 · 每月</small></div>
+      <ul>
+        <li><span>RM0 upfront, the first payment is on launch day <span class="zh">· 不用先付，上线当天才付第一期</span></span></li>
+        <li><span>A full website, with hosting and maintenance included <span class="zh">· 完整网站，含主机和维护</span></span></li>
+        <li><span>After 12 payments the website is yours <span class="zh">· 付满 12 期，网站归你</span></span></li>
+      </ul>
+    </section>
+    <section class="o">
+      <h2>Buy it outright<span class="zh">一次性买断</span></h2>
+      <div class="price"><small style="margin:0 1mm 0 0">from · 起</small><span class="rm">RM</span>800<small>one-time · 一次性</small></div>
+      <ul>
+        <li><span>Starter RM800 · Catalog RM1,200 · Growth RM1,600</span></li>
+        <li><span>Then maintenance RM150 a month, the first month free <span class="zh">· 之后每月维护费 RM150，第一个月免费</span></span></li>
+        <li><span>First 3 clients pay the second half only when happy <span class="zh">· 前 3 位客户：满意了才付另一半</span></span></li>
+      </ul>
+    </section>
+  </div>
+
+  <div class="dash">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#14171c" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M10 18.5h4"/><path d="M9 7h6M9 10h6M9 13h3.5" stroke="#ff5a2c"/></svg>
+    <div>Every website comes with a shop dashboard on your phone: new orders, payments to check, what to make today, Excel reports.<span class="zh">每个网站都附手机店家后台：新订单、确认付款、今天要做多少、Excel 报表。</span></div>
+  </div>
+
+  <div class="bottom">
+    <div class="qr">{{QR}}</div>
+    <div>
+      <p class="scan">Scan to see the demo websites and full prices<span class="zh">扫码看示范网站和完整价钱</span></p>
+      <p class="links"><b>cartsmithstudio.com</b> · Instagram <b>@cartsmith.studio</b></p>
+      <p class="wa">WhatsApp {{WHATSAPP}}</p>
+      <p class="who">English · 中文 · BM: you talk to the person who builds it. 直接跟做网站的人谈。</p>
+    </div>
+  </div>
+  <p class="fine">Prices in Ringgit. Domain (about RM50–120 a year) and payment-gateway fees are paid directly by you, in your own name. Full terms on cartsmithstudio.com.<br><span class="zh">价钱以令吉计。域名（每年约 RM50–120）和付款网关的费用，由你用自己的名义直接付。完整条件见网站。</span></p>
+</div>
+</body>
+</html>

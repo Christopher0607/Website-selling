@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{{TITLE}}</title>
+<meta name="description" content="{{DESC}}">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#11100e">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2311100e'/%3E%3Ctext x='32' y='43' font-family='Georgia,serif' font-size='30' text-anchor='middle' fill='%23c5a46d'%3EMC%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&amp;family=Jost:wght@300;400;500;600&amp;display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-page="{{PAGE}}">
+<a class="skip" href="#main">Skip to content</a>
+<div class="demobar">
+  <p><b>Demo website.</b> <span class="dm-long">Maison Cendre is a fictional restaurant made by Cartsmith Studio. Reservations, orders and payments here are not real.</span><span class="dm-short">Not a real restaurant; nothing here is charged or sent.</span></p>
+  <a href="https://cartsmithstudio.com/start.html?package=growth">Get one like this <span aria-hidden="true">&rarr;</span></a>
+</div>
+<header class="hdr" data-hdr>
+  <div class="wrap hdr__in">
+    <a class="logo" href="index.html" aria-label="Maison Cendre, home"><span class="logo__mark">MC</span><span class="logo__name">Maison <i>Cendre</i></span></a>
+    <nav class="nav" id="nav" aria-label="Main">
+      <a href="menu.html" data-nav="menu">Menus</a>
+      <a href="book.html" data-nav="book">Reservations</a>
+      <a href="private.html" data-nav="private">Private dining</a>
+      <a href="festive.html" data-nav="festive">Seasonal</a>
+      <a href="order.html" data-nav="order">Takeaway</a>
+      <a href="gift.html" data-nav="gift">Gift cards</a>
+      <a href="owner.html" data-nav="owner" class="nav__owner">Owner view</a>
+    </nav>
+    <div class="hdr__right">
+      <span class="status" data-status></span>
+      <a class="bagbtn" href="order.html" aria-label="Your takeaway order"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8h12l-1 12H7L6 8z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M9 8V6a3 3 0 0 1 6 0v2" fill="none" stroke="currentColor" stroke-width="1.5"/></svg><b data-bag-count hidden>0</b></a>
+      <a class="btn btn--gold btn--sm hdr__cta" href="book.html">Reserve</a>
+      <button class="burger" type="button" aria-label="Open menu" aria-controls="nav" aria-expanded="false" data-burger><span></span></button>
+    </div>
+  </div>
+</header>
+<main id="main">
+{{BODY}}
+</main>
+<footer class="ftr">
+  <div class="wrap ftr__grid">
+    <div>
+      <a class="logo logo--light" href="index.html"><span class="logo__mark">MC</span><span class="logo__name">Maison <i>Cendre</i></span></a>
+      <p>A contemporary dining room cooking over wood and embers. Tasting menus, à la carte and a chef’s counter, in the heart of Kuala Lumpur.</p>
+      <p class="ftr__demo">Demo address: Level 1, 18 Jalan Demo, 50250 Kuala Lumpur<br>Demo phone: +60 3-0000 0000 · reservations@example.com</p>
+    </div>
+    <div><h3>Hours</h3><div data-hours></div></div>
+    <div>
+      <h3>Visit</h3>
+      <ul class="ftr__links">
+        <li><a href="book.html">Reservations</a></li>
+        <li><a href="menu.html">Menus</a></li>
+        <li><a href="private.html">Private dining &amp; events</a></li>
+        <li><a href="festive.html">Seasonal menus</a></li>
+        <li><a href="order.html">Takeaway</a></li>
+        <li><a href="gift.html">Gift cards</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap ftr__base">
+    <p>A concept website by <a href="https://cartsmithstudio.com/">Cartsmith Studio</a>. Maison Cendre is not a real restaurant. Photos are Pexels placeholders; guest notes are samples written for this demo.</p>
+    <a class="ftr__cta" href="https://cartsmithstudio.com/pricing.html">Restaurant websites from RM800</a>
+  </div>
+</footer>
+<div class="sheet" data-sheet hidden>
+  <div class="sheet__back" data-close></div>
+  <div class="sheet__panel" role="dialog" aria-modal="true" aria-labelledby="sheet-title" tabindex="-1"></div>
+</div>
+<div class="toast" data-toast role="status" aria-live="polite"></div>
+<script src="app.js"></script>
+</body>
+</html>

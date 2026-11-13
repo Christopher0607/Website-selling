@@ -1,0 +1,20 @@
+<!--
+title: Track your order — Dulang & Daun (demo website)
+description: Enter your order number and phone number to see where your parcel is. Demo online shop by Cartsmith Studio.
+page: track
+-->
+<section class="wrap" style="padding:30px 0 80px;max-width:720px">
+  <p class="kicker">Track your order</p>
+  <h1 style="font-size:clamp(2rem,5vw,3.1rem)">Where is my parcel?</h1>
+  <p class="lead">Enter the order number from your email or WhatsApp, and the phone number you ordered with.</p>
+  <form class="panel" data-track>
+    <div class="row2">
+      <div class="field"><label for="t-no">Order number</label><input class="input" id="t-no" name="no" placeholder="DD-2041" autocapitalize="characters" required></div>
+      <div class="field"><label for="t-phone">Phone number</label><input class="input" id="t-phone" name="phone" type="tel" placeholder="012-345 6789"></div>
+    </div>
+    <button class="btn btn--block" type="submit">Track</button>
+    <p class="small muted center" style="margin:10px 0 0">Demo: try order <b>DD-2041</b> with <b>012-345 6789</b>, or any order you placed on this demo.</p>
+  </form>
+  <div data-track-out aria-live="polite"></div>
+  <img src="img/parcel.webp" alt="A parcel with a label (placeholder photo)" loading="lazy" width="1400" height="788" style="border-radius:22px;margin-top:22px;aspect-ratio:16/7;object-fit:cover">
+</section>

@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Agency Core
  * Description:       WhatsApp buttons, demo mode, tracking codes, business details and Malaysian checkout tweaks for studio-built stores.
- * Version:           1.3.0
+ * Version:           1.6.1
  * Requires at least: 6.4
  * Requires PHP:      8.1
  * Author:            Cartsmith
@@ -15,7 +15,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'AGC_VERSION', '1.3.0' );
+define( 'AGC_VERSION', '1.6.1' );
 define( 'AGC_FILE', __FILE__ );
 define( 'AGC_DIR', plugin_dir_path( __FILE__ ) );
 define( 'AGC_URL', plugin_dir_url( __FILE__ ) );
@@ -30,6 +30,11 @@ require_once AGC_DIR . 'includes/class-lead-form.php';
 require_once AGC_DIR . 'includes/class-fee-calculator.php';
 require_once AGC_DIR . 'includes/class-store-ux.php';
 require_once AGC_DIR . 'includes/class-ai-chat.php';
+require_once AGC_DIR . 'includes/class-receipts.php';
+require_once AGC_DIR . 'includes/class-festive.php';
+require_once AGC_DIR . 'includes/class-owner-api.php';
+require_once AGC_DIR . 'includes/class-shop-pause.php';
+require_once AGC_DIR . 'includes/class-owner-app.php';
 
 if ( defined( 'WP_CLI' ) && WP_CLI ) {
 	require_once AGC_DIR . 'includes/class-cli.php';
@@ -59,6 +64,43 @@ add_action(
 		AGC_Fee_Calculator::init();
 		AGC_Store_UX::init();
 		AGC_AI_Chat::init();
+		if ( class_exists( 'WooCommerce' ) ) {
+			AGC_Receipts::init();
+			AGC_Festive::init();
+			AGC_Owner_API::init();
+			AGC_Shop_Pause::init();
+			AGC_Owner_App::init();
+		}
+	}
+);
+
+// Payment methods (DuitNow QR + demo online payment), only with WooCommerce.
+add_action(
+	'plugins_loaded',
+	static function () {
+		if ( ! class_exists( 'WC_Payment_Gateway' ) ) {
+			return;
+		}
+		require_once AGC_DIR . 'includes/class-festive-gateways.php';
+		add_filter(
+			'woocommerce_payment_gateways',
+			static function ( $gateways ) {
+				$gateways[] = 'AGC_Gateway_DuitNow';
+				$gateways[] = 'AGC_Gateway_Demo_Pay';
+				return $gateways;
+			}
+		);
+	},
+	20
+);
+
+// Works with WooCommerce's order tables (HPOS).
+add_action(
+	'before_woocommerce_init',
+	static function () {
+		if ( class_exists( '\Automattic\WooCommerce\Utilities\FeaturesUtil' ) ) {
+			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', AGC_FILE, true );
+		}
 	}
 );
 

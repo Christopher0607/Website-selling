@@ -1012,7 +1012,7 @@ class Studio:
         self.stores = stores
 
     def nav(self):
-        return [("templates.html", "Templates"), ("pricing.html", "Pricing"), ("why-us.html", "Why us"), ("process.html", "How it works"), ("faq.html", "FAQ")]
+        return [("templates.html", "Demos"), ("pricing.html", "Pricing"), ("why-us.html", "Why us"), ("process.html", "How it works"), ("faq.html", "FAQ")]
 
     def layout(self, rel, title, desc, body, current="", noindex=False):
         d = self.d
@@ -1039,7 +1039,7 @@ class Studio:
 <link rel="stylesheet" href="{root}assets/css/studio.css">
 <script src="{root}assets/js/studio.js" defer></script>
 </head>
-<body class="studio">
+<body class="studio p-{rel.rsplit('.html', 1)[0].replace('/', '-')}">
 {sprite()}
 <a class="skip" href="#main">Skip to content</a>
 <header class="s-hdr"><div class="s-wrap s-hdr__in">
@@ -1053,13 +1053,13 @@ class Studio:
 </main>
 <footer class="s-ftr"><div class="s-wrap s-ftr__grid">
   <div><a class="s-logo s-logo--light" href="{root}index.html" aria-label="Cartsmith Studio home"><svg class="s-mark" viewBox="0 0 100 100" width="30" height="30" aria-hidden="true"><path d="M72.98 30.72A30 30 0 1 0 72.98 69.28" fill="none" stroke="currentColor" stroke-width="14"/><rect x="66" y="43" width="14" height="14" fill="#ff5a2c"/></svg><span>cartsmith<em>studio</em></span></a>
-    <p>Online stores for Malaysian brands that sell on Shopee, TikTok Shop and Instagram. Built, launched and looked after by one person you can actually reach.</p>
+    <p>Websites that take orders, for Malaysian restaurants, cafés, bakeries and local brands. Built, launched and looked after by one person you can actually reach.</p>
     <p><a class="s-ig" href="{e(ig['profile'])}" rel="noopener">{icon('ig')} @{e(ig['handle'])}</a></p></div>
-  <div><h4>Studio</h4><ul><li><a href="{root}templates.html">6 templates</a></li><li><a href="{root}pricing.html">Pricing</a></li><li><a href="{root}why-us.html">Why Cartsmith</a></li><li><a href="{root}process.html">How it works</a></li></ul></div>
+  <div><h4>Studio</h4><ul><li><a href="{root}templates.html">Demo websites</a></li><li><a href="{root}pricing.html">Pricing</a></li><li><a href="{root}why-us.html">Why Cartsmith</a></li><li><a href="{root}process.html">How it works</a></li></ul></div>
   <div><h4>Free tools</h4><ul><li><a href="{root}shopee-fee-calculator.html">Shopee fee calculator</a></li><li><a href="{root}start.html">Free homepage mockup</a></li><li><a href="{root}faq.html">FAQ</a></li></ul></div>
   <div><h4>Talk to us</h4><ul><li><a href="{e(ig['dm'])}" rel="noopener">DM on Instagram</a></li><li><a href="{root}start.html">Request form</a></li><li><button class="s-linkbtn" type="button" data-chat-open>Ask the AI assistant</button></li></ul></div>
 </div>
-<div class="s-wrap s-ftr__bottom"><span>© {YEAR} Cartsmith Studio · Malaysia</span><span><a href="{root}privacy.html">Privacy</a> · Store demos use fictional brands and Pexels photos.</span></div></footer>
+<div class="s-wrap s-ftr__bottom"><span>© {YEAR} Cartsmith Studio · Malaysia</span><span><a href="{root}privacy.html">Privacy</a> · Demos use fictional brands and Pexels photos.</span></div></footer>
 {self.chat_widget(root)}
 </body>
 </html>
@@ -1116,9 +1116,40 @@ class Studio:
             tag = f'<span class="pkg__tag">{e(p["tag"])}</span>' if p.get("tag") else ""
             out.append(f"""<article class="pkg{hl}">{tag}<h3>{e(p['name'])}</h3><p class="pkg__for">{e(p['for'])}</p>
 <p class="pkg__price"><span>RM</span>{p['price']:,}<small>one-time</small></p>
+<p class="pkg__after">then <b>RM{self.d['care']['plans'][0]['price']}/month</b> maintenance, first month free</p>
 <p class="pkg__meta">{e(p['meta'])}</p><ul class="s-ticks">{feats}</ul>
 <a class="s-btn s-btn--block{'' if p.get('highlight') else ' s-btn--ghost'}" href="{root}start.html?package={p['id']}">Get a free mockup first</a></article>""")
         return '<div class="pkgs">' + "".join(out) + "</div>"
+
+    def frag_starts(self, root):
+        # other ways to start (2026-11-12): festive pre-order shop, monthly plan
+        out = []
+        for p in self.d.get("starts", []):
+            feats = "".join(f"<li>{icon('check')}{e(f)}</li>" for f in p["features"])
+            out.append(f"""<article class="pkg" id="start-{p['id']}"><h3>{e(p['name'])}</h3><p class="pkg__for">{e(p['for'])}</p>
+<p class="pkg__price"><span>RM</span>{p['price']:,}<small>{e(p['unit'])}</small></p>
+<p class="pkg__meta">{e(p['meta'])}</p><ul class="s-ticks">{feats}</ul>
+{f'<p class="pkg__after pkg__after--end">{e(p["after"])}</p>' if p.get("after") else ""}
+{f'<a class="s-btn s-btn--block" href="{root}{p["demo"]}" style="margin-bottom:10px">See the demo</a>' if p.get("demo") else ""}<a class="s-btn s-btn--block s-btn--ghost" href="{root}start.html?package={p['id']}">Ask about this</a></article>""")
+        return '<div class="pkgs pkgs--2">' + "".join(out) + "</div>"
+
+    def frag_starts_mini(self, root):
+        # homepage: the RM399 festive shop and the RM199-a-month plan. 2026-11-13 (Junyu): show what each includes;
+        # RM399 goes straight to the demo (and the real WordPress shop), RM199 to the request form and the full terms.
+        out = []
+        for p in self.d.get("starts", []):
+            pts = "".join(f"<li>{icon('check')}{e(x)}</li>" for x in p.get("short", []))
+            if p.get("demo"):
+                btns = f'<a class="s-btn s-btn--sm" href="{root}{p["demo"]}">See the demo</a>'
+                if p.get("real_shop"):
+                    btns += f'<a class="sm__link" href="{e(p["real_shop"])}">Try the real shop (CNY, in Chinese) →</a>'
+            else:
+                btns = (f'<a class="s-btn s-btn--sm" href="{root}start.html?package={p["id"]}">Get a free mockup first</a>'
+                        f'<a class="sm__link" href="{root}pricing.html#start-{p["id"]}">Full terms →</a>')
+            out.append(f'<article class="sm" id="sm-{p["id"]}"><div class="sm__top"><h3>{e(p["name"])}</h3>'
+                       f'<p class="sm__price"><span>RM</span>{p["price"]:,}<small>{e(p["unit"])}</small></p></div>'
+                       f'<p class="sm__for">{e(p["for"])}</p><ul class="s-ticks sm__pts">{pts}</ul><div class="sm__btns">{btns}</div></article>')
+        return '<div class="starts-mini"><p class="kicker">Or start smaller</p>' + "".join(out) + "</div>"
 
     def frag_care(self, root):
         c = self.d["care"]
@@ -1138,7 +1169,7 @@ class Studio:
             cells = ""
             for i, v in enumerate(r[1:]):
                 us = ' class="us"' if i == len(r) - 2 else ""
-                cells += f"<td{us}>{e(v)}</td>"
+                cells += f'<td{us} data-label="{e(c["cols"][i])}">{e(v)}</td>'
             rows += f"<tr><th scope=row>{e(r[0])}</th>{cells}</tr>"
         return f'<div class="s-tbl-wrap"><table class="s-tbl s-tbl--compare"><thead><tr><th></th>{head}</tr></thead><tbody>{rows}</tbody></table></div>'
 
@@ -1153,15 +1184,49 @@ class Studio:
                 'Your own quotes may differ. Platform plans and fees change — check each provider\'s official pricing page.</p>')
 
     def frag_template_options(self, root):
-        return "".join(f'<option value="{st.slug}">{e(st.t["name"])} — {e(st.t["style"])} ({e(st.t["category"])})</option>' for st in self.stores)
+        demos = [("maison-cendre", "Maison Cendre — boutique restaurant"), ("sireh-salt", "Sireh &amp; Salt — everyday restaurant or café"),
+                 ("dulang-daun", "Dulang &amp; Daun — food gifts &amp; online shop"), ("butter-lantern", "Butter &amp; Lantern — festive pre-order shop")]
+        return ('<optgroup label="Demo websites">' + "".join(f'<option value="{v}">{t}</option>' for v, t in demos) + '</optgroup>'
+                + '<optgroup label="Shop templates">' + "".join(f'<option value="{st.slug}">{e(st.t["name"])} — {e(st.t["style"])} ({e(st.t["category"])})</option>' for st in self.stores) + '</optgroup>')
 
     def frag_hero_phones(self, root):
+        # 2026-11-12: the two flagship demos (restaurant, food gift shop) instead of three shop templates
         out = []
-        for i, slug in enumerate(["plainfold", "dewlane", "lowlight"]):
-            p = f"assets/shots/{slug}-mobile.webp"
+        for i, (shot, href, label) in enumerate([("maison-cendre", "demo/maison-cendre/index.html", "the boutique restaurant demo"),
+                                                 ("butter-lantern", "demo/butter-lantern/index.html?fest=cny", "the festive pre-order shop demo"),
+                                                 ("dulang-daun", "demo/dulang-daun/index.html", "the food gift shop demo")]):
+            p = f"assets/shots/{shot}-mobile.webp"
             if os.path.exists(os.path.join(HERE, p)):
-                out.append(f'<a class="phone phone--{i}" href="{root}demo/{slug}/index.html" aria-label="Open the {slug} demo"><img src="{root}{p}" alt="" width="390" height="844"{" fetchpriority=high" if i == 1 else " loading=lazy"}></a>')
+                out.append(f'<a class="phone phone--{i}" href="{root}{href}" aria-label="Open {label}"><img src="{root}{p}" alt="" width="390" height="844"{" fetchpriority=high" if i == 1 else " loading=lazy"}></a>')
         return '<div class="phones">' + "".join(out) + "</div>"
+
+    def frag_flagships(self, root):
+        # 2026-11-12 (v3): each demo shown as a website, like the shop templates: a desktop and a phone screenshot on the
+        # demo's own colour (assets/shots/<slug>-desktop/-mobile.webp, made by tools/screenshots.js ... flagships)
+        cards = [
+            ("maison-cendre", "Maison Cendre", "Boutique restaurant", "demo/maison-cendre/index.html", "#1b1916", ("See the owner side", "demo/maison-cendre/owner.html"),
+             "Tasting menus, reservations with deposits, private dining.",
+             ["Dining room, chef’s counter and private salon bookings", "Places left, deposits and a waitlist when it is full", "Seasonal dinners, takeaway and gift cards", "Your side: tonight’s covers and dishes running out"]),
+            ("sireh-salt", "Sireh &amp; Salt", "Everyday restaurant or café", "demo/sireh-salt/index.html", "#1d3b2a", ("See the owner side", "demo/sireh-salt/owner.html"),
+             "Menu, pick-up and delivery orders, table bookings.",
+             ["Menu with options and sold-out dishes", "Pick-up and delivery, paid online or sent to WhatsApp", "Table bookings and festive pre-orders", "Your side: orders, bookings and sold-out switches"]),
+            ("dulang-daun", "Dulang &amp; Daun", "Food gifts &amp; online shop", "demo/dulang-daun/index.html", "#123c3a", ("See the owner side", "demo/dulang-daun/owner.html"),
+             "Gift boxes and hampers, shipped across Malaysia.",
+             ["Sizes, flavours, bundles and vouchers", "West and East Malaysia shipping, parcel tracking", "Build-your-own hamper, gift orders with a card", "Your side: pack, ship, stock and the waiting list"]),
+            ("butter-lantern", "Butter &amp; Lantern", "Festive pre-order shop · RM399", "demo/butter-lantern/index.html?fest=cny", "#8f1418", ("See the owner side", "demo/butter-lantern/owner.html?fest=cny"),
+             "Your own festive online shop, live in 3 working days.",
+             ["Up to 10 items, cut-off countdown and how many are left", "Online payment or DuitNow QR, order emails, order tracking", "Collection or delivery slots; what to bake each day", "Re-dressed for CNY, Raya, Christmas or Valentine's"]),
+        ]
+        out = []
+        for slug, name, kind, href, bg, second, line, feats in cards:
+            li = "".join(f"<li>{icon('check')}{f}</li>" for f in feats)
+            out.append(f'<article class="flag"><a class="flag__media" href="{root}{href}" style="--flag-bg:{bg}" tabindex="-1" aria-hidden="true">'
+                       f'<img class="flag__desk" src="{root}assets/shots/{slug}-desktop.webp" alt="" loading="lazy" width="1440" height="900">'
+                       f'<img class="flag__phone" src="{root}assets/shots/{slug}-mobile.webp" alt="" loading="lazy" width="600" height="1298"></a>'
+                       f'<div class="flag__body"><p class="kicker">{kind}</p><h3>{name}</h3><p class="flag__line">{line}</p><ul class="s-ticks">{li}</ul>'
+                       f'<div class="s-btns"><a class="s-btn" href="{root}{href}">Open the demo</a><a class="s-btn s-btn--ghost" href="{root}{second[1]}">{second[0]}</a></div></div></article>')
+        return '<div class="flags">' + "".join(out) + '</div><p class="s-hero__note" style="text-align:center;margin-top:16px">All four brands are fictional and nothing is charged; every button works. Open them on your phone.</p>'
+
 
     def frag_calculator(self, root):
         c = self.d["calculator"]
@@ -1208,6 +1273,8 @@ class Studio:
                 "TEMPLATE_CARDS_DETAILED": lambda: self.frag_template_cards(root, detailed=True),
                 "TEMPLATE_OPTIONS": lambda: self.frag_template_options(root),
                 "PACKAGES": lambda: self.frag_packages(root),
+                "STARTS": lambda: self.frag_starts(root),
+                "STARTS_MINI": lambda: self.frag_starts_mini(root),
                 "CARE": lambda: self.frag_care(root),
                 "FAQ": lambda: self.frag_faq(root),
                 "FAQ_SHORT": lambda: self.frag_faq(root, 6),
@@ -1216,6 +1283,7 @@ class Studio:
                 "ADDONS": lambda: self.frag_addons(root),
                 "COMPARE_SOURCES": lambda: self.frag_compare_sources(root),
                 "HERO_PHONES": lambda: self.frag_hero_phones(root),
+                "FLAGSHIPS": lambda: self.frag_flagships(root),
                 "IG_DM": lambda: e(d["instagram"]["dm"]),
                 "IG_PROFILE": lambda: e(d["instagram"]["profile"]),
                 "IG_HANDLE": lambda: e(d["instagram"]["handle"]),
@@ -1401,6 +1469,97 @@ HEADERS = """# 自动产生（site/build.py）。Cloudflare Pages 的回应标�
 """
 
 
+def build_flagships():
+    """Hand-made flagship demos (2026-11-12): site/flagships/<slug>/ → dist/demo/<slug>/.
+    Each folder: layout.html ({{TITLE}} {{DESC}} {{PAGE}} {{BODY}}), pages/*.html (a <!-- title/description/page --> header
+    and the page body), style.css, app.js, img/. Fictional brands, Pexels placeholder photos (image-sources.md)."""
+    root = os.path.join(HERE, "flagships")
+    n = 0
+    for slug in sorted(os.listdir(root)) if os.path.isdir(root) else []:
+        src = os.path.join(root, slug)
+        if not os.path.isfile(os.path.join(src, "layout.html")):
+            continue
+        out = os.path.join(DIST, "demo", slug)
+        shutil.copytree(os.path.join(src, "img"), os.path.join(out, "img"), dirs_exist_ok=True)
+        for f in os.listdir(src):
+            if f.endswith((".css", ".js")):
+                shutil.copy(os.path.join(src, f), os.path.join(out, f))
+        layout = open(os.path.join(src, "layout.html"), encoding="utf-8").read()
+        for fn in sorted(os.listdir(os.path.join(src, "pages"))):
+            if not fn.endswith(".html"):
+                continue
+            body = open(os.path.join(src, "pages", fn), encoding="utf-8").read()
+            m = re.match(r"\s*<!--(.*?)-->\s*", body, re.S)
+            meta = {}
+            if m:
+                for part in m.group(1).split("\n"):
+                    if ":" in part:
+                        k, v = part.split(":", 1)
+                        meta[k.strip()] = v.strip()
+                body = body[m.end():]
+            html = (layout.replace("{{TITLE}}", e(meta.get("title", slug))).replace("{{DESC}}", e(meta.get("description", "")))
+                    .replace("{{PAGE}}", e(meta.get("page", fn[:-5]))).replace("{{BODY}}", body))
+            write(f"demo/{slug}/{fn}", html)
+            n += 1
+    return n
+
+
+def add_hit_beacon(dist):
+    """2026-11-13: the visitor counter (assets/js/hit.js → /api/hit → the desk's 流量 tab) on every built page,
+    except the desk itself. Customers' mockups are built separately (--preview) and keep their own tracker."""
+    tag = '<script src="/assets/js/hit.js" defer></script>'
+    for base, _, files in os.walk(dist):
+        if os.path.relpath(base, dist).split(os.sep)[0] == "desk":
+            continue
+        for fn in files:
+            if not fn.endswith(".html"):
+                continue
+            page = os.path.join(base, fn)
+            src = open(page, encoding="utf-8").read()
+            if "/assets/js/hit.js" in src or "</head>" not in src:
+                continue
+            with open(page, "w", encoding="utf-8") as fh:
+                fh.write(src.replace("</head>", tag + "\n</head>", 1))
+
+
+ASSET_RX = re.compile(r'((?:href|src)=")([^"#?:]+\.(?:css|js|webp|jpe?g|png|svg|avif|woff2))(")')
+
+
+def version_assets(dist):
+    """2026-11-12: every local stylesheet, script and image URL in the built pages gets ?v=<hash of the file>.
+    /assets/* is cached for 7 days (browsers and Cloudflare), so without this a phone could get the new page
+    with last week's stylesheet. A changed file gets a new URL; an unchanged one keeps its cache."""
+    import hashlib
+    memo = {}
+
+    def tag(path):
+        if path not in memo:
+            with open(path, "rb") as fh:
+                memo[path] = hashlib.md5(fh.read()).hexdigest()[:10]
+        return memo[path]
+
+    for base, _, files in os.walk(dist):
+        for fn in files:
+            if not fn.endswith(".html"):
+                continue
+            page = os.path.join(base, fn)
+            src = open(page, encoding="utf-8").read()
+
+            def sub(m):
+                url = m.group(2)
+                if url.startswith("//"):
+                    return m.group(0)
+                target = os.path.normpath(os.path.join(dist, url.lstrip("/")) if url.startswith("/") else os.path.join(base, url))
+                if not os.path.isfile(target):
+                    return m.group(0)
+                return f"{m.group(1)}{url}?v={tag(target)}{m.group(3)}"
+
+            out = ASSET_RX.sub(sub, src)
+            if out != src:
+                with open(page, "w", encoding="utf-8") as fh:
+                    fh.write(out)
+
+
 def main():
     if os.path.exists(DIST):
         shutil.rmtree(DIST)
@@ -1415,6 +1574,7 @@ def main():
     for st in stores:
         n += st.build()
     n += Studio(studio_data, stores).build()
+    n += build_flagships()
     build_knowledge()
     # sales desk (private tool, password-protected by the /api/desk function)
     shutil.copytree(os.path.join(HERE, "desk"), os.path.join(DIST, "desk"))
@@ -1422,6 +1582,8 @@ def main():
     write("robots.txt", "User-agent: *\nDisallow: /demo/\nDisallow: /desk/\n")
     # response headers (Cloudflare Pages reads dist/_headers; same rules the site had on Netlify)
     write("_headers", HEADERS)
+    add_hit_beacon(DIST)
+    version_assets(DIST)
     files = sum(len(f) for _, _, f in os.walk(DIST))
     print(f"built {n} pages, {files} files → {DIST}")
 
