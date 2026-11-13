@@ -7,6 +7,18 @@
 > - 项目是公开的，服务器直接用 https 下载，不用 GitHub deploy key。
 > - 下面的「快速版」做完就有母版站；旧版的详细说明留在后面参考（第 1、4、5 步按快速版做）。
 
+## 自动版（2026-11-13，俊宇在手机上操作时用）
+
+Claude Code 用 DigitalOcean API 帮你开服务器，服务器开机自己装好一切，你只要做两件事：
+
+1. **给 Claude Code 一个 DigitalOcean API Token**（不要贴在聊天里）：
+   - DigitalOcean → **API** → **Generate New Token**：名字 `cartsmith-claude`，Expiration **30 days**，Scopes 选 **Custom**，勾 droplet（全部）、ssh_key（create、read）、tag（create、read）、account / size / region / image / actions（read）。手机上找不到这些的话，选 **Full Access**（30 天会自动失效，用完也可以自己删掉）。
+   - 复制 Token，存到 Claude Code 环境设定：工作阶段标题上的环境选单 → **Edit** → **Network secrets**：Host `api.digitalocean.com`，Bearer Token 贴上。存好之后**开一个新的工作阶段**，说「读 PROGRESS.md 继续开服务器」。
+2. Claude Code 开好服务器会告诉你 **IP**，你在 Cloudflare 加 `master` 和 `demo-festive` 两条 A 记录（灰色云 DNS only）。
+
+之后服务器自己建母版和节日网店示范，Claude Code 从报告网址看进度。设定（2026-11-13 俊宇选的）：新加坡、Ubuntu 24.04、2 GB / 1 CPU（USD 12 / 月）、**不开 DigitalOcean 备份**、管理员电邮 cartsmith.studio@gmail.com、装自动更新小帮手。
+指令：`bash scripts/local/do-server.sh check`（不花钱）→ `create` → `status`。
+
 ## 快速版（2026-11-13，约 1 小时）
 
 **A. 你的电脑做 SSH 密钥**（PowerShell；已经有就跳过）

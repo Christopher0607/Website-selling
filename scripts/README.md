@@ -21,6 +21,8 @@
 | `backup-site.sh <代号\|--all>` | 备份（数据库 + 文件），保留 7 份 |
 | `restore-site.sh <代号> <备份文件夹>` | 还原（可以还原到别的站，自动换网址） |
 | `update-site.sh <代号\|all> [--exclude 插件] [--simulate-failure]` | 先备份 → 更新 → smoke test → 失败自动还原 |
+| `cloud-init.sh` | 新服务器第一次开机自动执行（由 `local/do-server.sh create` 放进 DigitalOcean 开机设定）：下载项目 → provision → 装自动更新小帮手 |
+| `ops-setup.sh` / `ops-runner.sh` | 自动更新小帮手（2026-11-13）：cron 每 5 分钟拉 GitHub、更新插件和子主题、执行 `ops/jobs/` 里没跑过的脚本；报告在 `http://<IP>/agency-ops-<代号>/`（见 `ops/README.md`）；关掉：`sudo rm /etc/cron.d/agency-ops` |
 | `smoke-test.sh <网址> [--site 代号] [--shop] [--expect-noindex]` | 快速检查（任何电脑都能跑） |
 | `site-inventory.sh` | 所有站点：WP 版本、待更新、SSL 到期、磁盘、最后备份 |
 | `site-config.sh <代号> [--ssl] [--basic-auth on\|off] [--noindex on\|off] [--show]` | 改 Nginx 层设定 |
@@ -35,6 +37,7 @@
 
 | 脚本 | 做什么 |
 |---|---|
+| `do-server.sh check \| create \| status \| report` | 用 DigitalOcean API 开服务器、看状态（连不上 SSH 时用；Token 在环境的 Network secrets 或 `DO_TOKEN`） |
 | `deploy-code.sh <ssh主机> <代号\|all>` | 服务器 `git pull` + 安装插件和子主题 + smoke test |
 | `migrate-site.sh <来源主机> <代号> <目标主机> <代号> <域名>` | 跨服务器搬站（staging → 生产）。**第一次用前先演练** |
 | `screenshot.js <网址> <文件夹> [--auth u:p]` | 作品集截图（桌面 1440 + 手机 390） |

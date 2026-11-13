@@ -8,7 +8,7 @@
 # 顺序：下载项目 → provision-server.sh（Nginx / PHP / MariaDB / 防火墙…）→ 自动更新小帮手（ops-setup.sh）
 #       → 之后的事都交给小帮手：ops/jobs/001-build-sites.sh 等 DNS 指过来再建母版 + 节日网店示范
 #
-# 下面 4 个 __X__ 由 do-server.sh 填好再送出。
+# 下面 4 个值由 do-server.sh 填好再送出。
 set -u
 BRANCH="__BRANCH__"
 EMAIL="__EMAIL__"
@@ -27,6 +27,8 @@ st() { echo "$(date -u '+%F %T') UTC  $*" >> "$PUB/status.txt"; }
 
 st "开机设定开始（分支 $BRANCH）"
 export DEBIAN_FRONTEND=noninteractive
+# First boot: unattended-upgrades may hold the apt lock; wait for it instead of failing.
+echo 'DPkg::Lock::Timeout "900";' > /etc/apt/apt.conf.d/90agency-lock-wait
 for i in 1 2 3 4 5; do apt-get update -y >/dev/null 2>&1 && apt-get install -y git >/dev/null 2>&1 && break; sleep 20; done
 if ! git clone -q -b "$BRANCH" "$REPO" /opt/agency; then
   st "失败：下载项目"
