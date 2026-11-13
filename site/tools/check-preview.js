@@ -245,7 +245,7 @@ async function scan(page, url, vp, shotDir) {
     const id = await page.$eval('.mitem', (el) => el.id.replace(/^i-/, '')).catch(() => '');
     const askHref = await page.getAttribute(`#i-${id} .addbtn--ask`, 'href').catch(() => null);
     if (askHref) {
-      ok(/^https:\/\/wa\.me\/(60\d+)?\?text=/.test(askHref), 'no price yet: "Ask" opens WhatsApp with the question filled in');
+      ok(/^https:\/\/wa\.me\/(\d{8,15})?\?text=/.test(askHref), 'no price yet: "Ask" opens WhatsApp with the question filled in');
       await page.goto(BASE + 'owner.html'); await unlock(page);
       await page.click('[data-tab="menu"]');
       await page.fill(`[data-price="${id}"]`, '12.5');
