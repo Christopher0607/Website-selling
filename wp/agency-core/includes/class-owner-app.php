@@ -270,6 +270,7 @@ class AGC_Owner_App {
 				'admin'    => current_user_can( 'manage_options' ),
 			),
 			'demo'     => (bool) agc_get( 'demo_mode' ),
+			'manual'   => (bool) agc_get( 'owner_manual_orders' ),
 		);
 		$v = AGC_VERSION . '.' . filemtime( AGC_DIR . 'assets/owner/app.js' );
 		self::head( self::site_name() . ' · ' . __( 'Shop dashboard', 'agency-core' ) );

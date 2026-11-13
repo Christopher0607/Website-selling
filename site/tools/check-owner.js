@@ -17,6 +17,28 @@ const wait = (p, ms = 400) => p.waitForTimeout(ms);
 async function ready(p) { await p.waitForFunction(() => !document.querySelector('.ow-boot') && !document.querySelector('.main > .empty:only-child'), null, { timeout: 20000 }).catch(() => {}); await wait(p, 300); }
 async function overflow(p) { return p.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth); }
 
+// A customer orders on the website and pays by DuitNow (so there is always a "payment to check").
+async function shopOrderDuitNow(browser) {
+  const c = await browser.newContext({ viewport: { width: 390, height: 844 } });
+  const s = await c.newPage();
+  const settle = async () => { await s.waitForTimeout(500); await s.waitForFunction(() => !document.querySelector('.blockUI.blockOverlay'), null, { timeout: 20000 }).catch(() => {}); };
+  await s.goto(BASE + '/');
+  await s.locator('li.product a.ajax_add_to_cart').first().click();
+  await s.waitForTimeout(1500);
+  await s.goto(BASE + '/checkout/');
+  await s.fill('#billing_first_name', 'Test'); await s.fill('#billing_last_name', 'DuitNow'); await s.fill('#billing_address_1', '1 Jalan Test'); await s.fill('#billing_city', 'Petaling Jaya');
+  await s.selectOption('select#billing_state', 'SGR'); await s.fill('#billing_postcode', '47300'); await s.fill('#billing_phone', '012-555 0000'); await s.fill('#billing_email', 'duitnow-test@example.com');
+  await s.evaluate(() => window.jQuery && window.jQuery(document.body).trigger('update_checkout')); await settle();
+  await s.locator('input[name^="shipping_method"][value^="local_pickup"]').first().evaluate((e) => e.click()); await settle();
+  await s.locator('.agc-fest-pick__days .agc-chip:not([disabled])').first().click();
+  await s.locator('.agc-fest-pick__slots .agc-chip:not([disabled])').first().click();
+  await s.evaluate(() => { document.getElementById('payment_method_agc_duitnow').click(); const t = document.getElementById('terms'); if (t && !t.checked) t.click(); });
+  await s.waitForTimeout(300);
+  await Promise.all([s.waitForURL(/order-received/, { timeout: 45000 }), s.click('#place_order')]);
+  await c.close();
+  return true;
+}
+
 (async () => {
   if (!U || !P) { console.log('set OWNER_USER and OWNER_PASS'); process.exit(2); }
   const browser = await chromium.launch();
@@ -59,19 +81,8 @@ async function overflow(p) { return p.evaluate(() => document.documentElement.sc
   ok((await p.$$('.ocard')).length > 0 && (await p.$$('.ocard')).length <= nAll, 'orders: search by name');
   await p.fill('.search input', '');
   await wait(p, 800);
-  // An unpaid order taken by phone, so there is always one "payment to check".
-  const made = await p.evaluate(async () => {
-    const H = { 'X-WP-Nonce': AGC_OWNER.nonce, 'Content-Type': 'application/json' };
-    const get = (u) => fetch(AGC_OWNER.rest + u, { headers: H, credentials: 'same-origin' }).then((r) => r.json());
-    const pr = await get('products');
-    const item = pr.products.flatMap((x) => (x.variations.length ? x.variations : [x])).find((x) => x.stock == null || x.stock > 2);
-    const sl = await get('slots?mode=collect');
-    const d = sl.days.find((x) => Object.values(x.slots).some((n) => n > 0));
-    const when = d ? d.day + '|' + Object.keys(d.slots).find((k) => d.slots[k] > 0) : '';
-    const r = await fetch(AGC_OWNER.rest + 'orders', { method: 'POST', headers: H, credentials: 'same-origin', body: JSON.stringify({ name: 'Test Unpaid', phone: '012-555 0000', items: [{ id: item.id, qty: 1 }], mode: 'collect', when: when, paid: false, method: 'transfer' }) });
-    return r.status;
-  });
-  ok(made === 200, 'an unpaid order taken by phone is added (' + made + ')');
+  const madeShop = await shopOrderDuitNow(browser).catch((e) => { console.log('    ' + e.message.split('\n')[0]); return false; });
+  ok(madeShop, 'a customer orders on the website and pays by DuitNow');
   await p.goto(BASE + '/dian/#/home');
   await ready(p);
   await p.goto(BASE + '/dian/#/orders?f=check');
@@ -201,7 +212,14 @@ async function overflow(p) { return p.evaluate(() => document.documentElement.sc
   ok((await p.$$('section')).length === 4, 'settings: festive, shop details, DuitNow, delivery fees');
   ok((await overflow(p)) <= 1, 'settings fit the phone screen');
 
-  console.log('New order (phone / WhatsApp / counter)');
+  console.log('New order (phone / WhatsApp / counter) — an add-on');
+  const manualOn = await p.evaluate(() => !!(window.AGC_OWNER && AGC_OWNER.manual));
+  if (!manualOn) {
+    await p.goto(BASE + '/dian/#/orders?f=all');
+    await ready(p);
+    const apiStatus = await p.evaluate(async () => (await fetch(AGC_OWNER.rest + 'orders', { method: 'POST', credentials: 'same-origin', headers: { 'X-WP-Nonce': AGC_OWNER.nonce, 'Content-Type': 'application/json' }, body: JSON.stringify({ name: 'x', items: [] }) })).status);
+    ok(!(await p.$('.top__act a[href="#/new-order"]')) && apiStatus === 403, 'phone orders are an add-on: no button, and the server refuses (' + apiStatus + ')');
+  } else {
   await p.goto(BASE + '/dian/#/new-order');
   await p.waitForSelector('.actbar');
   await ready(p);
@@ -218,6 +236,7 @@ async function overflow(p) { return p.evaluate(() => document.documentElement.sc
   await Promise.all([p.waitForURL(/#\/order\/\d+/, { timeout: 20000 }), p.click('.actbar .btn')]);
   await ready(p);
   ok(/要做|To make/.test(await p.textContent('.badge')) && /Test Walk-in/.test(await p.textContent('.top__site')), 'new order saved as paid (shows under "to make")');
+  }
 
   console.log('Many orders at once');
   await p.goto(BASE + '/dian/#/orders?f=make');
@@ -315,7 +334,7 @@ async function overflow(p) { return p.evaluate(() => document.documentElement.sc
 
   console.log('Desktop');
   await p.setViewportSize({ width: 1280, height: 860 });
-  for (const v of ['home', 'orders?f=all', 'production', 'products', 'customers', 'coupons', 'reports', 'settings', 'team', 'new-order']) {
+  for (const v of ['home', 'orders?f=all', 'production', 'products', 'customers', 'coupons', 'reports', 'settings', 'team']) {
     await p.goto(BASE + '/dian/#/' + v);
     await ready(p);
     const o = await overflow(p);

@@ -434,7 +434,7 @@
     var f = r.p.get('f') || (s && s.counts.check ? 'check' : s && s.counts.make ? 'make' : 'all');
     var q = r.p.get('q') || '';
     var day = r.p.get('day') || '';
-    setTop(t('orders'), day ? (day === 'courier' ? t('courier') : day) : C.site, false, h('a', { class: 'btn btn--sm', href: '#/new-order' }, icon('plus'), t('new_order')));
+    setTop(t('orders'), day ? (day === 'courier' ? t('courier') : day) : C.site, false, C.manual ? h('a', { class: 'btn btn--sm', href: '#/new-order' }, icon('plus'), t('new_order')) : null);
     var picking = false, picked = {};
     var bulkInfo = h('span', { class: 'small', style: 'font-weight:700' });
     function bulkGo(status) {
@@ -783,6 +783,7 @@
   };
 
   VIEWS['new-order'] = function (r) {
+    if (!C.manual) { location.replace('#/orders'); return Promise.resolve(); }
     setTop(t('new_order'), C.site, true);
     return api('products').then(function (dd) {
       var m = live(r); if (!m) return; m.innerHTML = '';

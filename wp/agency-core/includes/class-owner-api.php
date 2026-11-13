@@ -1114,6 +1114,10 @@ class AGC_Owner_API {
 	 * @return array|WP_Error
 	 */
 	public static function order_create( $req ) {
+		// An add-on (2026-11-13, Junyu): the website is where customers order; entering orders by hand is sold separately.
+		if ( ! agc_get( 'owner_manual_orders' ) ) {
+			return new WP_Error( 'agc_addon_off', __( 'Entering orders by hand is an add-on that is not switched on for this shop.', 'agency-core' ), array( 'status' => 403 ) );
+		}
 		$b     = (array) $req->get_json_params();
 		$items = array();
 		foreach ( (array) ( $b['items'] ?? array() ) as $it ) {

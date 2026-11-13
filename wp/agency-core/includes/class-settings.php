@@ -64,6 +64,7 @@ class AGC_Settings {
 			'concept_label'        => '',
 			// Checkout.
 			'my_checkout'          => 1,
+			'owner_manual_orders'  => 0,
 			// Store UX.
 			'announcement'         => '',
 			'shop_paused'          => 0,
@@ -206,6 +207,7 @@ class AGC_Settings {
 				'fields' => array(
 					'accent_color' => array( 'text', __( 'Accent colour (HEX)', 'agency-core' ) ),
 					'my_checkout'  => array( 'checkbox', __( 'Malaysian checkout tweaks (phone required, hide company & address line 2)', 'agency-core' ) ),
+					'owner_manual_orders' => array( 'checkbox', __( 'Shop dashboard add-on: the shop can enter phone / WhatsApp / counter orders itself (paid extra, off by default)', 'agency-core' ) ),
 				),
 			),
 		);
