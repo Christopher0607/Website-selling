@@ -430,8 +430,8 @@
       }
     } else if (['contacted', 'preview_sent', 'proposal_sent', 'call_booked'].includes(p.status) && (due || mode === 'full')) {
       if (p.followup) {
-        body += msgBox(p, 'followup', p.status === 'contacted' ? (p.touches <= 1 ? '第 2 条：给一个有用的资讯' : '最后一条') : p.status === 'preview_sent' ? ['跟进信息（第 1 条：网址密码、适合他的示范网站、三种开始方式：RM800 起 / 每月 RM199 / 节日预购网店 RM399）', '跟进信息（第 2 条：换一个有用的角度）', '最后一条（礼貌收尾）'][Math.min(2, p.pv_followups || 0)] : '跟进信息') + sendRow(p, 'followup');
-        body += `<div class="btnrow btnrow--end">${sentBtn}${moreBtn}</div>`;
+        body += msgBox(p, 'followup', p.status === 'contacted' ? (p.touches <= 1 ? (p.cfollow_v ? '第 2 条：免费样板、每月 RM199、节日预购网店 RM399（真网店示范）、手机店家后台' : '第 2 条：给一个有用的资讯') : '最后一条') : p.status === 'preview_sent' ? ['跟进信息（第 1 条：网址密码、适合他的示范网站、三种开始方式：RM800 起 / 每月 RM199 / 节日预购网店 RM399、手机店家后台）', '跟进信息（第 2 条：换一个有用的角度）', '最后一条（礼貌收尾）'][Math.min(2, p.pv_followups || 0)] : '跟进信息') + sendRow(p, 'followup');
+        body += `<div class="btnrow btnrow--end"><button class="btn btn--ghost btn--sm" data-act="reply" data-id="${p.id}">${svg('reply', 16)}对方有回复</button>${sentBtn}${moreBtn}</div>`;
       } else {
         body += `<div class="btnrow"><button class="btn btn--sm" data-act="followup" data-id="${p.id}">${svg('pen', 16)}写跟进信息${p.status === 'preview_sent' ? `（第 ${Math.min(3, (p.pv_followups || 0) + 1)} 条）` : ''}</button><button class="btn btn--ghost btn--sm" data-act="reply" data-id="${p.id}">${svg('reply', 16)}对方有回复</button>${moreBtn}</div>`;
       }
@@ -468,6 +468,9 @@
       const fresh = b.find((x) => x[0] && !used.includes(x[0]));
       hint = `<p class="send__hint" data-send-hint>上次用 ${esc(CH[p.last_channel] || p.last_channel)}。${fresh ? `这次可以换 ${CH[fresh[0]]}，对方可能比较常看。` : '没有别的联系方式，可以先在卡片补上 WhatsApp / Email。'}同一条信息只用一个渠道发。</p>`;
     }
+    // an Instagram DM holds about 1,000 characters (2026-11-13): longer messages go by WhatsApp / Email, or get shortened
+    const len = String(p[field] || '').length;
+    if (p.instagram && len > 1000) hint += `<p class="send__hint" data-ig-long>这条有 ${len} 个字，Instagram 私信最多大约 1000 字：用 WhatsApp / Email 发，或者用 Instagram 前先删短一点。</p>`;
     return `<div class="send"><span class="send__label">发送</span><div class="send__btns">${b.map((x) => x[1]).join('')}</div></div>${hint}`;
   }
   function mini(p) {

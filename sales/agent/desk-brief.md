@@ -57,15 +57,23 @@ to end the call politely — and then nothing happens. Seven mockups went out; o
 - **They have not opened it** (desk shows no visits, or the link opened but no password entered): resend the link and
   password, call again in 2 days. Never say we can see this.
 - **Written follow-ups** (only when the call did not connect, or as the message after the call):
-  1. 1–2 days after sending: link + password again; their own photos and current prices go in for free; the price in
-     one line (RM800 one-off, or nothing upfront and RM199 a month for 12 months); the full demo website that fits them
-     (the card file says which one); the RM399 festive pre-order shop as the small first step, with the link to the
-     Butter & Lantern demo; ONE specific detail from THEIR mockup (a dish, a set, the booking or pre-order page).
+  1. 1–2 days after sending (a ready-made template on the card since 2026-11-13, Junyu: "push RM199 / RM399 and the new
+     website"): link + password again; their own photos and current prices go in for free; the full demo website that
+     fits them (the card file says which one); three ways to start: RM800 one-off (then RM150 a month maintenance, first
+     month free), nothing upfront and RM199 a month for 12 months, or the RM399 festive pre-order shop (live in 3 working
+     days, 3 months of hosting and maintenance included) with its link; every website comes with a simple shop dashboard
+     on the phone (new orders, payments to check, what to make each day, stock, Excel export); our own site at the end.
   2. About 4 days later: one new useful angle for their kind of shop (festive sets with cut-off dates and slots left so
      they stop answering the same DM; bookings that arrive with date, time and party size; regulars ordering without
-     platform commission), the price again in one line, the link again, door open.
+     platform commission), the price again in one line (RM800 one-off or RM199 a month), the RM399 festive shop as the
+     small first step with its link, the mockup link again, door open.
   3. About a week later: the last short, polite message — the sample stays up until its delete date; if the timing is
      not right, they can message us any time. Then stop.
+- **Contacted before, no mockup yet** (mostly Instagram-only shops, 2026-11-13): the 2nd message is a ready-made template
+  on the card — the free sample website offer, the three ways to start (RM199 a month, the RM399 festive shop with its
+  link, RM800 one-off + maintenance), the phone dashboard, the demo that fits them. It stays under 1,000 characters
+  because an Instagram DM holds about that much. Later messages are AI-written: short, one useful point, the free mockup
+  offer, RM199 / RM399 in one or two lines.
 - **Respect "not ready" and "no".** Thank them, close, never chase. Example (Hideaway Café, 11-11): "menu changes daily,
   whole cakes are old-school manual pre-orders, not ready to go online yet, will remember you" → we thanked them, said
   the sample stays up until 23 Nov, and stopped. Baba Beng already had an online store → closed, no more messages.
@@ -81,9 +89,14 @@ business ("Full demo website that fits them"); use that one:
   reservations with deposits and a waitlist, private dining, seasonal dinners; owner side at /demo/maison-cendre/owner.html).
 - Everyday restaurants, cafés, caterers: https://cartsmithstudio.com/demo/sireh-salt/ (ordering, bookings, festive pre-orders,
   catering, vouchers; the owner side at /demo/sireh-salt/owner.html shows how they would run it from their phone).
-- The small first step (RM399 festive pre-order shop): https://cartsmithstudio.com/demo/butter-lantern/?fest=cny
-  (use ?fest=raya for Malay bakeries, ?fest=xmas for Christmas bakes, ?fest=val for Valentine's). It is a real online shop:
-  payment online or by DuitNow QR, order emails, order tracking and the owner's dashboard. Best link in a festive follow-up.
+- The small first step (RM399 festive pre-order shop), two versions:
+  - **The real one** (2026-11-13): https://demo-festive.cartsmithstudio.com/ — the actual WordPress shop a client gets
+    (Chinese New Year, in Chinese; fictional bakery, nothing is charged). People can place a test order and see the order
+    email and tracking. Behind it is the owner's phone dashboard (new-order alerts, payments to check, what to make each
+    day, stock, customers, reports with an Excel export, coupons, pause orders, staff logins). Best link for Chinese
+    shops and Chinese-speaking owners; the card file picks it for them.
+  - The demo page: https://cartsmithstudio.com/demo/butter-lantern/ (?fest=raya for Malay bakeries, ?fest=xmas for
+    Christmas bakes, ?fest=val for Valentine's) — in English or Malay, shows every festival, with an owner page.
 - Bakeries, kuih and cookie makers, sambal and gift brands: https://cartsmithstudio.com/demo/dulang-daun/ (shop, gift
   boxes, build-your-own hamper, West/East shipping, WhatsApp orders, tracking; owner side at /demo/dulang-daun/owner.html).
 Use at most one demo link per message, as a statement ("Here is a full example of what the finished website does: …").
