@@ -44,6 +44,14 @@ else
   tail -30 /var/log/agency-provision.log | sed -E 's/((PASS|PASSWORD|password|token|TOKEN)[^=:]*[=:] *)[^ ]+/\1[hidden]/' | sed 's/^/    /' >> "$PUB/status.txt"
 fi
 
+# SSH: keys only. A root password chosen in the DigitalOcean form stays usable in the website's Recovery Console,
+# and the normal web Console (Droplet Agent) keeps working, but nobody can try passwords over SSH.
+cat > /etc/ssh/sshd_config.d/10-agency-no-password.conf <<'EOF2'
+PasswordAuthentication no
+KbdInteractiveAuthentication no
+EOF2
+if sshd -t 2>/dev/null; then systemctl reload ssh 2>/dev/null || systemctl reload sshd 2>/dev/null || true; st "SSH：只能用密钥登录（网页 Console 照样可以用）"; else rm -f /etc/ssh/sshd_config.d/10-agency-no-password.conf; fi
+
 if bash /opt/agency/scripts/server/ops-setup.sh; then
   st "自动更新小帮手：已安装（每 5 分钟检查一次 GitHub）"
 else

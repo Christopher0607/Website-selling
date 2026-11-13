@@ -7,6 +7,12 @@
 > - 项目是公开的，服务器直接用 https 下载，不用 GitHub deploy key。
 > - 下面的「快速版」做完就有母版站；旧版的详细说明留在后面参考（第 1、4、5 步按快速版做）。
 
+## 贴一行版（2026-11-13，手机上最简单，不用给 API Token）
+
+在 DigitalOcean 网站开 Droplet 时，**Advanced options → Add Initialization scripts** 贴 Claude Code 给的一行指令（它会从 GitHub 下载 `scripts/server/cloud-init.sh`，填好分支、管理员电邮、报告代号再执行）。
+Authentication 选 Password（设一个强密码存进 Bitwarden；开机后 SSH 只接受密钥，密码只给网站的 Recovery Console 用）。
+开好之后把 IP 告诉 Claude Code，在 Cloudflare 加 `master`、`demo-festive` 两条 A 记录（灰色云）。服务器自己建站，Claude Code 看报告网址。
+
 ## 自动版（2026-11-13，俊宇在手机上操作时用）
 
 Claude Code 用 DigitalOcean API 帮你开服务器，服务器开机自己装好一切，你只要做两件事：
