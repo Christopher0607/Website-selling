@@ -40,6 +40,12 @@ class AGC_Owner_API {
 		$settings = static function () {
 			return current_user_can( 'manage_woocommerce' );
 		};
+		$coupons  = static function () {
+			return current_user_can( 'edit_shop_coupons' );
+		};
+		$team     = static function () {
+			return current_user_can( 'create_users' ) && current_user_can( 'promote_users' );
+		};
 		$r = array(
 			array( '/owner/summary', 'GET', 'summary', $orders ),
 			array( '/owner/orders', 'GET', 'orders', $orders ),
@@ -57,6 +63,15 @@ class AGC_Owner_API {
 			array( '/owner/media', 'POST', 'media', $products ),
 			array( '/owner/settings', 'GET', 'settings', $settings ),
 			array( '/owner/settings', 'POST', 'settings_save', $settings ),
+			array( '/owner/orders', 'POST', 'order_create', $orders ),
+			array( '/owner/orders/bulk', 'POST', 'orders_bulk', $orders ),
+			array( '/owner/slots', 'GET', 'slots', $orders ),
+			array( '/owner/coupons', 'GET', 'coupons', $coupons ),
+			array( '/owner/coupons', 'POST', 'coupon_save', $coupons ),
+			array( '/owner/coupons/(?P<id>\d+)', 'DELETE', 'coupon_delete', $coupons ),
+			array( '/owner/team', 'GET', 'team', $team ),
+			array( '/owner/team', 'POST', 'team_add', $team ),
+			array( '/owner/team/(?P<id>\d+)', 'DELETE', 'team_remove', $team ),
 		);
 		foreach ( $r as $x ) {
 			register_rest_route(
@@ -177,6 +192,8 @@ class AGC_Owner_API {
 			'pay'      => $o->get_payment_method_title(),
 			'receipt'  => (bool) $o->get_meta( AGC_Receipts::META ),
 			'paid'     => $o->is_paid(),
+			'email'    => $o->get_billing_email(),
+			'addr'     => wp_strip_all_tags( str_replace( '<br/>', ', ', $o->has_shipping_address() ? $o->get_formatted_shipping_address() : $o->get_formatted_billing_address() ) ),
 		);
 	}
 
@@ -250,6 +267,7 @@ class AGC_Owner_API {
 				'early'    => AGC_Festive::early_pct(),
 			),
 			'notify'  => count( (array) get_option( AGC_Festive::NOTIFY, array() ) ),
+			'paused'  => (bool) agc_get( 'shop_paused' ),
 		);
 	}
 
@@ -267,6 +285,8 @@ class AGC_Owner_API {
 		$q    = mb_strtolower( trim( sanitize_text_field( (string) $req->get_param( 'q' ) ) ) );
 		$page = max( 1, (int) $req->get_param( 'page' ) );
 		$all  = (bool) $req->get_param( 'all' );
+		$days = (int) $req->get_param( 'days' );
+		$from = $days > 0 ? time() - $days * DAY_IN_SECONDS : 0;
 		$rows = array();
 		foreach ( self::recent_orders() as $o ) {
 			$b = self::bucket( $o );
@@ -274,6 +294,9 @@ class AGC_Owner_API {
 				continue;
 			}
 			if ( ( ! $f || 'all' === $f ) && 'pending' === $b ) {
+				continue;
+			}
+			if ( $from && ( ! $o->get_date_created() || $o->get_date_created()->getTimestamp() < $from ) ) {
 				continue;
 			}
 			if ( $day ) {
@@ -944,7 +967,7 @@ class AGC_Owner_API {
 		return array(
 			'fest_on', 'fest_name', 'fest_cutoff', 'fest_from', 'fest_to', 'fest_closed', 'fest_collect_slots', 'fest_delivery_slots',
 			'fest_courier_note', 'fest_early_end', 'fest_early_pct', 'fest_show_left', 'fest_low_stock', 'fest_notify',
-			'legal_name', 'business_email', 'business_phone', 'business_address', 'business_hours', 'announcement',
+			'legal_name', 'business_email', 'business_phone', 'business_address', 'business_hours', 'announcement', 'shop_paused', 'shop_paused_msg',
 		);
 	}
 
@@ -1064,5 +1087,310 @@ class AGC_Owner_API {
 			WC_Cache_Helper::get_transient_version( 'shipping', true );
 		}
 		return self::settings();
+	}
+
+	/* ------------------------------------------------------------------ manual orders, bulk, slots */
+
+	/**
+	 * Days and times with places left for a mode (for the manual order form).
+	 *
+	 * @param WP_REST_Request $req Request.
+	 * @return array
+	 */
+	public static function slots( $req ) {
+		$mode = 'delivery' === $req->get_param( 'mode' ) ? 'delivery' : 'collect';
+		$out  = array();
+		foreach ( AGC_Festive::availability( $mode ) as $day => $slots ) {
+			$out[] = array( 'day' => $day, 'label' => AGC_Festive::day_label( $day ), 'slots' => $slots );
+		}
+		return array( 'mode' => $mode, 'days' => $out );
+	}
+
+	/**
+	 * An order taken by phone, WhatsApp or at the counter.
+	 * Paid → processing (stock goes down, customer email if there is an address); not paid yet → on hold.
+	 *
+	 * @param WP_REST_Request $req Request.
+	 * @return array|WP_Error
+	 */
+	public static function order_create( $req ) {
+		$b     = (array) $req->get_json_params();
+		$items = array();
+		foreach ( (array) ( $b['items'] ?? array() ) as $it ) {
+			$p   = wc_get_product( absint( $it['id'] ?? 0 ) );
+			$qty = max( 1, (int) ( $it['qty'] ?? 1 ) );
+			if ( ! $p || ! in_array( $p->get_type(), array( 'simple', 'variation' ), true ) ) {
+				return new WP_Error( 'agc_item', __( 'Choose a product (and its option).', 'agency-core' ), array( 'status' => 400 ) );
+			}
+			if ( $p->managing_stock() && null !== $p->get_stock_quantity() && $p->get_stock_quantity() < $qty && empty( $b['force'] ) ) {
+				/* translators: 1: product, 2: left */
+				return new WP_Error( 'agc_stock', sprintf( __( 'Only %2$d left of %1$s.', 'agency-core' ), $p->get_name(), (int) $p->get_stock_quantity() ), array( 'status' => 409 ) );
+			}
+			$items[] = array( $p, $qty );
+		}
+		$name = sanitize_text_field( (string) ( $b['name'] ?? '' ) );
+		if ( ! $items || '' === $name ) {
+			return new WP_Error( 'agc_order', __( 'A name and at least one item are needed.', 'agency-core' ), array( 'status' => 400 ) );
+		}
+		$mode = in_array( $b['mode'] ?? '', array( 'collect', 'delivery', 'courier' ), true ) ? $b['mode'] : 'collect';
+		$o    = wc_create_order(
+			array(
+				'status'      => 'pending',
+				'created_via' => 'shop-dashboard',
+			)
+		);
+		foreach ( $items as $x ) {
+			$o->add_product( $x[0], $x[1] );
+		}
+		$o->set_billing_first_name( $name );
+		$o->set_billing_phone( sanitize_text_field( (string) ( $b['phone'] ?? '' ) ) );
+		$email = sanitize_email( (string) ( $b['email'] ?? '' ) );
+		if ( $email ) {
+			$o->set_billing_email( $email );
+		}
+		$o->set_billing_country( 'MY' );
+		$addr = sanitize_textarea_field( (string) ( $b['address'] ?? '' ) );
+		if ( $addr && 'collect' !== $mode ) {
+			$o->set_billing_address_1( $addr );
+			$o->set_shipping_first_name( $name );
+			$o->set_shipping_address_1( $addr );
+			$o->set_shipping_country( 'MY' );
+		}
+		$fee  = max( 0, (float) ( $b['shipping'] ?? 0 ) );
+		$ship = new WC_Order_Item_Shipping();
+		$ship->set_method_title( AGC_Festive::mode_label( $mode ) );
+		$ship->set_method_id( 'collect' === $mode ? 'local_pickup' : 'flat_rate' );
+		$ship->set_total( $fee );
+		$o->add_item( $ship );
+		$o->update_meta_data( AGC_Festive::MODE, $mode );
+		$when = explode( '|', sanitize_text_field( (string) ( $b['when'] ?? '' ) ), 2 );
+		if ( 'courier' !== $mode && 2 === count( $when ) && preg_match( '/^\d{4}-\d{2}-\d{2}$/', $when[0] ) ) {
+			$o->update_meta_data( AGC_Festive::DATE, $when[0] );
+			$o->update_meta_data( AGC_Festive::SLOT, $when[1] );
+		}
+		if ( ! empty( $b['note'] ) ) {
+			$o->set_customer_note( sanitize_textarea_field( (string) $b['note'] ) );
+		}
+		$methods = array(
+			'cash'     => __( 'Cash', 'agency-core' ),
+			'transfer' => __( 'Bank transfer', 'agency-core' ),
+			'duitnow'  => 'DuitNow QR',
+			'other'    => __( 'Other', 'agency-core' ),
+		);
+		$m = $methods[ $b['method'] ?? 'cash' ] ?? $methods['cash'];
+		$o->set_payment_method( 'duitnow' === ( $b['method'] ?? '' ) ? 'agc_duitnow' : '' );
+		$o->set_payment_method_title( $m );
+		$o->calculate_totals( false );
+		$o->save();
+		/* translators: %s: user name */
+		$o->add_order_note( sprintf( __( 'Order added in the shop dashboard by %s.', 'agency-core' ), wp_get_current_user()->display_name ) );
+		$o->update_status( ! empty( $b['paid'] ) ? 'processing' : 'on-hold' );
+		AGC_Festive::forget_booked();
+		return self::order( array( 'id' => $o->get_id() ) );
+	}
+
+	/**
+	 * Change many orders at once (e.g. everyone in the 10am slot is ready).
+	 *
+	 * @param WP_REST_Request $req Request.
+	 * @return array|WP_Error
+	 */
+	public static function orders_bulk( $req ) {
+		$to  = sanitize_key( (string) $req->get_param( 'status' ) );
+		$ids = array_slice( array_map( 'absint', (array) $req->get_param( 'ids' ) ), 0, 200 );
+		if ( ! in_array( $to, array( 'processing', AGC_Festive::STATUS, 'completed' ), true ) || ! $ids ) {
+			return new WP_Error( 'agc_bad', 'Bad request', array( 'status' => 400 ) );
+		}
+		$n = 0;
+		/* translators: %s: user name */
+		$note = sprintf( __( 'Changed in the shop dashboard by %s.', 'agency-core' ), wp_get_current_user()->display_name );
+		foreach ( $ids as $id ) {
+			$o = wc_get_order( $id );
+			if ( $o && 'shop_order' === $o->get_type() && ! $o->has_status( $to ) && ! $o->has_status( array( 'cancelled', 'refunded', 'failed' ) ) ) {
+				$o->update_status( $to, $note, true );
+				++$n;
+			}
+		}
+		AGC_Festive::forget_booked();
+		return array( 'changed' => $n );
+	}
+
+	/* ------------------------------------------------------------------ coupons */
+
+	/**
+	 * Coupon as the dashboard needs it.
+	 *
+	 * @param int $id Post ID.
+	 * @return array
+	 */
+	private static function coupon_row( $id ) {
+		$c   = new WC_Coupon( $id );
+		$exp = $c->get_date_expires();
+		return array(
+			'id'       => $c->get_id(),
+			'code'     => $c->get_code(),
+			'type'     => 'percent' === $c->get_discount_type() ? 'percent' : 'fixed_cart',
+			'amount'   => (string) $c->get_amount(),
+			'min'      => (string) $c->get_minimum_amount(),
+			'limit'    => $c->get_usage_limit() ? (int) $c->get_usage_limit() : null,
+			'used'     => (int) $c->get_usage_count(),
+			'expires'  => $exp ? $exp->date( 'Y-m-d' ) : '',
+			'expired'  => $exp && $exp->getTimestamp() < time(),
+			'free_ship' => $c->get_free_shipping(),
+			'on'       => 'publish' === get_post_status( $c->get_id() ),
+		);
+	}
+
+	/**
+	 * All coupons.
+	 *
+	 * @return array
+	 */
+	public static function coupons() {
+		$ids = get_posts(
+			array(
+				'post_type'      => 'shop_coupon',
+				'post_status'    => array( 'publish', 'draft' ),
+				'posts_per_page' => 200,
+				'fields'         => 'ids',
+				'orderby'        => 'date',
+				'order'          => 'DESC',
+			)
+		);
+		return array( 'coupons' => array_map( array( __CLASS__, 'coupon_row' ), $ids ) );
+	}
+
+	/**
+	 * Create or update a coupon.
+	 *
+	 * @param WP_REST_Request $req Request.
+	 * @return array|WP_Error
+	 */
+	public static function coupon_save( $req ) {
+		$b    = (array) $req->get_json_params();
+		$id   = absint( $b['id'] ?? 0 );
+		$code = wc_format_coupon_code( sanitize_text_field( (string) ( $b['code'] ?? '' ) ) );
+		if ( '' === $code ) {
+			return new WP_Error( 'agc_code', __( 'Enter a code.', 'agency-core' ), array( 'status' => 400 ) );
+		}
+		$other = wc_get_coupon_id_by_code( $code );
+		if ( $other && $other !== $id ) {
+			return new WP_Error( 'agc_code', __( 'That code is already used.', 'agency-core' ), array( 'status' => 409 ) );
+		}
+		$c = $id ? new WC_Coupon( $id ) : new WC_Coupon();
+		$c->set_code( $code );
+		$c->set_discount_type( 'percent' === ( $b['type'] ?? '' ) ? 'percent' : 'fixed_cart' );
+		$c->set_amount( wc_format_decimal( (string) ( $b['amount'] ?? '0' ) ) );
+		$c->set_minimum_amount( '' === (string) ( $b['min'] ?? '' ) ? '' : wc_format_decimal( (string) $b['min'] ) );
+		$c->set_usage_limit( ! empty( $b['limit'] ) ? absint( $b['limit'] ) : 0 );
+		$c->set_free_shipping( ! empty( $b['free_ship'] ) );
+		$exp = (string) ( $b['expires'] ?? '' );
+		$c->set_date_expires( preg_match( '/^\d{4}-\d{2}-\d{2}$/', $exp ) ? ( new DateTimeImmutable( $exp . ' 23:59:59', wp_timezone() ) )->getTimestamp() : null );
+		$c->save();
+		wp_update_post(
+			array(
+				'ID'          => $c->get_id(),
+				'post_status' => ( ! isset( $b['on'] ) || $b['on'] ) ? 'publish' : 'draft',
+			)
+		);
+		return self::coupon_row( $c->get_id() );
+	}
+
+	/**
+	 * Delete a coupon (to the bin).
+	 *
+	 * @param WP_REST_Request $req Request.
+	 * @return array|WP_Error
+	 */
+	public static function coupon_delete( $req ) {
+		$id = absint( $req['id'] );
+		if ( 'shop_coupon' !== get_post_type( $id ) || ! current_user_can( 'delete_post', $id ) ) {
+			return new WP_Error( 'agc_forbidden', 'Not allowed', array( 'status' => 403 ) );
+		}
+		wp_trash_post( $id );
+		return array( 'deleted' => true );
+	}
+
+	/* ------------------------------------------------------------------ team */
+
+	/**
+	 * Staff accounts (shop managers) and the owners (administrators).
+	 *
+	 * @return array
+	 */
+	public static function team() {
+		$out = array();
+		foreach ( get_users( array( 'role__in' => array( 'administrator', 'shop_manager' ), 'orderby' => 'registered' ) ) as $u ) {
+			$out[] = array(
+				'id'    => $u->ID,
+				'name'  => $u->display_name,
+				'login' => $u->user_login,
+				'email' => $u->user_email,
+				'role'  => in_array( 'administrator', (array) $u->roles, true ) ? 'admin' : 'staff',
+				'me'    => get_current_user_id() === $u->ID,
+			);
+		}
+		return array( 'team' => $out );
+	}
+
+	/**
+	 * Add a staff account; returns a one-time "set your password" link to send to them.
+	 *
+	 * @param WP_REST_Request $req Request.
+	 * @return array|WP_Error
+	 */
+	public static function team_add( $req ) {
+		$b     = (array) $req->get_json_params();
+		$name  = sanitize_text_field( (string) ( $b['name'] ?? '' ) );
+		$email = sanitize_email( (string) ( $b['email'] ?? '' ) );
+		if ( '' === $name || ! is_email( $email ) ) {
+			return new WP_Error( 'agc_team', __( 'Enter a name and a valid email.', 'agency-core' ), array( 'status' => 400 ) );
+		}
+		if ( email_exists( $email ) ) {
+			return new WP_Error( 'agc_team', __( 'That email already has an account.', 'agency-core' ), array( 'status' => 409 ) );
+		}
+		$base  = sanitize_user( strtolower( strtok( $email, '@' ) ), true );
+		$base  = $base ? $base : 'staff';
+		$login = $base;
+		for ( $i = 2; username_exists( $login ); $i++ ) {
+			$login = $base . $i;
+		}
+		$id = wp_insert_user(
+			array(
+				'user_login'   => $login,
+				'user_email'   => $email,
+				'display_name' => $name,
+				'first_name'   => $name,
+				'user_pass'    => wp_generate_password( 32, true, true ),
+				'role'         => 'shop_manager',
+			)
+		);
+		if ( is_wp_error( $id ) ) {
+			return new WP_Error( 'agc_team', $id->get_error_message(), array( 'status' => 400 ) );
+		}
+		$u   = get_user_by( 'id', $id );
+		$key = get_password_reset_key( $u );
+		return array(
+			'login' => $login,
+			'link'  => is_wp_error( $key ) ? '' : network_site_url( 'wp-login.php?action=rp&key=' . $key . '&login=' . rawurlencode( $login ), 'login' ),
+			'team'  => self::team()['team'],
+		);
+	}
+
+	/**
+	 * Remove a staff account (only shop managers; never yourself or an owner).
+	 *
+	 * @param WP_REST_Request $req Request.
+	 * @return array|WP_Error
+	 */
+	public static function team_remove( $req ) {
+		$id = absint( $req['id'] );
+		$u  = get_user_by( 'id', $id );
+		if ( ! $u || get_current_user_id() === $id || ! in_array( 'shop_manager', (array) $u->roles, true ) || in_array( 'administrator', (array) $u->roles, true ) || ! current_user_can( 'delete_users' ) ) {
+			return new WP_Error( 'agc_forbidden', 'Not allowed', array( 'status' => 403 ) );
+		}
+		require_once ABSPATH . 'wp-admin/includes/user.php';
+		wp_delete_user( $id, get_current_user_id() );
+		return self::team();
 	}
 }

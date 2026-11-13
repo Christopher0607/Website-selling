@@ -2,14 +2,14 @@
 # This file is distributed under the GPL-2.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Agency Core 1.5.0\n"
+"Project-Id-Version: Agency Core 1.6.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/agency-core\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-13T13:06:01+08:00\n"
+"POT-Creation-Date: 2026-11-13T14:14:07+08:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: agency-core\n"
@@ -253,6 +253,7 @@ msgstr ""
 
 #. translators: %s: date
 #: includes/class-festive.php:513
+#: includes/class-owner-api.php:265
 msgctxt "festive cut-off"
 msgid "j M, g:i a"
 msgstr ""
@@ -592,66 +593,116 @@ msgid "Date"
 msgstr ""
 
 #. translators: %s: user name
-#: includes/class-owner-api.php:398
+#: includes/class-owner-api.php:421
+#: includes/class-owner-api.php:1206
 #, php-format
 msgid "Changed in the shop dashboard by %s."
 msgstr ""
 
 #. translators: 1: old, 2: new
-#: includes/class-owner-api.php:442
+#: includes/class-owner-api.php:465
 #, php-format
 msgid "Collection / delivery moved: %1$s → %2$s"
 msgstr ""
 
+#: includes/class-owner-api.php:1123
+msgid "Choose a product (and its option)."
+msgstr ""
+
+#. translators: 1: product, 2: left
+#: includes/class-owner-api.php:1127
+#, php-format
+msgid "Only %2$d left of %1$s."
+msgstr ""
+
+#: includes/class-owner-api.php:1133
+msgid "A name and at least one item are needed."
+msgstr ""
+
+#: includes/class-owner-api.php:1175
+msgid "Cash"
+msgstr ""
+
+#: includes/class-owner-api.php:1176
+msgid "Bank transfer"
+msgstr ""
+
+#: includes/class-owner-api.php:1178
+#: includes/class-settings.php:205
+msgid "Other"
+msgstr ""
+
+#. translators: %s: user name
+#: includes/class-owner-api.php:1186
+#, php-format
+msgid "Order added in the shop dashboard by %s."
+msgstr ""
+
+#: includes/class-owner-api.php:1274
+msgid "Enter a code."
+msgstr ""
+
+#: includes/class-owner-api.php:1278
+msgid "That code is already used."
+msgstr ""
+
+#: includes/class-owner-api.php:1347
+msgid "Enter a name and a valid email."
+msgstr ""
+
+#: includes/class-owner-api.php:1350
+msgid "That email already has an account."
+msgstr ""
+
 #: includes/class-owner-app.php:92
-#: includes/class-owner-app.php:161
-#: includes/class-owner-app.php:208
-#: includes/class-owner-app.php:213
-#: includes/class-owner-app.php:266
+#: includes/class-owner-app.php:170
+#: includes/class-owner-app.php:217
+#: includes/class-owner-app.php:222
+#: includes/class-owner-app.php:275
 msgid "Shop dashboard"
 msgstr ""
 
-#: includes/class-owner-app.php:215
+#: includes/class-owner-app.php:224
 msgid "This account cannot open the shop dashboard."
 msgstr ""
 
-#: includes/class-owner-app.php:216
+#: includes/class-owner-app.php:225
 msgid "Log out"
 msgstr ""
 
-#: includes/class-owner-app.php:219
+#: includes/class-owner-app.php:228
 msgid "Wrong username or password. Please try again."
 msgstr ""
 
-#: includes/class-owner-app.php:221
+#: includes/class-owner-app.php:230
 msgid "The page was open too long. Please log in again."
 msgstr ""
 
-#: includes/class-owner-app.php:224
+#: includes/class-owner-app.php:233
 msgid "Username or email"
 msgstr ""
 
-#: includes/class-owner-app.php:225
+#: includes/class-owner-app.php:234
 msgid "Password"
 msgstr ""
 
-#: includes/class-owner-app.php:226
+#: includes/class-owner-app.php:235
 msgid "Keep me logged in on this phone"
 msgstr ""
 
-#: includes/class-owner-app.php:229
+#: includes/class-owner-app.php:238
 msgid "Log in"
 msgstr ""
 
-#: includes/class-owner-app.php:231
+#: includes/class-owner-app.php:240
 msgid "Forgot password?"
 msgstr ""
 
-#: includes/class-owner-app.php:269
+#: includes/class-owner-app.php:278
 msgid "Loading…"
 msgstr ""
 
-#: includes/class-owner-app.php:270
+#: includes/class-owner-app.php:279
 msgid "Please turn on JavaScript to use the shop dashboard."
 msgstr ""
 
@@ -707,248 +758,256 @@ msgstr ""
 msgid "Receipt not found."
 msgstr ""
 
-#: includes/class-settings.php:108
+#: includes/class-settings.php:110
 msgid "WhatsApp"
 msgstr ""
 
-#: includes/class-settings.php:110
+#: includes/class-settings.php:112
 msgid "WhatsApp number (international format, no +, e.g. 60123456789)"
 msgstr ""
 
-#: includes/class-settings.php:111
+#: includes/class-settings.php:113
 msgid "Show floating button"
 msgstr ""
 
-#: includes/class-settings.php:112
+#: includes/class-settings.php:114
 msgid "Floating button position"
 msgstr ""
 
-#: includes/class-settings.php:113
+#: includes/class-settings.php:115
 msgid "Floating button label (screen readers)"
 msgstr ""
 
-#: includes/class-settings.php:114
+#: includes/class-settings.php:116
 msgid "Show button on product pages"
 msgstr ""
 
-#: includes/class-settings.php:115
+#: includes/class-settings.php:117
 msgid "Product button text"
 msgstr ""
 
-#: includes/class-settings.php:116
+#: includes/class-settings.php:118
 msgid "Product message template — variables: {product} {url} {site}"
 msgstr ""
 
-#: includes/class-settings.php:117
+#: includes/class-settings.php:119
 msgid "General message (floating button) — variables: {site} {url}"
 msgstr ""
 
-#: includes/class-settings.php:121
+#: includes/class-settings.php:123
 msgid "Demo mode"
 msgstr ""
 
-#: includes/class-settings.php:123
+#: includes/class-settings.php:125
 msgid "Demo mode on (banner, no payments, orders blocked, noindex, no customer emails)"
 msgstr ""
 
-#: includes/class-settings.php:124
+#: includes/class-settings.php:126
 msgid "Banner text"
 msgstr ""
 
-#: includes/class-settings.php:125
+#: includes/class-settings.php:127
 msgid "Checkout notice"
 msgstr ""
 
-#: includes/class-settings.php:126
+#: includes/class-settings.php:128
 msgid "Allow test orders in demo mode (only DuitNow QR and the demo online payment; nothing is charged)"
 msgstr ""
 
-#: includes/class-settings.php:127
+#: includes/class-settings.php:129
 msgid "Footer label (e.g. \"Concept Project\")"
 msgstr ""
 
-#: includes/class-settings.php:131
+#: includes/class-settings.php:133
 msgid "Tracking"
 msgstr ""
 
-#: includes/class-settings.php:133
+#: includes/class-settings.php:135
 msgid "GA4 Measurement ID (G-XXXXXXX) — leave empty to disable"
 msgstr ""
 
-#: includes/class-settings.php:134
+#: includes/class-settings.php:136
 msgid "Meta Pixel ID — leave empty to disable"
 msgstr ""
 
-#: includes/class-settings.php:138
+#: includes/class-settings.php:140
 msgid "Business details"
 msgstr ""
 
-#: includes/class-settings.php:140
+#: includes/class-settings.php:142
 msgid "Registered business name"
 msgstr ""
 
-#: includes/class-settings.php:141
+#: includes/class-settings.php:143
 msgid "SSM registration no."
 msgstr ""
 
-#: includes/class-settings.php:142
+#: includes/class-settings.php:144
 msgid "Email"
 msgstr ""
 
-#: includes/class-settings.php:143
+#: includes/class-settings.php:145
 msgid "Phone"
 msgstr ""
 
-#: includes/class-settings.php:144
+#: includes/class-settings.php:146
 msgid "Address"
 msgstr ""
 
-#: includes/class-settings.php:145
+#: includes/class-settings.php:147
 msgid "Business hours"
 msgstr ""
 
-#: includes/class-settings.php:149
+#: includes/class-settings.php:151
 msgid "Social links"
 msgstr ""
 
-#: includes/class-settings.php:160
+#: includes/class-settings.php:162
 msgid "Store UX"
 msgstr ""
 
-#: includes/class-settings.php:162
+#: includes/class-settings.php:164
 msgid "Announcement bar text (empty = hidden)"
 msgstr ""
 
-#: includes/class-settings.php:163
-msgid "Announcement link (optional)"
-msgstr ""
-
-#: includes/class-settings.php:164
-msgid "Trust badges, one per line: icon|Title|Subtitle (icons: truck, card, return, leaf, shield, chat, heart, gift, clock, star)"
-msgstr ""
-
 #: includes/class-settings.php:165
-msgid "Free-shipping amount for the progress bar (RM, empty = hidden)"
+msgid "Pause online orders (the shop stays open to browse)"
 msgstr ""
 
 #: includes/class-settings.php:166
-msgid "Sticky add-to-cart bar on mobile product pages"
+msgid "Message while paused"
 msgstr ""
 
 #: includes/class-settings.php:167
-msgid "Button & card corner radius (e.g. 0px, 8px, 999px)"
+msgid "Announcement link (optional)"
 msgstr ""
 
 #: includes/class-settings.php:168
-msgid "Product image shape"
+msgid "Trust badges, one per line: icon|Title|Subtitle (icons: truck, card, return, leaf, shield, chat, heart, gift, clock, star)"
+msgstr ""
+
+#: includes/class-settings.php:169
+msgid "Free-shipping amount for the progress bar (RM, empty = hidden)"
+msgstr ""
+
+#: includes/class-settings.php:170
+msgid "Sticky add-to-cart bar on mobile product pages"
+msgstr ""
+
+#: includes/class-settings.php:171
+msgid "Button & card corner radius (e.g. 0px, 8px, 999px)"
 msgstr ""
 
 #: includes/class-settings.php:172
-msgid "Festive pre-orders"
-msgstr ""
-
-#: includes/class-settings.php:174
-msgid "Festive pre-order season on"
-msgstr ""
-
-#: includes/class-settings.php:175
-msgid "Season name shown to customers (e.g. Chinese New Year 2027)"
+msgid "Product image shape"
 msgstr ""
 
 #: includes/class-settings.php:176
-msgid "Last day to order: YYYY-MM-DD (until 23:59) or YYYY-MM-DD HH:MM"
-msgstr ""
-
-#: includes/class-settings.php:177
-msgid "First collection / delivery day (YYYY-MM-DD)"
+msgid "Festive pre-orders"
 msgstr ""
 
 #: includes/class-settings.php:178
-msgid "Last collection / delivery day (YYYY-MM-DD)"
+msgid "Festive pre-order season on"
 msgstr ""
 
 #: includes/class-settings.php:179
-msgid "Days off in between (YYYY-MM-DD, separated by commas)"
+msgid "Season name shown to customers (e.g. Chinese New Year 2027)"
 msgstr ""
 
 #: includes/class-settings.php:180
-msgid "Self-collect times, one per line: time|orders per day (e.g. 10:00–13:00|6)"
+msgid "Last day to order: YYYY-MM-DD (until 23:59) or YYYY-MM-DD HH:MM"
 msgstr ""
 
 #: includes/class-settings.php:181
-msgid "Delivery times, one per line: time|orders per day"
+msgid "First collection / delivery day (YYYY-MM-DD)"
 msgstr ""
 
 #: includes/class-settings.php:182
-msgid "Shipping zone for local delivery (its name contains this word)"
+msgid "Last collection / delivery day (YYYY-MM-DD)"
 msgstr ""
 
 #: includes/class-settings.php:183
-msgid "Note shown for courier orders (e.g. Posted by 3 Feb, arrives in 1–3 working days)"
+msgid "Days off in between (YYYY-MM-DD, separated by commas)"
 msgstr ""
 
 #: includes/class-settings.php:184
-msgid "Early-bird price until (YYYY-MM-DD, empty = none)"
+msgid "Self-collect times, one per line: time|orders per day (e.g. 10:00–13:00|6)"
 msgstr ""
 
 #: includes/class-settings.php:185
-msgid "Early-bird discount (%)"
+msgid "Delivery times, one per line: time|orders per day"
 msgstr ""
 
 #: includes/class-settings.php:186
-msgid "Show how many are left (from your stock numbers)"
+msgid "Shipping zone for local delivery (its name contains this word)"
 msgstr ""
 
 #: includes/class-settings.php:187
-msgid "Say \"Only X left\" at or below"
+msgid "Note shown for courier orders (e.g. Posted by 3 Feb, arrives in 1–3 working days)"
 msgstr ""
 
 #: includes/class-settings.php:188
-msgid "After the cut-off, ask for a WhatsApp number to tell them when you open again"
+msgid "Early-bird price until (YYYY-MM-DD, empty = none)"
 msgstr ""
 
 #: includes/class-settings.php:189
-msgid "Items included in the plan (a warning above this; 0 = no warning)"
+msgid "Early-bird discount (%)"
+msgstr ""
+
+#: includes/class-settings.php:190
+msgid "Show how many are left (from your stock numbers)"
+msgstr ""
+
+#: includes/class-settings.php:191
+msgid "Say \"Only X left\" at or below"
+msgstr ""
+
+#: includes/class-settings.php:192
+msgid "After the cut-off, ask for a WhatsApp number to tell them when you open again"
 msgstr ""
 
 #: includes/class-settings.php:193
-msgid "AI chat assistant"
-msgstr ""
-
-#: includes/class-settings.php:195
-msgid "Show the AI chat (also needs AGC_AI_CHAT_URL and AGC_AI_CHAT_TOKEN in wp-config.php and the sales-agent service running)"
-msgstr ""
-
-#: includes/class-settings.php:196
-msgid "Chat window title"
+msgid "Items included in the plan (a warning above this; 0 = no warning)"
 msgstr ""
 
 #: includes/class-settings.php:197
-msgid "First message shown to visitors"
+msgid "AI chat assistant"
+msgstr ""
+
+#: includes/class-settings.php:199
+msgid "Show the AI chat (also needs AGC_AI_CHAT_URL and AGC_AI_CHAT_TOKEN in wp-config.php and the sales-agent service running)"
+msgstr ""
+
+#: includes/class-settings.php:200
+msgid "Chat window title"
 msgstr ""
 
 #: includes/class-settings.php:201
-msgid "Other"
+msgid "First message shown to visitors"
 msgstr ""
 
-#: includes/class-settings.php:203
+#: includes/class-settings.php:207
 msgid "Accent colour (HEX)"
 msgstr ""
 
-#: includes/class-settings.php:204
+#: includes/class-settings.php:208
 msgid "Malaysian checkout tweaks (phone required, hide company & address line 2)"
 msgstr ""
 
-#: includes/class-settings.php:248
+#: includes/class-settings.php:252
 msgid "Agency"
 msgstr ""
 
-#: includes/class-settings.php:384
+#: includes/class-settings.php:388
 msgid "Agency settings"
 msgstr ""
 
-#: includes/class-settings.php:386
+#: includes/class-settings.php:390
 msgid "Demo mode is ON: payments are hidden and orders are blocked."
+msgstr ""
+
+#: includes/class-shop-pause.php:38
+msgid "We are not taking online orders right now. Please check back soon."
 msgstr ""
 
 #: includes/class-store-ux.php:95

@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Agency Core
  * Description:       WhatsApp buttons, demo mode, tracking codes, business details and Malaysian checkout tweaks for studio-built stores.
- * Version:           1.5.0
+ * Version:           1.6.0
  * Requires at least: 6.4
  * Requires PHP:      8.1
  * Author:            Cartsmith
@@ -15,7 +15,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'AGC_VERSION', '1.5.0' );
+define( 'AGC_VERSION', '1.6.0' );
 define( 'AGC_FILE', __FILE__ );
 define( 'AGC_DIR', plugin_dir_path( __FILE__ ) );
 define( 'AGC_URL', plugin_dir_url( __FILE__ ) );
@@ -33,6 +33,7 @@ require_once AGC_DIR . 'includes/class-ai-chat.php';
 require_once AGC_DIR . 'includes/class-receipts.php';
 require_once AGC_DIR . 'includes/class-festive.php';
 require_once AGC_DIR . 'includes/class-owner-api.php';
+require_once AGC_DIR . 'includes/class-shop-pause.php';
 require_once AGC_DIR . 'includes/class-owner-app.php';
 
 if ( defined( 'WP_CLI' ) && WP_CLI ) {
@@ -67,6 +68,7 @@ add_action(
 			AGC_Receipts::init();
 			AGC_Festive::init();
 			AGC_Owner_API::init();
+			AGC_Shop_Pause::init();
 			AGC_Owner_App::init();
 		}
 	}

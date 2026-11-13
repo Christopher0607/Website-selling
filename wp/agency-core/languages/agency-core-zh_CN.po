@@ -216,6 +216,7 @@ msgstr "截止：%s"
 
 #. translators: %s: date
 #: includes/class-festive.php:513
+#: includes/class-owner-api.php:265
 msgctxt "festive cut-off"
 msgid "j M, g:i a"
 msgstr "n月j日 H:i"
@@ -489,66 +490,116 @@ msgid "Asked to be told when you open again (%d)"
 msgstr "想在下次开放时收到通知（%d）"
 
 #. translators: %s: user name
-#: includes/class-owner-api.php:398
+#: includes/class-owner-api.php:421
+#: includes/class-owner-api.php:1206
 #, php-format
 msgid "Changed in the shop dashboard by %s."
 msgstr "%s 在店家后台修改。"
 
 #. translators: 1: old, 2: new
-#: includes/class-owner-api.php:442
+#: includes/class-owner-api.php:465
 #, php-format
 msgid "Collection / delivery moved: %1$s → %2$s"
 msgstr "取货 / 送货时间改了：%1$s → %2$s"
 
+#: includes/class-owner-api.php:1123
+msgid "Choose a product (and its option)."
+msgstr "请选产品（和规格）。"
+
+#. translators: 1: product, 2: left
+#: includes/class-owner-api.php:1127
+#, php-format
+msgid "Only %2$d left of %1$s."
+msgstr "%1$s 只剩 %2$d 份。"
+
+#: includes/class-owner-api.php:1133
+msgid "A name and at least one item are needed."
+msgstr "要填顾客名字，至少一样产品。"
+
+#: includes/class-owner-api.php:1175
+msgid "Cash"
+msgstr "现金"
+
+#: includes/class-owner-api.php:1176
+msgid "Bank transfer"
+msgstr "银行转账"
+
+#: includes/class-owner-api.php:1178
+#: includes/class-settings.php:205
+msgid "Other"
+msgstr "其他"
+
+#. translators: %s: user name
+#: includes/class-owner-api.php:1186
+#, php-format
+msgid "Order added in the shop dashboard by %s."
+msgstr "%s 在店家后台新增这张订单。"
+
+#: includes/class-owner-api.php:1274
+msgid "Enter a code."
+msgstr "请填优惠码。"
+
+#: includes/class-owner-api.php:1278
+msgid "That code is already used."
+msgstr "这个优惠码已经有了。"
+
+#: includes/class-owner-api.php:1347
+msgid "Enter a name and a valid email."
+msgstr "请填名字和正确的电邮。"
+
+#: includes/class-owner-api.php:1350
+msgid "That email already has an account."
+msgstr "这个电邮已经有帐号了。"
+
 #: includes/class-owner-app.php:92
-#: includes/class-owner-app.php:161
-#: includes/class-owner-app.php:208
-#: includes/class-owner-app.php:213
-#: includes/class-owner-app.php:266
+#: includes/class-owner-app.php:170
+#: includes/class-owner-app.php:217
+#: includes/class-owner-app.php:222
+#: includes/class-owner-app.php:275
 msgid "Shop dashboard"
 msgstr "店家后台"
 
-#: includes/class-owner-app.php:215
+#: includes/class-owner-app.php:224
 msgid "This account cannot open the shop dashboard."
 msgstr "这个帐号不能打开店家后台。"
 
-#: includes/class-owner-app.php:216
+#: includes/class-owner-app.php:225
 msgid "Log out"
 msgstr "登出"
 
-#: includes/class-owner-app.php:219
+#: includes/class-owner-app.php:228
 msgid "Wrong username or password. Please try again."
 msgstr "用户名或密码不对，请再试一次。"
 
-#: includes/class-owner-app.php:221
+#: includes/class-owner-app.php:230
 msgid "The page was open too long. Please log in again."
 msgstr "页面开太久了，请重新登录。"
 
-#: includes/class-owner-app.php:224
+#: includes/class-owner-app.php:233
 msgid "Username or email"
 msgstr "用户名或电邮"
 
-#: includes/class-owner-app.php:225
+#: includes/class-owner-app.php:234
 msgid "Password"
 msgstr "密码"
 
-#: includes/class-owner-app.php:226
+#: includes/class-owner-app.php:235
 msgid "Keep me logged in on this phone"
 msgstr "在这部手机保持登录"
 
-#: includes/class-owner-app.php:229
+#: includes/class-owner-app.php:238
 msgid "Log in"
 msgstr "登录"
 
-#: includes/class-owner-app.php:231
+#: includes/class-owner-app.php:240
 msgid "Forgot password?"
 msgstr "忘记密码？"
 
-#: includes/class-owner-app.php:269
+#: includes/class-owner-app.php:278
 msgid "Loading…"
 msgstr "载入中…"
 
-#: includes/class-owner-app.php:270
+#: includes/class-owner-app.php:279
 msgid "Please turn on JavaScript to use the shop dashboard."
 msgstr "请开启 JavaScript 才能使用店家后台。"
 
@@ -604,77 +655,89 @@ msgstr "请在银行 App 核对，然后按「已收到付款」："
 msgid "Receipt not found."
 msgstr "找不到收据。"
 
-#: includes/class-settings.php:126
+#: includes/class-settings.php:128
 msgid "Allow test orders in demo mode (only DuitNow QR and the demo online payment; nothing is charged)"
 msgstr "示范模式也可以下测试订单（只有 DuitNow QR 和示范网上付款，不会收钱）"
 
-#: includes/class-settings.php:172
+#: includes/class-settings.php:165
+msgid "Pause online orders (the shop stays open to browse)"
+msgstr "暂停网上接单（网店照样可以看）"
+
+#: includes/class-settings.php:166
+msgid "Message while paused"
+msgstr "暂停时显示的公告"
+
+#: includes/class-settings.php:176
 msgid "Festive pre-orders"
 msgstr "节日预购"
 
-#: includes/class-settings.php:174
+#: includes/class-settings.php:178
 msgid "Festive pre-order season on"
 msgstr "开启节日预购"
 
-#: includes/class-settings.php:175
+#: includes/class-settings.php:179
 msgid "Season name shown to customers (e.g. Chinese New Year 2027)"
 msgstr "给顾客看的节日名称（例如 2027 农历新年）"
 
-#: includes/class-settings.php:176
+#: includes/class-settings.php:180
 msgid "Last day to order: YYYY-MM-DD (until 23:59) or YYYY-MM-DD HH:MM"
 msgstr "截止日：YYYY-MM-DD（到晚上 11:59），或 YYYY-MM-DD HH:MM"
 
-#: includes/class-settings.php:177
+#: includes/class-settings.php:181
 msgid "First collection / delivery day (YYYY-MM-DD)"
 msgstr "第一天取货 / 送货（YYYY-MM-DD）"
 
-#: includes/class-settings.php:178
+#: includes/class-settings.php:182
 msgid "Last collection / delivery day (YYYY-MM-DD)"
 msgstr "最后一天取货 / 送货（YYYY-MM-DD）"
 
-#: includes/class-settings.php:179
+#: includes/class-settings.php:183
 msgid "Days off in between (YYYY-MM-DD, separated by commas)"
 msgstr "中间休息的日子（YYYY-MM-DD，用逗号分开）"
 
-#: includes/class-settings.php:180
+#: includes/class-settings.php:184
 msgid "Self-collect times, one per line: time|orders per day (e.g. 10:00–13:00|6)"
 msgstr "自取时段，一行一个：时间|每天几单（例如 10:00–13:00|6）"
 
-#: includes/class-settings.php:181
+#: includes/class-settings.php:185
 msgid "Delivery times, one per line: time|orders per day"
 msgstr "送货时段，一行一个：时间|每天几单"
 
-#: includes/class-settings.php:182
+#: includes/class-settings.php:186
 msgid "Shipping zone for local delivery (its name contains this word)"
 msgstr "本地送货的运送区域（名字里有这个字）"
 
-#: includes/class-settings.php:183
+#: includes/class-settings.php:187
 msgid "Note shown for courier orders (e.g. Posted by 3 Feb, arrives in 1–3 working days)"
 msgstr "快递订单的说明（例如：2 月 3 日前寄出，1–3 个工作天送到）"
 
-#: includes/class-settings.php:184
+#: includes/class-settings.php:188
 msgid "Early-bird price until (YYYY-MM-DD, empty = none)"
 msgstr "早鸟价到哪一天（YYYY-MM-DD，空白 = 没有）"
 
-#: includes/class-settings.php:185
+#: includes/class-settings.php:189
 msgid "Early-bird discount (%)"
 msgstr "早鸟折扣（%）"
 
-#: includes/class-settings.php:186
+#: includes/class-settings.php:190
 msgid "Show how many are left (from your stock numbers)"
 msgstr "显示还剩几份（按库存数量）"
 
-#: includes/class-settings.php:187
+#: includes/class-settings.php:191
 msgid "Say \"Only X left\" at or below"
 msgstr "剩下几份或更少时，显示「只剩 X 份」"
 
-#: includes/class-settings.php:188
+#: includes/class-settings.php:192
 msgid "After the cut-off, ask for a WhatsApp number to tell them when you open again"
 msgstr "截止后，请顾客留 WhatsApp 号码，下次开放时通知"
 
-#: includes/class-settings.php:189
+#: includes/class-settings.php:193
 msgid "Items included in the plan (a warning above this; 0 = no warning)"
 msgstr "配套包括几样产品（超过会提醒；0 = 不提醒）"
+
+#: includes/class-shop-pause.php:38
+msgid "We are not taking online orders right now. Please check back soon."
+msgstr "我们暂时没有接网上订单，请迟些再来看看。"
 
 #. translators: %s: customer first name
 #: templates/emails/customer-agc-ready.php:15

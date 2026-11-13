@@ -49,7 +49,7 @@ async function overflow(p) { return p.evaluate(() => document.documentElement.sc
   await p.click('.nav a[data-k=orders]');
   await p.waitForSelector('.pills .pill');
   await wait(p, 600);
-  ok((await p.$$('.pill')).length === 6, 'orders: six filters');
+  ok((await p.$$('.pill[data-f]')).length === 6, 'orders: six filters');
   await p.click('.pill[data-f=all]');
   await wait(p, 800);
   const nAll = (await p.$$('.ocard')).length;
@@ -58,6 +58,24 @@ async function overflow(p) { return p.evaluate(() => document.documentElement.sc
   await wait(p, 1000);
   ok((await p.$$('.ocard')).length > 0 && (await p.$$('.ocard')).length <= nAll, 'orders: search by name');
   await p.fill('.search input', '');
+  await wait(p, 800);
+  // An unpaid order taken by phone, so there is always one "payment to check".
+  const made = await p.evaluate(async () => {
+    const H = { 'X-WP-Nonce': AGC_OWNER.nonce, 'Content-Type': 'application/json' };
+    const get = (u) => fetch(AGC_OWNER.rest + u, { headers: H, credentials: 'same-origin' }).then((r) => r.json());
+    const pr = await get('products');
+    const item = pr.products.flatMap((x) => (x.variations.length ? x.variations : [x])).find((x) => x.stock == null || x.stock > 2);
+    const sl = await get('slots?mode=collect');
+    const d = sl.days.find((x) => Object.values(x.slots).some((n) => n > 0));
+    const when = d ? d.day + '|' + Object.keys(d.slots).find((k) => d.slots[k] > 0) : '';
+    const r = await fetch(AGC_OWNER.rest + 'orders', { method: 'POST', headers: H, credentials: 'same-origin', body: JSON.stringify({ name: 'Test Unpaid', phone: '012-555 0000', items: [{ id: item.id, qty: 1 }], mode: 'collect', when: when, paid: false, method: 'transfer' }) });
+    return r.status;
+  });
+  ok(made === 200, 'an unpaid order taken by phone is added (' + made + ')');
+  await p.goto(BASE + '/dian/#/home');
+  await ready(p);
+  await p.goto(BASE + '/dian/#/orders?f=check');
+  await p.waitForSelector('.pill[data-f]');
   await wait(p, 800);
   await p.click('.pill[data-f=check]');
   await wait(p, 800);
@@ -159,8 +177,10 @@ async function overflow(p) { return p.evaluate(() => document.documentElement.sc
   await ready(p);
   ok(!!(await p.$('.chart svg path.b')) && (await p.$$('.tbl tbody tr')).length > 0, 'reports: chart of sales per day, best sellers');
   const [dl] = await Promise.all([p.waitForEvent('download', { timeout: 15000 }), p.click('.main > .btn')]);
-  const csv = fs.readFileSync(await dl.path(), 'utf8');
-  ok(/Order,Status/.test(csv) && csv.split('\n').length > 2, 'export orders as CSV');
+  const xl = fs.readFileSync(await dl.path());
+  const xlPath = path.join(os.tmpdir(), 'agc-owner-test.xlsx');
+  fs.writeFileSync(xlPath, xl);
+  ok(xl.slice(0, 2).toString() === 'PK' && xl.includes('xl/worksheets/sheet1.xml') && xl.includes('xl/worksheets/sheet3.xml') && /\.xlsx$/.test(dl.suggestedFilename()), 'export to Excel (.xlsx: orders, daily sales, best sellers) → ' + xlPath);
 
   console.log('Settings');
   await p.goto(BASE + '/dian/#/settings');
@@ -181,9 +201,121 @@ async function overflow(p) { return p.evaluate(() => document.documentElement.sc
   ok((await p.$$('section')).length === 4, 'settings: festive, shop details, DuitNow, delivery fees');
   ok((await overflow(p)) <= 1, 'settings fit the phone screen');
 
+  console.log('New order (phone / WhatsApp / counter)');
+  await p.goto(BASE + '/dian/#/new-order');
+  await p.waitForSelector('.actbar');
+  await ready(p);
+  await p.locator('.card.form input[type=text]').first().fill('Test Walk-in ' + Date.now());
+  await p.locator('input[type=tel]').first().fill('012-333 4444');
+  const firstSel = p.locator('.card select[aria-label]').first();
+  const optVal = await firstSel.evaluate((s) => [...s.options].find((o) => o.value && !o.disabled).value);
+  await firstSel.selectOption(optVal);
+  await p.waitForFunction(() => document.querySelectorAll('.card select')[2] && document.querySelectorAll('.card select')[2].options.length > 1, null, { timeout: 15000 }).catch(() => {});
+  const whenSel = p.locator('.card.form select').nth(1);
+  const whenVal = await whenSel.evaluate((s) => { const o = [...s.options].find((x) => x.value); return o ? o.value : ''; });
+  if (whenVal) await whenSel.selectOption(whenVal);
+  ok(/RM\d/.test(await p.textContent('.actbar b')), 'new order: the total adds up as you pick items');
+  await Promise.all([p.waitForURL(/#\/order\/\d+/, { timeout: 20000 }), p.click('.actbar .btn')]);
+  await ready(p);
+  ok(/要做|To make/.test(await p.textContent('.badge')) && /Test Walk-in/.test(await p.textContent('.top__site')), 'new order saved as paid (shows under "to make")');
+
+  console.log('Many orders at once');
+  await p.goto(BASE + '/dian/#/orders?f=make');
+  await p.waitForSelector('.ocard');
+  await ready(p);
+  await p.click('.pills button:has-text("选择"), .pills button:has-text("Select")');
+  const cards = await p.$$('.ocard');
+  await cards[0].click();
+  await cards[1].click();
+  ok(/2/.test(await p.textContent('.actbar .small')), 'select two orders');
+  await p.click('.actbar button:has-text("可以取货"), .actbar button:has-text("Mark ready")');
+  const bulkToast = await p.waitForSelector('.toast:has-text("2")', { timeout: 15000 }).catch(() => null);
+  ok(!!bulkToast, 'two orders marked ready in one tap');
+  await wait(p, 1500);
+
+  console.log('Delivery and printing');
+  await p.goto(BASE + '/dian/#/orders?f=all');
+  await ready(p);
+  await p.waitForSelector('.ocard');
+  const dCard = p.locator('.ocard:has-text("送货"), .ocard:has-text("Delivery")').first();
+  if (await dCard.count()) {
+    await dCard.click();
+    await p.waitForSelector('.lines');
+    await ready(p);
+    ok(!!(await p.$('a[href^="https://waze.com/ul"]')) && !!(await p.$('a[href^="https://www.google.com/maps/"]')), 'delivery order: Waze and Google Maps buttons');
+  } else ok(false, 'no delivery order to check');
+  await p.goto(BASE + '/dian/#/production');
+  await ready(p);
+  await p.click('.top__act button:has-text("清单"), .top__act button:has-text("List")');
+  await p.waitForSelector('.checklist .box', { timeout: 15000 }).catch(() => {});
+  ok((await p.$$('.checklist .box')).length > 0, 'printable pick-up list with boxes to tick');
+
+  console.log('Coupons');
+  const code = 'TEST' + String(Date.now()).slice(-6);
+  await p.goto(BASE + '/dian/#/coupon/new');
+  await p.waitForSelector('.actbar');
+  await ready(p);
+  await p.locator('.card.form input[type=text]').first().fill(code);
+  await p.locator('.card.form input[type=number]').first().fill('10');
+  await Promise.all([p.waitForURL(/#\/coupons$/), p.click('.actbar .btn')]);
+  await ready(p);
+  ok(new RegExp(code).test(await p.textContent('.main')), 'coupon created');
+  const shop = await browser.newContext({ viewport: { width: 390, height: 844 } });
+  const sp = await shop.newPage();
+  await sp.goto(BASE + '/');
+  await sp.locator('li.product a.ajax_add_to_cart').first().click();
+  await sp.waitForTimeout(1500);
+  await sp.goto(BASE + '/cart/');
+  await sp.fill('#coupon_code', code);
+  await sp.click('button[name=apply_coupon]');
+  await sp.waitForTimeout(2500);
+  ok(new RegExp(code, 'i').test(await sp.textContent('.cart_totals')), 'the coupon works in the shop cart');
+  await shop.close();
+  await p.click('.pcard:has-text("' + code + '")');
+  await p.waitForSelector('.actbar');
+  await p.click('button.btn--danger');
+  await p.click('.sheet .btn--danger');
+  await p.waitForURL(/#\/coupons$/);
+  await ready(p);
+  ok(!new RegExp(code).test(await p.textContent('.main')), 'coupon deleted');
+
+  console.log('Pause online orders');
+  await p.goto(BASE + '/dian/#/home');
+  await ready(p);
+  const pz = p.locator('.card .switch input').first();
+  await pz.click();
+  await p.waitForSelector('.toast');
+  await p.waitForTimeout(800);
+  const v1 = await browser.newContext();
+  const vp = await v1.newPage();
+  await vp.goto(BASE + '/?nc=' + Date.now());
+  ok(!!(await vp.$('.agc-paused')) && !(await vp.$('li.product a.add_to_cart_button')), 'paused: the shop shows the message and nothing can be added to the cart');
+  await pz.click();
+  await p.waitForTimeout(1500);
+  await vp.goto(BASE + '/?nc=' + Date.now());
+  ok(!(await vp.$('.agc-paused')) && !!(await vp.$('li.product a.add_to_cart_button')), 'switched back on: orders open again');
+  await v1.close();
+
+  if (process.env.OWNER_IS_ADMIN !== '0') {
+    console.log('Team');
+    await p.goto(BASE + '/dian/#/team');
+    await p.waitForSelector('.tbl');
+    await ready(p);
+    const em = 'staff' + Date.now() + '@example.com';
+    await p.locator('.card.form input[type=text]').fill('Test Staff');
+    await p.locator('.card.form input[type=email]').fill(em);
+    await p.click('.card.form .btn');
+    await p.waitForSelector('.card--soft');
+    ok(/wp-login\.php\?action=rp/.test(await p.textContent('.card--soft')) && /Test Staff/.test(await p.textContent('.tbl')), 'staff account added, with a set-password link to send');
+    await p.click('tr:has-text("Test Staff") .btn--danger');
+    await p.click('.sheet .btn--danger');
+    await p.waitForTimeout(1500);
+    ok(!/Test Staff/.test(await p.textContent('.tbl')), 'staff account removed');
+  }
+
   console.log('Desktop');
   await p.setViewportSize({ width: 1280, height: 860 });
-  for (const v of ['home', 'orders?f=all', 'production', 'products', 'customers', 'reports', 'settings']) {
+  for (const v of ['home', 'orders?f=all', 'production', 'products', 'customers', 'coupons', 'reports', 'settings', 'team', 'new-order']) {
     await p.goto(BASE + '/dian/#/' + v);
     await ready(p);
     const o = await overflow(p);

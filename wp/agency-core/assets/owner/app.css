@@ -121,7 +121,7 @@ h1, h2, h3 { margin: 0; line-height: 1.25; }
 .search svg { position: absolute; left: 13px; top: 13px; width: 20px; height: 20px; color: var(--faint); }
 
 /* order list */
-.olist { display: grid; gap: 10px; }
+.olist { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; }
 .ocard { display: block; background: var(--card); border: 1px solid var(--line); border-radius: var(--r); padding: 14px; text-decoration: none; color: var(--ink); }
 .ocard:active { transform: scale(.995); }
 .ocard__top { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
@@ -163,7 +163,7 @@ h1, h2, h3 { margin: 0; line-height: 1.25; }
 .slot-h svg, .row > svg { width: 20px; height: 20px; flex: none; color: var(--muted); }
 
 /* products */
-.plist { display: grid; gap: 10px; }
+.plist { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; }
 @media (min-width: 720px) { .plist { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .pcard { display: grid; grid-template-columns: 76px minmax(0, 1fr); gap: 12px; background: var(--card); border: 1px solid var(--line); border-radius: var(--r); padding: 12px; text-decoration: none; color: var(--ink); }
 .pcard__img { width: 76px; height: 76px; border-radius: 12px; object-fit: cover; background: #f2ece5; }
@@ -257,3 +257,27 @@ h1, h2, h3 { margin: 0; line-height: 1.25; }
   .card { border: 0; padding: 0; break-inside: avoid; }
   .main { padding: 0; }
 }
+
+/* 2026-11-13 第 2 批：多选订单、取货清单、打印 */
+.ocard.is-picking { position: relative; padding-left: 50px; cursor: pointer; }
+.ocard.is-picking::before { content: ""; position: absolute; left: 14px; top: 16px; width: 22px; height: 22px; border-radius: 7px; border: 2px solid #d6ccc1; background: #fff; }
+.ocard.is-picked { border-color: var(--accent); background: var(--soft); }
+.ocard.is-picked::before { content: "✓"; color: #fff; font-weight: 900; font-size: 14px; line-height: 18px; text-align: center; background: var(--accent); border-color: var(--accent); }
+.actbar .small { align-self: center; white-space: nowrap; }
+.checklist td { vertical-align: top; }
+.checklist .box { display: inline-block; width: 20px; height: 20px; border: 2px solid var(--ink); border-radius: 5px; margin-top: 2px; }
+.top__act .btns { flex-wrap: nowrap; }
+@media print {
+  .top { position: static; padding: 0 0 10px; }
+  .top__title { font-size: 18pt; }
+  .card { margin-bottom: 10px; }
+  .btn, .btns { display: none !important; }
+  .receipt img { max-height: 240px; }
+  a { color: inherit; text-decoration: none; }
+}
+
+.oline select, .oline input { width: 100%; min-width: 0; min-height: 46px; border: 1px solid var(--line); border-radius: 12px; background: #fff; padding: 8px 10px; }
+.oline input { width: 76px; flex: none; text-align: center; }
+.actbar--bulk { flex-wrap: wrap; }
+.actbar--bulk .small { flex: 1 0 100%; }
+.actbar--bulk .btn { flex: 1 1 0; min-width: 0; white-space: normal; line-height: 1.2; padding: 6px 8px; }

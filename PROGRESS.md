@@ -43,7 +43,7 @@
 - [ ] 1.8 邮件发送 —— 要俊宇注册 Brevo
 - [ ] 1.9 备份、更新、监控（含还原测试）🧪（备份、还原、更新失败自动还原都测过；UpdraftPlus Google Drive 和 UptimeRobot 要在真服务器设）
 - [ ] 1.10 复制脚本测试 + 母版 v1.0 🧪（复制 38 秒、没有残留）
-- [x] 1.12 现代化店家后台 `/dian/` —— agency-core 1.5.0，`check-owner.js` 34 项（2026-11-13）
+- [x] 1.12 现代化店家后台 `/dian/` —— agency-core 1.6.0，`check-owner.js` 48 项（2026-11-13）
 - [ ] 1.11 节日预购网店（RM399）🧪 agency-core 1.4.0 + 示范站 `sites/demo-festive`（Butter & Lantern 农历新年中文版）；`check-festive-wp.js` 38 项本机通过（2026-11-13）；等服务器建好再在真网址验收
 
 ## Phase 2 样板站（2026-11-07 改由 Phase N 的 6 个 Netlify 模板代替）
@@ -113,6 +113,7 @@
 
 | 日期 | 任务 | 结果 | 网址 / 文件 | 未解决的问题 |
 |---|---|---|---|---|
+| 2026-11-13 | 4.10 店家后台第 2 批（俊宇：顾客、报表导出 Excel、设定，还有更多实际商家会用的功能，你决定） | agency-core 1.6.0：Excel 导出（报表 / 生产 / 顾客 / 等通知）、代客下单、一次处理多张订单、优惠码管理、一键暂停接单、Waze / Google 地图、打印取货清单和单张订单、新订单提醒、员工帐号（设定密码连结）、点顾客看订单。修正画面切换的时间差和长名字撑宽画面。`check-owner.js` 48 项本机通过（含优惠码在购物车真的能用、暂停时前台不能下单），店铺测试 38 项照样通过，没有 PHP 错误。俊宇决定服务器留着 2 GB（不降级） | https://demo-festive.cartsmithstudio.com/dian/ | 测试会故意输错一次密码，连续跑太多次会被防暴力破解插件锁 20 分钟（正常保护） |
 | 2026-11-13 | 4.9 现代化店家后台（俊宇：WordPress 后台破破烂烂、不现代；要完整完善） | agency-core 1.5.0：新后台 `/dian/`（自己的登录页、手机底部分页 + 电脑侧边栏、可加到主画面）：概况、订单（确认付款 / 可以取货 / 完成 / 取消 / 改时间 / 备注 / 打电话 / WhatsApp 预填）、生产（每天要做多少 + 打印）、产品（价钱、库存、售完、上架隐藏、规格、照片上传、新增删除）、顾客 + 等通知名单、报表（图表、热卖、CSV）、设定（节日、店铺资料、DuitNow QR、运费）。`site/tools/check-owner.js` 34 项本机通过（手机 + 电脑不超出画面、没有程式错误、没有 PHP 错误），店铺测试 38 项照样通过 | https://demo-festive.cartsmithstudio.com/dian/、wp/agency-core/includes/class-owner-*.php、wp/agency-core/assets/owner/ | 新后台目前只有中文和英文；以后交付客户时，客户用店长帐号登录就直接到新后台 |
 | 2026-11-13 | 4.8 真网址后台测试 + 俊宇的后台帐号（俊宇：只有手机，要直接登录后台） | 小帮手执行 `ops/jobs/002-temp-admins.sh`：俊宇的帐号 cartsmith-admin（一次性设定密码连结，24 小时）+ 测试帐号 festtest（密码两边各自算，不落记录）。真网址完整测试 34 项通过（含店家后台、看收据、已收到付款、可以取货、时段满、截止后）。`003-cleanup-tests.sh` 删掉测试帐号、6 张测试订单（库存加回）、测试电话、含连结的记录 | https://demo-festive.cartsmithstudio.com/wp-admin | 电邮要 Brevo；API Token 由俊宇自己删 |
 | 2026-11-13 | 4.7 服务器上线（俊宇在手机上，给了临时 API Token） | Claude Code 用 DigitalOcean API 开 `agency-dev`（sgp1、s-1vcpu-2gb、Ubuntu 24.04、无备份、管理员电邮 cartsmith.studio@gmail.com），开机脚本 `cloud-init.sh` 自己装好系统、SSH 改成只能用密钥、装自动更新小帮手；俊宇加 DNS 后小帮手自己建好母版 + 节日网店示范（HTTPS、服务器自我检查 12 项 PASS）。真网址前台测试 21 项通过（自取 + 网上付款、巴生谷送货 + DuitNow + 上传收据、快递、查订单）。店家后台测试没有跑：为了测试自建管理员帐号被安全检查挡下，改由俊宇自己登录看 | https://demo-festive.cartsmithstudio.com、https://master.cartsmithstudio.com、scripts/local/do-server.sh、scripts/server/cloud-init.sh、ops/ | 邮件还不能寄（要 Brevo）；API Token 贴过在聊天里，要俊宇删掉；服务器上的 3 张测试订单（名字 Test）是测试留下的 |

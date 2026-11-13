@@ -66,6 +66,8 @@ class AGC_Settings {
 			'my_checkout'          => 1,
 			// Store UX.
 			'announcement'         => '',
+			'shop_paused'          => 0,
+			'shop_paused_msg'      => '',
 			'announcement_link'    => '',
 			'trust_badges'         => "truck|Free shipping over RM150|West & East Malaysia\ncard|FPX & e-wallets|Secure checkout\nreturn|Easy exchange|See our policy\nchat|Real people on WhatsApp|We reply within 1 working day",
 			'free_shipping_min'    => '',
@@ -160,6 +162,8 @@ class AGC_Settings {
 				'title'  => __( 'Store UX', 'agency-core' ),
 				'fields' => array(
 					'announcement'      => array( 'text', __( 'Announcement bar text (empty = hidden)', 'agency-core' ) ),
+					'shop_paused'       => array( 'checkbox', __( 'Pause online orders (the shop stays open to browse)', 'agency-core' ) ),
+					'shop_paused_msg'   => array( 'text', __( 'Message while paused', 'agency-core' ) ),
 					'announcement_link' => array( 'url', __( 'Announcement link (optional)', 'agency-core' ) ),
 					'trust_badges'      => array( 'textarea', __( 'Trust badges, one per line: icon|Title|Subtitle (icons: truck, card, return, leaf, shield, chat, heart, gift, clock, star)', 'agency-core' ) ),
 					'free_shipping_min' => array( 'text', __( 'Free-shipping amount for the progress bar (RM, empty = hidden)', 'agency-core' ) ),
