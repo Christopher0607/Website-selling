@@ -1,0 +1,630 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Agency Core\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Domain: agency-core\n"
+
+#: includes/class-festive-email.php:21
+msgid "Order ready"
+msgstr "订单可以取货 / 已出发"
+
+#: includes/class-festive-email.php:22
+msgid "Sent to the customer when you mark an order \"Ready\" (ready for collection, or out for delivery)."
+msgstr "把订单标为「可以取货」（可以取货，或已经出发送货）时，寄给顾客。"
+
+#: includes/class-festive-email.php:40
+msgid "Your {site_title} order #{order_number} is ready"
+msgstr "你在 {site_title} 的订单 #{order_number} 好了"
+
+#: includes/class-festive-email.php:49
+msgid "Your order is ready"
+msgstr "你的订单好了"
+
+#: includes/class-festive-email.php:58
+msgid "Thank you, and happy celebrating!"
+msgstr "谢谢你，祝佳节愉快！"
+
+#: includes/class-festive-gateways.php:30
+msgid "DuitNow QR (manual)"
+msgstr "DuitNow QR（手动确认）"
+
+#: includes/class-festive-gateways.php:31
+msgid "Shows your DuitNow QR and the amount. The order waits on hold until the customer uploads the receipt and you press \"Payment received\"."
+msgstr "显示你的 DuitNow QR 和金额。顾客上传收据、你按「已收到付款」之前，订单是「保留」状态。"
+
+#: includes/class-festive-gateways.php:49
+#: includes/class-festive-gateways.php:208
+msgid "Enable"
+msgstr "开启"
+
+#: includes/class-festive-gateways.php:51
+msgid "Accept DuitNow QR payments"
+msgstr "接受 DuitNow QR 付款"
+
+#: includes/class-festive-gateways.php:55
+#: includes/class-festive-gateways.php:214
+msgid "Title"
+msgstr "标题"
+
+#: includes/class-festive-gateways.php:57
+msgid "DuitNow QR (any banking or e-wallet app)"
+msgstr "DuitNow QR（任何银行或电子钱包 App）"
+
+#: includes/class-festive-gateways.php:60
+#: includes/class-festive-gateways.php:219
+msgid "Description"
+msgstr "说明"
+
+#: includes/class-festive-gateways.php:62
+msgid "After you place the order you will see our DuitNow QR and the amount. Pay with any banking or e-wallet app, then upload the receipt."
+msgstr "下单后会看到我们的 DuitNow QR 和金额。用任何银行或电子钱包 App 付款，再上传收据。"
+
+#: includes/class-festive-gateways.php:65
+msgid "DuitNow QR image (URL)"
+msgstr "DuitNow QR 图片网址"
+
+#: includes/class-festive-gateways.php:67
+msgid "Upload your shop's DuitNow QR to Media, copy its URL here."
+msgstr "把店的 DuitNow QR 上传到「媒体」，复制它的网址贴在这里。"
+
+#: includes/class-festive-gateways.php:71
+msgid "Account name shown under the QR"
+msgstr "QR 下面显示的户口名字"
+
+#: includes/class-festive-gateways.php:76
+msgid "Extra note"
+msgstr "补充说明"
+
+#: includes/class-festive-gateways.php:78
+msgid "We confirm payments within the same day (9am–9pm)."
+msgstr "我们当天确认付款（早上 9 点到晚上 9 点）。"
+
+#: includes/class-festive-gateways.php:113
+msgid "Waiting for the DuitNow payment and receipt."
+msgstr "等顾客 DuitNow 付款和上传收据。"
+
+#: includes/class-festive-gateways.php:129
+msgid "Pay by DuitNow QR"
+msgstr "用 DuitNow QR 付款"
+
+#: includes/class-festive-gateways.php:130
+#: includes/class-festive-gateways.php:177
+msgid "DuitNow QR"
+msgstr "DuitNow QR"
+
+#: includes/class-festive-gateways.php:135
+msgid "Scan the QR with your banking or e-wallet app (or save it and choose it from your photos)."
+msgstr "用银行或电子钱包 App 扫这个 QR（也可以先存图，再从相册选）。"
+
+#. translators: 1: amount, 2: order number
+#: includes/class-festive-gateways.php:137
+#, php-format
+msgid "Pay <strong>%1$s</strong>, reference <strong>%2$s</strong>."
+msgstr "付 <strong>%1$s</strong>，备注（reference）写 <strong>%2$s</strong>。"
+
+#: includes/class-festive-gateways.php:138
+msgid "Upload the receipt below. We will email you when the payment is confirmed."
+msgstr "在下面上传收据。我们确认付款后会发电邮给你。"
+
+#. translators: 1: amount, 2: order number
+#: includes/class-festive-gateways.php:170
+#, php-format
+msgid "Pay %1$s by DuitNow QR, reference %2$s, then upload the receipt here:"
+msgstr "请用 DuitNow QR 付 %1$s，备注写 %2$s，然后在这里上传收据："
+
+#: includes/class-festive-gateways.php:176
+msgid "Upload my receipt"
+msgstr "上传收据"
+
+#: includes/class-festive-gateways.php:192
+msgid "Demo online payment (nothing is charged)"
+msgstr "示范网上付款（不会收钱）"
+
+#: includes/class-festive-gateways.php:193
+msgid "Only appears in demo mode with test orders allowed. The order is marked paid without charging anything."
+msgstr "只在示范模式、允许测试订单时出现。订单直接当作已付款，不会收任何钱。"
+
+#: includes/class-festive-gateways.php:210
+msgid "Offer in demo mode"
+msgstr "在示范模式提供"
+
+#: includes/class-festive-gateways.php:216
+msgid "Online banking (FPX), card or e-wallet"
+msgstr "网上银行 FPX、信用卡、电子钱包"
+
+#: includes/class-festive-gateways.php:221
+msgid "Demo store: the order is marked paid and nothing is charged. A real shop connects its own payment gateway here."
+msgstr "示范网站：订单直接当作已付款，不会收钱。真正的网店会接上店家自己的付款网关。"
+
+#: includes/class-festive-gateways.php:243
+msgid "Demo payment: nothing was charged."
+msgstr "示范付款：没有收任何钱。"
+
+#: includes/class-festive.php:323
+msgctxt "festive day label"
+msgid "D j M"
+msgstr "D n月j日"
+
+#: includes/class-festive.php:334
+msgid "Self-collect"
+msgstr "到店自取"
+
+#: includes/class-festive.php:335
+msgid "Delivery"
+msgstr "送货"
+
+#: includes/class-festive.php:336
+#: includes/class-festive.php:1133
+msgid "Courier"
+msgstr "快递"
+
+#: includes/class-festive.php:374
+#: includes/class-festive.php:524
+msgid "days"
+msgstr "天"
+
+#: includes/class-festive.php:375
+#: includes/class-festive.php:525
+msgid "hrs"
+msgstr "小时"
+
+#: includes/class-festive.php:376
+#: includes/class-festive.php:526
+msgid "min"
+msgstr "分"
+
+#. translators: %d: how many are left
+#. translators: %d: places left
+#: includes/class-festive.php:377
+#: includes/class-festive.php:415
+#: includes/class-festive.php:651
+#, php-format
+msgid "%d left"
+msgstr "剩 %d 份"
+
+#. translators: %d: places left
+#: includes/class-festive.php:378
+#: includes/class-festive.php:651
+msgid "Full"
+msgstr "已满"
+
+#: includes/class-festive.php:407
+msgid "Sold out"
+msgstr "已售完"
+
+#. translators: %d: how many are left
+#: includes/class-festive.php:415
+#, php-format
+msgid "Only %d left"
+msgstr "只剩 %d 份"
+
+#. translators: %s: season name
+#: includes/class-festive.php:507
+#, php-format
+msgid "Pre-orders for %s have closed. Thank you!"
+msgstr "%s预购已经截止，谢谢大家！"
+
+#. translators: %s: date
+#: includes/class-festive.php:521
+#, php-format
+msgid "Order by %s"
+msgstr "截止：%s"
+
+#. translators: %s: date
+#: includes/class-festive.php:521
+msgctxt "festive cut-off"
+msgid "j M, g:i a"
+msgstr "n月j日 H:i"
+
+#: includes/class-festive.php:523
+msgid "Time left to order"
+msgstr "离截止还有"
+
+#. translators: %s: date range
+#: includes/class-festive.php:530
+#, php-format
+msgid "Collection & delivery: %s"
+msgstr "取货 / 送货：%s"
+
+#. translators: 1: percent, 2: date
+#: includes/class-festive.php:536
+#, php-format
+msgid "Early-bird %1$s%% off until %2$s"
+msgstr "早鸟 %1$s%% 折扣，到 %2$s"
+
+#: includes/class-festive.php:549
+msgid "Thank you. We will message you when the next season opens."
+msgstr "谢谢！下次开放预购时我们会通知你。"
+
+#: includes/class-festive.php:552
+msgid "Leave your WhatsApp number and we will tell you when we open again."
+msgstr "留下 WhatsApp 号码，下次开放时通知你。"
+
+#: includes/class-festive.php:554
+msgid "Notify me"
+msgstr "通知我"
+
+#. translators: %s: percent
+#: includes/class-festive.php:600
+#, php-format
+msgid "Early-bird %s%% off"
+msgstr "早鸟 %s%% 折扣"
+
+#: includes/class-festive.php:638
+msgid "Delivery day and time"
+msgstr "送货日子和时间"
+
+#: includes/class-festive.php:638
+msgid "Collection day and time"
+msgstr "取货日子和时间"
+
+#: includes/class-festive.php:640
+msgid "required"
+msgstr "必填"
+
+#: includes/class-festive.php:642
+msgid "No days left to choose. Please contact the shop."
+msgstr "已经没有日子可以选了，请联系店家。"
+
+#: includes/class-festive.php:645
+msgid "Choose a day and time"
+msgstr "选日子和时间"
+
+#. translators: %s: address
+#: includes/class-festive.php:669
+#: includes/class-festive.php:830
+#: includes/class-festive.php:837
+#, php-format
+msgid "Collect from: %s"
+msgstr "取货地点：%s"
+
+#: includes/class-festive.php:679
+msgid "Pre-orders for this season have closed."
+msgstr "这一季的预购已经截止。"
+
+#: includes/class-festive.php:697
+msgid "Please choose a delivery day and time."
+msgstr "请选送货的日子和时间。"
+
+#: includes/class-festive.php:697
+msgid "Please choose a collection day and time."
+msgstr "请选取货的日子和时间。"
+
+#: includes/class-festive.php:703
+msgid "That day or time can no longer be chosen. Please choose another."
+msgstr "这个日子或时间已经不能选了，请换一个。"
+
+#: includes/class-festive.php:705
+msgid "That time has just filled up. Please choose another."
+msgstr "这个时段刚刚满了，请换一个。"
+
+#: includes/class-festive.php:740
+msgid "Order received"
+msgstr "已收到订单"
+
+#: includes/class-festive.php:741
+msgid "Paid · being made"
+msgstr "已付款 · 制作中"
+
+#: includes/class-festive.php:742
+msgid "Ready for collection"
+msgstr "可以取货"
+
+#: includes/class-festive.php:742
+msgid "On its way"
+msgstr "送货中"
+
+#: includes/class-festive.php:743
+#: includes/class-festive.php:1193
+msgid "Done"
+msgstr "完成"
+
+#. translators: %s: order status
+#: includes/class-festive.php:762
+#, php-format
+msgid "Order status: %s"
+msgstr "订单状态：%s"
+
+#: includes/class-festive.php:769
+msgid "Add to my calendar"
+msgstr "加入我的日历"
+
+#: includes/class-festive.php:793
+msgid "Collect order"
+msgstr "取订单"
+
+#: includes/class-festive.php:793
+msgid "Delivery of order"
+msgstr "送货：订单"
+
+#: includes/class-festive.php:851
+#: includes/class-festive.php:873
+#: includes/class-festive.php:925
+msgctxt "order status"
+msgid "Ready"
+msgstr "可以取货"
+
+#. translators: %s: number of orders
+#: includes/class-festive.php:857
+#, php-format
+msgid "Ready <span class=\"count\">(%s)</span>"
+msgid_plural "Ready <span class=\"count\">(%s)</span>"
+msgstr[0] "可以取货 <span class=\"count\">(%s)</span>"
+
+#: includes/class-festive.php:951
+msgid "Change status to Ready"
+msgstr "改成「可以取货」"
+
+#: includes/class-festive.php:968
+#: includes/class-festive.php:1009
+msgid "Collect / deliver"
+msgstr "取货 / 送货"
+
+#: includes/class-festive.php:984
+msgid "Receipt uploaded"
+msgstr "已上传收据"
+
+#. translators: 1: limit, 2: count
+#: includes/class-festive.php:1025
+#, php-format
+msgid "Your festive shop plan includes up to %1$d items; %2$d are published. Ask your web studio before adding more."
+msgstr "你的节日网店配套包括最多 %1$d 样产品，现在上架了 %2$d 样。要加更多，请先问帮你做网站的工作室。"
+
+#: includes/class-festive.php:1036
+#: includes/class-festive.php:1105
+msgid "Festive orders"
+msgstr "节日订单"
+
+#: includes/class-festive.php:1109
+msgid "Pre-orders are closed."
+msgstr "预购已经截止。"
+
+#. translators: %s: date
+#: includes/class-festive.php:1109
+#, php-format
+msgid "Pre-orders close %s."
+msgstr "预购截止：%s。"
+
+#. translators: %s: date
+#: includes/class-festive.php:1109
+msgid "Change dates and times"
+msgstr "改日期和时段"
+
+#: includes/class-festive.php:1112
+msgid "orders this season"
+msgstr "这一季的订单"
+
+#: includes/class-festive.php:1113
+msgid "payments to check"
+msgstr "待确认付款"
+
+#: includes/class-festive.php:1114
+msgid "paid, to make"
+msgstr "已付款，要做"
+
+#: includes/class-festive.php:1115
+msgid "paid so far"
+msgstr "已收款"
+
+#: includes/class-festive.php:1119
+msgid "No orders yet."
+msgstr "还没有订单。"
+
+#: includes/class-festive.php:1122
+msgid "Days"
+msgstr "日子"
+
+#: includes/class-festive.php:1158
+msgid "What to make"
+msgstr "这天要做多少"
+
+#: includes/class-festive.php:1160
+msgid "Item"
+msgstr "产品"
+
+#: includes/class-festive.php:1160
+msgid "Paid"
+msgstr "已付款"
+
+#: includes/class-festive.php:1160
+msgid "Payment to check"
+msgstr "待确认付款"
+
+#: includes/class-festive.php:1166
+msgid "Nothing for this day yet."
+msgstr "这天还没有订单。"
+
+#: includes/class-festive.php:1168
+msgid "Print"
+msgstr "打印"
+
+#: includes/class-festive.php:1170
+msgid "Orders"
+msgstr "订单"
+
+#: includes/class-festive.php:1172
+msgid "Time"
+msgstr "时间"
+
+#: includes/class-festive.php:1172
+msgid "Order"
+msgstr "订单"
+
+#: includes/class-festive.php:1172
+msgid "Customer"
+msgstr "顾客"
+
+#: includes/class-festive.php:1172
+msgid "Items"
+msgstr "产品"
+
+#: includes/class-festive.php:1172
+msgid "Status"
+msgstr "状态"
+
+#: includes/class-festive.php:1187
+msgid "See receipt"
+msgstr "看收据"
+
+#: includes/class-festive.php:1189
+msgid "Payment received"
+msgstr "已收到付款"
+
+#: includes/class-festive.php:1191
+msgid "Ready"
+msgstr "可以取货"
+
+#: includes/class-festive.php:1211
+msgid "No orders for this day yet."
+msgstr "这天还没有订单。"
+
+#. translators: %d: count
+#: includes/class-festive.php:1218
+#, php-format
+msgid "Asked to be told when you open again (%d)"
+msgstr "想在下次开放时收到通知（%d）"
+
+#: includes/class-receipts.php:94
+msgid "That file could not be used. Please upload a JPG, PNG, WebP or PDF under 5 MB."
+msgstr "这个文件不能用。请上传 5 MB 以内的 JPG、PNG、WebP 或 PDF。"
+
+#: includes/class-receipts.php:97
+msgid "Receipt received. We will check it and email you when your payment is confirmed."
+msgstr "收到收据了。我们确认付款后会发电邮给你。"
+
+#: includes/class-receipts.php:101
+msgid "Upload a different receipt"
+msgstr "换一张收据"
+
+#: includes/class-receipts.php:104
+msgid "Upload your payment receipt"
+msgstr "上传付款收据"
+
+#: includes/class-receipts.php:104
+msgid "(screenshot or PDF, up to 5 MB)"
+msgstr "（截图或 PDF，5 MB 以内）"
+
+#: includes/class-receipts.php:109
+msgid "Send receipt"
+msgstr "送出收据"
+
+#: includes/class-receipts.php:124
+msgid "This link has expired. Please open your order again."
+msgstr "这个连结已经过期，请重新打开你的订单。"
+
+#: includes/class-receipts.php:153
+msgid "The customer uploaded a payment receipt. Check it, then mark the order \"Processing\" (payment received)."
+msgstr "顾客上传了付款收据。请核对，然后把订单改成「处理中」（已收到付款）。"
+
+#. translators: 1: order number, 2: shop name
+#: includes/class-receipts.php:169
+#, php-format
+msgid "Payment receipt for order #%1$s – %2$s"
+msgstr "订单 #%1$s 的付款收据 – %2$s"
+
+#. translators: 1: customer name, 2: amount
+#: includes/class-receipts.php:171
+#, php-format
+msgid "%1$s uploaded a payment receipt for %2$s."
+msgstr "%1$s 上传了 %2$s 的付款收据。"
+
+#: includes/class-receipts.php:172
+msgid "Check it in your bank app, then press \"Payment received\":"
+msgstr "请在银行 App 核对，然后按「已收到付款」："
+
+#: includes/class-receipts.php:198
+msgid "Receipt not found."
+msgstr "找不到收据。"
+
+#: includes/class-settings.php:126
+msgid "Allow test orders in demo mode (only DuitNow QR and the demo online payment; nothing is charged)"
+msgstr "示范模式也可以下测试订单（只有 DuitNow QR 和示范网上付款，不会收钱）"
+
+#: includes/class-settings.php:172
+msgid "Festive pre-orders"
+msgstr "节日预购"
+
+#: includes/class-settings.php:174
+msgid "Festive pre-order season on"
+msgstr "开启节日预购"
+
+#: includes/class-settings.php:175
+msgid "Season name shown to customers (e.g. Chinese New Year 2027)"
+msgstr "给顾客看的节日名称（例如 2027 农历新年）"
+
+#: includes/class-settings.php:176
+msgid "Last day to order: YYYY-MM-DD (until 23:59) or YYYY-MM-DD HH:MM"
+msgstr "截止日：YYYY-MM-DD（到晚上 11:59），或 YYYY-MM-DD HH:MM"
+
+#: includes/class-settings.php:177
+msgid "First collection / delivery day (YYYY-MM-DD)"
+msgstr "第一天取货 / 送货（YYYY-MM-DD）"
+
+#: includes/class-settings.php:178
+msgid "Last collection / delivery day (YYYY-MM-DD)"
+msgstr "最后一天取货 / 送货（YYYY-MM-DD）"
+
+#: includes/class-settings.php:179
+msgid "Days off in between (YYYY-MM-DD, separated by commas)"
+msgstr "中间休息的日子（YYYY-MM-DD，用逗号分开）"
+
+#: includes/class-settings.php:180
+msgid "Self-collect times, one per line: time|orders per day (e.g. 10:00–13:00|6)"
+msgstr "自取时段，一行一个：时间|每天几单（例如 10:00–13:00|6）"
+
+#: includes/class-settings.php:181
+msgid "Delivery times, one per line: time|orders per day"
+msgstr "送货时段，一行一个：时间|每天几单"
+
+#: includes/class-settings.php:182
+msgid "Shipping zone for local delivery (its name contains this word)"
+msgstr "本地送货的运送区域（名字里有这个字）"
+
+#: includes/class-settings.php:183
+msgid "Note shown for courier orders (e.g. Posted by 3 Feb, arrives in 1–3 working days)"
+msgstr "快递订单的说明（例如：2 月 3 日前寄出，1–3 个工作天送到）"
+
+#: includes/class-settings.php:184
+msgid "Early-bird price until (YYYY-MM-DD, empty = none)"
+msgstr "早鸟价到哪一天（YYYY-MM-DD，空白 = 没有）"
+
+#: includes/class-settings.php:185
+msgid "Early-bird discount (%)"
+msgstr "早鸟折扣（%）"
+
+#: includes/class-settings.php:186
+msgid "Show how many are left (from your stock numbers)"
+msgstr "显示还剩几份（按库存数量）"
+
+#: includes/class-settings.php:187
+msgid "Say \"Only X left\" at or below"
+msgstr "剩下几份或更少时，显示「只剩 X 份」"
+
+#: includes/class-settings.php:188
+msgid "After the cut-off, ask for a WhatsApp number to tell them when you open again"
+msgstr "截止后，请顾客留 WhatsApp 号码，下次开放时通知"
+
+#: includes/class-settings.php:189
+msgid "Items included in the plan (a warning above this; 0 = no warning)"
+msgstr "配套包括几样产品（超过会提醒；0 = 不提醒）"
+
+#. translators: %s: customer first name
+#: templates/emails/customer-agc-ready.php:15
+#: templates/emails/plain/customer-agc-ready.php:12
+#, php-format
+msgid "Hi %s,"
+msgstr "%s 你好："
+
+#: templates/emails/customer-agc-ready.php:16
+#: templates/emails/plain/customer-agc-ready.php:13
+msgid "Your order is ready for collection. Please show this email or your order number when you come."
+msgstr "你的订单可以来取了。来的时候出示这封电邮或订单号码就可以。"
+
+#: templates/emails/customer-agc-ready.php:16
+#: templates/emails/plain/customer-agc-ready.php:13
+msgid "Your order is on its way to you."
+msgstr "你的订单已经出发，正在送去给你。"

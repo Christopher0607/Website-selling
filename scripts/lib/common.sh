@@ -165,6 +165,7 @@ fix_perms() {
   find "$SITE_PUBLIC" -type f -exec chmod 644 {} +
   [[ -f "$SITE_PUBLIC/wp-config.php" ]] && chmod 640 "$SITE_PUBLIC/wp-config.php" && chown "$SITE_USER:www-data" "$SITE_PUBLIC/wp-config.php"
   chmod 700 "$SITE_HOME/tmp" 2>/dev/null || true
+  chmod 700 "$SITE_HOME/private" 2>/dev/null || true
 }
 
 mysql_root() { mysql --protocol=socket -uroot "$@"; }

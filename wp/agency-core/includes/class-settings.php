@@ -41,6 +41,7 @@ class AGC_Settings {
 			'demo_mode'            => 0,
 			'demo_banner'          => 'Demo site – not a real store · 这是展示用网站，不是真的商店',
 			'demo_checkout_notice' => 'This is a demo store. Orders cannot be placed. · 这是展示站，不会真的下单。',
+			'demo_test_orders'     => 0,
 			// Tracking.
 			'ga4_id'               => '',
 			'meta_pixel_id'        => '',
@@ -72,6 +73,24 @@ class AGC_Settings {
 			'image_ratio'          => '1/1',
 			'button_radius'        => '8px',
 			// AI chat (needs AGC_AI_CHAT_URL + AGC_AI_CHAT_TOKEN in wp-config.php).
+			// Festive pre-orders (2026-11-13).
+			'fest_on'              => 0,
+			'fest_name'            => '',
+			'fest_cutoff'          => '',
+			'fest_from'            => '',
+			'fest_to'              => '',
+			'fest_closed'          => '',
+			'fest_collect_slots'   => "10:00–13:00|6\n14:00–18:00|6",
+			'fest_delivery_slots'  => "11:00–14:00|10\n15:00–19:00|10",
+			'fest_delivery_zone'   => 'Klang Valley',
+			'fest_courier_note'    => '',
+			'fest_early_end'       => '',
+			'fest_early_pct'       => '10',
+			'fest_show_left'       => 1,
+			'fest_low_stock'       => '15',
+			'fest_notify'          => 1,
+			'fest_item_limit'      => '10',
+
 			'ai_chat'              => 0,
 			'ai_chat_title'        => 'Ask us anything',
 			'ai_chat_greeting'     => "Hi! I'm Cartsmith's AI assistant 👋 Ask me about packages, prices or how it works. 有问题可以用中文问我。",
@@ -104,6 +123,7 @@ class AGC_Settings {
 					'demo_mode'            => array( 'checkbox', __( 'Demo mode on (banner, no payments, orders blocked, noindex, no customer emails)', 'agency-core' ) ),
 					'demo_banner'          => array( 'text', __( 'Banner text', 'agency-core' ) ),
 					'demo_checkout_notice' => array( 'text', __( 'Checkout notice', 'agency-core' ) ),
+					'demo_test_orders'     => array( 'checkbox', __( 'Allow test orders in demo mode (only DuitNow QR and the demo online payment; nothing is charged)', 'agency-core' ) ),
 					'concept_label'        => array( 'text', __( 'Footer label (e.g. "Concept Project")', 'agency-core' ) ),
 				),
 			),
@@ -146,6 +166,27 @@ class AGC_Settings {
 					'sticky_atc'        => array( 'checkbox', __( 'Sticky add-to-cart bar on mobile product pages', 'agency-core' ) ),
 					'button_radius'     => array( 'text', __( 'Button & card corner radius (e.g. 0px, 8px, 999px)', 'agency-core' ) ),
 					'image_ratio'       => array( 'select', __( 'Product image shape', 'agency-core' ), array( '1/1' => 'Square 1:1', '4/5' => 'Portrait 4:5', '3/4' => 'Portrait 3:4' ) ),
+				),
+			),
+			'festive'  => array(
+				'title'  => __( 'Festive pre-orders', 'agency-core' ),
+				'fields' => array(
+					'fest_on'             => array( 'checkbox', __( 'Festive pre-order season on', 'agency-core' ) ),
+					'fest_name'           => array( 'text', __( 'Season name shown to customers (e.g. Chinese New Year 2027)', 'agency-core' ) ),
+					'fest_cutoff'         => array( 'text', __( 'Last day to order: YYYY-MM-DD (until 23:59) or YYYY-MM-DD HH:MM', 'agency-core' ) ),
+					'fest_from'           => array( 'text', __( 'First collection / delivery day (YYYY-MM-DD)', 'agency-core' ) ),
+					'fest_to'             => array( 'text', __( 'Last collection / delivery day (YYYY-MM-DD)', 'agency-core' ) ),
+					'fest_closed'         => array( 'text', __( 'Days off in between (YYYY-MM-DD, separated by commas)', 'agency-core' ) ),
+					'fest_collect_slots'  => array( 'textarea', __( 'Self-collect times, one per line: time|orders per day (e.g. 10:00–13:00|6)', 'agency-core' ) ),
+					'fest_delivery_slots' => array( 'textarea', __( 'Delivery times, one per line: time|orders per day', 'agency-core' ) ),
+					'fest_delivery_zone'  => array( 'text', __( 'Shipping zone for local delivery (its name contains this word)', 'agency-core' ) ),
+					'fest_courier_note'   => array( 'text', __( 'Note shown for courier orders (e.g. Posted by 3 Feb, arrives in 1–3 working days)', 'agency-core' ) ),
+					'fest_early_end'      => array( 'text', __( 'Early-bird price until (YYYY-MM-DD, empty = none)', 'agency-core' ) ),
+					'fest_early_pct'      => array( 'text', __( 'Early-bird discount (%)', 'agency-core' ) ),
+					'fest_show_left'      => array( 'checkbox', __( 'Show how many are left (from your stock numbers)', 'agency-core' ) ),
+					'fest_low_stock'      => array( 'text', __( 'Say "Only X left" at or below', 'agency-core' ) ),
+					'fest_notify'         => array( 'checkbox', __( 'After the cut-off, ask for a WhatsApp number to tell them when you open again', 'agency-core' ) ),
+					'fest_item_limit'     => array( 'text', __( 'Items included in the plan (a warning above this; 0 = no warning)', 'agency-core' ) ),
 				),
 			),
 			'aichat'   => array(
@@ -288,6 +329,16 @@ class AGC_Settings {
 		$out['meta_pixel_id']   = preg_replace( '/\D+/', '', (string) $out['meta_pixel_id'] );
 		$out['button_radius'] = preg_match( '/^\d{1,3}px$/', (string) $out['button_radius'] ) ? $out['button_radius'] : '8px';
 		$out['free_shipping_min'] = is_numeric( $out['free_shipping_min'] ) ? (string) (float) $out['free_shipping_min'] : '';
+		foreach ( array( 'fest_from', 'fest_to', 'fest_early_end' ) as $k ) {
+			$out[ $k ] = preg_match( '/^\d{4}-\d{2}-\d{2}$/', trim( (string) $out[ $k ] ) ) ? trim( (string) $out[ $k ] ) : '';
+		}
+		$out['fest_cutoff'] = preg_match( '/^\d{4}-\d{2}-\d{2}( \d{2}:\d{2})?$/', trim( (string) $out['fest_cutoff'] ) ) ? trim( (string) $out['fest_cutoff'] ) : '';
+		$out['fest_closed'] = implode( ', ', array_filter( array_map( 'trim', explode( ',', (string) $out['fest_closed'] ) ), static function ( $d ) {
+			return (bool) preg_match( '/^\d{4}-\d{2}-\d{2}$/', $d );
+		} ) );
+		foreach ( array( 'fest_early_pct', 'fest_low_stock', 'fest_item_limit' ) as $k ) {
+			$out[ $k ] = is_numeric( $out[ $k ] ) ? (string) max( 0, (float) $out[ $k ] ) : '';
+		}
 		if ( $out['accent_color'] && ! preg_match( '/^#[0-9a-fA-F]{3,8}$/', $out['accent_color'] ) ) {
 			$out['accent_color'] = '';
 		}

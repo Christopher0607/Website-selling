@@ -23,6 +23,13 @@ class AGC_Demo_Mode {
 		add_filter( 'body_class', array( __CLASS__, 'body_class' ) );
 		add_filter( 'wp_robots', 'wp_robots_no_robots' );
 
+		// Test orders allowed (festive demo, 2026-11-13): orders go through, but only with the
+		// demo-safe payment methods (DuitNow sample QR + demo online payment). Nothing is charged.
+		if ( agc_get( 'demo_test_orders' ) ) {
+			add_filter( 'woocommerce_available_payment_gateways', array( __CLASS__, 'demo_gateways_only' ), 999 );
+			return;
+		}
+
 		// WooCommerce: hide payment methods, swap the button, block orders.
 		add_filter( 'woocommerce_available_payment_gateways', array( __CLASS__, 'no_gateways' ), 999 );
 		add_filter( 'woocommerce_order_button_html', array( __CLASS__, 'order_button' ), 999 );
@@ -60,6 +67,19 @@ class AGC_Demo_Mode {
 	 */
 	public static function no_gateways( $gateways ) {
 		return is_admin() && ! wp_doing_ajax() ? $gateways : array();
+	}
+
+	/**
+	 * Test orders: only the payment methods that cannot take real money.
+	 *
+	 * @param array $gateways Gateways.
+	 * @return array
+	 */
+	public static function demo_gateways_only( $gateways ) {
+		if ( is_admin() && ! wp_doing_ajax() ) {
+			return $gateways;
+		}
+		return array_intersect_key( $gateways, array_flip( array( 'agc_demo_pay', 'agc_duitnow' ) ) );
 	}
 
 	/**

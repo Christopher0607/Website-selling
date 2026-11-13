@@ -193,3 +193,12 @@ h2.wp-block-heading { font-size: clamp(1.6rem, 3vw, 2.4rem); line-height: 1.15; 
 .woocommerce-cart table.cart td.actions .coupon { display: flex; flex-wrap: wrap; gap: 8px; }
 .woocommerce-cart table.cart td.actions .coupon .button, .woocommerce-cart table.cart td.actions > .button { white-space: nowrap; }
 @media (max-width: 767px) { .woocommerce-cart table.cart td.actions > .button { width: 100%; margin-top: 8px; } }
+
+/* 节日预购网店的主视觉（2026-11-13）：左边加深，文字压在照片上也看得清楚 */
+.agc-fest-cover .wp-block-cover__background { background: linear-gradient(90deg, rgba(40, 6, 6, .88) 0%, rgba(40, 6, 6, .62) 45%, rgba(40, 6, 6, .2) 100%) !important; opacity: 1 !important; }
+.agc-fest-cover .agc-cover-text { text-shadow: 0 1px 3px rgba(0, 0, 0, .45); }
+.agc-fest-cover .agc-fest { margin: 18px 0 22px; }
+.agc-fest-cover .agc-fest__early { text-shadow: none; }
+@media (max-width: 767px) {
+  .agc-fest-cover .wp-block-cover__background { background: linear-gradient(180deg, rgba(40, 6, 6, .55) 0%, rgba(40, 6, 6, .82) 45%, rgba(40, 6, 6, .9) 100%) !important; }
+}
