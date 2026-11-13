@@ -128,7 +128,7 @@
     }
     let h = '';
     if (secondDue(p)) {
-      h += `<div class="send"><span class="send__label">第二通电话</span><div class="send__btns">${callBtn(p)}</div></div>`;
+      h += `<div class="send"><span class="send__label">${p.followup ? '也可以打电话' : '第二通电话'}</span><div class="send__btns">${callBtn(p)}</div></div>`;
       h += `<details class="cue"><summary>${svg('phone', 14)}第二通电话台词（发样板后 1–2 天）</summary>${secondHTML(p)}<p><a href="call-script.html#second" target="_blank" rel="noopener">完整电话脚本 →</a></p></details>`;
       return h;
     }
@@ -409,7 +409,10 @@
     if (p.verify && p.status === 'new') body += `<p class="verify">${svg('pin', 14)}<span>发之前看一眼：${esc(p.verify)}</span></p>`;
     body += contacts(p);
     body += pvBlock(p);
-    body += callBlock(p);
+    // 2026-11-13: after the mockup, the follow-up message comes first (WhatsApp); the second call is an option below it
+    const msgFirst = p.status === 'preview_sent' && !!p.followup && secondDue(p) && S.calling !== p.id;
+    const cb = callBlock(p);
+    if (!msgFirst) body += cb;
 
     if (p.status === 'new' && hasPv(p)) {
       body += `<div class="btnrow btnrow--end">${moreBtn}</div>`;
@@ -429,7 +432,7 @@
         if (p.reply_summary) body += `<div class="draft"><b>对方意思：</b>${esc(p.reply_summary)}<br><b>下一步：</b>${esc(p.reply_next || '')}${p.reply_intent === 'closed' ? '<br><b>不用再回。</b>' : ''}</div>`;
         body += `<div class="btnrow">${p.reply_summary ? `<button class="btn btn--sm" data-act="replied-more" data-id="${p.id}">记录进度</button>` : ''}<button class="btn ${p.reply_summary ? 'btn--ghost ' : ''}btn--sm" data-act="reply" data-id="${p.id}">${svg('reply', 16)}贴上对方的回复，起草回信</button>${moreBtn}</div>`;
       }
-    } else if (['contacted', 'preview_sent', 'proposal_sent', 'call_booked'].includes(p.status) && (due || mode === 'full')) {
+    } else if (['contacted', 'preview_sent', 'proposal_sent', 'call_booked'].includes(p.status) && (due || msgFirst || mode === 'full')) {
       if (p.followup) {
         body += msgBox(p, 'followup', p.status === 'contacted' ? (p.touches <= 1 ? (p.cfollow_v ? '第 2 条：免费样板、每月 RM199、节日预购网店 RM399（真网店示范）、手机店家后台' : '第 2 条：给一个有用的资讯') : '最后一条') : p.status === 'preview_sent' ? ['跟进信息（第 1 条：网址密码、适合他的示范网站、三种开始方式：RM800 起 / 每月 RM199 / 节日预购网店 RM399、手机店家后台）', '跟进信息（第 2 条：换一个有用的角度）', '最后一条（礼貌收尾）'][Math.min(2, p.pv_followups || 0)] : '跟进信息') + sendRow(p, 'followup');
         body += `<div class="btnrow btnrow--end"><button class="btn btn--ghost btn--sm" data-act="reply" data-id="${p.id}">${svg('reply', 16)}对方有回复</button>${sentBtn}${moreBtn}</div>`;
@@ -441,6 +444,7 @@
     } else {
       body += `<div class="btnrow"><button class="btn btn--ghost btn--sm" data-act="reply" data-id="${p.id}">${svg('reply', 16)}对方有回复</button>${moreBtn}</div>`;
     }
+    if (msgFirst) body += cb;
     return `<article class="card" id="${mode === 'analysis' ? 'a' : mode === 'full' ? 'l' : 'c'}-${p.id}" data-card="${p.id}"><div class="card__top"><div class="card__head"><div class="card__name">${esc(p.business_name)}<small>${esc(p.id)}</small></div><div class="card__sub">${sub}</div></div><div class="score ${scoreClass(p.score)}" title="符合几项条件（满分 5）">${p.score}/5</div></div><div class="tags">${tags.join('')}</div>${body}</article>`;
   }
   function contacts(p) {
@@ -456,22 +460,20 @@
   function msgBox(p, field, label) { return `<div class="msg"><label>${esc(label)}</label><textarea data-field="${field}" data-id="${p.id}">${esc(p[field] || '')}</textarea></div>`; }
   function sendRow(p, field) {
     const b = [];
-    if (callNo(p) && (field === 'message' || (field === 'followup' && !secondDue(p)) || (field === 'preview_msg' && ['new', 'contacted'].includes(p.status)))) b.push(['call', callBtn(p)]);
+    // 2026-11-13 (Junyu): all contact is on WhatsApp now; follow-ups go as a WhatsApp message first, a call is optional.
+    // Instagram only for shops with no WhatsApp / email.
+    const fu = field === 'followup' || (field === 'preview_msg' && p.status === 'contacted'); // already in touch: message first
+    if (!fu && callNo(p) && (field === 'message' || (field === 'preview_msg' && p.status === 'new'))) b.push(['call', callBtn(p)]);
     if (waNo(p)) b.push(['wa', `<button class="btn btn--sm ch ch--wa" data-act="wa" data-field="${field}" data-id="${p.id}">${svg('wa', 16)}WhatsApp ${esc(fmtPhone(waNo(p)))}</button>`]);
     if (p.email) b.push(['email', `<button class="btn btn--sm ch ch--mail" data-act="email" data-field="${field}" data-id="${p.id}">${svg('mail', 16)}Email</button>`]);
-    if (p.instagram) b.push(['ig', `<button class="btn btn--sm ch ch--ig" data-act="copyopen" data-field="${field}" data-id="${p.id}">${svg('ig', 16)}Instagram</button>`]);
+    if (fu && callNo(p) && !secondDue(p)) b.push(['call', callBtn(p)]);
+    if (p.instagram && !waNo(p) && !p.email) b.push(['ig', `<button class="btn btn--sm ch ch--ig" data-act="copyopen" data-field="${field}" data-id="${p.id}">${svg('ig', 16)}Instagram</button>`]);
     if (!b.length) b.push(['', `<button class="btn btn--sm" data-act="copyonly" data-field="${field}" data-id="${p.id}">复制信息</button>`]);
-    // follow-ups: try a channel they have not seen yet (one channel per message, never all at once)
     let hint = '';
-    if (field === 'followup' && p.last_channel) {
-      const used = p.channels && p.channels.length ? p.channels : [p.last_channel];
-      b.sort((x, y) => used.includes(x[0]) - used.includes(y[0]));
-      const fresh = b.find((x) => x[0] && !used.includes(x[0]));
-      hint = `<p class="send__hint" data-send-hint>上次用 ${esc(CH[p.last_channel] || p.last_channel)}。${fresh ? `这次可以换 ${CH[fresh[0]]}，对方可能比较常看。` : '没有别的联系方式，可以先在卡片补上 WhatsApp / Email。'}同一条信息只用一个渠道发。</p>`;
-    }
+    if (fu && !waNo(p)) hint = `<p class="send__hint" data-send-hint>没有 WhatsApp 号码：我们现在只用 WhatsApp 跟进，可以先在卡片补上号码。</p>`;
     // an Instagram DM holds about 1,000 characters (2026-11-13): longer messages go by WhatsApp / Email, or get shortened
     const len = String(p[field] || '').length;
-    if (p.instagram && len > 1000) hint += `<p class="send__hint" data-ig-long>这条有 ${len} 个字，Instagram 私信最多大约 1000 字：用 WhatsApp / Email 发，或者用 Instagram 前先删短一点。</p>`;
+    if (p.instagram && !waNo(p) && !p.email && len > 1000) hint += `<p class="send__hint" data-ig-long>这条有 ${len} 个字，Instagram 私信最多大约 1000 字：用 WhatsApp / Email 发，或者用 Instagram 前先删短一点。</p>`;
     return `<div class="send"><span class="send__label">发送</span><div class="send__btns">${b.map((x) => x[1]).join('')}</div></div>${hint}`;
   }
   function mini(p) {
@@ -483,7 +485,10 @@
     const limit = S.settings.dailyLimit || 10;
     const left = Math.max(0, limit - sentToday());
     const fresh = S.items.filter((p) => p.status === 'new' && p.score >= 3 && p.fit !== 'skip' && !p.duplicate_of && !p.next_call_date).sort((a, b) => b.score - a.score || (a.id < b.id ? -1 : 1));
-    const follow = S.items.filter((p) => (['contacted', 'preview_sent', 'proposal_sent', 'call_booked'].includes(p.status) && p.next_followup_date && p.next_followup_date <= S.today) || secondDue(p));
+    const followAll = S.items.filter((p) => (['contacted', 'preview_sent', 'proposal_sent', 'call_booked'].includes(p.status) && p.next_followup_date && p.next_followup_date <= S.today) || secondDue(p));
+    const reach = (p) => !!(waNo(p) || p.email || callNo(p));
+    const follow = followAll.filter(reach);
+    const igOnly = followAll.filter((p) => !reach(p));
     const sendNow = S.items.filter((p) => p.status === 'replied' && p.call_ok);
     const replied = S.items.filter((p) => p.status === 'replied' && !p.call_ok);
     const calls = S.items.filter((p) => callDue(p));
@@ -497,7 +502,8 @@
     if (replied.length) h += sect('有回复，等你回', replied.length, replied.map((p) => card(p)).join(''), '', 's-replied');
     if (viewed.length) h += sect('刚看过样板（48 小时内）：趁现在跟进', viewed.length, viewed.map(viewedRow).join(''), '', 's-viewed');
     if (calls.length) h += sect('今天要再打的电话', calls.length, calls.map((p) => card(p)).join(''), '');
-    if (follow.length) h += sect('今天要跟进', follow.length, follow.map((p) => card(p)).join(''), '', 's-follow');
+    if (follow.length) h += sect('今天要跟进（WhatsApp 先发信息）', follow.length, follow.map((p) => card(p)).join(''), '', 's-follow');
+    if (igOnly.length) h += `<section class="sect" id="s-igonly"><details class="parked"><summary><b>没有 WhatsApp 号码的商家</b><small>${igOnly.length} 家 · 暂停跟进</small></summary><p class="hint">我们现在只用 WhatsApp 联系。找到对方的 WhatsApp 号码，在卡片按「补上电话 / WhatsApp / Email」，就会回到「今天要跟进」。</p>${igOnly.map(mini).join('')}</details></section>`;
     if (left && fresh.length) h += `<div class="queuebar"><div><b>连续发送</b><small>一家一家打开已经填好的 WhatsApp / Email / Instagram，你按发送，再按「下一家」。有 WhatsApp / Email 的排前面。</small></div><button class="btn btn--sm" data-act="queue-start">开始（${Math.min(left, fresh.length)} 家）</button></div>`;
     h += sect(`新联系 · 今天还可以发 ${left} 个`, fresh.length, left ? fresh.slice(0, Math.max(left, 1) + 2).map((p) => card(p)).join('') : '<div class="empty">今天的新联系已经发满了，明天继续。</div>', '名单里没有待联系的商家。', 's-fresh');
     if (purge.length) h += sect('样板到期，要删除', purge.length, purge.map((p) => `<div class="card"><p>${esc(p.business_name)} 的样板 ${esc(p.preview_url || '')} 已到期（${esc(p.preview_delete_by)}）。跟 Claude Code 说「删除 ${esc(p.business_name)} 的样板」，删好后按：</p><div class="btnrow"><button class="btn btn--sm" data-act="purged" data-id="${p.id}">已删除样板</button></div></div>`).join(''), '');

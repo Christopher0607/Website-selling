@@ -75,8 +75,7 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
     'contacted, no mockup: the 2nd message is ready (free sample, RM199, RM399 festive shop, dashboard, under 1,000 characters, no questions)');
   ok(/免费样板、每月 RM199、节日预购网店 RM399/.test(await p.textContent('#c-p001')), 'the card says what the ready-made message covers');
   const order = await p.$$eval('#c-p001 .send__btns button', (bs) => bs.map((x) => x.dataset.act));
-  const hint = await p.textContent('#c-p001 [data-send-hint]');
-  ok(order[0] === 'call' && order.indexOf('wa') < order.indexOf('copyopen') && /上次用 Instagram/.test(hint) && /换 电话/.test(hint), 'follow-up after an IG message: call first, then WhatsApp, Instagram last');
+  ok(order[0] === 'wa' && order.includes('call') && !order.includes('copyopen') && !(await p.$('#c-p001 [data-send-hint]')), 'follow-up (2026-11-13, all on WhatsApp): WhatsApp first, call after, no Instagram button: ' + order.join(','));
   await p.click('#c-p001 [data-act="sent"]');
   await p.waitForTimeout(500);
   // the next one (third message) is AI-written
@@ -540,7 +539,7 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
     ok(/现在最适合打电话/.test(plan) && /开始连续打电话（\d+ 家）/.test(plan) && /今天已经：打了 \d+ 通电话/.test(plan), "today's plan: time advice, how many calls, what's done today");
     const s6 = JSON.parse(fs.readFileSync(STORE, 'utf8')).items;
     const g = s6.find((x) => x.id === 'p907'), ny = s6.find((x) => x.id === 'p908');
-    ok(/We messaged you on Instagram/.test(g.preview_msg) && g.preview_msg.includes('gelato5523'), 'shop already written to on Instagram: the mockup message says so');
+    ok(/We got in touch a few days ago/.test(g.preview_msg) && !/Instagram/.test(g.preview_msg) && g.preview_msg.includes('gelato5523'), 'shop we wrote to before: the mockup message says so (no "on Instagram")');
     ok(ny.followup.includes('https://demo-festive.cartsmithstudio.com/') && /place a test order/.test(ny.followup), 'Chinese / Nyonya shop: the festive part links the real WordPress shop');
     ok(ny.followup.includes('m-nyonya-test-1234abcd') && ny.followup.includes('beng6840') && /easy to find/.test(ny.followup) && !/[?？]/.test(ny.followup.replace(/https?:\/\/\S+/g, '')), 'mockup sent: the follow-up nudge is ready with the link (no AI needed)');
     await p.click('[data-act="cs-start"]');
@@ -691,6 +690,13 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
     const c1 = await p.textContent('#c-p961');
     ok(/第二通电话/.test(c1) && /Did you get a chance to look/.test(c1) && /RM800/.test(c1) && /RM399/.test(c1) && /RM199 a month/.test(c1), 'mockup sent and follow-up due: the card shows the second call and its script (price, festive page, monthly)');
     ok((await p.$$('#c-p961 [data-act="call"]')).length === 1, 'one call button on the card');
+    ok(await p.evaluate(() => {
+      const c = document.querySelector('#c-p961');
+      const ta = c.querySelector('textarea[data-field="followup"]');
+      const callLbl = [...c.querySelectorAll('.send__label')].find((x) => /也可以打电话/.test(x.textContent));
+      const first = c.querySelector('.msg + .send .send__btns button');
+      return !!ta && !!callLbl && !!(ta.compareDocumentPosition(callLbl) & Node.DOCUMENT_POSITION_FOLLOWING) && !!first && first.dataset.act === 'wa';
+    }), 'message first (2026-11-13): the WhatsApp follow-up is above the call, WhatsApp is its first button');
     ok(!!(await p.$('#c-p962 [data-act="call"]')), 'mockup sent and only the call date is due: the card is on today\'s list too');
     const fu = JSON.parse(fs.readFileSync(STORE, 'utf8')).items.find((x) => x.id === 'p961').followup || '';
     ok(fu.includes('second1234') && /from RM800 one-off/.test(fu) && /RM399/.test(fu) && /\/demo\/butter-lantern\//.test(fu) && /RM199 a month/.test(fu) && /\/demo\/dulang-daun\//.test(fu) && /second half only when you're happy/.test(fu) && /RM150 a month/.test(fu) && /shop dashboard on your phone/.test(fu) && /All our demos and prices: https:\/\/cartsmithstudio\.com\//.test(fu) && !/[?？]/.test(fu.replace(/https?:\/\/\S+/g, '')),
@@ -706,7 +712,7 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
     ok(n1.item && n1.item.next_call_date === '2099-01-03' && n1.item.next_followup_date <= '2099-01-01' && n1.item.followup.includes('warm1234') && n1.item.status === 'preview_sent', 'not looked yet: follow-up with the link is ready now, the next call is on the date');
     // the first follow-up is sent → the next one in 4 days (AI), then 7, then stop
     const s1 = await api4({ action: 'mark', id: 'p962', event: 'sent', channel: 'wa' });
-    ok(s1.item && s1.item.pv_followups === 1 && s1.item.next_followup_date > n1.item.next_followup_date && !s1.item.followup, 'first follow-up sent: the card waits 4 days and the canned message is not repeated');
+    ok(s1.item && s1.item.pv_followups === 1 && s1.item.next_followup_date > n1.item.next_followup_date && !s1.item.followup && !s1.item.next_call_date, 'first follow-up sent: the card waits 4 days, the canned message is not repeated, the call reminder is replaced by the message');
     const l1 = await api4({ action: 'list' });
     ok(!(l1.items.find((x) => x.id === 'p962') || {}).followup, 'the canned follow-up does not come back after it was sent');
     await api4({ action: 'mark', id: 'p962', event: 'sent', channel: 'wa' });

@@ -30,7 +30,7 @@ Built into the desk by `python3 site/build.py` (file: `sales/agent/desk-brief.md
    不需要 (no — never contact again) / 已经有网站 (they have a website — close politely, never pitch).
 4. **Send the mockup** by WhatsApp (or email) right after the call: short message = who we are, the sample website is
    already made for them, link + password, private and deleted on the date, no cost or obligation, our own site at the
-   end (https://cartsmithstudio.com/). If we wrote to them on Instagram before, the message says so.
+   end (https://cartsmithstudio.com/). If we were in touch before (a call or a message), the message says so.
 5. **Second call 1–2 days later**, and written follow-ups if the call does not connect — see section 2b. At most
    three written follow-ups after the mockup, then stop.
 6. **Interested** → a 15-minute call → written quotation within 24 hours (valid 14 days) → 50% deposit → build →
@@ -69,6 +69,9 @@ to end the call politely — and then nothing happens. Seven mockups went out; o
      small first step with its link, the mockup link again, door open.
   3. About a week later: the last short, polite message — the sample stays up until its delete date; if the timing is
      not right, they can message us any time. Then stop.
+- **All contact is on WhatsApp (2026-11-13, Junyu).** Instagram is no longer used to reach owners. Follow-ups go as a
+  WhatsApp message first; a call is optional after it, never instead of it. Never write "we messaged you on Instagram".
+  Shops with no WhatsApp number are parked until someone adds one.
 - **Contacted before, no mockup yet** (mostly Instagram-only shops, 2026-11-13): the 2nd message is a ready-made template
   on the card — the free sample website offer, the three ways to start (RM199 a month, the RM399 festive shop with its
   link, RM800 one-off + maintenance), the phone dashboard, the demo that fits them. It stays under 1,000 characters
@@ -102,7 +105,7 @@ business ("Full demo website that fits them"); use that one:
 Use at most one demo link per message, as a statement ("Here is a full example of what the finished website does: …").
 
 ## 3. Statuses on a card
-new = not contacted yet · contacted = we sent a message (often on Instagram) but no reply · replied = they replied
+new = not contacted yet · contacted = we sent a message or called but no reply · replied = they replied
 (or said yes on the phone: "call_ok") · preview_sent = mockup sent, waiting · call_booked · proposal_sent · won ·
 lost · no_response · do_not_contact. "Next follow-up" and "next call" dates are on the card.
 

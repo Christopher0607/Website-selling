@@ -339,3 +339,10 @@ input[type=file] { display: block; width: 100%; margin-top: 6px; font: 400 .88re
 .tr-new { display: inline-block; margin-left: 6px; padding: 0 6px; border-radius: 999px; background: var(--ok-bg); color: var(--ok); font-size: .7rem; font-weight: 600; }
 .tr-on { display: inline-flex; align-items: center; gap: 6px; }
 .tr-on::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--ok); }
+
+/* Instagram-only shops, parked (2026-11-13: all contact on WhatsApp) */
+.parked > summary { list-style: none; cursor: pointer; display: flex; align-items: baseline; gap: 8px; padding: 10px 2px; }
+.parked > summary::-webkit-details-marker { display: none; }
+.parked > summary::before { content: "▸"; color: var(--muted); }
+.parked[open] > summary::before { content: "▾"; }
+.parked > summary small { color: var(--muted); }
