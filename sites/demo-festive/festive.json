@@ -17,6 +17,7 @@
   "fest_notify": 1,
   "fest_item_limit": "10",
   "demo_test_orders": 1,
+  "studio_hits": "https://cartsmithstudio.com/assets/js/hit.js",
   "demo_banner": "示范网站 Demo site – not a real store · 不会收钱，订单只用来示范",
   "whatsapp_float": 0,
   "whatsapp_product_btn": 0,

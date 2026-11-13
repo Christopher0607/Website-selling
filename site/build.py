@@ -1496,6 +1496,24 @@ def build_flagships():
     return n
 
 
+def add_hit_beacon(dist):
+    """2026-11-13: the visitor counter (assets/js/hit.js → /api/hit → the desk's 流量 tab) on every built page,
+    except the desk itself. Customers' mockups are built separately (--preview) and keep their own tracker."""
+    tag = '<script src="/assets/js/hit.js" defer></script>'
+    for base, _, files in os.walk(dist):
+        if os.path.relpath(base, dist).split(os.sep)[0] == "desk":
+            continue
+        for fn in files:
+            if not fn.endswith(".html"):
+                continue
+            page = os.path.join(base, fn)
+            src = open(page, encoding="utf-8").read()
+            if "/assets/js/hit.js" in src or "</head>" not in src:
+                continue
+            with open(page, "w", encoding="utf-8") as fh:
+                fh.write(src.replace("</head>", tag + "\n</head>", 1))
+
+
 ASSET_RX = re.compile(r'((?:href|src)=")([^"#?:]+\.(?:css|js|webp|jpe?g|png|svg|avif|woff2))(")')
 
 
@@ -1556,6 +1574,7 @@ def main():
     write("robots.txt", "User-agent: *\nDisallow: /demo/\nDisallow: /desk/\n")
     # response headers (Cloudflare Pages reads dist/_headers; same rules the site had on Netlify)
     write("_headers", HEADERS)
+    add_hit_beacon(DIST)
     version_assets(DIST)
     files = sum(len(f) for _, _, f in os.walk(DIST))
     print(f"built {n} pages, {files} files → {DIST}")

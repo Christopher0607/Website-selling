@@ -14,6 +14,7 @@ import { KNOWLEDGE, IG_HANDLE } from './knowledge.mjs';
 import { SCRIPTS } from './scripts.mjs';
 import { BRIEF } from './brief.mjs';
 import { INBOX, PREVIEWS as BUNDLED_PREVIEWS } from './inbox.mjs';
+import { BOT_UA, deviceKind, trafficSummary } from './traffic.mjs';
 
 const DOC = 'prospects-v1';
 const MAX_INPUT = 3000;
@@ -40,11 +41,9 @@ function myDate(offsetDays = 0) { return new Date(Date.now() + 8 * 3600e3 + offs
 // mockup keeps in that browser (to tell devices apart), the device kind and the page. Junyu's own opens (cookie cs_staff,
 // set when he opens the desk on cartsmithstudio.com) and automated browsers (our checks, link-preview bots) are not counted.
 const VIEW_SLUG = /^[a-z0-9][a-z0-9-]{2,80}$/;
-const BOT_UA = /Headless|bot\b|bot\/|crawl|spider|slurp|preview|facebookexternalhit|WhatsApp|Telegram|Slack|Discord|Twitterbot|LinkedIn|curl|wget|python|node-fetch|undici|axios|Playwright|Puppeteer|Lighthouse|PageSpeed/i;
 function viewStore() {
   return { get: (s) => PLAT.store.get('view:' + s), set: (s, r) => PLAT.store.set('view:' + s, r) };
 }
-const deviceKind = (ua) => (/iPad|Tablet/i.test(ua) ? 'tablet' : /Mobi|Android|iPhone/i.test(ua) ? 'mobile' : 'desktop');
 const slugOf = (p) => p.preview_slug || (String(p.preview_url || '').match(/\/([a-z0-9][a-z0-9-]{2,80})\/?(?:index\.html)?$/) || [])[1] || '';
 async function track(req) {
   const done = new Response(null, { status: 204, headers: { 'Cache-Control': 'no-store' } });
@@ -845,6 +844,8 @@ async function handle(action, b, doc) {
     if (it && slugOf(it)) AI_VIEWS.set(it.id, (await viewsFor([it])).get(slugOf(it)) || null);
   }
   switch (action) {
+    case 'traffic': // website visitors (the 流量 tab, site/server/traffic.mjs)
+      return { traffic: await trafficSummary(PLAT.store, parseInt(b.days, 10) || 7) };
     case 'list': {
       const LEADS = await allLeads();
       let changed = refreshContacts(doc, LEADS);

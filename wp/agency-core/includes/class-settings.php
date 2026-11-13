@@ -45,6 +45,7 @@ class AGC_Settings {
 			// Tracking.
 			'ga4_id'               => '',
 			'meta_pixel_id'        => '',
+			'studio_hits'          => '',
 			// Business details (footer, legal pages).
 			'legal_name'           => '',
 			'ssm_no'               => '',
@@ -135,6 +136,7 @@ class AGC_Settings {
 				'fields' => array(
 					'ga4_id'        => array( 'text', __( 'GA4 Measurement ID (G-XXXXXXX) — leave empty to disable', 'agency-core' ) ),
 					'meta_pixel_id' => array( 'text', __( 'Meta Pixel ID — leave empty to disable', 'agency-core' ) ),
+					'studio_hits'   => array( 'text', __( 'Cartsmith visitor counter script (our own demo sites only) — e.g. https://cartsmithstudio.com/assets/js/hit.js; leave empty to disable', 'agency-core' ) ),
 				),
 			),
 			'business' => array(

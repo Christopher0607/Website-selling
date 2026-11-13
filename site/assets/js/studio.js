@@ -130,6 +130,7 @@
     if (state.msgs.length >= MAX_TURNS) { bubble('note', 'Let’s continue on Instagram — <a href="' + esc(dm) + '" target="_blank" rel="noopener">open DM</a>.', true); return; }
     quick.hidden = true;
     state.msgs.push({ role: 'user', content: text });
+    if (window.csHit && state.msgs.filter((m) => m.role === 'user').length === 1) window.csHit('chat'); // the desk's 流量 tab counts chats started
     store.set(KEY, state);
     bubble('me', text);
     busy = true;

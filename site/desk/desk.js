@@ -47,7 +47,8 @@
     clock: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
     eye: '<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/>',
     chat: '<path d="M5 4.5h14a1.5 1.5 0 0 1 1.5 1.5v9a1.5 1.5 0 0 1-1.5 1.5h-8l-4.5 3.5V16.5H5A1.5 1.5 0 0 1 3.5 15V6A1.5 1.5 0 0 1 5 4.5z"/>',
-    pin: '<path d="M12 21s-6.5-5.6-6.5-11A6.5 6.5 0 0 1 18.5 10c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/>'
+    pin: '<path d="M12 21s-6.5-5.6-6.5-11A6.5 6.5 0 0 1 18.5 10c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/>',
+    pulse: '<path d="M3 12h4l2.5-6 5 12 2.5-6h4"/>'
   };
   const svg = (n, size) => `<svg class="ic" viewBox="0 0 24 24" width="${size || 18}" height="${size || 18}" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${I[n] || ''}</svg>`;
 
@@ -590,6 +591,68 @@
       ${weakest ? `<p class="draft"><b>最弱的一步：</b>${esc(weakest)}</p>` : '<p class="hint">联系满 20 个之后，这里会提示哪一步最需要改进。</p>'}`;
     $('[data-limit]').value = S.settings.dailyLimit || 10;
   }
+  // ------------------------------------------------------------ 流量: who is looking at our website (2026-11-13)
+  // Data from /api/hit (site/assets/js/hit.js on every page of cartsmithstudio.com and the demo shop), summed up by
+  // site/server/traffic.mjs. Junyu's own browsers (cookie cs_staff) and bots are not counted. No IP is stored.
+  const TR = { days: 1, data: null, at: 0, busy: false, sel: -1 };
+  const ACT = { whatsapp: '按了 WhatsApp', email: '按了 Email', instagram: '按了 Instagram', phone: '按了电话', chat: '开始跟 AI 客服聊天', 'form:mockup-request': '送出免费样板申请', 'form:ai-chat-lead': 'AI 客服留下联系方式' };
+  const actName = (k) => {
+    const m = k.match(/^(demo-festive |demo )?(.+)$/);
+    const base = ACT[m[2]] || (m[2].startsWith('form:') ? '送出表单（' + m[2].slice(5) + '）' : m[2]);
+    return base + (m[1] === 'demo ' ? '（在示范网站里，只是试按）' : m[1] ? '（在真网店示范里，只是试按）' : '');
+  };
+  const secTxt = (n) => (n >= 60 ? Math.floor(n / 60) + ' 分 ' + (n % 60) + ' 秒' : n + ' 秒');
+  const hhmm = (t) => new Date(t + 8 * 3600e3).toISOString().slice(11, 16);
+  const dayOf = (t) => new Date(t + 8 * 3600e3).toISOString().slice(0, 10);
+  function barList(rows, total, fmt) {
+    if (!rows.length) return '<p class="hint">还没有资料。</p>';
+    const max = Math.max(...rows.map((r) => r[1]), 1);
+    return `<ul class="tr-list">${rows.map(([k, n]) => `<li><span>${esc(fmt ? fmt(k) : k)}</span><b>${n}${total ? ` · ${Math.round((n / total) * 100)}%` : ''}</b><em><i style="width:${Math.max(2, Math.round((n / max) * 100))}%"></i></em></li>`).join('')}</ul>`;
+  }
+  async function loadTraffic(force) {
+    if (TR.busy || (!force && TR.data && TR.data.days === TR.days && Date.now() - TR.at < 60e3)) return;
+    TR.busy = true;
+    try { const j = await api('traffic', { days: TR.days }); TR.data = j.traffic; TR.at = Date.now(); TR.sel = -1; }
+    catch (e) { if (!TR.data) $('[data-traffic]').innerHTML = `<p class="hint">读不到流量资料：${esc(e.message)}</p>`; TR.busy = false; return; }
+    TR.busy = false;
+    if (S.tab === 'traffic') renderTraffic();
+  }
+  function trRead(d) {
+    const b = d.bars[TR.sel];
+    if (b) return `<b>${esc(TR.days === 1 ? '今天 ' + b.label : b.label)}</b>：访客 ${b.visitors} · 浏览 ${b.views} 页`;
+    return TR.days === 1 ? `今天到现在：访客 ${d.visitors} · 浏览 ${d.views} 页（按一下柱子看那个小时）` : `过去 ${d.days} 天：访客 ${d.visitors} · 浏览 ${d.views} 页（按一下柱子看那一天）`;
+  }
+  function renderTraffic() {
+    const el = $('[data-traffic]');
+    const d = TR.data;
+    const range = `<div class="tr-top">${[[1, '今天'], [7, '7 天'], [30, '30 天']].map(([n, l]) => `<button type="button" class="chip${TR.days === n ? ' is-on' : ''}" data-act="tr-days" data-days="${n}">${l}</button>`).join('')}<button type="button" class="chip" data-act="tr-refresh">${svg('refresh', 14)} 重新整理</button>${d ? `<small>更新 ${hhmm(d.now)}</small>` : ''}</div>`;
+    if (!d || d.days !== TR.days) { el.innerHTML = `<h2>网站流量</h2>${range}<p class="hint">读取中…</p>`; loadTraffic(); return; }
+    loadTraffic(); // refreshes in the background when older than a minute
+    const max = Math.max(...d.bars.map((b) => b.visitors), 1);
+    const every = d.bars.length > 20 ? (d.bars.length === 24 ? 6 : 5) : 1;
+    const bars = d.bars.map((b, i) => `<button type="button" data-act="tr-bar" data-i="${i}" class="${TR.sel === i ? 'is-on' : ''}" ${b.visitors ? '' : 'data-zero'} aria-label="${esc(b.label)}：访客 ${b.visitors}，浏览 ${b.views}"><i style="height:${Math.round((b.visitors / max) * 100)}%"></i></button>`).join('');
+    const xl = d.bars.map((b, i) => `<span>${i % every === 0 ? esc(TR.days === 1 ? b.label.slice(0, 2) : b.label) : ''}</span>`).join('');
+    const talk = d.acts.filter(([k]) => !/^demo/.test(k));
+    const play = d.acts.filter(([k]) => /^demo/.test(k));
+    const pages = d.pages.length ? `<table class="tr-table"><thead><tr><th>页面</th><th>浏览</th><th>访客</th><th>停留</th></tr></thead><tbody>${d.pages.map((r) => `<tr><td>${esc(r.name)}</td><td>${r.views}</td><td>${r.visitors}</td><td>${r.avg_secs ? secTxt(r.avg_secs) : '—'}</td></tr>`).join('')}</tbody></table>` : '<p class="hint">还没有资料。</p>';
+    const today = dayOf(Date.now());
+    const live = d.recent.length ? `<ul class="tr-live">${d.recent.map((r) => `<li><time>${dayOf(r.t) === today ? hhmm(r.t) : esc(dayOf(r.t).slice(5))}</time><b>${esc(r.page)}${r.first ? '<span class="tr-new">新访客</span>' : ''}</b><small>${esc([r.src, KIND[r.k] || r.k, r.place, r.v ? '访客 ' + r.v : ''].filter(Boolean).join(' · '))}</small></li>`).join('')}</ul>` : '<p class="hint">还没有人来过。</p>';
+    el.innerHTML = `<h2>网站流量</h2>${range}
+      <div class="statgrid"><div class="stat"><b>${d.visitors}</b><small>访客（新 ${d.new_visitors} · 回访 ${d.returning}）</small></div><div class="stat"><b>${d.views}</b><small>浏览页数</small></div><div class="stat"><b>${d.avg_secs ? secTxt(d.avg_secs) : '—'}</b><small>平均每页停留</small></div><div class="stat"><b class="${d.online ? 'tr-on' : ''}">${d.online}</b><small>现在在看（5 分钟内）</small></div></div>
+      <div class="tr-card"><h3>${TR.days === 1 ? '今天每小时的访客' : '每天的访客'}</h3><p class="tr-read" data-tr-read>${trRead(d)}</p><div class="tr-bars" role="group" aria-label="访客">${bars}</div><div class="tr-x">${xl}</div></div>
+      <div class="tr-card"><h3>想联系我们的人</h3>${talk.length ? barList(talk, 0, actName) : '<p class="hint">这段时间没有人在工作室网站按 WhatsApp / Email / Instagram、送出申请或开始跟 AI 客服聊天。</p>'}${play.length ? `<p class="hint">在示范网站里试按（不是真的联系）：${play.map(([k, n]) => esc(actName(k)) + ' ' + n).join('、')}</p>` : ''}</div>
+      <div class="tr-card"><h3>热门页面</h3>${pages}</div>
+      <div class="tr-grid">
+        <div class="tr-card"><h3>从哪里来</h3>${barList(d.sources, d.visitors)}<p class="hint">「直接打开」多半是 WhatsApp、Email 里的连结或打字进来的。停留是每页平均。</p></div>
+        <div class="tr-card"><h3>示范网站</h3>${d.demos.length ? `<ul class="tr-list">${d.demos.map((r) => `<li><span>${esc(r.name)}</span><b>${r.visitors} 人 · ${r.views} 页</b></li>`).join('')}</ul>` : '<p class="hint">这段时间没有人看示范网站。</p>'}</div>
+        <div class="tr-card"><h3>设备</h3>${barList(d.devices, d.visitors, (k) => KIND[k] || k)}</div>
+        <div class="tr-card"><h3>地区</h3>${barList(d.places, d.visitors)}<p class="hint">Cloudflare 从网络位置估计的，不一定准。</p></div>
+      </div>
+      <div class="tr-card"><h3>刚刚的浏览</h3>${live}</div>
+      <p class="hint">算的是 cartsmithstudio.com、所有示范网站和真网店示范（demo-festive）；不算工作台和客户样板（样板在每张卡片看）。你自己打开过工作台的手机 / 电脑不算，机器人和自动测试不算。不记录 IP、名字或打的字，资料保留 120 天。</p>`;
+  }
+  setInterval(() => { if (S.tab === 'traffic' && document.visibilityState === 'visible') loadTraffic(); }, 60e3);
+
   function render() {
     $('[data-today]').textContent = S.today;
     const n = sentToday();
@@ -605,6 +668,7 @@
     if (S.tab === 'today') renderToday();
     if (S.tab === 'list') renderList();
     if (S.tab === 'stats') renderStats();
+    if (S.tab === 'traffic') renderTraffic();
   }
 
   // ------------------------------------------------------------ "sent?" bar after opening a channel
@@ -767,6 +831,14 @@
     if (t.dataset.tab) { S.tab = t.dataset.tab; $$('[data-tab]').forEach((b) => b.classList.toggle('is-on', b === t)); $$('[data-view]').forEach((v) => { v.hidden = v.dataset.view !== S.tab; }); render(); window.scrollTo(0, 0); return; }
     if (t.dataset.filter) { S.filter = t.dataset.filter; renderList(); return; }
     if (t.dataset.expand) { S.open[t.dataset.expand] = !S.open[t.dataset.expand]; renderList(); return; }
+    if (t.dataset.act === 'tr-days') { TR.days = Number(t.dataset.days) || 7; TR.sel = -1; renderTraffic(); return; }
+    if (t.dataset.act === 'tr-refresh') { loadTraffic(true); toast('更新中…'); return; }
+    if (t.dataset.act === 'tr-bar') {
+      TR.sel = TR.sel === Number(t.dataset.i) ? -1 : Number(t.dataset.i);
+      $$('[data-act="tr-bar"]').forEach((b) => b.classList.toggle('is-on', Number(b.dataset.i) === TR.sel));
+      $('[data-tr-read]').innerHTML = trRead(TR.data);
+      return;
+    }
     const p = S.items.find((x) => x.id === t.dataset.id);
     const act = t.dataset.act;
     try {

@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.6.1 — 2026-11-13（工作台「流量」）
+- 新设定 `studio_hits`（Settings → Agency → Tracking）：填 `https://cartsmithstudio.com/assets/js/hit.js`，这个站的访客就算进 Cartsmith 工作台的「流量」分页。只给我们自己的示范站（demo-festive 已打开），不放客户网站；登录的人不算
+
 ## 1.6.0 补充 — 2026-11-13（俊宇：代客下单另外收费）
 - 代客下单改成附加功能，默认关闭：Settings → Agency → Other 的「Shop dashboard add-on」，或 `wp agc set owner_manual_orders 1`。关闭时后台没有「新增订单」，网址进不去，接口回 403
 - 测试 `check-owner.js` 两种都会测（关闭：确认看不到也用不了；打开：照常下单）；「待确认付款」的测试订单改成在网店前台用 DuitNow 真的下单

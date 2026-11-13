@@ -1,6 +1,6 @@
 <?php
 /**
- * GA4 + Meta Pixel. Nothing is printed when the IDs are empty.
+ * GA4 + Meta Pixel + our own visitor counter. Nothing is printed when the settings are empty.
  *
  * @package AgencyCore
  */
@@ -34,8 +34,15 @@ class AGC_Tracking {
 	public static function head() {
 		$ga4   = agc_get( 'ga4_id' );
 		$pixel = agc_get( 'meta_pixel_id' );
-		if ( ( ! $ga4 && ! $pixel ) || self::skip() ) {
+		$hits  = agc_get( 'studio_hits' );
+		if ( ( ! $ga4 && ! $pixel && ! $hits ) || self::skip() ) {
 			return;
+		}
+		// Cartsmith's visitor counter (2026-11-13): our demo shops are counted in the sales desk's 流量 tab, like the
+		// studio website. The script sends the page, where the visitor came from and a random id kept in the browser;
+		// no IP, cookie or anything typed. Only for our own demo sites, never on a client's site.
+		if ( $hits ) {
+			printf( '<script src="%s" defer></script>' . "\n", esc_url( add_query_arg( 'v', AGC_VERSION, $hits ) ) );
 		}
 		if ( $ga4 ) {
 			printf( '<script async src="%s"></script>' . "\n", esc_url( 'https://www.googletagmanager.com/gtag/js?id=' . rawurlencode( $ga4 ) ) );

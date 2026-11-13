@@ -4,6 +4,7 @@
 //   <file>.views.json mockup views, by mockup name
 //   <file>.forms.json website form submissions, by id
 //   <file>.misc.json  anything else
+//   <file>.hits.json  website visitors (rows, oldest first)
 import fs from 'node:fs';
 
 export function fileStore(file) {
@@ -39,6 +40,9 @@ export function fileStore(file) {
       const all = read(w.f, {});
       return Object.keys(all).filter((s) => (prefix + s).startsWith(prefix)).sort().reverse().slice(0, limit).map((s) => ({ key: prefix + s, value: all[s] }));
     },
+    async hitAdd(r) { const all = read(file + '.hits.json', []); all.push(r); fs.writeFileSync(file + '.hits.json', JSON.stringify(all)); },
+    async hitsSince(t, limit = 60000) { return read(file + '.hits.json', []).filter((r) => r.t >= t).sort((a, b) => a.t - b.t).slice(0, limit); },
+    async hitsPrune(t) { const all = read(file + '.hits.json', []); const keep = all.filter((r) => r.t >= t); if (keep.length !== all.length) fs.writeFileSync(file + '.hits.json', JSON.stringify(keep)); },
     async del(k) {
       const w = where(k);
       if (!w.sub) { try { fs.unlinkSync(w.f); } catch (e) { /* none */ } return; }
