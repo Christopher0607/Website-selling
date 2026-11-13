@@ -69,6 +69,7 @@
   var MAPS = 'https://www.google.com/maps/search/?api=1&query=Petaling+Jaya';
   var WA = 'https://wa.me/?text=';
   var WA_ASK = WA; // a customer's mockup puts their own WhatsApp number here (wa.me/60…?text=)
+  var SIGNATURE = ['nasi-lemak', 'laksa', 'rendang', 'satay', 'ayam-percik', 'cendol']; // the home page's "most ordered" dishes
   var BRAND = 'Sireh & Salt', REF = 'SS', KEY = 'ss_'; // a customer's mockup: their name, order prefix, own storage key
   var PHOTO_NOTE = ' (placeholder photo)'; // a customer's mockup with their own photos: ''
 
@@ -269,13 +270,13 @@
   // ------------------------------------------------------------------ home
   function nextSeason() { var t = today(); for (var i = 0; i < SEASONS.length; i++) if (SEASONS[i].cutoff >= t) return SEASONS[i]; return null; }
   function pageHome() {
-    var sig = ['nasi-lemak', 'laksa', 'rendang', 'satay', 'ayam-percik', 'cendol'].map(item);
+    var sig = SIGNATURE.map(item).filter(Boolean);
     $('[data-signature]').innerHTML = sig.map(dishCard).join('');
     var s = nextSeason(), el = $('[data-festive-strip]');
     if (s && el) {
       var left = s.items.reduce(function (a, x) { return a + leftOf(x); }, 0), total = s.items.reduce(function (a, x) { return a + x.total; }, 0), d = daysUntil(s.cutoff);
       el.innerHTML = '<div class="fstrip"><img src="img/' + s.img + '.webp" alt=""><div><h3>' + esc(s.name) + ' pre-orders are open</h3><p>Order by ' + fmtDay(s.cutoff) + ' (' + (d === 0 ? 'today' : d + ' day' + (d === 1 ? '' : 's') + ' left') + '). Pick up ' + fmtDay(s.from) + ' to ' + fmtDay(s.to) + '.</p>' +
-        '<div class="bar" title="' + left + ' of ' + total + ' left"><i style="width:' + Math.round(100 * left / total) + '%"></i></div><p class="small" style="margin-top:6px">' + left + ' of ' + total + ' sets and jars left</p></div><a class="btn btn--light" href="festive.html">See festive sets</a></div>';
+        '<div class="bar" title="' + left + ' of ' + total + ' left"><i style="width:' + Math.round(100 * left / total) + '%"></i></div><p class="small" style="margin-top:6px">' + left + ' of ' + total + ' left to order</p></div><a class="btn btn--light" href="festive.html">See pre-orders</a></div>';
     }
     document.addEventListener('click', onAdd);
   }
@@ -348,7 +349,7 @@
     function paint() {
       var b = bag();
       if (!b.length) {
-        root.innerHTML = '<div class="panel empty"><h2>Your order is empty</h2><p>Start with a favourite. You can choose pick-up or delivery on the next step.</p><div class="grid grid--3" style="text-align:left;margin-top:18px">' + ['nasi-lemak', 'laksa', 'satay'].map(function (id) { return dishCard(item(id)); }).join('') + '</div><p style="margin-top:18px"><a class="btn" href="menu.html">See the full menu</a></p></div>';
+        root.innerHTML = '<div class="panel empty"><h2>Your order is empty</h2><p>Start with a favourite. ' + (DELIVERY ? 'You can choose pick-up or delivery on the next step.' : 'You choose a pick-up time on the next step.') + '</p><div class="grid grid--3" style="text-align:left;margin-top:18px">' + SIGNATURE.slice(0, 3).map(item).filter(Boolean).map(function (it) { return dishCard(it); }).join('') + '</div><p style="margin-top:18px"><a class="btn" href="menu.html">See the full menu</a></p></div>';
         return;
       }
       var days = openDays(8).filter(function (d) { return orderSlots(d).length; }).slice(0, 7);
