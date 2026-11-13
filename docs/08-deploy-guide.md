@@ -1,13 +1,52 @@
 # 08 — 部署到 DigitalOcean（一步一步）
 
-> ⏸ **2026-11-07：暂缓。** 工作室网站和 6 个模板现在放 Netlify（`docs/09-netlify-guide.md`）。这份指南等**第一个客户签约**、要做客户的 WooCommerce 网店时再用。
-> 到时先买域名，然后把下面所有 `yourdomain.com` 换成你的域名。旧的 3 个样板站已经停用，`build-all.sh` 默认只建母版站。
+> **2026-11-13 更新：现在就开（俊宇：「试看真的买一台 DigitalOcean，不然看不到」）。** 跟旧版不同的地方：
+> - **工作室网站和工作台继续放 Cloudflare，不搬。** 服务器只放「母版网店」和以后客户的网店。
+> - 域名用已经有的 `cartsmithstudio.com`（不用再买）。母版网址：`https://master.cartsmithstudio.com`（要密码、noindex）。
+> - DNS 在 **Cloudflare** 改，**只加一条 `master` 记录**。不要加 `@`、`www`、`*`，也不要改现有的记录（会把工作室网站和工作台弄坏）。
+> - 项目是公开的，服务器直接用 https 下载，不用 GitHub deploy key。
+> - 下面的「快速版」做完就有母版站；旧版的详细说明留在后面参考（第 1、4、5 步按快速版做）。
 
-> 给俊宇：照顺序做。每一步做完再做下一步。看不懂的地方，把那一步贴给 Claude Code 问。
-> 全部做完大约 1–2 小时（其中等 DNS 生效可能要 10 分钟到几小时）。
-> 所有东西都已经在本地完整测试过（2026-11-06）：建站、复制、套品牌、备份、还原、更新失败自动还原、删除站点。
+## 快速版（2026-11-13，约 1 小时）
+
+**A. 你的电脑做 SSH 密钥**（PowerShell；已经有就跳过）
+```
+ssh-keygen -t ed25519 -C "cartsmith"
+Get-Content $env:USERPROFILE\.ssh\id_ed25519.pub
+```
+复制显示的整行（`ssh-ed25519 AAAA... cartsmith`）。
+
+**B. DigitalOcean 开 Droplet**：Create → Droplets → Region **Singapore** → Image **Ubuntu 24.04 (LTS) x64**（脚本是在 24.04 测的，不要选 26.04）→ Size **Basic → Regular → 2 GB / 1 CPU / 50 GB**（2026-11-13 官网价 USD 12 / 月）→ Authentication **SSH Key → New SSH Key**，贴 A 的那一行，名字 `cartsmith-pc` → 勾 **Backups（每周，+20% ≈ USD 2.40）** 和 **Monitoring（免费）** → Hostname `agency-dev` → Create → 复制 **IP**。
+
+**C. Cloudflare 加一条 DNS**：dash.cloudflare.com → `cartsmithstudio.com` → **DNS → Records → Add record**：Type `A`，Name `master`，IPv4 = 服务器 IP，**Proxy status 关掉（灰色云 DNS only）** → Save。
+
+**D. 登录服务器、下载程式、初始化**（PowerShell）：
+```
+ssh root@服务器IP
+```
+第一次问 `Are you sure...` 输入 `yes`。登录后一行一行贴：
+```
+apt-get update && apt-get install -y git
+git clone -b ccr-4e1e8221-7msrbj https://github.com/Christopher0607/Website-selling.git /opt/agency
+bash /opt/agency/scripts/server/provision-server.sh --studio-domain cartsmithstudio.com --email 你的电邮
+```
+等 5–10 分钟，看到「完成」后，把最后 30 行贴给 Claude Code。
+
+**E. 换成 deploy 用户、关掉 root 登录**：照下面旧版的「第 6 步」（旧视窗不要关）。
+
+**F. 建母版站**（用 deploy 登录）：
+```
+sudo /opt/agency/scripts/server/build-all.sh
+```
+把最后的表格贴给 Claude Code（**不要贴密码**）。
+
+**G. 存密码**：`sudo cat /etc/agency/secrets/master.env` → 把 `WP_ADMIN_USER` / `WP_ADMIN_PASS` / `BASIC_AUTH_USER` / `BASIC_AUTH_PASS` 存进 Bitwarden。然后用手机开 `https://master.cartsmithstudio.com`。
+
+**以后更新程式**（Claude Code push 之后）：`cd /opt/agency && sudo git pull && sudo scripts/server/install-code.sh all`
 
 ---
+
+## 旧版详细说明（2026-11-06 写，参考用）
 
 ## 你会得到什么
 
