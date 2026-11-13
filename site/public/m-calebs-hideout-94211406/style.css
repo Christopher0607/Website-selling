@@ -59,6 +59,7 @@ p { margin: 0 0 1em; }
 .btn[disabled] { opacity: .45; cursor: not-allowed; box-shadow: none; }
 .btns { display: flex; gap: 12px; flex-wrap: wrap; }
 .linkbtn { background: none; border: 0; padding: 0; color: var(--leaf); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+button.linkbtn { min-height: 44px; }
 
 /* demo bar + header */
 .demobar { background: var(--ink); color: #e9e4d8; font-size: .82rem; display: flex; align-items: center; justify-content: center; gap: 14px; padding: 8px 16px; text-align: center; flex-wrap: wrap; }
@@ -110,7 +111,7 @@ p { margin: 0 0 1em; }
 .chip svg { width: 16px; height: 16px; color: var(--leaf-2); }
 
 /* festive strip */
-.fstrip { background: linear-gradient(100deg, #7e1d12, var(--chili)); color: #fff; border-radius: 22px; padding: 22px clamp(18px, 3vw, 32px); display: grid; grid-template-columns: auto 1fr auto; gap: 22px; align-items: center; box-shadow: var(--shadow); }
+.fstrip { background: #7e1d12 linear-gradient(100deg, #7e1d12, var(--chili)); color: #fff; border-radius: 22px; padding: 22px clamp(18px, 3vw, 32px); display: grid; grid-template-columns: auto 1fr auto; gap: 22px; align-items: center; box-shadow: var(--shadow); }
 .fstrip img { width: 84px; height: 84px; border-radius: 16px; object-fit: cover; }
 .fstrip h3 { font-size: 1.35rem; margin-bottom: 4px; }
 .fstrip p { margin: 0; color: #fde6d6; font-size: .95rem; }

@@ -277,7 +277,7 @@
   }
   function dishCard(it) {
     var out = isOut(it.id);
-    return '<article class="dish' + (out ? ' is-out' : '') + '"><div class="dish__img">' + (picOf(it) ? '<img src="' + picOf(it) + '" alt="' + esc(it.n) + '' + PHOTO_NOTE + '" loading="lazy" width="600" height="450">' : NOPHOTO) + '<div class="dish__tags">' + tagsHTML(it) + '</div></div>' +
+    return '<article class="dish' + (out ? ' is-out' : '') + '"><div class="dish__img">' + (picOf(it) ? '<img data-pv-src="' + picOf(it) + '" alt="' + esc(it.n) + '' + PHOTO_NOTE + '" loading="lazy" width="600" height="450">' : NOPHOTO) + '<div class="dish__tags">' + tagsHTML(it) + '</div></div>' +
       '<div class="dish__body"><h3>' + esc(it.n) + '</h3><p>' + esc(it.d) + '</p><div class="dish__foot"><span class="price">' + rm(priceOf(it)) + (it.per ? ' <small class="muted">· ' + esc(it.per) + '</small>' : '') + '</span>' +
       (hasPrice(it) || out ? '<button class="addbtn" type="button" data-add="' + it.id + '"' + (out ? ' disabled' : '') + '>' + (out ? 'Sold out' : ICON.plus + 'Add') + '</button>' : askBtn(it.n)) + '</div></div></article>';
   }
@@ -285,13 +285,13 @@
     var out = isOut(it.id);
     return '<article class="mitem' + (out ? ' is-out' : '') + '" id="i-' + it.id + '"><div><h3>' + esc(it.n) + '</h3><p>' + esc(it.d) + '</p><div class="mitem__meta">' + tagsHTML(it) + (it.per ? '<span class="tag">' + esc(it.per) + '</span>' : '') + '</div>' +
       '<div class="mitem__foot"><span class="price">' + rm(priceOf(it)) + '</span>' + (hasPrice(it) || out ? '<button class="addbtn" type="button" data-add="' + it.id + '"' + (out ? ' disabled' : '') + '>' + (out ? 'Sold out' : ICON.plus + 'Add') + '</button>' : askBtn(it.n)) + '</div></div>' +
-      (picOf(it) ? '<img src="' + picOf(it) + '" alt="' + esc(it.n) + '' + PHOTO_NOTE + '" loading="lazy" width="112" height="112">' : '') + '</article>';
+      (picOf(it) ? '<img data-pv-src="' + picOf(it) + '" alt="' + esc(it.n) + '' + PHOTO_NOTE + '" loading="lazy" width="112" height="112">' : '') + '</article>';
   }
   var sheetFocus = null;
   function openSheet(html, img) {
     var sh = $('[data-sheet]'), p = $('.sheet__panel', sh);
     sheetFocus = document.activeElement;
-    p.innerHTML = '<button class="sheet__x" type="button" data-close aria-label="Close">&times;</button>' + (img ? '<img class="sheet__img" src="' + img + '" alt="">' : '') + html;
+    p.innerHTML = '<button class="sheet__x" type="button" data-close aria-label="Close">&times;</button>' + (img ? '<img class="sheet__img" data-pv-src="' + img + '" alt="">' : '') + html;
     sh.hidden = false; document.body.style.overflow = 'hidden'; p.focus();
   }
   function closeSheet() { var sh = $('[data-sheet]'); if (!sh || sh.hidden) return; sh.hidden = true; document.body.style.overflow = ''; if (sheetFocus && sheetFocus.focus) sheetFocus.focus(); }
@@ -345,7 +345,7 @@
     var s = nextSeason(), el = $('[data-festive-strip]');
     if (s && el) {
       var left = s.items.reduce(function (a, x) { return a + leftOf(x); }, 0), total = s.items.reduce(function (a, x) { return a + x.total; }, 0), d = daysUntil(s.cutoff);
-      el.innerHTML = '<div class="fstrip"><img src="img/' + s.img + '.webp" alt=""><div><h3>' + esc(s.name) + ' pre-orders are open</h3><p>Order by ' + fmtDay(s.cutoff) + ' (' + (d === 0 ? 'today' : d + ' day' + (d === 1 ? '' : 's') + ' left') + '). Pick up ' + fmtDay(s.from) + ' to ' + fmtDay(s.to) + '.</p>' +
+      el.innerHTML = '<div class="fstrip"><img data-pv-src="img/' + s.img + '.webp" alt=""><div><h3>' + esc(s.name) + ' pre-orders are open</h3><p>Order by ' + fmtDay(s.cutoff) + ' (' + (d === 0 ? 'today' : d + ' day' + (d === 1 ? '' : 's') + ' left') + '). Pick up ' + fmtDay(s.from) + ' to ' + fmtDay(s.to) + '.</p>' +
         '<div class="bar" title="' + left + ' of ' + total + ' left"><i style="width:' + Math.round(100 * left / total) + '%"></i></div><p class="small" style="margin-top:6px">' + left + ' of ' + total + ' left to order</p></div><a class="btn btn--light" href="festive.html">See pre-orders</a></div>';
     }
     document.addEventListener('click', onAdd);
@@ -534,7 +534,7 @@
         '<div class="field"><label for="b-occ">Occasion <small>(optional)</small></label><select class="input" id="b-occ" data-k="occ"><option value="">—</option><option>Birthday</option><option>Anniversary</option><option>Business</option><option>Family gathering</option></select></div></div>' +
         '<div class="row2"><div class="field"><label for="b-name">Name</label><input class="input" id="b-name" autocomplete="name" data-k="name" value="' + esc(S.name) + '"></div><div class="field"><label for="b-phone">Mobile number</label><input class="input" id="b-phone" type="tel" autocomplete="tel" placeholder="012-345 6789" data-k="phone" value="' + esc(S.phone) + '"></div></div>' +
         '<div class="field"><label for="b-notes">Anything we should know? <small>(optional)</small></label><input class="input" id="b-notes" maxlength="160" placeholder="High chair, allergies, a birthday cake…" data-k="notes" value="' + esc(S.notes) + '"></div></section></div>' +
-        '<aside class="summary panel"><h2>Your table</h2><img src="img/interior.webp" alt="" style="border-radius:14px;aspect-ratio:4/3;object-fit:cover;width:100%;margin-bottom:14px">' +
+        '<aside class="summary panel"><h2>Your table</h2><img data-pv-src="img/interior.webp" alt="" style="border-radius:14px;aspect-ratio:4/3;object-fit:cover;width:100%;margin-bottom:14px">' +
         '<div class="totals"><div><span>Guests</span><b>' + S.pax + '</b></div><div><span>Day</span><b>' + fmtDay(S.date) + '</b></div><div><span>Time</span><b>' + (S.time ? fmtTime(S.time) : '—') + '</b></div><div><span>Seating</span><b>' + esc(S.seat) + '</b></div>' + (S.pax >= 8 ? '<div><span>Deposit</span><b>RM50.00</b></div>' : '') + '</div>' +
         '<button class="btn btn--block" type="button" data-confirm style="margin-top:16px">Confirm booking</button><p class="small muted center" style="margin-top:10px">Free cancellation up to 2 hours before. Demo: no table is held.</p></aside></div>';
     }
@@ -584,11 +584,11 @@
       var lines = s.items.filter(function (x) { return S.qty[x.id]; }).map(function (x) { return { it: x, q: S.qty[x.id] }; });
       var ask = lines.some(function (l) { return fp(l.it) == null; });
       var total = lines.reduce(function (a, l) { return a + (fp(l.it) || 0) * l.q; }, 0), dep = lines.reduce(function (a, l) { return a + (fp(l.it) || 0) * l.q * l.it.dep; }, 0);
-      $('[data-fhero]').innerHTML = '<img src="img/' + s.img + '.webp" alt=""><div class="wrap"><p class="kicker">Festive pre-orders</p><h1>' + esc(s.name) + '</h1><p class="lead">' + esc(s.blurb) + '</p><p class="lead" style="margin-top:-6px"><b>Order by ' + fmtDay(s.cutoff) + '</b> · pick up ' + fmtDay(s.from) + ' to ' + fmtDay(s.to) + '</p>' + countdown(s) + '</div>';
+      $('[data-fhero]').innerHTML = '<img data-pv-src="img/' + s.img + '.webp" alt=""><div class="wrap"><p class="kicker">Festive pre-orders</p><h1>' + esc(s.name) + '</h1><p class="lead">' + esc(s.blurb) + '</p><p class="lead" style="margin-top:-6px"><b>Order by ' + fmtDay(s.cutoff) + '</b> · pick up ' + fmtDay(s.from) + ' to ' + fmtDay(s.to) + '</p>' + countdown(s) + '</div>';
       root.innerHTML = '<div class="seg" role="tablist" aria-label="Festive season" style="margin-bottom:22px">' + SEASONS.map(function (x) { return '<button type="button" role="tab" data-season="' + x.id + '" class="' + (x.id === S.season ? 'is-on' : '') + '" aria-selected="' + (x.id === S.season) + '">' + esc(x.name) + (x.cutoff < t ? ' (closed)' : '') + '</button>'; }).join('') + '</div>' +
         '<div class="co" style="padding-top:0"><div class="grid" style="gap:16px">' + s.items.map(function (x) {
           var left = leftOf(x), out = left <= 0 || closed, q = S.qty[x.id] || 0;
-          return '<article class="fset' + (out ? ' is-out' : '') + '">' + (x.img === false ? NOPHOTO : '<img src="img/' + x.img + '.webp" alt="' + esc(x.n) + '' + PHOTO_NOTE + '" loading="lazy">') + '<div class="fset__body"><h3>' + esc(x.n) + '</h3><span class="price">' + rm(fp(x)) + '</span><ul>' + x.has.map(function (h) { return '<li>' + esc(h) + '</li>'; }).join('') + '</ul>' +
+          return '<article class="fset' + (out ? ' is-out' : '') + '">' + (x.img === false ? NOPHOTO : '<img data-pv-src="img/' + x.img + '.webp" alt="' + esc(x.n) + '' + PHOTO_NOTE + '" loading="lazy">') + '<div class="fset__body"><h3>' + esc(x.n) + '</h3><span class="price">' + rm(fp(x)) + '</span><ul>' + x.has.map(function (h) { return '<li>' + esc(h) + '</li>'; }).join('') + '</ul>' +
             '<div class="fset__left"><span>' + (left <= 0 ? 'Sold out' : 'Only ' + left + ' left') + '</span><span>' + (fp(x) == null ? 'Price on request' : x.dep < 1 ? '50% deposit' : 'Pay in full') + '</span></div><div class="bar bar--dark"><i style="width:' + Math.round(100 * Math.max(0, left) / x.total) + '%"></i></div>' +
             '<div style="display:flex;justify-content:flex-end;margin-top:8px">' + (out ? '<span class="tag tag--out">' + (closed ? 'Orders closed' : 'Sold out') + '</span>' : '<div class="qty"><button type="button" data-fq="' + x.id + ':-1" aria-label="One less">−</button><output>' + q + '</output><button type="button" data-fq="' + x.id + ':1" aria-label="One more">+</button></div>') + '</div></div></article>';
         }).join('') + '</div>' +
