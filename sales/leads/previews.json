@@ -2947,6 +2947,253 @@
     "sources": "Printed menu photos (Main/Brunch, Pasta/Noodle, Sandwich, Pizza, Salad/Snack, Amour Dessert, Good Coffee, Non-coffee, Hot Tea, Oui Special) sent by Junyu 2026-11-14; Google menu listing (delivery prices, about 10% higher; used only for the pastry counter, kombucha and cheesecake names); Malay Mail, 30 Nov 2024 (Kenny Mah; photos CK Lim); Eat Drink KL, Feb 2023."
    },
    "checked": "2026-11-14"
+  },
+  {
+   "code": "m-the-baking-trip",
+   "slug": "m-the-baking-trip-69eefe98",
+   "url": "https://previews.cartsmithstudio.com/m-the-baking-trip-69eefe98/",
+   "delete_by": "2026-11-28",
+   "lead_id": "k20261114-the-baking-trip",
+   "instagram": "_thebakingtrip_",
+   "name": "The Baking Trip",
+   "photos": "real: Eat Drink KL (May 2023), credited",
+   "enc": "eyJ2IjoyLCJlcGsiOiJCT1pwWjh3UFhRd2hzMTQwa21wMXAxNkdtdnRyT3RxVCtmaU55WDY0SlJ2STRJSXc1SWo4QnRtend5T3V0QXBURVB5UDBnSkQwemlrbndpZDFHaUpRY0U9IiwiaXYiOiJJMU9WMXpOaFFtZnBTK3J1IiwiY3QiOiJaUGxFeXl2UEZUejFCdVFKeDVaTDNucWZETHU3aUJhVEpBcFNZMWtmOEpZUzNVaEdodEVUIn0=",
+   "pitch": {
+    "mode": "pickup",
+    "items": [
+     "Cream Cheese Cheddar Boule",
+     "whole cakes",
+     "Christmas babka pre-orders"
+    ]
+   },
+   "facts": {
+    "mode": "pickup",
+    "place": "A6, Jalan Rukun 7, Taman Gembira (Happy Garden), 58200 Kuala Lumpur",
+    "hours": "Open Wed–Sun 9am–6pm; Mon & Tue closed",
+    "delivery": "",
+    "products": [
+     {
+      "n": "Cream Cheese Cheddar Boule",
+      "p": 18,
+      "per": "",
+      "cat": "Sourdough loaves",
+      "ex": false,
+      "set": "",
+      "src": "Eat Drink KL, May 2023"
+     },
+     {
+      "n": "Cranberry Pumpkin Seed Country",
+      "p": 14,
+      "per": "",
+      "cat": "Sourdough loaves",
+      "ex": false,
+      "set": "",
+      "src": "Eat Drink KL, May 2023"
+     },
+     {
+      "n": "Blueberry Raisin Cream Cheese Rye",
+      "p": 12,
+      "per": "",
+      "cat": "Sourdough loaves",
+      "ex": false,
+      "set": "",
+      "src": "Eat Drink KL, May 2023"
+     },
+     {
+      "n": "Classic Bagel",
+      "p": 8,
+      "per": "",
+      "cat": "Bagels & buns",
+      "ex": false,
+      "set": "",
+      "src": "Eat Drink KL, May 2023"
+     },
+     {
+      "n": "Amai Genmai Pistachio Cake",
+      "p": null,
+      "per": "",
+      "cat": "Cakes",
+      "ex": false,
+      "set": "",
+      "src": "Not published; ask the owner"
+     },
+     {
+      "n": "Home Milled Wheat Country",
+      "p": 12,
+      "per": "",
+      "cat": "Sourdough loaves",
+      "ex": false,
+      "set": "",
+      "src": "Eat Drink KL, May 2023"
+     },
+     {
+      "n": "Italian Classic Country",
+      "p": 13,
+      "per": "",
+      "cat": "Sourdough loaves",
+      "ex": false,
+      "set": "",
+      "src": "Eat Drink KL, May 2023"
+     },
+     {
+      "n": "Sourdough Coffee",
+      "p": 15,
+      "per": "",
+      "cat": "Sourdough loaves",
+      "ex": false,
+      "set": "",
+      "src": "Eat Drink KL, May 2023"
+     },
+     {
+      "n": "Miso Sourdough Loaf",
+      "p": null,
+      "per": "",
+      "cat": "Sourdough loaves",
+      "ex": false,
+      "set": "",
+      "src": "Not published; ask the owner"
+     },
+     {
+      "n": "78% Dark Chocolate Boule",
+      "p": null,
+      "per": "",
+      "cat": "Sourdough loaves",
+      "ex": false,
+      "set": "",
+      "src": "Not published; ask the owner"
+     },
+     {
+      "n": "Sourdough Milk Sandwich Loaf",
+      "p": null,
+      "per": "",
+      "cat": "Sourdough loaves",
+      "ex": false,
+      "set": "",
+      "src": "Not published; ask the owner"
+     },
+     {
+      "n": "Cinnamon Babka",
+      "p": null,
+      "per": "",
+      "cat": "Sourdough loaves",
+      "ex": false,
+      "set": "",
+      "src": "Not published; ask the owner"
+     },
+     {
+      "n": "Smoked Chicken Frankfurter Sausage Roll",
+      "p": null,
+      "per": "",
+      "cat": "Bagels & buns",
+      "ex": false,
+      "set": "",
+      "src": "Not published; ask the owner"
+     },
+     {
+      "n": "Japanese Curry Chicken Sausage Pan",
+      "p": null,
+      "per": "",
+      "cat": "Bagels & buns",
+      "ex": false,
+      "set": "",
+      "src": "Not published; ask the owner"
+     },
+     {
+      "n": "Red Bolognese Sausage Pan",
+      "p": null,
+      "per": "",
+      "cat": "Bagels & buns",
+      "ex": false,
+      "set": "",
+      "src": "Not published; ask the owner"
+     },
+     {
+      "n": "Black Olive & Cheddar Cube Pan",
+      "p": null,
+      "per": "",
+      "cat": "Bagels & buns",
+      "ex": false,
+      "set": "",
+      "src": "Not published; ask the owner"
+     },
+     {
+      "n": "Red Yeast Tomato Cheese Pan",
+      "p": null,
+      "per": "",
+      "cat": "Bagels & buns",
+      "ex": false,
+      "set": "",
+      "src": "Not published; ask the owner"
+     },
+     {
+      "n": "Pistachio Twist Brioche",
+      "p": null,
+      "per": "",
+      "cat": "Bagels & buns",
+      "ex": false,
+      "set": "",
+      "src": "Not published; ask the owner"
+     },
+     {
+      "n": "Black Sesame Truffle Butter Roll",
+      "p": null,
+      "per": "",
+      "cat": "Bagels & buns",
+      "ex": false,
+      "set": "",
+      "src": "Not published; ask the owner"
+     },
+     {
+      "n": "Grilled Cheese Sandwich",
+      "p": null,
+      "per": "",
+      "cat": "Sandwiches",
+      "ex": false,
+      "set": "",
+      "src": "Not published; ask the owner"
+     },
+     {
+      "n": "Black Sesame Milk Pistachio Cake",
+      "p": null,
+      "per": "",
+      "cat": "Cakes",
+      "ex": false,
+      "set": "",
+      "src": "Not published; ask the owner"
+     },
+     {
+      "n": "Tiramisu with Baileys Irish Cream",
+      "p": null,
+      "per": "",
+      "cat": "Cakes",
+      "ex": false,
+      "set": "",
+      "src": "Not published; ask the owner"
+     },
+     {
+      "n": "Thai Milk Tea Coconut Cake",
+      "p": null,
+      "per": "",
+      "cat": "Cakes",
+      "ex": false,
+      "set": "",
+      "src": "Not published; ask the owner"
+     },
+     {
+      "n": "Hand Brewed Coffee",
+      "p": 15,
+      "per": "",
+      "cat": "Coffee",
+      "ex": false,
+      "set": "",
+      "src": "Eat Drink KL, May 2023"
+     }
+    ],
+    "faq": [],
+    "contact": "WhatsApp / phone 019-576 1419 · IG @_thebakingtrip_ (orders currently by Instagram)",
+    "sources": "Eat Drink KL, 31 May 2023 (Sean): products, prices, photos; FMT Lifestyle, 11 Jul 2023 (Theevya Ragu): background, orders on Instagram."
+   },
+   "checked": ""
   }
  ]
 }
