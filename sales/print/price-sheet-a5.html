@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- A5 价钱单（2026-11-13，地推用）。改完跑：node sales/print/render.js → price-sheet-a5.pdf / .png
-     价钱跟 site/studio.json、sales/agent/knowledge.md 一致；改价钱三个地方一起改。二维码：cartsmithstudio.com/?ref=flyer
+     价钱跟 site/studio.json、sales/agent/knowledge.md 一致；改价钱三个地方一起改（2026-11-14：维护费 RM99、月付 RM169 × 12、Starter 前 5 家 RM800 之后 RM1,000；一次性价钱旁边一定写维护费）。二维码：cartsmithstudio.com/?ref=flyer
      （扫码的人在工作台「流量」的来源显示「价钱单（地推）」）。 -->
 <html lang="en">
 <head>
@@ -29,7 +29,7 @@
   .free b { font: 800 10.5pt/1 "Bricolage Grotesque", Inter, sans-serif; color: var(--ember); white-space: nowrap; }
   .free p { margin: 0; font-size: 7.5pt; line-height: 1.35; }
   .free .zh { display: block; opacity: .82; }
-  .offers { margin-top: 3mm; display: grid; gap: 2mm; }
+  .offers { margin-top: 2.6mm; display: grid; gap: 1.8mm; }
   .o { border: .3mm solid var(--line); border-radius: 3mm; padding: 2.3mm 3.4mm 2.2mm; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: baseline; gap: .4mm 3mm; }
   .o--hl { border-color: var(--ember); box-shadow: inset .9mm 0 0 var(--ember); }
   .o h2 { margin: 0; font: 800 10.6pt/1.15 "Bricolage Grotesque", Inter, sans-serif; letter-spacing: -.01em; }
@@ -37,6 +37,8 @@
   .price { grid-row: span 1; text-align: right; font: 800 15pt/1 "Bricolage Grotesque", Inter, sans-serif; letter-spacing: -.03em; white-space: nowrap; }
   .price small { font: 500 6.8pt/1.25 Inter, "Noto Sans SC", sans-serif; color: var(--muted); letter-spacing: 0; margin-left: 1.2mm; }
   .price .rm { font-size: 8.5pt; margin-right: .4mm; }
+  .plus { grid-column: 1 / -1; margin: .6mm 0 0; padding: 1mm 2mm; background: #fff4ef; border-radius: 1.6mm; font-weight: 700; font-size: 7.6pt; color: var(--ember-d); }
+  .plus .zh { display: block; font-weight: 500; color: var(--ember-d); }
   .o ul { grid-column: 1 / -1; list-style: none; margin: .8mm 0 0; padding: 0; display: grid; gap: .5mm; }
   .o li { display: grid; grid-template-columns: 3.4mm minmax(0, 1fr); gap: 1.2mm; }
   .o li::before { content: ""; width: 2.4mm; height: 1.3mm; margin-top: 1.1mm; border-left: .45mm solid var(--ok); border-bottom: .45mm solid var(--ok); transform: rotate(-45deg); }
@@ -77,12 +79,12 @@
       <ul>
         <li><span>Up to 10 items, online payment or DuitNow QR <span class="zh">· 最多 10 样，网上付款或 DuitNow QR</span></span></li>
         <li><span>Collection / delivery time slots and a cut-off date <span class="zh">· 自取 / 送货时段、截止日期</span></span></li>
-        <li><span>Live in 3 working days, 3 months of hosting and maintenance included <span class="zh">· 3 个工作天上线，含 3 个月主机和维护</span></span></li>
+        <li><span>Live in 3 working days; 3 months of hosting included, then pause free or RM49 a month <span class="zh">· 3 天上线；含 3 个月主机，之后免费暂停或每月 RM49</span></span></li>
       </ul>
     </section>
     <section class="o">
       <h2>Monthly plan<span class="zh">月付</span></h2>
-      <div class="price"><span class="rm">RM</span>199<small>a month × 12 · 每月</small></div>
+      <div class="price"><span class="rm">RM</span>169<small>a month × 12 · 每月</small></div>
       <ul>
         <li><span>RM0 upfront, the first payment is on launch day <span class="zh">· 不用先付，上线当天才付第一期</span></span></li>
         <li><span>A full website, with hosting and maintenance included <span class="zh">· 完整网站，含主机和维护</span></span></li>
@@ -91,10 +93,11 @@
     </section>
     <section class="o">
       <h2>Buy it outright<span class="zh">一次性买断</span></h2>
-      <div class="price"><small style="margin:0 1mm 0 0">from · 起</small><span class="rm">RM</span>800<small>one-time · 一次性</small></div>
+      <div class="price"><span class="rm">RM</span>800<small>one-time · 一次性</small></div>
+      <p class="plus">+ RM99 a month maintenance, first month free<span class="zh">另加每月维护费 RM99（主机、备份、更新、小修改），第一个月免费</span></p>
       <ul>
-        <li><span>Starter RM800 · Catalog RM1,200 · Growth RM1,600</span></li>
-        <li><span>Then maintenance RM150 a month, the first month free <span class="zh">· 之后每月维护费 RM150，第一个月免费</span></span></li>
+        <li><span>RM800 for our first 5 clients, then RM1,000 <span class="zh">· 前 5 家客户价，之后 RM1,000</span></span></li>
+        <li><span>Bigger sites: Catalog RM1,200 · Growth RM1,600 <span class="zh">· 维护费一样每月 RM99</span></span></li>
         <li><span>First 3 clients pay the second half only when happy <span class="zh">· 前 3 位客户：满意了才付另一半</span></span></li>
       </ul>
     </section>

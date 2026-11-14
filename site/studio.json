@@ -9,7 +9,7 @@
     "dm": "https://ig.me/m/cartsmith.studio"
   },
   "packages": [
-    {"id": "starter", "name": "Starter", "price": 800, "for": "Your own ordering website or online shop", "meta": "Up to 20 items · ~10 working days",
+    {"id": "starter", "name": "Starter", "price": 800, "founding": "RM800 for our first 5 clients · RM1,000 after that", "for": "Your own ordering website or online shop", "meta": "Up to 20 items · ~10 working days",
      "features": ["Home, Menu or Shop, About, Contact, FAQ, Delivery & Returns", "Orders for pick-up, delivery or shipping — paid online or sent to your WhatsApp", "1 payment gateway: FPX, cards & e-wallets", "Delivery areas, West / East Malaysia shipping rates", "WhatsApp / Instagram chat buttons", "Privacy & terms drafts (EN + BM)", "Mobile-first design, basic SEO, SSL", "Training video + 30-min handover", "First month of maintenance free"]},
     {"id": "growth", "name": "Growth", "price": 1600, "for": "Bookings, festive pre-orders, ready for ads", "meta": "Up to 80 items · ~15 working days", "highlight": true, "tag": "Most complete",
      "features": ["Everything in Starter", "Table bookings or festive pre-orders with cut-off dates", "Bulk import + options (size, flavour, add-ons…)", "2 payment methods", "Campaign / festive landing page", "Free-delivery threshold & vouchers", "Enter phone / WhatsApp orders in your shop dashboard", "GA4 + Meta Pixel ad tracking", "Homepage copy written for you (EN or 中文) + 3 SEO articles", "2 training sessions", "First month of maintenance free"]},
@@ -21,13 +21,13 @@
      "features": ["Up to 10 festive items, with photos, prices, options and how many are left", "Online payment (FPX, cards, e-wallets) through a gateway in your name, or DuitNow QR with a receipt upload from day one", "Collection or delivery days and time slots, cut-off date and early-bird price", "Order emails, order tracking and your own dashboard: what to bake each day", "Runs on WordPress + WooCommerce, in your name", "3 months of hosting and maintenance included"],
      "short": ["Up to 10 festive items, with how many are left", "Online payment or DuitNow QR", "Collection or delivery days and time slots, with a cut-off date", "Order emails and your own dashboard on your phone", "Live in 3 working days; 3 months of hosting and maintenance included, then pause it for free or keep it open for RM49 a month"],
      "after": "After 3 months, you choose: pause it for free and reopen next season for RM149, or keep it open for RM49 a month. A new festival look: RM99. Upgrade to a full website within 60 days and the RM399 comes off."},
-    {"id": "monthly", "name": "Monthly plan", "price": 199, "unit": "a month × 12", "for": "Your own website with nothing to pay upfront", "meta": "RM0 upfront · 12 monthly payments",
+    {"id": "monthly", "name": "Monthly plan", "price": 169, "unit": "a month × 12", "for": "Your own website with nothing to pay upfront", "meta": "RM0 upfront · 12 monthly payments",
      "features": ["Everything in Starter", "Hosting and basic maintenance included", "First payment on launch day", "After 12 payments the website is yours", "Terms in a written agreement"],
      "short": ["RM0 upfront: the first payment is on launch day", "A full Starter website: menu or shop, online orders and payments, up to 20 items", "Hosting and maintenance included every month", "After 12 payments the website is yours", "Terms in a written agreement"],
-     "after": "After the 12 payments the website is yours; maintenance from RM150 a month if you want us to keep looking after it."}
+     "after": "After the 12 payments the website is yours; maintenance is RM99 a month if you want us to keep looking after it."}
   ],
   "care": {
-    "plans": [{"name": "Basic maintenance", "price": 150}, {"name": "Standard maintenance", "price": 300}],
+    "plans": [{"name": "Basic maintenance", "price": 99}, {"name": "Standard maintenance", "price": 300}],
     "rows": [
       ["Hosting, SSL, daily backups", "✓", "✓"],
       ["Uptime monitoring + quarterly restore test", "✓", "✓"],
@@ -53,7 +53,7 @@
       ["See it before you pay", "Free trial — but you build it", "Template screenshots", "Sometimes a mockup", "Free sample website with your own menu or products + live demos"],
       ["Malaysian payments & shipping set up", "You set it up", "Often basic only", "Depends on the quote", "Done for you: FPX, cards, e-wallets, West/East rates, policy drafts"],
       ["After launch", "You maintain it", "Usually on your own", "Varies, often per job", "Maintenance plan: updates, backups, monitoring, small edits"],
-      ["Monthly cost", "Platform plan + apps + fees (varies)", "Usually none — and no help", "Varies", "RM150 or RM300 — first month free"],
+      ["Monthly cost", "Platform plan + apps + fees (varies)", "Usually none — and no help", "Varies", "RM99 or RM300 — first month free"],
       ["Who owns it", "Your account on their platform", "You", "Check the contract", "You — domain and payment account in your name, full backup anytime"],
       ["Made for Malaysian food businesses", "General", "General", "Varies", "Yes — ordering, bookings, festive pre-orders, WhatsApp orders, QR cards"]
     ],
@@ -70,7 +70,7 @@
     "sources": ["https://jumixdesign.com/shopee-seller-fees-malaysia-2026/", "https://www.zetpy.com/?p=10621", "https://www.worldfirst.com/my/blog/e-commerce-online-sellers/shopee-seller-fees-malaysia/"]
   },
   "faq": [
-    ["How much does a website cost?", "<p>One-time setup: <b>Starter RM800</b>, <b>Catalog (B2B) RM1,200</b> or <b>Growth RM1,600</b>. Then a monthly maintenance fee: <b>RM150</b> (or RM300 for more changes), the first month free. It is optional, but it is what keeps the website updated, backed up and working. Two other ways to start: a <b>festive pre-order shop for RM399</b> (3 months of hosting and maintenance included; then pause it free or RM49 a month), or the <b>monthly plan: RM0 upfront, RM199 a month for 12 months</b> (hosting and maintenance included). <a href=\"pricing.html\">See everything that's included</a>.</p>"],
+    ["How much does a website cost?", "<p>One-time setup: <b>Starter RM800</b>, <b>Catalog (B2B) RM1,200</b> or <b>Growth RM1,600</b>. Then a monthly maintenance fee: <b>RM99</b> (or RM300 for more changes), the first month free. It is optional, but it is what keeps the website updated, backed up and working. Two other ways to start: a <b>festive pre-order shop for RM399</b> (3 months of hosting and maintenance included; then pause it free or RM49 a month), or the <b>monthly plan: RM0 upfront, RM169 a month for 12 months</b> (hosting and maintenance included). <a href=\"pricing.html\">See everything that's included</a>.</p>"],
     ["Is there a free trial?", "<p>Two things are free: a <b>homepage mockup</b> before you decide (with your own products), and the <b>first month of maintenance</b> after your site goes live. A whole website can't be built for free because each one takes many hours of work.</p>"],
     ["Do I have to leave foodpanda, Grab or Shopee?", "<p>No. Keep them for new customers. Your own website is for <b>your regulars</b>, festive pre-orders, bookings and catering enquiries — with no platform commission, and the customer list is yours.</p>"],
     ["Will the website bring customers by itself?", "<p>Not at first, and we won't pretend otherwise. Customers come from your existing followers, a QR card on your tables or in every parcel, your Instagram and your regulars. We set up those entry points for you.</p>"],

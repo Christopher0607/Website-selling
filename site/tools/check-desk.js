@@ -70,10 +70,10 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
   ok(true, 'p001 appears under follow-ups when due');
   // contacted, no mockup yet: the 2nd message is a ready-made template (2026-11-13), short enough for an Instagram DM
   const tplFu = await p.inputValue('#c-p001 textarea[data-field="followup"]');
-  ok(/免费帮 Glow Lab 做一个样板网站/.test(tplFu) && /每个月 RM199/.test(tplFu) && /RM399/.test(tplFu) && tplFu.includes('https://demo-festive.cartsmithstudio.com/') && /店家后台/.test(tplFu) && /每月维护费 RM150/.test(tplFu)
+  ok(/免费帮 Glow Lab 做一个样板网站/.test(tplFu) && /每个月 RM169/.test(tplFu) && /RM399/.test(tplFu) && tplFu.includes('https://demo-festive.cartsmithstudio.com/') && /店家后台/.test(tplFu) && /每月维护费 RM99/.test(tplFu)
     && tplFu.length <= 1000 && !/[?？]/.test(tplFu.replace(/https?:\/\/\S+/g, '')) && !(await p.$('#c-p001 [data-ig-long]')),
-    'contacted, no mockup: the 2nd message is ready (free sample, RM199, RM399 festive shop, dashboard, under 1,000 characters, no questions)');
-  ok(/免费样板、每月 RM199、节日预购网店 RM399/.test(await p.textContent('#c-p001')), 'the card says what the ready-made message covers');
+    'contacted, no mockup: the 2nd message is ready (free sample, RM169, RM399 festive shop, dashboard, under 1,000 characters, no questions)');
+  ok(/免费样板、每月 RM169、节日预购网店 RM399/.test(await p.textContent('#c-p001')), 'the card says what the ready-made message covers');
   const order = await p.$$eval('#c-p001 .send__btns button', (bs) => bs.map((x) => x.dataset.act));
   ok(order[0] === 'wa' && order.includes('call') && !order.includes('copyopen') && !(await p.$('#c-p001 [data-send-hint]')), 'follow-up (2026-11-13, all on WhatsApp): WhatsApp first, call after, no Instagram button: ' + order.join(','));
   await p.click('#c-p001 [data-act="sent"]');
@@ -688,7 +688,7 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
     await p.click('[data-tab="list"]'); await p.click('[data-tab="today"]');
     await p.waitForSelector('#c-p961 [data-act="call"]');
     const c1 = await p.textContent('#c-p961');
-    ok(/第二通电话/.test(c1) && /Did you get a chance to look/.test(c1) && /RM800/.test(c1) && /RM399/.test(c1) && /RM199 a month/.test(c1), 'mockup sent and follow-up due: the card shows the second call and its script (price, festive page, monthly)');
+    ok(/第二通电话/.test(c1) && /Did you get a chance to look/.test(c1) && /RM800/.test(c1) && /RM399/.test(c1) && /RM169 a month/.test(c1), 'mockup sent and follow-up due: the card shows the second call and its script (price, festive page, monthly)');
     ok((await p.$$('#c-p961 [data-act="call"]')).length === 1, 'one call button on the card');
     ok(await p.evaluate(() => {
       const c = document.querySelector('#c-p961');
@@ -699,7 +699,7 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
     }), 'message first (2026-11-13): the WhatsApp follow-up is above the call, WhatsApp is its first button');
     ok(!!(await p.$('#c-p962 [data-act="call"]')), 'mockup sent and only the call date is due: the card is on today\'s list too');
     const fu = JSON.parse(fs.readFileSync(STORE, 'utf8')).items.find((x) => x.id === 'p961').followup || '';
-    ok(fu.includes('second1234') && /from RM800 one-off/.test(fu) && /RM399/.test(fu) && /\/demo\/butter-lantern\//.test(fu) && /RM199 a month/.test(fu) && /\/demo\/dulang-daun\//.test(fu) && /second half only when you're happy/.test(fu) && /RM150 a month/.test(fu) && /shop dashboard on your phone/.test(fu) && /All our demos and prices: https:\/\/cartsmithstudio\.com\//.test(fu) && !/[?？]/.test(fu.replace(/https?:\/\/\S+/g, '')),
+    ok(fu.includes('second1234') && /from RM800 one-off/.test(fu) && /RM399/.test(fu) && /\/demo\/butter-lantern\//.test(fu) && /RM169 a month/.test(fu) && /\/demo\/dulang-daun\//.test(fu) && /second half only when you're happy/.test(fu) && /RM99 a month/.test(fu) && /shop dashboard on your phone/.test(fu) && /All our demos and prices: https:\/\/cartsmithstudio\.com\//.test(fu) && !/[?？]/.test(fu.replace(/https?:\/\/\S+/g, '')),
       'first follow-up after the mockup: link, password, the price + maintenance, the monthly plan, the fitting demo (bakery → Dulang & Daun), the festive page, the phone dashboard, our site, no questions');
     ok(/Dulang &(amp;)? Daun/.test(c1) && /2b 完整示范/.test(c1), 'the card and the second-call script name the demo that fits (bakery → Dulang & Daun)');
     await p.click('#c-p961 [data-act="call"]');

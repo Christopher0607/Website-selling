@@ -48,7 +48,7 @@ Thanks for your message. This is Cartsmith Studio. We will reply here within 1 w
 
 | 问题（按钮上显示） | 自动回答 |
 |---|---|
-| How much does a website cost? 网站多少钱？ | One-time setup: Starter RM800 (up to 20 items) · Catalog RM1,200 · Growth RM1,600 (up to 80 items). Festive pre-order shop RM399. Or RM0 upfront and RM199 a month for 12 months. Monthly maintenance from RM150 — the first month after launch is free. Full list: https://cartsmithstudio.com/pricing.html |
+| How much does a website cost? 网站多少钱？ | One-time setup: Starter RM800 (up to 20 items) · Catalog RM1,200 · Growth RM1,600 (up to 80 items). Festive pre-order shop RM399. Or RM0 upfront and RM169 a month for 12 months. Monthly maintenance from RM99 — the first month after launch is free. Full list: https://cartsmithstudio.com/pricing.html |
 | Can I see it before paying? 可以先看样板吗？ | Yes. We make a free, private homepage mockup with your own products in 1–2 working days. Send us your shop link + the template you like (https://cartsmithstudio.com/templates.html). No obligation. |
 | How long does it take? 要多久？ | About 10 working days for Starter, 12 for Catalog and 15 for Growth — counted from when we have your deposit and all your content (logo, products, photos). |
 | Do I need to leave Shopee? 要离开 Shopee 吗？ | No. Keep Shopee / TikTok for new customers. Your own website is for repeat customers, wholesale and ads — no marketplace commission, and the customer list is yours. |
@@ -77,8 +77,8 @@ Our prices are fixed and written down:
 • Catalog (B2B) RM1,200
 • Growth RM1,600 (up to 80 items)
 • Festive pre-order shop RM399
-• Or RM0 upfront, RM199 a month for 12 months
-Monthly maintenance from RM150 — first month free after launch.
+• Or RM0 upfront, RM169 a month for 12 months
+Monthly maintenance from RM99 — first month free after launch.
 Details: https://cartsmithstudio.com/pricing.html
 Want a free homepage mockup first? Reply MOCKUP.
 — Cartsmith Studio
