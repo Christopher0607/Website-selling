@@ -1024,8 +1024,27 @@
    "priority": "A",
    "why": "Happy Garden（Kuchai Lama 旁）一栋洋房里的酸种面包和蛋糕店，2015 年开始做；FMT、Eat Drink KL 报道过；订单只靠 IG 私信，没有网站或网上点餐。",
    "verify": "星期三到日 9am–6pm 才开（星期一、二休息）；看 IG 简介有没有别的下单连结；问他们圣诞 / 农历新年有没有预购、整个蛋糕要提早几天订。",
-   "batch": "2026-11-14 Kuchai Lama（俊宇：找新目标，可以是中国餐厅，地区锁定 Kuchai Lama）",
+   "batch": "2026-11-14 Kuchai Lama（俊宇：找新目标，可以是中国餐厅；再找不一样的咖啡店）",
    "input": "What they sell / Location: Sourdough bakery in a bungalow at A6, Jalan Rukun 7, Taman Gembira (Happy Garden), off Jalan Kuchai Lama, KL 58200. Sourdough breads (24-hour process), blueberry raisin cream cheese rye, cream cheese cheddar boule, buns and bagels, grilled cheese sandwiches, cakes and pastries; they have made occasion cakes including a wedding cake. Open Wed-Sun 9am-6pm. It is a pick-up shop, not a cafe.\nSignals: Started online in 2015 (founder Gillian Beh, self-taught; learned sourdough from an artisan in Thailand); grew from baking whole cakes in a small Serdang apartment to the Happy Garden bungalow. FMT Lifestyle feature (11 Jul 2023, 'House called The Baking Trip sells glorious breads and cakes'); Eat Drink KL featured post calling it Happy Garden's home for the neighbourhood's widest variety of sourdough specialities and cakes; Chiefeater review (whisky raisin bun, RM20-50 per pax).\nBudget signal: A whole bungalow as the bakery, media coverage, whole cakes and occasion cakes; in business since 2015.\nWebsite check: (a) check-domains.sh thebakingtrip, bakingtrip, thebakingtripkl -> NONE. (b) No website, Beep, StoreHub or take.app page found; FMT 2023 says the team accepts orders on Instagram, Eat Drink KL lists 'Order on IG'. (c) No other brand found.\nContacts: IG @_thebakingtrip_ (FMT 2023); phone 019-576 1419 (FMT 2023 and Eat Drink KL).\nObservation: FMT (Jul 2023): the sourdough takes 24 hours to make; her partner is now the main baker and her sister makes the cakes and pastries.\nAngle: Orders come in by Instagram DM today. A pre-order page with pick-up days and time slots (bread sells out), whole-cake orders with a lead time, and Christmas / Chinese New Year bakes with a cut-off date (RM399 festive shop or RM800 website).\nSources: https://www.freemalaysiatoday.com/category/leisure/2023/07/11/house-called-the-baking-trip-sells-glorious-breads-and-cakes ; https://www.eatdrinkkl.com/posts/featured/the-baking-trip-happy-garden-s-wholesome-home-for-the-neighbourhood-s-widest-variety-of-sourdough-specialities-cakes ; https://chiefeater.com/single-location/kuchai-lama"
+  },
+  {
+   "id": "k20261114-surreal",
+   "name": "Surreal Cafe & Dining",
+   "instagram": "surreal_kl",
+   "whatsapp": "018-329 7260",
+   "email": "surrealkl@gmail.com",
+   "contact_source": "搜索结果里 Facebook 专页（Surreal Cafe & Dining）的摘要：电话、Email、IG（2026-11 看到）",
+   "phone": "",
+   "area": "Kuchai Lama（Dataran Loka）",
+   "address": "1-7, Dataran Loka, Jalan Kuchai Lama, 58200 KL",
+   "store_url": "",
+   "language": "en",
+   "template": "lowlight",
+   "priority": "A",
+   "why": "Dataran Loka 的 Dalí 壁画咖啡馆，Bukit Jalil 康普茶咖啡馆 Scoby 的姐妹店：菠萝 tepache 等发酵饮料，加上扇贝 pie tee、意粉、饭碗；Eat Drink KL、TheSmartLocal 2025 报道；没有网站。",
+   "verify": "中午 12 点才开（星期二休息）；问他们的发酵饮料能不能装瓶外带 / 送货；看 IG 简介有没有点餐连结。",
+   "batch": "2026-11-14 Kuchai Lama（俊宇：找新目标，可以是中国餐厅；再找不一样的咖啡店）",
+   "input": "What they sell / Location: Cafe and dining at 1-7, Dataran Loka, Jalan Kuchai Lama, KL 58200 (TheSmartLocal 2025). Menu (Eat Drink KL, Jan 2025): Hotate Paitee (pie tee with butter-poached scallops and pickled beetroot sengkuang), pastas, risotto and rice bowls, Avocado Tartare on sourdough, Coconut Green Soup, a pineapple tepache with brown sugar and cinnamon, taro latte with oat milk, quince cooler with mint. A Dali-inspired mural. Opens at noon; closed Tuesday (Facebook page summary: Wed-Mon 11am-10pm; hours differ between sources).\nSignals: Sibling of Bukit Jalil's Scoby Cafe, which called itself Malaysia's first kombucha cafe (Vulcan Post); Eat Drink KL snapshot (Jan 2025); TheSmartLocal '11 New Cafes & Restaurants In Klang Valley In 2025'.\nBudget signal: Physical cafe with dinner menu (scallops, risotto) plus media coverage; the team has run cafes since Scoby.\nWebsite check: (a) check-domains.sh surrealkl, surrealcafe, scobycafe -> NONE (scoby.com is an unrelated parked domain). (b) No website, Beep, StoreHub or other online ordering found. (c) Scoby Cafe: no website found.\nContacts: IG @surreal_kl; phone 018-329 7260; email surrealkl@gmail.com (Facebook page summary in search results, Nov 2026).\nObservation: Eat Drink KL (Jan 2025): 'Surreal is Kuchai Lama's new cafe for whimsy and wonder'; fermentation remains in its DNA.\nAngle: Pick-up orders and bottled ferments (tepache / kombucha) to take home, plus Christmas and CNY sets; a website that shows the mural, the menu and the hours (sources disagree on hours today).\nSources: https://eatdrinkkl.blogspot.com/2025/01/surreal-kuchai-lama.html ; https://thesmartlocal.my/cafes-restaurants-kl-2025/ ; https://www.facebook.com/p/Surreal-Cafe-Dining-61571115384460/"
   }
  ],
  "previews": [
