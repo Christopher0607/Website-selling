@@ -302,6 +302,8 @@ textarea.input { min-height: 96px; resize: vertical; }
 .hours tr.is-today td { font-weight: 500; color: var(--ink); }
 .ftr .hours td { border-color: var(--line-d); }
 .ftr .hours tr.is-today td { color: var(--gold-2); }
+.hours small { font-size: .8em; }
+@media (min-width: 1141px) { .ftr__grid.ftr__grid--2 { grid-template-columns: 1.3fr 1fr; } }
 
 /* private dining, gift cards */
 .pack { border-top: 1px solid var(--gold); padding-top: 22px; display: flex; flex-direction: column; gap: 10px; }

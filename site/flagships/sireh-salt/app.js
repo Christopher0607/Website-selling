@@ -145,10 +145,16 @@
     return { cls: 'closed', open: false, text: 'Closed', long: 'Closed.' };
   }
   function hoursTable() {
-    var t = dowOf(today()), order = [1, 2, 3, 4, 5, 6, 0];
-    return '<table class="hours"><tbody>' + order.map(function (d) {
-      var h = HOURS[d];
-      return '<tr class="' + (d === t ? 'is-today' : '') + '"><td>' + DAYL[d] + (d === t ? ' (today)' : '') + '</td><td>' + (h.length ? h.map(function (x) { return fmtTime(x[0]) + '–' + fmtTime(x[1]); }).join(', ') : 'Closed') + '</td></tr>';
+    // days with the same hours share one row (2026-11-14), e.g. "Tuesday – Friday" or "Every day"
+    var t = dowOf(today()), order = [1, 2, 3, 4, 5, 6, 0], rows = [];
+    order.forEach(function (d) {
+      var k = JSON.stringify(HOURS[d]), last = rows[rows.length - 1];
+      if (last && last.k === k) last.days.push(d); else rows.push({ k: k, days: [d] });
+    });
+    return '<table class="hours"><tbody>' + rows.map(function (r) {
+      var h = HOURS[r.days[0]], a = r.days[0], b = r.days[r.days.length - 1], has = r.days.indexOf(t) >= 0;
+      var label = r.days.length === 7 ? 'Every day' : r.days.length === 1 ? DAYL[a] : DAYL[a] + ' – ' + DAYL[b];
+      return '<tr class="' + (has ? 'is-today' : '') + '"><td>' + label + (has && r.days.length < 7 ? ' <small>(today)</small>' : '') + '</td><td>' + (h.length ? h.map(function (x) { return fmtTime(x[0]) + '–' + fmtTime(x[1]); }).join(', ') : 'Closed') + '</td></tr>';
     }).join('') + '</tbody></table>';
   }
   function openDays(n, from) {
@@ -190,6 +196,8 @@
     $$('[data-status-long]').forEach(function (el) { el.textContent = st.long; });
     $$('[data-status-text]').forEach(function (el) { el.textContent = st.text; });
     $$('[data-hours]').forEach(function (el) { el.innerHTML = hoursTable(); });
+    // the hours show once per page: the footer's copy steps aside where the page already has the table
+    if ($('main [data-hours]')) { var fh = $('[data-ftr-hours]'); if (fh) { fh.hidden = true; fh.parentNode.classList.add('ftr__grid--2'); } }
     $$('[data-address]').forEach(function (el) { el.textContent = ADDRESS; });
     $$('[data-maps]').forEach(function (el) { el.href = MAPS; });
     updateBag();
@@ -251,16 +259,18 @@
     var p = $('.sheet__panel');
     function total() { var u = priceOf(it); (it.o || []).forEach(function (g, gi) { (sel[gi] || []).forEach(function (vi) { u += g.v[vi][1]; }); }); return u * qty; }
     function paint() { $('[data-qv]', p).textContent = qty; $('[data-sheet-add]', p).textContent = 'Add to order · ' + rm(total()); }
-    p.addEventListener('change', function (e) {
+    // onchange / onclick, not addEventListener: the panel is reused, so each dish replaces the last one's handlers
+    // (2026-11-14: with addEventListener, adding a second dish added the first one again)
+    p.onchange = function (e) {
       var m = /^g(\d+)$/.exec(e.target.name || ''); if (!m) return;
       var gi = +m[1];
       sel[gi] = $$('input[name="g' + gi + '"]:checked', p).map(function (x) { return +x.value; });
       paint();
-    });
-    p.addEventListener('click', function (e) {
+    };
+    p.onclick = function (e) {
       var q = e.target.closest('[data-q]'); if (q) { qty = Math.max(1, Math.min(20, qty + +q.getAttribute('data-q'))); paint(); }
       if (e.target.closest('[data-sheet-add]')) { addDirect(it, qty, sel, $('#sh-note', p).value.trim()); closeSheet(); }
-    });
+    };
     paint();
   }
   function onAdd(e) {
