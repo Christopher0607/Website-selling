@@ -2624,14 +2624,14 @@
    "lead_id": "v20261113-oui-bakehouse-cafe",
    "instagram": "ouibakehousecafe",
    "name": "Oui Bakehouse & Café",
-   "photos": "real: Malay Mail / CK Lim (Nov 2024), credited",
-   "enc": "eyJ2IjoyLCJlcGsiOiJCRWZQNUI1MWZaRUluZEVpbkZZUXFyMEtoMi81dlAzSFVsWFhtcmNMblBaSEVsdVJFZVkxVExOaDFVZzNsSFE3cEt4R1lSVWttWlM1Y3F0eUtKczVhU009IiwiaXYiOiIrM2xaS2FXbVVwVkhjeHEvIiwiY3QiOiJZblNIZW5iQWxKSEhyQWFya0tlcG9md1R6emlqSUd2YitydFp2ZzdYVVlaQkR3QjhiMk09In0=",
+   "photos": "real: dish photos cut from the printed menu; Malay Mail / CK Lim (Nov 2024), credited",
+   "enc": "eyJ2IjoyLCJlcGsiOiJCRUpMT3NXWkVZS21ENFBpRVBDQ3BwSWh2bDVHYjJEblRaNlZEUFpDbHA1K1V2NGx3QTE2LzBUYSt3eEJCS3VKaFkrQktEcVdvQndMV0NuczVMYjhNOTQ9IiwiaXYiOiIxRnFjY0N0eUxtTzRaZEFyIiwiY3QiOiJMNlRBSEQ0UUpLOWcvTUZWaHh0MkRmOU83bVRoRmVBSTRneWgzQzIxbVVZcSthQjJQZTA9In0=",
    "pitch": {
     "mode": "pickup",
     "items": [
      "Country Steak Sandwich",
-     "Peanut Butter Pain Suisse",
-     "office pastry orders"
+     "Summer French Toast",
+     "office coffee and pizza orders"
     ]
    },
    "facts": {
@@ -2641,146 +2641,227 @@
     "delivery": "",
     "products": [
      {
-      "n": "Butter Croissant",
-      "p": null,
+      "n": "Country Steak Sandwich",
+      "p": 42,
       "per": "",
-      "cat": "pastries",
+      "cat": "Sandwich",
       "ex": false,
       "set": "",
-      "src": "Not published; ask the owner"
+      "src": "Printed menu (photo, about Aug 2026)"
      },
      {
-      "n": "Pain au Chocolat",
-      "p": null,
+      "n": "Summer French Toast",
+      "p": 23,
       "per": "",
-      "cat": "pastries",
+      "cat": "Amour Dessert",
       "ex": false,
       "set": "",
-      "src": "Not published; ask the owner"
+      "src": "Printed menu (photo, about Aug 2026)"
      },
      {
-      "n": "Canelé",
-      "p": null,
+      "n": "Bonjour Babe",
+      "p": 25,
       "per": "",
-      "cat": "pastries",
+      "cat": "Amour Dessert",
       "ex": false,
       "set": "",
-      "src": "Not published; ask the owner"
-     },
-     {
-      "n": "Fruit Danish",
-      "p": null,
-      "per": "",
-      "cat": "pastries",
-      "ex": false,
-      "set": "",
-      "src": "Not published; ask the owner"
+      "src": "Printed menu (photo, about Aug 2026)"
      },
      {
       "n": "Peanut Butter Pain Suisse",
       "p": null,
       "per": "",
-      "cat": "pastries",
+      "cat": "Pastry counter",
       "ex": false,
       "set": "",
-      "src": "Not published; ask the owner"
+      "src": "Not on the printed menu; ask the owner"
      },
      {
-      "n": "Chocolate Banana",
-      "p": null,
+      "n": "Sugar Cubes",
+      "p": 15.9,
       "per": "",
-      "cat": "pastries",
+      "cat": "Amour Dessert",
       "ex": false,
       "set": "",
-      "src": "Not published; ask the owner"
-     },
-     {
-      "n": "Country Steak Sandwich",
-      "p": null,
-      "per": "",
-      "cat": "brunch",
-      "ex": false,
-      "set": "",
-      "src": "Not published; ask the owner"
-     },
-     {
-      "n": "Summer French Toast",
-      "p": null,
-      "per": "",
-      "cat": "brunch",
-      "ex": false,
-      "set": "",
-      "src": "Not published; ask the owner"
-     },
-     {
-      "n": "Soft Shell Crab Burger",
-      "p": null,
-      "per": "",
-      "cat": "brunch",
-      "ex": false,
-      "set": "",
-      "src": "Not published; ask the owner"
-     },
-     {
-      "n": "Aglio Olio with Market Seafood",
-      "p": null,
-      "per": "",
-      "cat": "pasta",
-      "ex": false,
-      "set": "",
-      "src": "Not published; ask the owner"
-     },
-     {
-      "n": "Pizzas, made fresh",
-      "p": null,
-      "per": "",
-      "cat": "pasta",
-      "ex": false,
-      "set": "",
-      "src": "Not published; ask the owner"
-     },
-     {
-      "n": "Matcha Flan",
-      "p": null,
-      "per": "",
-      "cat": "pasta",
-      "ex": false,
-      "set": "",
-      "src": "Not published; ask the owner"
-     },
-     {
-      "n": "Long Black",
-      "p": null,
-      "per": "",
-      "cat": "coffee",
-      "ex": false,
-      "set": "",
-      "src": "Not published; ask the owner"
+      "src": "Printed menu (photo, about Aug 2026)"
      },
      {
       "n": "Flat White",
-      "p": null,
+      "p": 12,
       "per": "",
-      "cat": "coffee",
+      "cat": "Good Coffee",
       "ex": false,
       "set": "",
-      "src": "Not published; ask the owner"
+      "src": "Printed menu (photo, about Aug 2026)"
      },
      {
-      "n": "Caffè Latte",
-      "p": null,
+      "n": "The Big B",
+      "p": 38.9,
       "per": "",
-      "cat": "coffee",
+      "cat": "Main / Brunch",
       "ex": false,
       "set": "",
-      "src": "Not published; ask the owner"
+      "src": "Printed menu (photo, about Aug 2026)"
+     },
+     {
+      "n": "Nasi Lemak Fried Chicken",
+      "p": 28.9,
+      "per": "",
+      "cat": "Main / Brunch",
+      "ex": false,
+      "set": "",
+      "src": "Printed menu (photo, about Aug 2026)"
+     },
+     {
+      "n": "Unagi Tornado",
+      "p": 38,
+      "per": "",
+      "cat": "Main / Brunch",
+      "ex": false,
+      "set": "",
+      "src": "Printed menu (photo, about Aug 2026)"
+     },
+     {
+      "n": "Crabmeat Seafood Rice",
+      "p": 34,
+      "per": "",
+      "cat": "Main / Brunch",
+      "ex": false,
+      "set": "",
+      "src": "Printed menu (photo, about Aug 2026)"
+     },
+     {
+      "n": "Bangers & Hash",
+      "p": 23,
+      "per": "",
+      "cat": "Main / Brunch",
+      "ex": false,
+      "set": "",
+      "src": "Printed menu (photo, about Aug 2026)"
+     },
+     {
+      "n": "Hottest Soft Shell Crab",
+      "p": 36,
+      "per": "",
+      "cat": "Main / Brunch",
+      "ex": false,
+      "set": "",
+      "src": "Printed menu (photo, about Aug 2026)"
+     },
+     {
+      "n": "Hunter Chicken",
+      "p": 26,
+      "per": "",
+      "cat": "Main / Brunch",
+      "ex": false,
+      "set": "",
+      "src": "Printed menu (photo, about Aug 2026)"
+     },
+     {
+      "n": "Egg & Crab Crunch",
+      "p": 26,
+      "per": "",
+      "cat": "Main / Brunch",
+      "ex": false,
+      "set": "",
+      "src": "Printed menu (photo, about Aug 2026)"
+     },
+     {
+      "n": "Umami Seafood Pasta",
+      "p": 34,
+      "per": "",
+      "cat": "Pasta / Noodle",
+      "ex": false,
+      "set": "",
+      "src": "Printed menu (photo, about Aug 2026)"
+     },
+     {
+      "n": "Mushroom Aglio Olio",
+      "p": 28,
+      "per": "",
+      "cat": "Pasta / Noodle",
+      "ex": false,
+      "set": "",
+      "src": "Printed menu (photo, about Aug 2026)"
+     },
+     {
+      "n": "Smoked Duck Carbonara",
+      "p": 29,
+      "per": "",
+      "cat": "Pasta / Noodle",
+      "ex": false,
+      "set": "",
+      "src": "Printed menu (photo, about Aug 2026)"
+     },
+     {
+      "n": "Seafood Aglio Olio",
+      "p": 32,
+      "per": "",
+      "cat": "Pasta / Noodle",
+      "ex": false,
+      "set": "",
+      "src": "Printed menu (photo, about Aug 2026)"
+     },
+     {
+      "n": "Cha Soba",
+      "p": 30,
+      "per": "",
+      "cat": "Pasta / Noodle",
+      "ex": false,
+      "set": "",
+      "src": "Printed menu (photo, about Aug 2026)"
+     },
+     {
+      "n": "Shio Ramen",
+      "p": 29,
+      "per": "",
+      "cat": "Pasta / Noodle",
+      "ex": false,
+      "set": "",
+      "src": "Printed menu (photo, about Aug 2026)"
+     },
+     {
+      "n": "Cold Capellini",
+      "p": 28,
+      "per": "",
+      "cat": "Pasta / Noodle",
+      "ex": false,
+      "set": "",
+      "src": "Printed menu (photo, about Aug 2026)"
+     },
+     {
+      "n": "OUI Katsu Sandwich",
+      "p": 26,
+      "per": "",
+      "cat": "Sandwich",
+      "ex": false,
+      "set": "",
+      "src": "Printed menu (photo, about Aug 2026)"
+     },
+     {
+      "n": "Mushroom Melt",
+      "p": 26,
+      "per": "",
+      "cat": "Sandwich",
+      "ex": false,
+      "set": "",
+      "src": "Printed menu (photo, about Aug 2026)"
+     },
+     {
+      "n": "Unagi Sandwich",
+      "p": 38,
+      "per": "",
+      "cat": "Sandwich",
+      "ex": false,
+      "set": "",
+      "src": "Printed menu (photo, about Aug 2026)"
      }
     ],
     "faq": [],
     "contact": "Phone 03-7770 9355 (landline) · IG @ouibakehousecafe · FB OuiBakehouseCafe",
-    "sources": "Malay Mail, 30 Nov 2024, \"For steak sandwiches, fancy French toast and other brunch favourites, drop by Oui Bakehouse & Café\" (Kenny Mah; photos CK Lim); Eat Drink KL, Feb 2023 opening post. No prices published."
+    "sources": "Printed menu photos (Main/Brunch, Pasta/Noodle, Sandwich, Pizza, Salad/Snack, Amour Dessert, Good Coffee, Non-coffee, Hot Tea, Oui Special) sent by Junyu 2026-11-14; Google menu listing (delivery prices, about 10% higher; used only for the pastry counter, kombucha and cheesecake names); Malay Mail, 30 Nov 2024 (Kenny Mah; photos CK Lim); Eat Drink KL, Feb 2023."
    },
-   "checked": "2026-11-13"
+   "checked": ""
   },
   {
    "code": "m-calebs-hideout",
@@ -2791,7 +2872,7 @@
    "instagram": "calebs.hideout",
    "name": "Caleb's Hideout",
    "photos": "real: Malay Mail / CK Lim (Sep 2026), credited",
-   "enc": "eyJ2IjoyLCJlcGsiOiJCRkkrZlJ3dXl2UEpXWWlJRlVOZjZJQkJ1K0QwdUtLUDhFakFId3ZEQ1BPZ1VGM2ovVUh1c04reG1ROHFNdWgyWlIwTkpqNlc1RTBXcnk2L1dhRnU1Yjg9IiwiaXYiOiJjOWdWOHlsc1l0Qyt6ZU5WIiwiY3QiOiI3MXE2QXA2L1pwbmRKQVJzTjZlMUhzWkpxaGxOK3lKSVluWUd4U3M2emNBMUV4TXBCWHNmcGc9PSJ9",
+   "enc": "eyJ2IjoyLCJlcGsiOiJCSW9YWWlBdzQrcVJYc1BDRUdRR3REdU9GSEJSSVU0ZXBkZk5GWm9GTm5jZ3NVSEM2MFlEcENXaWFKTzZxdGpjbEVsQ1Y3ZCtpQ3ZRZ1kyTUlUUGdRWVU9IiwiaXYiOiI3eGZicHhiMFV1aFBaclA1IiwiY3QiOiJNWmZ1bFhEODNUVitDVTBTdU9EMEsxTEE2WGRjOThyeC9ua1N6R2YwckNrUStna3BDSmJlcmc9PSJ9",
    "pitch": {
     "mode": "pickup",
     "items": [
