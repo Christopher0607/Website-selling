@@ -134,7 +134,7 @@ button.linkbtn { min-height: 44px; }
 .dish { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; display: flex; flex-direction: column; transition: box-shadow .2s, transform .2s; }
 .dish:hover { box-shadow: var(--shadow); transform: translateY(-2px); }
 .dish__img { position: relative; aspect-ratio: 4 / 3; background: var(--cream); }
-.dish__img img { width: 100%; height: 100%; object-fit: cover; }
+.dish__img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; } /* absolute: a photo that is not 4:3 cannot stretch the card (2026-11-14) */
 .dish__tags { position: absolute; left: 10px; top: 10px; display: flex; gap: 6px; flex-wrap: wrap; }
 .tag { display: inline-flex; align-items: center; gap: 4px; padding: 4px 9px; border-radius: 999px; font-size: .72rem; font-weight: 800; background: #fff; color: var(--ink); letter-spacing: .02em; }
 .tag--pop { background: var(--turmeric); color: #3a2a00; }
@@ -290,6 +290,8 @@ textarea.input { min-height: 90px; resize: vertical; }
 .hours tr.is-today td { color: var(--leaf); font-weight: 800; }
 .ftr .hours td { border-color: rgba(255,255,255,.15); }
 .ftr .hours tr.is-today td { color: var(--turmeric); }
+.hours small { font-size: .8em; font-weight: 600; }
+@media (min-width: 861px) { .ftr__grid.ftr__grid--2 { grid-template-columns: 1.3fr 1fr; } }
 .steps { counter-reset: s; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 .step { background: #fff; border: 1px solid var(--line); border-radius: var(--r); padding: 22px; }
 .step::before { counter-increment: s; content: counter(s); display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--turmeric-2); color: var(--warn); font: 700 1.2rem/1 var(--serif); margin-bottom: 12px; }

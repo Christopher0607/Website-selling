@@ -7,45 +7,321 @@
 
   // ------------------------------------------------------------------ data (demo)
   var HOURS = { 0: [[540, 1080]], 1: [[540, 1080]], 2: [[540, 1080]], 3: [[540, 1080]], 4: [[540, 1080]], 5: [[540, 1080]], 6: [[540, 1080]] };
-  var CATS = [["pastries", "Pastries"], ["brunch", "Brunch"], ["pasta", "Pizza, pasta & sweets"], ["coffee", "Coffee"]];
+  var CATS = [["brunch", "Main / Brunch"], ["pasta", "Pasta / Noodle"], ["sandwich", "Sandwich"], ["pizza", "Pizza"], ["snack", "Salad / Snack"], ["dessert", "Amour Dessert"], ["pastries", "Pastry counter"], ["coffee", "Good Coffee"], ["noncoffee", "Non-Coffee"], ["tea", "Hot Tea"], ["special", "Oui Special"]];
   var MENU = [
     {
-      "id": "croissant",
-      "cat": "pastries",
-      "n": "Butter Croissant",
-      "d": "Buttery and flaky, from the pastry counter.",
-      "p": null,
+      "id": "big-b",
+      "cat": "brunch",
+      "n": "The Big B",
+      "d": "Scrambled eggs or two sunny side up, sausage, mushrooms, chicken ham, hash brown, a mini croissant, tomato, baked beans and banana.",
+      "p": 38.9,
+      "tags": [],
+      "heat": 0,
+      "o": [
+        {
+          "n": "Eggs",
+          "one": true,
+          "def": 0,
+          "v": [
+            [
+              "Scrambled eggs",
+              0
+            ],
+            [
+              "Two sunny side up",
+              0
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "nasi-lemak",
+      "cat": "brunch",
+      "n": "Nasi Lemak Fried Chicken",
+      "d": "A whole fried chicken leg, ikan bilis, peanuts, a sunny side up, sambal and pickled cucumber.",
+      "p": 28.9,
+      "tags": [],
+      "heat": 0
+    },
+    {
+      "id": "unagi-tornado",
+      "cat": "brunch",
+      "n": "Unagi Tornado",
+      "d": "Smoked unagi, tornado eggs, nori flakes and tobiko on Japanese rice.",
+      "p": 38,
+      "tags": [],
+      "heat": 0
+    },
+    {
+      "id": "crabmeat-rice",
+      "cat": "brunch",
+      "n": "Crabmeat Seafood Rice",
+      "d": "Crabmeat, mussels, clams, tiger prawn, squid, button mushrooms and Parmesan.",
+      "p": 34,
+      "tags": [],
+      "heat": 0
+    },
+    {
+      "id": "bangers-hash",
+      "cat": "brunch",
+      "n": "Bangers & Hash",
+      "d": "Jumbo chicken sausage, baby potatoes, cherry tomatoes, tornado eggs and spinach.",
+      "p": 23,
+      "tags": [],
+      "heat": 0
+    },
+    {
+      "id": "softshell-crab",
+      "cat": "brunch",
+      "n": "Hottest Soft Shell Crab",
+      "d": "Soft shell crab in a homemade burger bun with the special hot sauce and pickled onion, with sweet potato fries.",
+      "p": 36,
+      "tags": [],
+      "heat": 2
+    },
+    {
+      "id": "hunter-chicken",
+      "cat": "brunch",
+      "n": "Hunter Chicken",
+      "d": "Grilled chicken breast, cheesy scrambled eggs, garden greens, quinoa and nuts.",
+      "p": 26,
+      "tags": [],
+      "heat": 0
+    },
+    {
+      "id": "egg-crab-crunch",
+      "cat": "brunch",
+      "n": "Egg & Crab Crunch",
+      "d": "A freshly baked croissant with crabmeat eggs, a tangy sauce and ebiko.",
+      "p": 26,
+      "tags": [],
+      "heat": 0
+    },
+    {
+      "id": "umami-pasta",
+      "cat": "pasta",
+      "n": "Umami Seafood Pasta",
+      "d": "Conchiglie rigate with tiger prawn, clams, mussels, squid, ebiko and furikake in a rich umami sauce.",
+      "p": 34,
+      "tags": [],
+      "heat": 0
+    },
+    {
+      "id": "mushroom-aglio",
+      "cat": "pasta",
+      "n": "Mushroom Aglio Olio",
+      "d": "Button mushrooms, garlic, chilli flakes, cherry tomatoes, Parmesan and spinach.",
+      "p": 28,
+      "tags": [],
+      "heat": 0
+    },
+    {
+      "id": "duck-carbonara",
+      "cat": "pasta",
+      "n": "Smoked Duck Carbonara",
+      "d": "Smoked duck, mushrooms, Parmesan crumble, egg yolk and black pepper. Chicken ham instead, if you like.",
+      "p": 29,
+      "tags": [],
+      "heat": 0,
+      "o": [
+        {
+          "n": "Meat",
+          "one": true,
+          "def": 0,
+          "v": [
+            [
+              "Smoked duck",
+              0
+            ],
+            [
+              "Chicken ham",
+              0
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "seafood-aglio",
+      "cat": "pasta",
+      "n": "Seafood Aglio Olio",
+      "d": "Tiger prawn, clams, mussels, squid, garlic, Parmesan and chilli flakes.",
+      "p": 32,
+      "tags": [],
+      "heat": 0
+    },
+    {
+      "id": "cha-soba",
+      "cat": "pasta",
+      "n": "Cha Soba",
+      "d": "Cha soba with amaebi, ebiko, shredded cucumber and sesame, in a citrus ponzu sauce with truffle oil.",
+      "p": 30,
+      "tags": [],
+      "heat": 0
+    },
+    {
+      "id": "shio-ramen",
+      "cat": "pasta",
+      "n": "Shio Ramen",
+      "d": "Ramen with homemade karaage chicken, inari, ajitama and a toasted nori sheet.",
+      "p": 29,
+      "tags": [],
+      "heat": 0
+    },
+    {
+      "id": "cold-capellini",
+      "cat": "pasta",
+      "n": "Cold Capellini",
+      "d": "Cold capellini with amaebi and ebiko in a yuzu sesame dressing, with truffle oil.",
+      "p": 28,
+      "tags": [],
+      "heat": 0
+    },
+    {
+      "id": "katsu-sandwich",
+      "cat": "sandwich",
+      "n": "OUI Katsu Sandwich",
+      "d": "Sourdough with béchamel, chicken katsu, hash brown and cheesy eggs.",
+      "p": 26,
+      "tags": [],
+      "heat": 0
+    },
+    {
+      "id": "mushroom-melt",
+      "cat": "sandwich",
+      "n": "Mushroom Melt",
+      "d": "Sourdough with béchamel, mushrooms, garlic, cherry tomatoes, onion, spinach, hash brown and Parmesan.",
+      "p": 26,
+      "tags": [],
+      "heat": 0
+    },
+    {
+      "id": "unagi-sandwich",
+      "cat": "sandwich",
+      "n": "Unagi Sandwich",
+      "d": "Sourdough with béchamel, unagi, hash brown, cheesy eggs, chives, ebiko and sesame.",
+      "p": 38,
+      "tags": [],
+      "heat": 0
+    },
+    {
+      "id": "steak-sandwich",
+      "cat": "sandwich",
+      "n": "Country Steak Sandwich",
+      "d": "Sourdough with béchamel, a 150 g grain-fed sirloin steak, hash brown, cheesy eggs and chives.",
+      "p": 42,
       "tags": [
         "pop"
       ],
-      "heat": 0,
-      "img": "pastries"
+      "heat": 0
     },
     {
-      "id": "pain-au-chocolat",
-      "cat": "pastries",
-      "n": "Pain au Chocolat",
-      "d": "Rich, flaky and chocolatey.",
-      "p": null,
+      "id": "volcano-pizza",
+      "cat": "pizza",
+      "n": "Volcano Pizza",
+      "d": "Chicken ham, pineapple, onion, béchamel, cheddar, mozzarella and nacho cheese sauce.",
+      "p": 43,
       "tags": [],
-      "heat": 0,
-      "img": false
+      "heat": 0
     },
     {
-      "id": "canele",
-      "cat": "pastries",
-      "n": "Canelé",
-      "d": "Custardy inside, with a dark caramelised crust.",
-      "p": null,
+      "id": "truffle-pizza",
+      "cat": "pizza",
+      "n": "Truffle & Fungi Lover",
+      "d": "Mixed mushrooms, truffle paste, arugula, mozzarella and truffle béchamel.",
+      "p": 38,
       "tags": [],
-      "heat": 0,
-      "img": "pastries"
+      "heat": 0
     },
     {
-      "id": "fruit-danish",
-      "cat": "pastries",
-      "n": "Fruit Danish",
-      "d": "The flavours rotate: Lychee Rose, Grape, Peach and Blueberry were on the counter in late 2024.",
+      "id": "ohana-pizza",
+      "cat": "pizza",
+      "n": "Ohana",
+      "d": "Chicken ham, pineapple tidbits, cheddar, mozzarella, tomato sauce, sliced onion and arugula.",
+      "p": 36,
+      "tags": [],
+      "heat": 0
+    },
+    {
+      "id": "duck-pizza",
+      "cat": "pizza",
+      "n": "Smoked Duck Pizza",
+      "d": "Smoked duck, béchamel, onion and Parmesan.",
+      "p": 36,
+      "tags": [],
+      "heat": 0
+    },
+    {
+      "id": "quinoa-salad",
+      "cat": "snack",
+      "n": "Quinoa Berries Salad",
+      "d": "Strawberries, mandarin, blueberries, quinoa, walnuts and garden greens with a passion fruit dressing.",
+      "p": 21,
+      "tags": [],
+      "heat": 0
+    },
+    {
+      "id": "oui-fried-chicken",
+      "cat": "snack",
+      "n": "OUI Fried Chicken",
+      "d": "With the OUI secret sauce.",
+      "p": 23,
+      "tags": [],
+      "heat": 0
+    },
+    {
+      "id": "fries",
+      "cat": "snack",
+      "n": "Fries",
+      "d": "A plate of fries for the table.",
+      "p": 15,
+      "tags": [],
+      "heat": 0
+    },
+    {
+      "id": "bonjour-babe",
+      "cat": "dessert",
+      "n": "Bonjour Babe",
+      "d": "Homemade marshmallow, chocolate fondant, berry compote, matcha cream, Paris-Brest, strawberry mochi and praline crispy.",
+      "p": 25,
+      "tags": [],
+      "heat": 0
+    },
+    {
+      "id": "honeyed-orchard",
+      "cat": "dessert",
+      "n": "Your Honeyed Orchard",
+      "d": "Local organic honeycomb, seasonal berries, banana and granola.",
+      "p": 25,
+      "tags": [],
+      "heat": 0
+    },
+    {
+      "id": "french-toast",
+      "cat": "dessert",
+      "n": "Summer French Toast",
+      "d": "Stacked thick-cut French toast with peanut butter, seasonal berries and maple syrup.",
+      "p": 23,
+      "tags": [
+        "pop"
+      ],
+      "heat": 0
+    },
+    {
+      "id": "sugar-cubes",
+      "cat": "dessert",
+      "n": "Sugar Cubes",
+      "d": "With matcha ganache, chocolate ganache and pandan kaya to dip.",
+      "p": 15.9,
+      "tags": [],
+      "heat": 0
+    },
+    {
+      "id": "burnt-cheesecake",
+      "cat": "dessert",
+      "n": "Burnt Cheesecake",
+      "d": "By the slice, from the cake counter.",
       "p": null,
       "tags": [],
       "heat": 0,
@@ -66,7 +342,7 @@
       "id": "choc-banana",
       "cat": "pastries",
       "n": "Chocolate Banana",
-      "d": "A refined, balanced take on a chocolate banana pastry.",
+      "d": "A chocolate and banana pastry from the counter.",
       "p": null,
       "tags": [
         "pop"
@@ -74,60 +350,50 @@
       "heat": 0
     },
     {
-      "id": "steak-sandwich",
-      "cat": "brunch",
-      "n": "Country Steak Sandwich",
-      "d": "Grain-fed strip loin on sourdough toast, with béchamel, a crispy hash brown, cheesy scrambled eggs and chives.",
-      "p": null,
-      "tags": [
-        "pop"
-      ],
-      "heat": 0
-    },
-    {
-      "id": "french-toast",
-      "cat": "brunch",
-      "n": "Summer French Toast",
-      "d": "Eggy French toast cubes with blueberries, strawberries and a light drizzle of honey.",
-      "p": null,
-      "tags": [],
-      "heat": 0
-    },
-    {
-      "id": "softshell-burger",
-      "cat": "brunch",
-      "n": "Soft Shell Crab Burger",
-      "d": "From the all-day menu.",
+      "id": "lychee-rose-danish",
+      "cat": "pastries",
+      "n": "Lychee Rose Danish",
+      "d": "A danish with lychee and rose.",
       "p": null,
       "tags": [],
       "heat": 0,
       "img": false
     },
     {
-      "id": "aglio-olio",
-      "cat": "pasta",
-      "n": "Aglio Olio with Market Seafood",
-      "d": "From the all-day menu.",
+      "id": "matcha-bomb",
+      "cat": "pastries",
+      "n": "Matcha Bomb Danish",
+      "d": "A danish filled with matcha.",
       "p": null,
       "tags": [],
       "heat": 0,
       "img": false
     },
     {
-      "id": "pizza",
-      "cat": "pasta",
-      "n": "Pizzas, made fresh",
-      "d": "Freshly made pizzas from the all-day menu.",
+      "id": "choc-bomb",
+      "cat": "pastries",
+      "n": "Chocolate Bomb Danish",
+      "d": "A danish filled with chocolate.",
       "p": null,
       "tags": [],
       "heat": 0,
       "img": false
     },
     {
-      "id": "matcha-flan",
-      "cat": "pasta",
-      "n": "Matcha Flan",
-      "d": "Creamy matcha flan.",
+      "id": "cc-sausage",
+      "cat": "pastries",
+      "n": "CC Sausage",
+      "d": "A pastry with chicken sausage.",
+      "p": null,
+      "tags": [],
+      "heat": 0,
+      "img": false
+    },
+    {
+      "id": "chicken-breast-sandwich",
+      "cat": "pastries",
+      "n": "Chicken Breast Sandwich",
+      "d": "Chicken breast, egg, vegetables and tomatoes.",
       "p": null,
       "tags": [],
       "heat": 0,
@@ -137,30 +403,511 @@
       "id": "long-black",
       "cat": "coffee",
       "n": "Long Black",
-      "d": "Espresso-based, so it comes quickly.",
-      "p": null,
+      "d": "Hot, or iced for RM1 more.",
+      "p": 10,
       "tags": [],
       "heat": 0,
-      "img": "coffee"
+      "img": false,
+      "o": [
+        {
+          "n": "Hot or iced",
+          "one": true,
+          "def": 0,
+          "v": [
+            [
+              "Hot",
+              0
+            ],
+            [
+              "Iced",
+              1
+            ]
+          ]
+        },
+        {
+          "n": "Add",
+          "v": [
+            [
+              "Extra shot",
+              4
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "latte",
+      "cat": "coffee",
+      "n": "Latte",
+      "d": "Hot, or iced for RM1 more.",
+      "p": 12,
+      "tags": [],
+      "heat": 0,
+      "img": false,
+      "o": [
+        {
+          "n": "Hot or iced",
+          "one": true,
+          "def": 0,
+          "v": [
+            [
+              "Hot",
+              0
+            ],
+            [
+              "Iced",
+              1
+            ]
+          ]
+        },
+        {
+          "n": "Add",
+          "v": [
+            [
+              "Extra shot",
+              4
+            ],
+            [
+              "Oat milk",
+              3
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cappuccino",
+      "cat": "coffee",
+      "n": "Cappuccino",
+      "d": "Hot.",
+      "p": 12,
+      "tags": [],
+      "heat": 0,
+      "img": false,
+      "o": [
+        {
+          "n": "Add",
+          "v": [
+            [
+              "Extra shot",
+              4
+            ],
+            [
+              "Oat milk",
+              3
+            ]
+          ]
+        }
+      ]
     },
     {
       "id": "flat-white",
       "cat": "coffee",
       "n": "Flat White",
-      "d": "Espresso-based, so it comes quickly.",
-      "p": null,
-      "tags": [
-        "pop"
-      ],
+      "d": "Hot, with oat milk or an extra shot if you like.",
+      "p": 12,
+      "tags": [],
       "heat": 0,
-      "img": "coffee"
+      "img": "coffee",
+      "o": [
+        {
+          "n": "Add",
+          "v": [
+            [
+              "Extra shot",
+              4
+            ],
+            [
+              "Oat milk",
+              3
+            ]
+          ]
+        }
+      ]
     },
     {
-      "id": "latte",
+      "id": "mocha",
       "cat": "coffee",
-      "n": "Caffè Latte",
-      "d": "Espresso-based, so it comes quickly.",
+      "n": "Mocha",
+      "d": "Hot, or iced for RM1 more.",
+      "p": 15,
+      "tags": [],
+      "heat": 0,
+      "img": false,
+      "o": [
+        {
+          "n": "Hot or iced",
+          "one": true,
+          "def": 0,
+          "v": [
+            [
+              "Hot",
+              0
+            ],
+            [
+              "Iced",
+              1
+            ]
+          ]
+        },
+        {
+          "n": "Add",
+          "v": [
+            [
+              "Extra shot",
+              4
+            ],
+            [
+              "Oat milk",
+              3
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "espresso",
+      "cat": "coffee",
+      "n": "Espresso",
+      "d": "Hot.",
+      "p": 10,
+      "tags": [],
+      "heat": 0,
+      "img": false,
+      "o": [
+        {
+          "n": "Add",
+          "v": [
+            [
+              "Extra shot",
+              4
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "piccolo",
+      "cat": "coffee",
+      "n": "Piccolo",
+      "d": "Hot.",
+      "p": 11,
+      "tags": [],
+      "heat": 0,
+      "img": false,
+      "o": [
+        {
+          "n": "Add",
+          "v": [
+            [
+              "Extra shot",
+              4
+            ],
+            [
+              "Oat milk",
+              3
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dirty",
+      "cat": "coffee",
+      "n": "Dirty",
+      "d": "Iced.",
+      "p": 12,
+      "tags": [],
+      "heat": 0,
+      "img": false,
+      "o": [
+        {
+          "n": "Add",
+          "v": [
+            [
+              "Extra shot",
+              4
+            ],
+            [
+              "Oat milk",
+              3
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "black-tonic",
+      "cat": "coffee",
+      "n": "Iced Black Tonic",
+      "d": "Iced.",
+      "p": 13,
+      "tags": [],
+      "heat": 0,
+      "img": false,
+      "o": [
+        {
+          "n": "Add",
+          "v": [
+            [
+              "Extra shot",
+              4
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "matcha-latte",
+      "cat": "noncoffee",
+      "n": "Matcha Latte",
+      "d": "Hot, or iced for RM1 more.",
+      "p": 14,
+      "tags": [],
+      "heat": 0,
+      "img": false,
+      "o": [
+        {
+          "n": "Hot or iced",
+          "one": true,
+          "def": 0,
+          "v": [
+            [
+              "Hot",
+              0
+            ],
+            [
+              "Iced",
+              1
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "houjicha-latte",
+      "cat": "noncoffee",
+      "n": "Houjicha Latte",
+      "d": "Roasted green tea with creamy milk. Hot, or iced for RM1 more.",
+      "p": 14,
+      "tags": [],
+      "heat": 0,
+      "img": false,
+      "o": [
+        {
+          "n": "Hot or iced",
+          "one": true,
+          "def": 0,
+          "v": [
+            [
+              "Hot",
+              0
+            ],
+            [
+              "Iced",
+              1
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "chocolate",
+      "cat": "noncoffee",
+      "n": "Chocolate",
+      "d": "Hot, or iced for RM1 more.",
+      "p": 14,
+      "tags": [],
+      "heat": 0,
+      "img": false,
+      "o": [
+        {
+          "n": "Hot or iced",
+          "one": true,
+          "def": 0,
+          "v": [
+            [
+              "Hot",
+              0
+            ],
+            [
+              "Iced",
+              1
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "honey-lemon",
+      "cat": "noncoffee",
+      "n": "Honey Lemon",
+      "d": "Hot, or iced for RM1 more.",
+      "p": 12,
+      "tags": [],
+      "heat": 0,
+      "img": false,
+      "o": [
+        {
+          "n": "Hot or iced",
+          "one": true,
+          "def": 0,
+          "v": [
+            [
+              "Hot",
+              0
+            ],
+            [
+              "Iced",
+              1
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "yuzu-mojito",
+      "cat": "noncoffee",
+      "n": "Yuzu Mojito",
+      "d": "Iced.",
+      "p": 13,
+      "tags": [],
+      "heat": 0,
+      "img": false
+    },
+    {
+      "id": "strawberry-mojito",
+      "cat": "noncoffee",
+      "n": "Strawberry Mojito",
+      "d": "Iced.",
+      "p": 13,
+      "tags": [],
+      "heat": 0,
+      "img": false
+    },
+    {
+      "id": "mango-passion",
+      "cat": "noncoffee",
+      "n": "Mango Passionfruit",
+      "d": "Iced.",
+      "p": 13,
+      "tags": [],
+      "heat": 0,
+      "img": false
+    },
+    {
+      "id": "kombucha",
+      "cat": "noncoffee",
+      "n": "Kombucha",
+      "d": "Original, chrysanthemum, lychee rose or pineapple.",
       "p": null,
+      "tags": [],
+      "heat": 0,
+      "img": false
+    },
+    {
+      "id": "hot-tea",
+      "cat": "tea",
+      "n": "Hot Tea",
+      "d": "Green tea, chamomile, English breakfast or Earl Grey.",
+      "p": 11,
+      "tags": [],
+      "heat": 0,
+      "img": false,
+      "o": [
+        {
+          "n": "Tea",
+          "one": true,
+          "def": 0,
+          "v": [
+            [
+              "Green tea",
+              0
+            ],
+            [
+              "Chamomile",
+              0
+            ],
+            [
+              "English breakfast",
+              0
+            ],
+            [
+              "Earl Grey",
+              0
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "black-macchiato",
+      "cat": "special",
+      "n": "Black Macchiato",
+      "d": "Espresso, cream cold foam and cocoa powder. With a mini croissant for RM3 more.",
+      "p": 14,
+      "tags": [],
+      "heat": 0,
+      "img": false,
+      "o": [
+        {
+          "n": "Add",
+          "v": [
+            [
+              "Mini croissant",
+              3
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "latte-macchiato",
+      "cat": "special",
+      "n": "Latte Macchiato",
+      "d": "Latte, cream cold foam and cocoa powder. With a mini croissant for RM3 more.",
+      "p": 16,
+      "tags": [],
+      "heat": 0,
+      "img": false,
+      "o": [
+        {
+          "n": "Add",
+          "v": [
+            [
+              "Mini croissant",
+              3
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "orangewood",
+      "cat": "special",
+      "n": "Orangewood",
+      "d": "Espresso, orange and jasmine green tea.",
+      "p": 18,
+      "tags": [],
+      "heat": 0,
+      "img": false
+    },
+    {
+      "id": "gummy-candies",
+      "cat": "special",
+      "n": "Gummy Candies",
+      "d": "Gummy candy, strawberry, Earl Grey and cream foam.",
+      "p": 16,
+      "tags": [],
+      "heat": 0,
+      "img": false
+    },
+    {
+      "id": "wake-me-up",
+      "cat": "special",
+      "n": "Wake Me Up",
+      "d": "Plum, Earl Grey, quince and lime.",
+      "p": 15,
       "tags": [],
       "heat": 0,
       "img": false
@@ -186,20 +933,20 @@
           "left": 30,
           "dep": 1,
           "has": [
-            "Croissants, pain au chocolat and canelés",
+            "Danishes, pain suisse and CC sausage from the counter",
             "Pick up at Menara K1"
           ]
         },
         {
           "id": "xmas-office-box",
-          "n": "Office Breakfast Box (example)",
+          "n": "Office Party Box (example)",
           "p": null,
           "img": "coffee",
           "total": 20,
           "left": 20,
           "dep": 1,
           "has": [
-            "Pastries for a meeting",
+            "Pastries and coffee for the team",
             "Ready at the time you choose"
           ]
         }
@@ -216,7 +963,8 @@
   var MAPS = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent("Oui Bakehouse & Cafe, Menara K1, Old Klang Road, Kuala Lumpur");
   var WA = 'https://wa.me/?text=';
   var WA_ASK = WA; // a customer's mockup puts their own WhatsApp number here (wa.me/60…?text=)
-  var SIGNATURE = ["steak-sandwich", "pb-pain-suisse", "french-toast"]; // the home page's "most ordered" dishes
+  var SIGNATURE = ["steak-sandwich", "french-toast", "bonjour-babe", "pb-pain-suisse", "sugar-cubes", "flat-white"]; // the home page's "most ordered" dishes
+  var BOOK = { max: 12, depositFrom: 0, deposit: 0, counts: false, seats: ['No preference'], bigGroup: '', cancel: '' };
   var BRAND = "Oui Bakehouse & Café", REF = "OUI", KEY = "oui_"; // a customer's mockup: their name, order prefix, own storage key
   var PHOTO_NOTE = ''; // a customer's mockup with their own photos: ''
 
@@ -290,10 +1038,16 @@
     return { cls: 'closed', open: false, text: 'Closed', long: 'Closed.' };
   }
   function hoursTable() {
-    var t = dowOf(today()), order = [1, 2, 3, 4, 5, 6, 0];
-    return '<table class="hours"><tbody>' + order.map(function (d) {
-      var h = HOURS[d];
-      return '<tr class="' + (d === t ? 'is-today' : '') + '"><td>' + DAYL[d] + (d === t ? ' (today)' : '') + '</td><td>' + (h.length ? h.map(function (x) { return fmtTime(x[0]) + '–' + fmtTime(x[1]); }).join(', ') : 'Closed') + '</td></tr>';
+    // days with the same hours share one row (2026-11-14), e.g. "Tuesday – Friday" or "Every day"
+    var t = dowOf(today()), order = [1, 2, 3, 4, 5, 6, 0], rows = [];
+    order.forEach(function (d) {
+      var k = JSON.stringify(HOURS[d]), last = rows[rows.length - 1];
+      if (last && last.k === k) last.days.push(d); else rows.push({ k: k, days: [d] });
+    });
+    return '<table class="hours"><tbody>' + rows.map(function (r) {
+      var h = HOURS[r.days[0]], a = r.days[0], b = r.days[r.days.length - 1], has = r.days.indexOf(t) >= 0;
+      var label = r.days.length === 7 ? 'Every day' : r.days.length === 1 ? DAYL[a] : DAYL[a] + ' – ' + DAYL[b];
+      return '<tr class="' + (has ? 'is-today' : '') + '"><td>' + label + (has && r.days.length < 7 ? ' <small>(today)</small>' : '') + '</td><td>' + (h.length ? h.map(function (x) { return fmtTime(x[0]) + '–' + fmtTime(x[1]); }).join(', ') : 'Closed') + '</td></tr>';
     }).join('') + '</tbody></table>';
   }
   function openDays(n, from) {
@@ -309,7 +1063,7 @@
   function bookings() { return load('bookings', []); }
   function tablesLeft(d, t) {
     var h = 7, s = d + ':' + t; for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
-    var n = h % 6; if (t >= 1140 && t <= 1230) n = Math.max(0, n - 2);
+    var n = BOOK.counts ? h % 6 : 4; if (BOOK.counts && t >= 1140 && t <= 1230) n = Math.max(0, n - 2);
     n -= bookings().filter(function (b) { return b.date === d && b.time === t; }).length;
     return Math.max(0, n);
   }
@@ -335,6 +1089,8 @@
     $$('[data-status-long]').forEach(function (el) { el.textContent = st.long; });
     $$('[data-status-text]').forEach(function (el) { el.textContent = st.text; });
     $$('[data-hours]').forEach(function (el) { el.innerHTML = hoursTable(); });
+    // the hours show once per page: the footer's copy steps aside where the page already has the table
+    if ($('main [data-hours]')) { var fh = $('[data-ftr-hours]'); if (fh) { fh.hidden = true; fh.parentNode.classList.add('ftr__grid--2'); } }
     $$('[data-address]').forEach(function (el) { el.textContent = ADDRESS; });
     $$('[data-maps]').forEach(function (el) { el.href = MAPS; });
     updateBag();
@@ -396,16 +1152,18 @@
     var p = $('.sheet__panel');
     function total() { var u = priceOf(it); (it.o || []).forEach(function (g, gi) { (sel[gi] || []).forEach(function (vi) { u += g.v[vi][1]; }); }); return u * qty; }
     function paint() { $('[data-qv]', p).textContent = qty; $('[data-sheet-add]', p).textContent = 'Add to order · ' + rm(total()); }
-    p.addEventListener('change', function (e) {
+    // onchange / onclick, not addEventListener: the panel is reused, so each dish replaces the last one's handlers
+    // (2026-11-14: with addEventListener, adding a second dish added the first one again)
+    p.onchange = function (e) {
       var m = /^g(\d+)$/.exec(e.target.name || ''); if (!m) return;
       var gi = +m[1];
       sel[gi] = $$('input[name="g' + gi + '"]:checked', p).map(function (x) { return +x.value; });
       paint();
-    });
-    p.addEventListener('click', function (e) {
+    };
+    p.onclick = function (e) {
       var q = e.target.closest('[data-q]'); if (q) { qty = Math.max(1, Math.min(20, qty + +q.getAttribute('data-q'))); paint(); }
       if (e.target.closest('[data-sheet-add]')) { addDirect(it, qty, sel, $('#sh-note', p).value.trim()); closeSheet(); }
-    });
+    };
     paint();
   }
   function onAdd(e) {
@@ -590,7 +1348,7 @@
       'DESCRIPTION:Booking ' + b.ref + '. This is a demo booking on a concept website.', 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
   }
   function pageBook() {
-    var S = { date: '', time: 0, pax: 2, seat: 'Indoor', occ: '', name: '', phone: '', notes: '' };
+    var S = { date: '', time: 0, pax: 2, seat: BOOK.seats[0], occ: '', name: '', phone: '', notes: '' };
     var root = $('[data-book]');
     function paint() {
       // offer a day only while it still has a time that is neither past nor full (at 19:55 the last table of the night can be taken)
@@ -600,20 +1358,20 @@
       HOURS[dowOf(S.date)].forEach(function (h) { for (var t = h[0]; t <= h[1] - 90; t += 30) slots.push(t); });
       var minT = S.date === today() ? nowMin() + 30 : 0;
       root.innerHTML = '<div class="co"><div>' +
-        '<section class="panel"><h2>How many?</h2><div class="seg" role="group" aria-label="Party size">' + [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(function (n) { return '<button type="button" data-pax="' + n + '" class="' + (n === S.pax ? 'is-on' : '') + '" aria-pressed="' + (n === S.pax) + '">' + n + '</button>'; }).join('') + '</div>' +
-        '<p class="small muted" style="margin:12px 0 0">More than 12? <a href="catering.html#private">Book the private dining room</a>.' + (S.pax >= 8 ? ' Groups of 8 or more pay a RM50 deposit, taken off the bill.' : '') + '</p></section>' +
+        '<section class="panel"><h2>How many?</h2><div class="seg" role="group" aria-label="Party size">' + Array.apply(null, Array(BOOK.max)).map(function (x, i) { return i + 1; }).map(function (n) { return '<button type="button" data-pax="' + n + '" class="' + (n === S.pax ? 'is-on' : '') + '" aria-pressed="' + (n === S.pax) + '">' + n + '</button>'; }).join('') + '</div>' +
+        '<p class="small muted" style="margin:12px 0 0">' + BOOK.bigGroup + (BOOK.depositFrom && S.pax >= BOOK.depositFrom ? ' Groups of ' + BOOK.depositFrom + ' or more pay a ' + rm(BOOK.deposit) + ' deposit, taken off the bill.' : '') + '</p></section>' +
         '<section class="panel"><h2>Which day?</h2><div class="days">' + days.map(function (d, i) { return '<button type="button" class="day' + (d === S.date ? ' is-on' : '') + '" data-day="' + d + '"><small>' + (i === 0 && d === today() ? 'Today' : DAY[dowOf(d)]) + '</small><b>' + d.slice(8).replace(/^0/, '') + '</b><small>' + MON[+d.slice(5, 7) - 1] + '</small></button>'; }).join('') + '</div><p class="small muted" style="margin:10px 0 0">Closed on Mondays.</p></section>' +
         '<section class="panel"><h2>What time?</h2><div class="slots">' + slots.map(function (t) {
           var left = tablesLeft(S.date, t), past = t < minT, full = left === 0;
-          return '<button type="button" class="slot' + (t === S.time ? ' is-on' : '') + '" data-time="' + t + '"' + (past || full ? ' disabled' : '') + '>' + fmtTime(t) + '<small>' + (past ? 'past' : full ? 'full' : left === 1 ? '1 table left' : left + ' tables') + '</small></button>';
+          return '<button type="button" class="slot' + (t === S.time ? ' is-on' : '') + '" data-time="' + t + '"' + (past || full ? ' disabled' : '') + '>' + fmtTime(t) + '<small>' + (past ? 'past' : full ? 'full' : !BOOK.counts ? 'open' : left === 1 ? '1 table left' : left + ' tables') + '</small></button>';
         }).join('') + '</div></section>' +
-        '<section class="panel"><h2>A few details</h2><div class="row2"><div class="field"><label for="b-seat">Seating</label><select class="input" id="b-seat" data-k="seat"><option' + (S.seat === 'Indoor' ? ' selected' : '') + '>Indoor</option><option' + (S.seat === 'Outdoor terrace' ? ' selected' : '') + '>Outdoor terrace</option><option' + (S.seat === 'No preference' ? ' selected' : '') + '>No preference</option></select></div>' +
+        '<section class="panel"><h2>A few details</h2><div class="row2"><div class="field"><label for="b-seat">Seating</label><select class="input" id="b-seat" data-k="seat">' + BOOK.seats.map(function (o) { return '<option' + (S.seat === o ? ' selected' : '') + '>' + esc(o) + '</option>'; }).join('') + '</select></div>' +
         '<div class="field"><label for="b-occ">Occasion <small>(optional)</small></label><select class="input" id="b-occ" data-k="occ"><option value="">—</option><option>Birthday</option><option>Anniversary</option><option>Business</option><option>Family gathering</option></select></div></div>' +
         '<div class="row2"><div class="field"><label for="b-name">Name</label><input class="input" id="b-name" autocomplete="name" data-k="name" value="' + esc(S.name) + '"></div><div class="field"><label for="b-phone">Mobile number</label><input class="input" id="b-phone" type="tel" autocomplete="tel" placeholder="012-345 6789" data-k="phone" value="' + esc(S.phone) + '"></div></div>' +
         '<div class="field"><label for="b-notes">Anything we should know? <small>(optional)</small></label><input class="input" id="b-notes" maxlength="160" placeholder="High chair, allergies, a birthday cake…" data-k="notes" value="' + esc(S.notes) + '"></div></section></div>' +
         '<aside class="summary panel"><h2>Your table</h2><img data-pv-src="img/interior.webp" alt="" style="border-radius:14px;aspect-ratio:4/3;object-fit:cover;width:100%;margin-bottom:14px">' +
-        '<div class="totals"><div><span>Guests</span><b>' + S.pax + '</b></div><div><span>Day</span><b>' + fmtDay(S.date) + '</b></div><div><span>Time</span><b>' + (S.time ? fmtTime(S.time) : '—') + '</b></div><div><span>Seating</span><b>' + esc(S.seat) + '</b></div>' + (S.pax >= 8 ? '<div><span>Deposit</span><b>RM50.00</b></div>' : '') + '</div>' +
-        '<button class="btn btn--block" type="button" data-confirm style="margin-top:16px">Confirm booking</button><p class="small muted center" style="margin-top:10px">Free cancellation up to 2 hours before. Demo: no table is held.</p></aside></div>';
+        '<div class="totals"><div><span>Guests</span><b>' + S.pax + '</b></div><div><span>Day</span><b>' + fmtDay(S.date) + '</b></div><div><span>Time</span><b>' + (S.time ? fmtTime(S.time) : '—') + '</b></div><div><span>Seating</span><b>' + esc(S.seat) + '</b></div>' + (BOOK.depositFrom && S.pax >= BOOK.depositFrom ? '<div><span>Deposit</span><b>' + rm(BOOK.deposit) + '</b></div>' : '') + '</div>' +
+        '<button class="btn btn--block" type="button" data-confirm style="margin-top:16px">Confirm booking</button><p class="small muted center" style="margin-top:10px">' + BOOK.cancel + '</p></aside></div>';
     }
     root.addEventListener('click', function (e) {
       var t;
@@ -635,7 +1393,7 @@
       var all = bookings(); all.unshift(b); save('bookings', all.slice(0, 30));
       var text = 'Booking request (demo website): ' + BRAND + '\n' + b.ref + ' · Table for ' + b.pax + ' · ' + fmtDay(b.date) + ', ' + fmtTime(b.time) + '\nSeating: ' + b.seat + (b.occ ? '\nOccasion: ' + b.occ : '') + (b.notes ? '\nNotes: ' + b.notes : '') + '\nName: ' + b.name + ' · ' + b.phone;
       root.innerHTML = '<div class="panel done" style="margin:30px 0 80px"><div class="done__icon">' + ICON.check + '</div><p class="kicker" style="justify-content:center">Booking received (demo)</p><p class="ref">' + b.ref + '</p>' +
-        '<h2 style="margin-top:10px">Table for ' + b.pax + ' · ' + fmtDay(b.date) + ', ' + fmtTime(b.time) + '</h2><p class="lead" style="margin:0 auto 16px">We’ll confirm on WhatsApp within 30 minutes during opening hours.' + (b.pax >= 8 ? ' A RM50 deposit link comes with the confirmation.' : '') + '</p>' +
+        '<h2 style="margin-top:10px">Table for ' + b.pax + ' · ' + fmtDay(b.date) + ', ' + fmtTime(b.time) + '</h2><p class="lead" style="margin:0 auto 16px">We’ll confirm on WhatsApp within 30 minutes during opening hours.' + (BOOK.depositFrom && b.pax >= BOOK.depositFrom ? ' A ' + rm(BOOK.deposit) + ' deposit link comes with the confirmation.' : '') + '</p>' +
         '<div class="btns" style="justify-content:center"><button class="btn" type="button" data-ics>Add to my calendar</button><a class="btn btn--ghost" href="owner.html">See it in the owner view</a></div>' +
         '<details style="max-width:520px;margin:22px auto 0;text-align:left"><summary class="linkbtn">What the restaurant receives</summary><div class="waprev" style="margin-top:10px">' + esc(text) + '</div></details></div>';
       window.scrollTo(0, 0);
