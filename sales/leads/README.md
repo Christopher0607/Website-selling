@@ -32,7 +32,7 @@ Claude Code 每天早上约 06:40（马来西亚时间）做「**可以直接打
 2. **有东西可以在网上卖**（产品、节日套餐、预订蛋糕、外烩、礼券、课程等）。
 3. 做得好的证据：最近 2 年的媒体报道或推荐清单、或 Google 评价数量多（例如 200+ 条，从搜索结果摘要看）、或开店多年。
 4. **有购买力**：人均 / 单价 RM40 以上、或节日套餐 / 产品 RM80 以上、或有实体店加上报道、或有公司 / 酒店客户、或花钱做过推广。
-5. **没有网站**：a. `bash scripts/local/check-domains.sh <写法1> <写法2> <写法3>`（只有 NONE / PARKED / EXPIRED 算没有）；b. 搜「<店名> order online」和「<店名> website」（Shopify、StoreHub、Beepit、Oddle、EasyStore、take.app、WooCommerce、Wix 网上商店 → 排除）；c. 老板的其他品牌有网站 → 排除；d.（2026-11-14 加）搜「<店名> sites.google.com」和搜索结果里他们 IG 简介的连结（Linktree、Carrd、Canva、Google Sites）：用自己网域的 Google Sites 资讯网站，check-domains 测不出来（例：Caleb's Hideout 的 calebshideout.com）。只有资讯、没有下单的网站不算网店，可以放，但 `why` 要写「已有资讯网站，卖点是加下单 / 预约」，priority 最多 B。
+5. **没有网站**：a. `bash scripts/local/check-domains.sh <写法1> <写法2> <写法3>`（只有 NONE / PARKED / EXPIRED 算没有）；b. 搜「<店名> order online」和「<店名> website」（Shopify、StoreHub、Beepit、Oddle、EasyStore、take.app、WooCommerce、Wix 网上商店 → 排除）；c. 老板的其他品牌有网站 → 排除；d.（2026-11-14 加）搜「<店名> sites.google.com」和搜索结果里他们 IG 简介的连结（Linktree、Carrd、Canva、Google Sites）：用自己网域的 Google Sites 资讯网站，check-domains 测不出来（例：Caleb's Hideout 的 calebshideout.com）。只有资讯、没有下单的网站不算网店，可以放，但 `why` 要写「已有资讯网站，卖点是加下单 / 预约」，priority 最多 B。e.（2026-11-14 加）网上点餐平台的网址常常**不是店名**（例：Oui Bakehouse 的 Beep 店是 `ouicaffe.beepit.com`），只搜店名会漏掉：要搜「site:beepit.com <店名的一个字>」「<店名> storehub」「<店名> <大楼 / 地区> order」，并看 Google 地图那一页有没有「Order online / 网上订购」按钮、IG 简介的连结。有 Beep、Oddle、StoreHub、GrabFood / foodpanda 以外的自家点餐网址 → 排除。
 6. **一定要有 Instagram 帐号**。
 7. **一定要有公开的电话号码（手机或座机）或 Email**（2026-11-09 起座机也可以，因为改成打电话为主）。手机号码写进 `whatsapp`，座机写进 `phone`。
 

@@ -73,4 +73,4 @@
 - 本机测试：`DESK_LOCAL_FILE=/tmp/desk.json SALES_DESK_KEY=testpass123 ... node site/tools/dev-server.mjs` + `node site/tools/check-desk.js http://localhost:8769 /tmp/desk.json`；
   Cloudflare 执行环境：在 `site/` 跑 `npx wrangler dev`（本机 D1）。
 - CPU：打开工作台中位数约 3 毫秒（免费版上限 10 毫秒，2026-11-12 用真实资料量的）。资料变很大时再量一次。
-- 不要部署的 commit：说明**开头**写 `[skip ci]`。`leads` 分支两个 Worker 都不会建置（只建置各自设定的 Git branch，Preview builds 关掉）。
+- 不要部署的 commit：说明**开头**写 `[skip ci]`。**要部署的 commit，整段说明（包括第二行以后）都不能出现这几个字**：Cloudflare 只要在说明里看到就跳过（2026-11-14 就因为说明里提到它，修好的示范站没有上线）。`leads` 分支两个 Worker 都不会建置（只建置各自设定的 Git branch，Preview builds 关掉）。
