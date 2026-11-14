@@ -553,7 +553,7 @@ const OLD_URLS = [['https://previews--cartsmith.netlify.app', 'https://previews.
   ['previews--cartsmith.netlify.app', 'previews.cartsmithstudio.com'], ['cartsmith.netlify.app', 'cartsmithstudio.com']]; // also written without https://
 const DRAFT_FIELDS = ['preview_url', 'preview_msg', 'followup', 'draft_reply', 'message'];
 const newUrls = (s) => OLD_URLS.reduce((t, [a, b]) => t.split(a).join(b), String(s));
-const PVMSG_V = 5;
+const PVMSG_V = 6; // 6 (2026-11-14): new prices (RM169 a month) in the unsent mockup messages
 // how we were in touch before (2026-11-13: everything on WhatsApp now, so no "on Instagram")
 const howTouched = (p) => ((p.channels || []).includes('call') ? 'call' : 'msg');
 // already contacted (usually on Instagram) before the mockup was ready: say so, then the link
