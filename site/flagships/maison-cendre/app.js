@@ -132,10 +132,16 @@
     return { cls: 'closed', text: 'Closed', long: 'Closed.' };
   }
   function hoursTable() {
-    var t = dowOf(today()), order = [1, 2, 3, 4, 5, 6, 0];
-    return '<table class="hours"><tbody>' + order.map(function (d) {
-      var h = HOURS[d];
-      return '<tr class="' + (d === t ? 'is-today' : '') + '"><td>' + DAYL[d] + '</td><td>' + (h.length ? h.map(function (x) { return fmtTime(x[0]) + '–' + fmtTime(x[1]); }).join(' · ') : 'Closed') + '</td></tr>';
+    // days with the same hours share one row (2026-11-14), e.g. "Tuesday – Friday" or "Every day"
+    var t = dowOf(today()), order = [1, 2, 3, 4, 5, 6, 0], rows = [];
+    order.forEach(function (d) {
+      var k = JSON.stringify(HOURS[d]), last = rows[rows.length - 1];
+      if (last && last.k === k) last.days.push(d); else rows.push({ k: k, days: [d] });
+    });
+    return '<table class="hours"><tbody>' + rows.map(function (r) {
+      var h = HOURS[r.days[0]], a = r.days[0], b = r.days[r.days.length - 1], has = r.days.indexOf(t) >= 0;
+      var label = r.days.length === 7 ? 'Every day' : r.days.length === 1 ? DAYL[a] : DAYL[a] + ' – ' + DAYL[b];
+      return '<tr class="' + (has ? 'is-today' : '') + '"><td>' + label + (has && r.days.length < 7 ? ' <small>(today)</small>' : '') + '</td><td>' + (h.length ? h.map(function (x) { return fmtTime(x[0]) + '–' + fmtTime(x[1]); }).join(' · ') : 'Closed') + '</td></tr>';
     }).join('') + '</tbody></table>';
   }
   function openDays(n) { var out = [], o = owner(), t = today(); for (var i = 0; out.length < n && i < 40; i++) { var d = addDays(t, i); if (HOURS[dowOf(d)].length && !(d === t && o.status === 'closed')) out.push(d); } return out; }
@@ -179,6 +185,8 @@
     });
     refreshStatus();
     $$('[data-hours]').forEach(function (el) { el.innerHTML = hoursTable(); });
+    // the hours show once per page: the footer's copy steps aside where the page already has the table
+    if ($('main [data-hours]')) { var fh = $('[data-ftr-hours]'); if (fh) { fh.hidden = true; fh.parentNode.classList.add('ftr__grid--2'); } }
     $$('[data-address]').forEach(function (el) { el.textContent = ADDRESS; });
     $$('[data-maps]').forEach(function (el) { el.href = MAPS; });
     updateBag();
