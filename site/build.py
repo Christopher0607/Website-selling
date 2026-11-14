@@ -1116,7 +1116,8 @@ class Studio:
             tag = f'<span class="pkg__tag">{e(p["tag"])}</span>' if p.get("tag") else ""
             out.append(f"""<article class="pkg{hl}">{tag}<h3>{e(p['name'])}</h3><p class="pkg__for">{e(p['for'])}</p>
 <p class="pkg__price"><span>RM</span>{p['price']:,}<small>one-time</small></p>
-<p class="pkg__after">then <b>RM{self.d['care']['plans'][0]['price']}/month</b> maintenance, first month free</p>
+{f'<p class="pkg__founding">{e(p["founding"])}</p>' if p.get("founding") else ""}
+<p class="pkg__after">+ <b>RM{self.d['care']['plans'][0]['price']} a month</b> maintenance, first month free</p>
 <p class="pkg__meta">{e(p['meta'])}</p><ul class="s-ticks">{feats}</ul>
 <a class="s-btn s-btn--block{'' if p.get('highlight') else ' s-btn--ghost'}" href="{root}start.html?package={p['id']}">Get a free mockup first</a></article>""")
         return '<div class="pkgs">' + "".join(out) + "</div>"
@@ -1134,8 +1135,8 @@ class Studio:
         return '<div class="pkgs pkgs--2">' + "".join(out) + "</div>"
 
     def frag_starts_mini(self, root):
-        # homepage: the RM399 festive shop and the RM199-a-month plan. 2026-11-13 (Junyu): show what each includes;
-        # RM399 goes straight to the demo (and the real WordPress shop), RM199 to the request form and the full terms.
+        # homepage: the RM399 festive shop and the RM169-a-month plan. 2026-11-13 (Junyu): show what each includes;
+        # RM399 goes straight to the demo (and the real WordPress shop), RM169 to the request form and the full terms.
         out = []
         for p in self.d.get("starts", []):
             pts = "".join(f"<li>{icon('check')}{e(x)}</li>" for x in p.get("short", []))
@@ -1349,9 +1350,10 @@ def load_leads():
                 raise SystemExit("sales/leads/%s: %s email looks wrong: %s" % (name, lead["id"], email))
             seen.add(lead["id"])
             ig = str(lead.get("instagram", "")).strip().lstrip("@")
-            if not ig:
-                # 2026-11-08 俊宇：没有 IG 的商家不要放（IG 是基本条件；WhatsApp / Email 是加分的联系方式）
-                print("  sales/leads/%s: skip %s (no Instagram)" % (name, lead["id"]))
+            wa_lead = re.sub(r"\D", "", str(lead.get("whatsapp", "")))
+            if not ig and not (9 <= len(wa_lead) <= 15):
+                # 2026-11-14 俊宇（用默认）：全部用 WhatsApp 联系以后，没有 IG 也可以，但一定要有手机号码（以前 2026-11-08：一定要有 IG）
+                print("  sales/leads/%s: skip %s (no Instagram and no mobile number)" % (name, lead["id"]))
                 continue
             out.append({
                 "id": lead["id"], "name": lead["name"].strip(), "instagram": ig,

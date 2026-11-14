@@ -1,7 +1,7 @@
 # Cartsmith Studio — knowledge base for the sales assistant
 
 > This file is the ONLY source of facts the AI may use about Cartsmith Studio. When prices or offers change, edit this file (and site/studio.json, site/desk/desk.js STUDIO_PRICE, sales/agent/desk-brief.md, docs/00-decisions.md) — then rebuild the website (python3 site/build.py) so the website chat and the desk use the new version.
-> Last updated: 2026-11-12 (new prices RM800 / RM1,200 / RM1,600, festive pre-order shop RM399, monthly plan RM199 × 12, new founding-client terms)
+> Last updated: 2026-11-14 (maintenance RM99 a month; monthly plan RM169 × 12; Starter RM800 for the first 5 clients, RM1,000 after that). Before: 2026-11-12 (prices RM800 / RM1,200 / RM1,600, festive pre-order shop RM399, founding-client terms)
 
 ## Who we are
 - Cartsmith Studio is a small (one-person) web studio in Malaysia. In messages, speak as "we" / "Cartsmith Studio" and do not use the owner's personal name. New studio — no long client list yet. Honest about that.
@@ -33,24 +33,26 @@ All templates: phone-first design, slide-out cart with free-shipping bar, sticky
 ## Packages (one-time setup)
 | Package | Price | Best for | Items | Payments | Revisions | Delivery* |
 |---|---|---|---|---|---|---|
-| Starter | RM800 | Own ordering website or online shop | up to 20 | 1 gateway (FPX / cards / e-wallets), or orders sent to their WhatsApp | 2 rounds | ~10 working days |
+| Starter | RM800 for the first 5 clients, then RM1,000 | Own ordering website or online shop | up to 20 | 1 gateway (FPX / cards / e-wallets), or orders sent to their WhatsApp | 2 rounds | ~10 working days |
 | Growth | RM1,600 | Table bookings or festive pre-orders, bigger range, ready for ads | up to 80, bulk import, options | 2 payment methods | 3 rounds | ~15 working days |
 | Catalog (B2B) | RM1,200 | Catering, wholesale and corporate orders: enquiries, not checkout | up to 50 | none (enquiry form) | 2 rounds | ~12 working days |
 
 *Counted from the day we receive the deposit AND all content.
 
+Every one-off price is followed by maintenance: RM99 a month (Basic), the first month free. Always say both numbers together, e.g. "RM800 one-off, then RM99 a month maintenance". Starter is RM800 only for our first 5 clients; after that it is RM1,000 (still below Catalog RM1,200). The first-3-clients terms (balance only when happy) are separate and stay.
+
 Starter includes: Home, Menu or Shop, About, Contact, FAQ, Delivery & Returns, Privacy & Terms drafts (EN + BM); orders for pick-up, local delivery or shipping (delivery areas, West / East Malaysia rates), paid online or sent to their WhatsApp already filled in; WhatsApp / Instagram chat buttons; printable QR card design (table or parcel); 1 training video + 30-min handover.
 Growth adds: table bookings (date, time, party size) or festive pre-orders with cut-off dates; options (size, flavour, add-ons); campaign / festive page; free-delivery threshold and vouchers; entering phone / WhatsApp / counter orders in their shop dashboard; GA4 + Meta Pixel (ad tracking); homepage copy written by us (EN or 中文) + 3 SEO articles; 2 training sessions.
 Catalog: Home, Catalogue (menu or products), About, Certificates/Partners, Contact; pre-filled quotation requests (events, bulk orders, corporate gifts); GA4.
-Every package: mobile-first design, basic SEO, speed optimisation, order/enquiry emails, SSL, **first month of maintenance free after launch; after that a monthly maintenance fee from RM150 (optional, always mention it with the setup price)**.
+Every package: mobile-first design, basic SEO, speed optimisation, order/enquiry emails, SSL, **first month of maintenance free after launch; after that a monthly maintenance fee from RM99 (optional, always mention it with the setup price)**.
 Not included (add-ons): product / food photography, logo design, large copywriting jobs, running ads, extra languages.
 
 ## Two other ways to start
 - **Festive pre-order shop — RM399 one-time.** Their own online shop for a festive season (Chinese New Year, Hari Raya, Christmas, Valentine's Day…), on WordPress + WooCommerce: up to 10 items with photos, prices, options and stock; cut-off date and early-bird price; collection or delivery days and time slots; online payment (FPX, cards, e-wallets) through a payment gateway in their own name, or DuitNow QR with a receipt upload from day one (gateway approval can take a few days); order emails, order tracking and their own dashboard. Live in 3 working days after we have the items, prices and photos. Includes 3 months of hosting and maintenance. After that they choose: pause it for free and reopen next season for RM149 (new dates, items and prices), or keep it open for RM49 a month (for shops with new products all year). A new festival look: RM99. If they upgrade to a full website within 60 days, the RM399 comes off the setup price. Payment-gateway fees per transaction are paid by them.
-- **Monthly plan — RM0 upfront, RM199 a month for 12 months.** Everything in Starter, plus hosting and basic maintenance. First payment on launch day. After 12 payments the website is theirs (they can keep maintenance at RM150 / month or take a full backup). Minimum 12 months; leaving early and other terms are set out in a written agreement.
+- **Monthly plan — RM0 upfront, RM169 a month for 12 months.** Everything in Starter, plus hosting and basic maintenance. First payment on launch day. After 12 payments the website is theirs (they can keep maintenance at RM99 / month or take a full backup). Minimum 12 months; leaving early and other terms are set out in a written agreement.
 
 ## Monthly maintenance (maintenance fee)
-| | Basic maintenance RM150/month | Standard maintenance RM300/month |
+| | Basic maintenance RM99/month | Standard maintenance RM300/month |
 |---|---|---|
 | Hosting + SSL, daily backups, quarterly restore test, uptime monitoring | yes | yes |
 | Updates | monthly | checked weekly |
@@ -94,7 +96,7 @@ Every website comes with its own modern shop dashboard (orders, payments to chec
 - "Will the website bring customers by itself?" Not at first. Customers come from their regulars, Instagram, a QR card on the table or in the bag, and Google Maps. We set up those entry points.
 - "Can you guarantee sales / Google page one?" No — and be careful of anyone who does. We guarantee a website that works well on phones, takes orders correctly, loads fast and is looked after.
 - "You're new, no case studies?" True — that's why the first 3 clients pay the balance only when happy and get a 7-working-day guarantee; prices and scope are written clearly; they can see the sample website first.
-- "Too expensive?" Start with the festive pre-order shop (RM399, comes off the full website within 60 days) or the monthly plan (RM0 upfront, RM199 a month). A simple way to think about it with their OWN numbers: if regulars order directly instead of through a platform that takes a commission, the saving on those orders adds up every month — never promise a result. Never lower the prices.
+- "Too expensive?" Start with the festive pre-order shop (RM399, comes off the full website within 60 days) or the monthly plan (RM0 upfront, RM169 a month). A simple way to think about it with their OWN numbers: if regulars order directly instead of through a platform that takes a commission, the saving on those orders adds up every month — never promise a result. Never lower the prices.
 - "Can it be free for 1–2 months?" The sample website is free, and the first month of maintenance after launch is free. A whole website can't be built for free because each one takes many hours.
 - "No monthly fee?" Possible — we hand over a full backup after launch and they host it themselves; updates/backups/fixes are then theirs (or paid per job).
 - "My menu changes every day / we only take orders by phone." The website can show "today's menu" that they change from their phone in a minute, or only the fixed items and festive sets; orders can still go to their WhatsApp. If they are not ready, that's fine — no pressure.

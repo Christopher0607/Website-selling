@@ -33,14 +33,14 @@ Claude Code 每天早上约 06:40（马来西亚时间）做「**可以直接打
 3. 做得好的证据：最近 2 年的媒体报道或推荐清单、或 Google 评价数量多（例如 200+ 条，从搜索结果摘要看）、或开店多年。
 4. **有购买力**：人均 / 单价 RM40 以上、或节日套餐 / 产品 RM80 以上、或有实体店加上报道、或有公司 / 酒店客户、或花钱做过推广。
 5. **没有网站**：a. `bash scripts/local/check-domains.sh <写法1> <写法2> <写法3>`（只有 NONE / PARKED / EXPIRED 算没有）；b. 搜「<店名> order online」和「<店名> website」（Shopify、StoreHub、Beepit、Oddle、EasyStore、take.app、WooCommerce、Wix 网上商店 → 排除）；c. 老板的其他品牌有网站 → 排除；d.（2026-11-14 加）搜「<店名> sites.google.com」和搜索结果里他们 IG 简介的连结（Linktree、Carrd、Canva、Google Sites）：用自己网域的 Google Sites 资讯网站，check-domains 测不出来（例：Caleb's Hideout 的 calebshideout.com）。只有资讯、没有下单的网站不算网店，可以放，但 `why` 要写「已有资讯网站，卖点是加下单 / 预约」，priority 最多 B。e.（2026-11-14 加）网上点餐平台的网址常常**不是店名**（例：Oui Bakehouse 的 Beep 店是 `ouicaffe.beepit.com`），只搜店名会漏掉：要搜「site:beepit.com <店名的一个字>」「<店名> storehub」「<店名> <大楼 / 地区> order」，并看 Google 地图那一页有没有「Order online / 网上订购」按钮、IG 简介的连结。有 Beep、Oddle、StoreHub、GrabFood / foodpanda 以外的自家点餐网址 → 排除。
-6. **一定要有 Instagram 帐号**。
+6. ~~一定要有 Instagram 帐号~~（2026-11-14 俊宇「用默认」：全部用 WhatsApp 联系以后，**没有 IG 也可以，但一定要有手机号码**；有 IG 就写上）。
 7. **一定要有公开的电话号码（手机或座机）或 Email**（2026-11-09 起座机也可以，因为改成打电话为主）。手机号码写进 `whatsapp`，座机写进 `phone`。
 
 **B 级（2026-11-08 起，为了每天 100 家）：只有第 3 项（做得好的证据）不够，其他六项都符合——购买力（第 4 项）一样要有。** `priority` 写 `B`，`why` 写清楚缺什么。每一轮先找 A 级，A 级找不到了才放 B 级。不符合第 1、2、4、5、6、7 项的一律不放，不要为了凑数降低标准。
 
 ## 规则
 
-- **一定要有 Instagram 帐号**（2026-11-08 俊宇定）：报道、推荐清单、搜索结果、Linktree、Facebook 上看到的 IG 链接都可以。找不到 IG 的不要放；`python3 site/build.py` 也会自动跳过并印出来。
+- **IG 或手机号码至少一个**（2026-11-14 起；以前 2026-11-08 是一定要有 IG）：报道、推荐清单、搜索结果、Linktree、Facebook 上看到的 IG 链接都可以写上。两个都没有的不要放；`python3 site/build.py` 会自动跳过并印出来。
 - **每天的新商家一定要有 WhatsApp（手机号码）或 Email 其中一个**（2026-11-08 俊宇定：IG 私信效果不大）。找不到公开的 WhatsApp / Email 就不要放。
 - **联系方式的来源**：很多商家比较常回 WhatsApp 和 Email。只用**公开给客人的**联系方式：报道里的订购电话、搜索结果里的 Google 商家资料 / Facebook 页面摘要、他们的 Linktree（搜「linktr.ee <店名>」找到网址，打开一次看上面的 WhatsApp / Email 链接）、网站联系页。**不要登录、不要用程式读 Instagram / Facebook 页面本身。** 写进 `whatsapp`（只放手机号码，原样写，例如 `012-345 6789`）、`email`、`contact_source`（简体中文写在哪里看到、哪个月份）。
 - **补联系方式（2026-11-08 起，每天做）**：找完新商家后，花最多 15 分钟，帮名单里**还没有 WhatsApp / Email** 的商家（`sales/leads/inbox.json` 里两个都空的）再找一次，用上面同样的公开来源。找到的写进 `sales/leads/<日期>-contacts.json`（格式见下面），`build.py` 会把号码补进那家商家，工作台的卡片也会自动补上（不会盖掉已经有的）。**页面上要同时看到店名和号码才算**；只在不知名的聚合网站看到、看不出是哪一家的号码不要放；座机（03- 等）不能用 WhatsApp，不要放。找不到就算了，不要硬凑。

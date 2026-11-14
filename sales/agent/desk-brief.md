@@ -34,8 +34,8 @@ Built into the desk by `python3 site/build.py` (file: `sales/agent/desk-brief.md
 5. **Second call 1–2 days later**, and written follow-ups if the call does not connect — see section 2b. At most
    three written follow-ups after the mockup, then stop.
 6. **Interested** → a 15-minute call → written quotation within 24 hours (valid 14 days) → 50% deposit → build →
-   balance → launch. Prices and offers ONLY from the knowledge base (Starter RM800, Catalog RM1,200, Growth RM1,600;
-   festive pre-order shop RM399 (up to 10 items, online payment or DuitNow QR, order emails, own dashboard; 3 months of hosting and maintenance, then pause free or RM49/month); monthly plan RM0 upfront + RM199 × 12; maintenance from RM150 / month after the free first month (always say it with the setup price); founding-client terms
+   balance → launch. Prices and offers ONLY from the knowledge base (Starter RM800 for the first 5 clients then RM1,000, Catalog RM1,200, Growth RM1,600, each + RM99 a month maintenance;
+   festive pre-order shop RM399 (up to 10 items, online payment or DuitNow QR, order emails, own dashboard; 3 months of hosting and maintenance, then pause free or RM49/month); monthly plan RM0 upfront + RM169 × 12; maintenance from RM99 / month after the free first month (always say it with the setup price); founding-client terms
    for the first 3 clients only: balance only when happy, live in 7 working days or RM50 off per late day).
 7. Lost / not interested / already has a website → close politely; the mockup is deleted by its date.
 
@@ -47,7 +47,7 @@ to end the call politely — and then nothing happens. Seven mockups went out; o
   Thursday afternoon to hear what you think."
 - **Second call, 1–2 days after sending** (the desk shows "第二通电话" with the script). Questions are fine on the phone.
   Ask what they thought and listen. Then three short points:
-  1. **Price, plainly**: their own website from RM800 one-off, fixed and written down (or RM0 upfront and RM199 a month
+  1. **Price, plainly**: their own website from RM800 one-off (first 5 clients; RM1,000 after), then RM99 a month maintenance, fixed and written down (or RM0 upfront and RM169 a month
      for 12 months). As one of our first 3 clients they pay the second half only when happy, live in 7 working days.
   2. **Timing**: Christmas (25 Dec), Chinese New Year (6 Feb 2027), Hari Raya (expected 10 Mar 2027). Customers ask about
      festive orders weeks before; pick the one that fits THEIR shop (Malay kuih → Raya; Chinese bakery → CNY).
@@ -57,15 +57,15 @@ to end the call politely — and then nothing happens. Seven mockups went out; o
 - **They have not opened it** (desk shows no visits, or the link opened but no password entered): resend the link and
   password, call again in 2 days. Never say we can see this.
 - **Written follow-ups** (only when the call did not connect, or as the message after the call):
-  1. 1–2 days after sending (a ready-made template on the card since 2026-11-13, Junyu: "push RM199 / RM399 and the new
+  1. 1–2 days after sending (a ready-made template on the card since 2026-11-13, Junyu: "push RM169 / RM399 and the new
      website"): link + password again; their own photos and current prices go in for free; the full demo website that
-     fits them (the card file says which one); three ways to start: RM800 one-off (then RM150 a month maintenance, first
-     month free), nothing upfront and RM199 a month for 12 months, or the RM399 festive pre-order shop (live in 3 working
+     fits them (the card file says which one); three ways to start: RM800 one-off (then RM99 a month maintenance, first
+     month free), nothing upfront and RM169 a month for 12 months, or the RM399 festive pre-order shop (live in 3 working
      days, 3 months of hosting and maintenance included) with its link; every website comes with a simple shop dashboard
      on the phone (new orders, payments to check, what to make each day, stock, Excel export); our own site at the end.
   2. About 4 days later: one new useful angle for their kind of shop (festive sets with cut-off dates and slots left so
      they stop answering the same DM; bookings that arrive with date, time and party size; regulars ordering without
-     platform commission), the price again in one line (RM800 one-off or RM199 a month), the RM399 festive shop as the
+     platform commission), the price again in one line (RM800 one-off or RM169 a month), the RM399 festive shop as the
      small first step with its link, the mockup link again, door open.
   3. About a week later: the last short, polite message — the sample stays up until its delete date; if the timing is
      not right, they can message us any time. Then stop.
@@ -73,10 +73,10 @@ to end the call politely — and then nothing happens. Seven mockups went out; o
   WhatsApp message first; a call is optional after it, never instead of it. Never write "we messaged you on Instagram".
   Shops with no WhatsApp number are parked until someone adds one.
 - **Contacted before, no mockup yet** (mostly Instagram-only shops, 2026-11-13): the 2nd message is a ready-made template
-  on the card — the free sample website offer, the three ways to start (RM199 a month, the RM399 festive shop with its
+  on the card — the free sample website offer, the three ways to start (RM169 a month, the RM399 festive shop with its
   link, RM800 one-off + maintenance), the phone dashboard, the demo that fits them. It stays under 1,000 characters
   because an Instagram DM holds about that much. Later messages are AI-written: short, one useful point, the free mockup
-  offer, RM199 / RM399 in one or two lines.
+  offer, RM169 / RM399 in one or two lines.
 - **Respect "not ready" and "no".** Thank them, close, never chase. Example (Hideaway Café, 11-11): "menu changes daily,
   whole cakes are old-school manual pre-orders, not ready to go online yet, will remember you" → we thanked them, said
   the sample stays up until 23 Nov, and stopped. Baba Beng already had an online store → closed, no more messages.
@@ -138,8 +138,8 @@ lost · no_response · do_not_contact. "Next follow-up" and "next call" dates ar
 ## 5. Phone answers we use (keep consistent with the desk)
 - Owner not in → ask what time the owner is usually in, call back then.
 - Busy → "I'll WhatsApp you the link so you can look later." (a statement)
-- How much? → the sample is free; a full website starts from RM800 one-off, fixed and written down; a festive
-  pre-order shop is RM399; or RM0 upfront and RM199 a month for 12 months. Details come with the link.
+- How much? → the sample is free; a full website starts from RM800 one-off, then RM99 a month maintenance (first month free), fixed and written down; a festive
+  pre-order shop is RM399; or RM0 upfront and RM169 a month for 12 months. Details come with the link.
 - We already have Shopee / Instagram / foodpanda → keep them; this gives regulars one link to order directly, without
   paying commission on every order.
 - We already have a website → apologise, close, mark 已经有网站.
@@ -150,7 +150,7 @@ lost · no_response · do_not_contact. "Next follow-up" and "next call" dates ar
   a set time to call back.
 - (Second call) Not now / after the festive season → the RM399 festive shop is the small step; otherwise no problem,
   the sample stays up until its date.
-- (Second call) Too expensive → RM0 upfront and RM199 a month, or start with the RM399 festive shop. Never lower prices.
+- (Second call) Too expensive → RM0 upfront and RM169 a month, or start with the RM399 festive shop. Never lower prices.
 - (Second call) WhatsApp / phone orders are enough → orders still come to their WhatsApp, already filled in (items,
   date, name), so less back and forth.
 - (Second call) Menu changes every day → "today's menu" changed from the phone in a minute, or only fixed items and

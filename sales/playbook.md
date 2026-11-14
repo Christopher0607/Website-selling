@@ -108,7 +108,7 @@
 
 | 对方说 | 你的下一步 |
 |---|---|
-| 「多少钱？」 | 简短给价格范围（Starter RM800 起，上线后第 1 个月维护免费；节日预购网店 RM399；也可以月付 RM199）→ 样板已经做好，发给他看 |
+| 「多少钱？」 | 简短给价格范围（Starter RM800 起，上线后第 1 个月维护免费；节日预购网店 RM399；也可以月付 RM169）→ 样板已经做好，发给他看 |
 | 「可以看看」 | 要店铺链接 + logo + 3–5 款主打产品 → 做样板 |
 | 「现在没空 / 以后再说」 | 「好的，我 [日期] 再问你一次可以吗？」→ 在 notes 写日期 |
 | 「不需要」 | 「明白，谢谢你的时间 🙏 祝生意越来越好！」→ `mark dnc` |
@@ -154,7 +154,7 @@
 **给他看（4 分钟）：** 打开他的样板，**对着他刚才说的问题讲**（例：「你说回头客多 → 这里他可以直接下单，不用再私信问价」）。
 
 **推荐一个套餐（3 分钟）——照这样讲：**
-> 「我建议 [Starter]：一次性 RM800，大约 10 个工作天上线。上线后**第一个月维护免费**——你先用一个月，觉得有帮助再开始月费，基础维护每月 RM150。你是我们前 3 个客户之一的话，先付一半订金，做好你满意才付尾款，7 个工作天上线，维护免费两个月，条件是上线后给我一段真实评价。不想一次付也可以月付，每个月 RM199，12 个月。一般付款是 50% 订金开工，50% 上线前付。付款网关和域名都用你自己的名字开，网站付清后就是你的。」
+> 「我建议 [Starter]：一次性 RM800，大约 10 个工作天上线。上线后**第一个月维护免费**——你先用一个月，觉得有帮助再开始月费，基础维护每月 RM99。你是我们前 3 个客户之一的话，先付一半订金，做好你满意才付尾款，7 个工作天上线，维护免费两个月，条件是上线后给我一段真实评价。不想一次付也可以月付，每个月 RM169，12 个月。一般付款是 50% 订金开工，50% 上线前付。付款网关和域名都用你自己的名字开，网站付清后就是你的。」
 
 **结尾（1 分钟）：** 「没问题的话，我今天发报价单给你，收到订金就开工。你觉得怎样？」
 
@@ -222,13 +222,13 @@
 **+25 天的话术：**
 
 **中文**
-> 嗨 [名字]，网站上线快一个月了 🙂 这个月我帮你做了：每天备份、[X] 次更新、[修改内容]，网站一直正常。免费的维护月到 [日期] 结束，之后基础维护是每月 RM150（备份、更新、监控、每月 30 分钟小修改）。要继续的话，我发付款资料给你；如果想自己管，我会把完整备份交给你。你觉得呢？
+> 嗨 [名字]，网站上线快一个月了 🙂 这个月我帮你做了：每天备份、[X] 次更新、[修改内容]，网站一直正常。免费的维护月到 [日期] 结束，之后基础维护是每月 RM99（备份、更新、监控、每月 30 分钟小修改）。要继续的话，我发付款资料给你；如果想自己管，我会把完整备份交给你。你觉得呢？
 
 **English**
-> Hi [Name], your website has been live for almost a month 🙂 This month I handled daily backups, [X] updates and [changes], and everything has been running smoothly. The free maintenance month ends on [date]; after that Basic maintenance is RM150/month (backups, updates, monitoring, 30 minutes of small changes). Shall I send the payment details to continue? If you'd rather manage it yourself, I'll hand over a full backup. What do you think?
+> Hi [Name], your website has been live for almost a month 🙂 This month I handled daily backups, [X] updates and [changes], and everything has been running smoothly. The free maintenance month ends on [date]; after that Basic maintenance is RM99/month (backups, updates, monitoring, 30 minutes of small changes). Shall I send the payment details to continue? If you'd rather manage it yourself, I'll hand over a full backup. What do you think?
 
 **Bahasa Malaysia**
-> Hai [Nama], website anda dah hampir sebulan live 🙂 Bulan ini saya uruskan backup harian, [X] kemas kini dan [perubahan], dan semuanya berjalan lancar. Bulan maintenance percuma tamat pada [tarikh]; selepas itu Basic maintenance RM150/bulan (backup, kemas kini, pemantauan, 30 minit perubahan kecil). Nak saya hantar butiran bayaran untuk teruskan? Kalau nak urus sendiri, saya serahkan backup penuh. Macam mana?
+> Hai [Nama], website anda dah hampir sebulan live 🙂 Bulan ini saya uruskan backup harian, [X] kemas kini dan [perubahan], dan semuanya berjalan lancar. Bulan maintenance percuma tamat pada [tarikh]; selepas itu Basic maintenance RM99/bulan (backup, kemas kini, pemantauan, 30 minit perubahan kecil). Nak saya hantar butiran bayaran untuk teruskan? Kalau nak urus sendiri, saya serahkan backup penuh. Macam mana?
 
 ---
 
@@ -262,7 +262,7 @@
    - 回复率低 → 「具体观察」不够具体？渠道不对？
    - 有回复但不要样板 → 先算费用给他看
    - 有样板不约通话 → 附录屏视频、跟进更快
-   - 有报价不成交 → 信任感（满意才付尾款、7 天上线保证）和更小的第一步（节日预购网店 RM399、月付 RM199）
+   - 有报价不成交 → 信任感（满意才付尾款、7 天上线保证）和更小的第一步（节日预购网店 RM399、月付 RM169）
 3. 只改一个地方，下周再看
 
 **第 30 天目标：** 联系 300 个 → 1 个付费客户。做不到也没关系，数字会告诉你哪里要改。
