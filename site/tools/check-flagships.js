@@ -19,6 +19,16 @@ const ok = (c, m) => { console.log((c ? '  ✅ ' : '  ❌ ') + m); if (!c) fail+
   p.on('console', (m) => { if (m.type() === 'error' && !/fonts\.(googleapis|gstatic)/.test(m.text())) errors.push(m.text()); });
   p.on('dialog', (d) => d.accept());
   const R = BASE + '/demo/sireh-salt/';
+  // opening hours show once per page: home has them in "Visit us", other pages in the footer (2026-11-14)
+  const hoursOnce = async (base, pages) => {
+    const q = await (await b.newContext({ viewport: { width: 1280, height: 900 } })).newPage();
+    for (const pg of pages) {
+      await q.goto(base + pg + '.html');
+      const n = await q.$$eval('table.hours', (t) => t.filter((x) => x.offsetParent !== null).length);
+      ok(n === 1, `${pg}: opening hours shown once (${n} on the page)`);
+    }
+    await q.context().close();
+  };
   const shot = async (n) => { if (SHOTS) { fs.mkdirSync(SHOTS, { recursive: true }); await p.screenshot({ path: `${SHOTS}/${n}.png`, fullPage: true }); } };
 
   console.log('Sireh & Salt (restaurant)');
@@ -34,6 +44,19 @@ const ok = (c, m) => { console.log((c ? '  ✅ ' : '  ❌ ') + m); if (!c) fail+
   ok(((await p.textContent('.status')) || '').length > 3, 'home: open / closed status shown: ' + (await p.textContent('.status')));
   ok(/pre-orders are open/.test(await p.textContent('[data-festive-strip]')), 'home: festive strip with the next season');
   ok((await p.$$('.review .sample')).length === 4 && /made up for this demo/.test(await p.textContent('.disclaim')), 'home: every review is labelled as a sample');
+  await hoursOnce(R, ['index', 'menu', 'book']);
+  {
+    // two dishes with options in a row: the second must not add the first again (fixed 2026-11-14)
+    const q = await (await b.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' })).newPage();
+    await q.goto(R + 'menu.html');
+    for (const id of ['nasi-lemak', 'laksa']) {
+      await q.click(`#i-${id} [data-add]`);
+      await q.waitForSelector('[data-sheet]:not([hidden])');
+      await q.click('[data-sheet-add]');
+    }
+    ok((await q.textContent('[data-bag-count]')) === '2', 'two dishes with options in a row: two in the bag, not three');
+    await q.context().close();
+  }
 
   // menu → options sheet → bag
   await p.goto(R + 'menu.html');
@@ -276,6 +299,7 @@ const ok = (c, m) => { console.log((c ? '  ✅ ' : '  ❌ ') + m); if (!c) fail+
   // ---------------------------------------------------------------- Maison Cendre (boutique restaurant)
   console.log('Maison Cendre (boutique restaurant)');
   const M = BASE + '/demo/maison-cendre/';
+  await hoursOnce(M, ['index', 'menu', 'book']);
   for (const pg of ['index', 'menu', 'book', 'private', 'festive', 'order', 'gift', 'owner']) {
     const r = await p.goto(M + pg + '.html');
     ok(r.ok() && /Demo website/.test(await p.textContent('.demobar')), `${pg}.html loads with the demo banner`);
