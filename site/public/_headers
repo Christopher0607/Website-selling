@@ -1,3 +1,9 @@
 /*
   X-Robots-Tag: noindex, nofollow
   Referrer-Policy: no-referrer
+/:slug/style.css
+  Cache-Control: public, max-age=600
+/:slug/theme.css
+  Cache-Control: public, max-age=600
+/:slug/assets/css/*
+  Cache-Control: public, max-age=600

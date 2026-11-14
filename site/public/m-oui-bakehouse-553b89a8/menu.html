@@ -14,7 +14,7 @@ function open(raw,how){return crypto.subtle.importKey('raw',raw,'AES-GCM',false,
   try{localStorage.setItem(K,s64(raw))}catch(e){}
   tr('view','&h='+(how||'saved'));
   var h=new TextDecoder().decode(pt),m=h.match(/var H='([0-9a-f]+)'/);if(m){try{localStorage.setItem('pv_'+m[1],'1')}catch(e){}}
-  h=h.replace(/<head([^>]*)>/i,'<head$1><style>img[data-pv-src]{visibility:hidden}</style><script>'+RT.replace(/<\/script/gi,'<\\/script')+'<\/script>');
+  h=h.replace(/<head([^>]*)>/i,'<head$1><style id="pvh">html{visibility:hidden}</style><script>(function(){var d=0;function done(){if(d)return;d=1;var s=document.getElementById("pvh");if(s)s.parentNode.removeChild(s)}setTimeout(done,2500);function chk(){var ls=document.querySelectorAll("link[rel=stylesheet]"),n=0;for(var i=0;i<ls.length;i++){var l=ls[i],ok;try{ok=!!(l.sheet&&l.sheet.cssRules)}catch(e){ok=!!l.sheet}if(!ok){n++;l.addEventListener("load",chk,{once:true});l.addEventListener("error",chk,{once:true})}}if(!n)done()}document.addEventListener("DOMContentLoaded",chk)})()<\/script><style>img[data-pv-src]{visibility:hidden}</style><script>'+RT.replace(/<\/script/gi,'<\\/script')+'<\/script>');
   // only replace the password page once it has finished loading: if the saved key decrypts while the page is still
   // being read, document.open() does nothing and the store got written INSIDE the password page (its centred grid
   // squeezed the top bar and pushed the page sideways on phones)
