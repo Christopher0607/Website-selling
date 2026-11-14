@@ -2617,6 +2617,91 @@
    "checked": "2026-11-10"
   },
   {
+   "code": "m-calebs-hideout",
+   "slug": "m-calebs-hideout-94211406",
+   "url": "https://previews.cartsmithstudio.com/m-calebs-hideout-94211406/",
+   "delete_by": "2026-11-27",
+   "lead_id": "v20261113-calebs-hideout",
+   "instagram": "calebs.hideout",
+   "name": "Caleb's Hideout",
+   "photos": "real: Malay Mail / CK Lim (Sep 2026), credited",
+   "enc": "eyJ2IjoyLCJlcGsiOiJCSW9YWWlBdzQrcVJYc1BDRUdRR3REdU9GSEJSSVU0ZXBkZk5GWm9GTm5jZ3NVSEM2MFlEcENXaWFKTzZxdGpjbEVsQ1Y3ZCtpQ3ZRZ1kyTUlUUGdRWVU9IiwiaXYiOiI3eGZicHhiMFV1aFBaclA1IiwiY3QiOiJNWmZ1bFhEODNUVitDVTBTdU9EMEsxTEE2WGRjOThyeC9ua1N6R2YwckNrUStna3BDSmJlcmc9PSJ9",
+   "pitch": {
+    "mode": "pickup",
+    "items": [
+     "Tofu Oat Milk Chocolate Mousse Cake",
+     "Flat White (Emberwood beans)",
+     "Christmas cake pre-orders"
+    ]
+   },
+   "facts": {
+    "mode": "pickup",
+    "place": "24-1, Jalan Sepadu, Taman United, Kuala Lumpur (off Old Klang Road)",
+    "hours": "Open Fri & Sun 9am–6pm, Sat 9am–10pm; Mon–Thu closed",
+    "delivery": "",
+    "products": [
+     {
+      "n": "Flat White",
+      "p": null,
+      "per": "",
+      "cat": "coffee",
+      "ex": false,
+      "set": "",
+      "src": "Not published; ask the owner"
+     },
+     {
+      "n": "Sunlit Jasmine",
+      "p": null,
+      "per": "",
+      "cat": "tea",
+      "ex": false,
+      "set": "",
+      "src": "Not published; ask the owner"
+     },
+     {
+      "n": "Tofu Oat Milk Chocolate Mousse Cake",
+      "p": null,
+      "per": "",
+      "cat": "cakes",
+      "ex": false,
+      "set": "",
+      "src": "Not published; ask the owner"
+     },
+     {
+      "n": "Banana Cake with Walnuts & Prunes",
+      "p": null,
+      "per": "",
+      "cat": "cakes",
+      "ex": false,
+      "set": "",
+      "src": "Not published; ask the owner"
+     },
+     {
+      "n": "Tofu Brownie Cheesecake with Biscoff",
+      "p": null,
+      "per": "",
+      "cat": "cakes",
+      "ex": false,
+      "set": "",
+      "src": "Not published; ask the owner"
+     },
+     {
+      "n": "Rose Water Watermelon Cake",
+      "p": null,
+      "per": "",
+      "cat": "cakes",
+      "ex": false,
+      "set": "",
+      "src": "Not published; ask the owner"
+     }
+    ],
+    "faq": [],
+    "contact": "WhatsApp +65 9138 8504 · call 018-317 0986 · caleb@calebshideout.com · IG @calebs.hideout · 小红书 Calebs Hideout 家咖",
+    "sources": "Malay Mail, 12 Sep 2026, \"Escape to Caleb’s Hideout, a dietitian-designed garden café in OUG\" (text and photos by CK Lim); his own site calebshideout.com (Google Sites, info only, reservations by Google Form / WhatsApp / Instagram; checked 2026-11-14). No prices published."
+   },
+   "checked": "2026-11-14"
+  },
+  {
    "code": "m-oui-bakehouse",
    "slug": "m-oui-bakehouse-553b89a8",
    "url": "https://previews.cartsmithstudio.com/m-oui-bakehouse-553b89a8/",
@@ -2625,7 +2710,7 @@
    "instagram": "ouibakehousecafe",
    "name": "Oui Bakehouse & Café",
    "photos": "real: dish photos cut from the printed menu; Malay Mail / CK Lim (Nov 2024), credited",
-   "enc": "eyJ2IjoyLCJlcGsiOiJCRUpMT3NXWkVZS21ENFBpRVBDQ3BwSWh2bDVHYjJEblRaNlZEUFpDbHA1K1V2NGx3QTE2LzBUYSt3eEJCS3VKaFkrQktEcVdvQndMV0NuczVMYjhNOTQ9IiwiaXYiOiIxRnFjY0N0eUxtTzRaZEFyIiwiY3QiOiJMNlRBSEQ0UUpLOWcvTUZWaHh0MkRmOU83bVRoRmVBSTRneWgzQzIxbVVZcSthQjJQZTA9In0=",
+   "enc": "eyJ2IjoyLCJlcGsiOiJCQkNIa1pJN2Y4UmY4Ump1RkhoRks1dXlUKzIxWlRya1NFNnpKeWl6MXBOcVhRcVFpMHBlU3ZZSkxjL0tEVGRkaHVJRzEvelFoSE4walUrRk9lYUpzR3c9IiwiaXYiOiJaaE9zWk9SSUs2WXZoN0VNIiwiY3QiOiJkYVptQmtwUzZENUFYb0lGeTJiU3ZVZithdExQMEFEYVJIeVdoN0NFdnVzN2UwS3lRNTA9In0=",
    "pitch": {
     "mode": "pickup",
     "items": [
@@ -2861,92 +2946,7 @@
     "contact": "Phone 03-7770 9355 (landline) · IG @ouibakehousecafe · FB OuiBakehouseCafe",
     "sources": "Printed menu photos (Main/Brunch, Pasta/Noodle, Sandwich, Pizza, Salad/Snack, Amour Dessert, Good Coffee, Non-coffee, Hot Tea, Oui Special) sent by Junyu 2026-11-14; Google menu listing (delivery prices, about 10% higher; used only for the pastry counter, kombucha and cheesecake names); Malay Mail, 30 Nov 2024 (Kenny Mah; photos CK Lim); Eat Drink KL, Feb 2023."
    },
-   "checked": "2026-11-14"
-  },
-  {
-   "code": "m-calebs-hideout",
-   "slug": "m-calebs-hideout-94211406",
-   "url": "https://previews.cartsmithstudio.com/m-calebs-hideout-94211406/",
-   "delete_by": "2026-11-27",
-   "lead_id": "v20261113-calebs-hideout",
-   "instagram": "calebs.hideout",
-   "name": "Caleb's Hideout",
-   "photos": "real: Malay Mail / CK Lim (Sep 2026), credited",
-   "enc": "eyJ2IjoyLCJlcGsiOiJCSW9YWWlBdzQrcVJYc1BDRUdRR3REdU9GSEJSSVU0ZXBkZk5GWm9GTm5jZ3NVSEM2MFlEcENXaWFKTzZxdGpjbEVsQ1Y3ZCtpQ3ZRZ1kyTUlUUGdRWVU9IiwiaXYiOiI3eGZicHhiMFV1aFBaclA1IiwiY3QiOiJNWmZ1bFhEODNUVitDVTBTdU9EMEsxTEE2WGRjOThyeC9ua1N6R2YwckNrUStna3BDSmJlcmc9PSJ9",
-   "pitch": {
-    "mode": "pickup",
-    "items": [
-     "Tofu Oat Milk Chocolate Mousse Cake",
-     "Flat White (Emberwood beans)",
-     "Christmas cake pre-orders"
-    ]
-   },
-   "facts": {
-    "mode": "pickup",
-    "place": "24-1, Jalan Sepadu, Taman United, Kuala Lumpur (off Old Klang Road)",
-    "hours": "Open Fri & Sun 9am–6pm, Sat 9am–10pm; Mon–Thu closed",
-    "delivery": "",
-    "products": [
-     {
-      "n": "Flat White",
-      "p": null,
-      "per": "",
-      "cat": "coffee",
-      "ex": false,
-      "set": "",
-      "src": "Not published; ask the owner"
-     },
-     {
-      "n": "Sunlit Jasmine",
-      "p": null,
-      "per": "",
-      "cat": "tea",
-      "ex": false,
-      "set": "",
-      "src": "Not published; ask the owner"
-     },
-     {
-      "n": "Tofu Oat Milk Chocolate Mousse Cake",
-      "p": null,
-      "per": "",
-      "cat": "cakes",
-      "ex": false,
-      "set": "",
-      "src": "Not published; ask the owner"
-     },
-     {
-      "n": "Banana Cake with Walnuts & Prunes",
-      "p": null,
-      "per": "",
-      "cat": "cakes",
-      "ex": false,
-      "set": "",
-      "src": "Not published; ask the owner"
-     },
-     {
-      "n": "Tofu Brownie Cheesecake with Biscoff",
-      "p": null,
-      "per": "",
-      "cat": "cakes",
-      "ex": false,
-      "set": "",
-      "src": "Not published; ask the owner"
-     },
-     {
-      "n": "Rose Water Watermelon Cake",
-      "p": null,
-      "per": "",
-      "cat": "cakes",
-      "ex": false,
-      "set": "",
-      "src": "Not published; ask the owner"
-     }
-    ],
-    "faq": [],
-    "contact": "WhatsApp +65 9138 8504 · call 018-317 0986 · caleb@calebshideout.com · IG @calebs.hideout · 小红书 Calebs Hideout 家咖",
-    "sources": "Malay Mail, 12 Sep 2026, \"Escape to Caleb’s Hideout, a dietitian-designed garden café in OUG\" (text and photos by CK Lim); his own site calebshideout.com (Google Sites, info only, reservations by Google Form / WhatsApp / Instagram; checked 2026-11-14). No prices published."
-   },
-   "checked": "2026-11-14"
+   "checked": ""
   }
  ]
 }
