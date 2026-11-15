@@ -14,8 +14,12 @@
 
 **要准备：** 你的 MyKad（年满 18 岁）、手机、一个能收信的电邮、做生意的地址（可以先用住家地址）、网上付款（卡或网银）。
 
+**先看会不会免费（SPPP）：** 年满 18 岁、还没有注册过生意，而且是 **全职学生**，或 **30 岁以下、在 BPN 名单里的 B40**，或 B40 单亲妈妈，注册费全免（一年）。符合的话在柜台问「Skim Pendaftaran Perniagaan Prihatin」。来源：[SSM：SPPP](https://www.ssm.com.my/Pages/Services/Registration-of-Business-(ROB)/Skim%20Pendaftaran%20Perniagaan%20Prihatin.aspx)
+
+**帐号要先「开通」（2026-11-15 查）：** 网上开好 ezBiz 帐号后，要带 MyKad 去 **任何一间 SSM 办公室**（或 Tap.It 自助机）验证身份才能用；有的情况可以申请 WhatsApp 视讯验证。来源：[SSM：注册 ezBiz 帐号指南（PDF，2024-08）](https://www.ssm.com.my/Documents/GUIDELINE_FOR_REGISTER_EZBIZ_USER_ACCOUNT.pdf)
+
 **步骤（用手机就可以）：**
-1. 打开 **ezbiz.ssm.com.my**，按「Register」开帐号（用 MyKad 号码），电邮里按确认连结开通。
+1. 打开 **ezbiz.ssm.com.my**，按「Register」开帐号（用 MyKad 号码），电邮里按确认连结；然后带 MyKad 去 SSM 柜台开通帐号（见上面）。
 2. 登入后选 **New Registration → Local Business（本地生意）→ Sole Proprietorship（独资）**。
 3. **商号**：填 `Cartsmith Studio`（系统要你填 3 个名字、按顺序，第 2、3 个可以填 `Cartsmith Studio Enterprise`、`Cartsmith Web Studio`）。用商号要先批名字；用自己 IC 上的名字就不用批，但是比较不像一间工作室。
 4. **生意性质（MSIC 代码）**：在系统里搜「website」「computer programming」「web design」，选最接近「电脑程式设计 / 网站设计」的那一个（常见的是 62010 *Computer programming activities*，我不确定是不是最合适，以系统的说明为准；可以选 2–3 个）。
