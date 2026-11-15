@@ -40,6 +40,12 @@
   - **CIMB**：网上申请 + 分行；
   - **Hong Leong PrimeBiz**：来源说独资可以全程网上办。
 - **建议：** 选你个人户口所在的那间银行，转帐和 DuitNow 最方便。开好后申请这个户口的 **DuitNow QR**：客户付订金、月费可以扫码。
+- **没有本金（2026-11-15 俊宇问）：** 最低存款最少的几个（第三方网站的资料，开户前看银行官网）：
+  - **GXBank 商业户口**：只给独资，来源说开户存款 RM10 或 0、没有最低余额，全程用 App；
+  - **Maybank SME First**：用 MAE App 转帐开户 RM100（去分行要 RM1,000）；
+  - HSBC / UOB 的基本户口：RM100。
+  - 所以开始只需要 **SSM RM60 + 开户 RM10–100，大约 RM70–160**。第一位客户的订金（Growth 是 RM800）会进这个户口，之后的开销都可以用订金付。
+  - 来源：[Airwallex：Maybank 商业户口](https://www.airwallex.com/en-my/blog/maybank-business-account-review)、[Airwallex：免费商业户口](https://www.airwallex.com/en-my/blog/best-free-business-bank-account)、[WorldFirst：中小企业户口比较](https://www.worldfirst.com/my/blog/business-bank-insights/best-sme-bank-accounts-malaysia/)、[Maybank SME First](https://www.maybank2u.com.my/maybank2u/malaysia/en/business/deposits/deposit_account/sme_first_investment_i.page?)
 
 来源：[WorldFirst：独资银行户口](https://www.worldfirst.com/my/blog/business-bank-insights/sole-proprietorship-bank-account-malaysia/)、[Curlec：开商业户口步骤](https://curlec.com/blog/how-to-open-a-business-bank-account-in-malaysia/)、[Maybank SME First 网上开户 FAQ（PDF）](https://www.maybank2u.com.my/iwov-resources/pdf/business/deposits/sme1st-activate-biz-acc-faq.pdf)
 
