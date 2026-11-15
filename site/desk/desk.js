@@ -120,7 +120,7 @@
     if (S.calling === p.id) {
       return `<div class="callout" data-callout="${p.id}"><b>电话打得怎么样？</b>
         <div class="btnrow">
-          <button class="btn btn--sm" data-act="call-out" data-out="ok" data-id="${p.id}">${svg('check', 16)}可以发样板</button>
+          <button class="btn btn--sm" data-act="call-out" data-out="ok" data-id="${p.id}">${svg('check', 16)}${hasMock(p) ? '可以发样板' : '可以发示范'}</button>
           <button class="btn btn--ghost btn--sm" data-act="call-out" data-out="no_answer" data-id="${p.id}">没接</button>
           <button class="btn btn--ghost btn--sm" data-act="call-out" data-out="no" data-id="${p.id}">不需要</button>
         </div>
@@ -166,6 +166,7 @@
     const items = (pt.items || []).filter(Boolean).slice(0, 3);
     const act = (PV_ACT[pt.mode] || PV_ACT.shop);
     const li = (x) => items.length ? x : '';
+    const dk = (p.demo && p.demo.kind) || { en: 'shops like yours', zh: '像你们这样的店', ms: 'kedai seperti anda' };
     const T = {
       owner: { en: 'Hi, good afternoon! May I speak to the owner, please?', zh: '你好，请问老板在吗？', ms: 'Hai, selamat petang! Boleh saya bercakap dengan pemilik?' },
       intro: has ? {
@@ -173,27 +174,27 @@
         zh: `你好，我是 Cartsmith Studio 的（你的名字）。我们帮本地餐饮做网站。我们已经帮 ${n} 做好了一个免费的样板网站${li('，放了你们的 ' + items.join('、'))}，客人可以直接在网上${act.zh}。`,
         ms: `Saya (nama anda) dari Cartsmith Studio. Kami buat laman web untuk perniagaan makanan tempatan. Kami sudah siapkan contoh laman web percuma untuk ${n}${li(', dengan ' + items.join(', '))}, di mana pelanggan boleh ${act.ms} secara online.`,
       } : {
-        en: `Hi, I'm (your name) from Cartsmith Studio. We build websites for local food businesses. We'd like to make a free sample website for ${n}, with your name and menu.`,
-        zh: `你好，我是 Cartsmith Studio 的（你的名字）。我们帮本地餐饮做网站。我们想用 ${n} 的店名和菜单，免费帮你们做一个样板网站。`,
-        ms: `Saya (nama anda) dari Cartsmith Studio. Kami buat laman web untuk perniagaan makanan tempatan. Kami nak buatkan contoh laman web percuma untuk ${n}, dengan nama dan menu anda.`,
+        en: `Hi, I'm (your name) from Cartsmith Studio. We build websites for local businesses. We've built a complete demo website for ${dk.en}, where customers order and pay online and you run everything from your phone.`,
+        zh: `你好，我是 Cartsmith Studio 的（你的名字）。我们帮本地商家做网站。我们做好了一个给${dk.zh}的完整示范网站，客人可以直接在网上下单付款，你用手机就能管。`,
+        ms: `Saya (nama anda) dari Cartsmith Studio. Kami buat laman web untuk perniagaan tempatan. Kami sudah siapkan laman web demo lengkap untuk ${dk.ms}, di mana pelanggan tempah dan bayar secara online dan anda uruskan semuanya dari telefon.`,
       },
       ask: has ? {
         en: "It's free, and there's no obligation. I'll WhatsApp you the link right after this call, so you can have a look when you're free.",
         zh: '不用钱，也不用马上决定。我挂了电话就用 WhatsApp 发给你，你有空再看。',
         ms: 'Percuma, tiada komitmen. Saya WhatsApp pautannya sebaik habis panggilan ini, anda tengok bila senang.',
       } : {
-        en: "It's free, and there's no obligation. We'll make it and WhatsApp it to you in one or two working days.",
-        zh: '不用钱，也不用马上决定。我们做好了（一两个工作天）就用 WhatsApp 发给你。',
-        ms: 'Percuma, tiada komitmen. Kami siapkan dan WhatsApp kepada anda dalam satu atau dua hari bekerja.',
+        en: "I'll WhatsApp you the demo and our prices right after this call, so you can have a look when you're free. No obligation.",
+        zh: '我挂了电话就用 WhatsApp 发示范网站和价钱给你，你有空再看，不用马上决定。',
+        ms: 'Saya WhatsApp demo dan harga kami sebaik habis panggilan ini, anda tengok bila senang. Tiada komitmen.',
       },
       close: has ? {
         en: "Great, thank you! Is this number on WhatsApp? And may I know your name? I'll send it right after this call.",
         zh: '好，谢谢！这个号码有 WhatsApp 吗？请问怎么称呼？我挂了电话马上发给你。',
         ms: 'Baik, terima kasih! Nombor ini ada WhatsApp? Boleh saya tahu nama? Saya hantar sebaik sahaja habis panggilan ini.',
       } : {
-        en: "Great, thank you! Is this number on WhatsApp? And may I know your name? We'll send it in one or two working days.",
-        zh: '好，谢谢！这个号码有 WhatsApp 吗？请问怎么称呼？我们一两个工作天内发给你。',
-        ms: 'Baik, terima kasih! Nombor ini ada WhatsApp? Boleh saya tahu nama? Kami hantar dalam satu atau dua hari bekerja.',
+        en: "Great, thank you! Is this number on WhatsApp? And may I know your name? I'll send it right after this call.",
+        zh: '好，谢谢！这个号码有 WhatsApp 吗？请问怎么称呼？我挂了电话马上发给你。',
+        ms: 'Baik, terima kasih! Nombor ini ada WhatsApp? Boleh saya tahu nama? Saya hantar sebaik sahaja habis panggilan ini.',
       },
     };
     const steps = [['1 找老板', T.owner], ['2 介绍（15 秒）', T.intro], ['3 说下一步（不用问「可以吗」）', T.ask], ['4 对方没反对，收尾', T.close]];
@@ -285,17 +286,18 @@
   function renderCalls() {
     const q = S.cq;
     const p = q && S.items.find((x) => x.id === q.ids[q.i]);
-    if (!p) { const d = q || {}; S.cq = null; closeSheet(); render(); toast(`连续打电话结束：打了 ${d.calls || 0} 通，${d.ok || 0} 家说可以，发了 ${d.sent || 0} 个样板。`); return; }
+    if (!p) { const d = q || {}; S.cq = null; closeSheet(); render(); toast(`连续打电话结束：打了 ${d.calls || 0} 通，${d.ok || 0} 家说可以，发了 ${d.sent || 0} 家。`); return; }
     const sub = [p.area, LANG[p.language], STATUS[p.status], p.calls ? `打过 ${p.calls} 次` : ''].filter(Boolean).map(esc).join('<span class="dot">·</span>');
-    const pv = p.preview_url ? `<div class="pvbox"><div class="pvbox__row"><b>样板</b><a href="${esc(p.preview_url)}" target="_blank" rel="noopener">打开看看</a><span>密码 <code>${esc(p.preview_password || '')}</code></span></div>${pvChecked(p)}</div>` : '<p class="warnbadge">还没有样板：对方说可以的话，跟 Claude Code 说「帮我做 ' + esc(p.business_name) + ' 的样板」。</p>';
+    const pv = p.preview_url ? `<div class="pvbox"><div class="pvbox__row"><b>样板</b><a href="${esc(p.preview_url)}" target="_blank" rel="noopener">打开看看</a><span>密码 <code>${esc(p.preview_password || '')}</code></span></div>${pvChecked(p)}</div>` : (p.demo ? `<div class="pvbox"><div class="pvbox__row"><b>示范网站</b><a href="${esc(p.demo.url)}" target="_blank" rel="noopener">${esc(p.demo.zh || p.demo.name)}</a></div><p class="hint">不做样板（2026-11-15 起）：对方说可以，就发这个示范网站和价钱。</p></div>` : '<p class="hint">不做样板（2026-11-15 起）：对方说可以，就发工作室网站和价钱。</p>');
     let body;
     if (q.stage === 'send') {
       const field = p.draft_reply ? 'draft_reply' : 'preview_msg';
-      body = `<div class="cs-yes">${svg('check', 18)}<b>说可以了！现在发样板</b></div>
-        ${msgBox(p, field, '发给对方的信息（网址和密码已经填好）')}
+      const pvOk = hasMock(p);
+      body = `<div class="cs-yes">${svg('check', 18)}<b>${pvOk ? '说可以了！现在发样板' : '说可以了！现在发示范网站和价钱'}</b></div>
+        ${msgBox(p, field, pvOk ? '发给对方的信息（网址和密码已经填好）' : '发给对方的信息（示范网站和价钱已经填好）')}
         <div class="send"><span class="send__label">发送</span><div class="send__btns">${waNo(p) ? `<button class="btn btn--sm ch ch--wa" data-act="cs-wa" data-field="${field}" data-id="${p.id}">${svg('wa', 16)}WhatsApp ${esc(fmtPhone(waNo(p)))}</button>` : ''}${p.email ? `<button class="btn btn--sm ch ch--mail" data-act="email" data-field="${field}" data-id="${p.id}">${svg('mail', 16)}Email</button>` : ''}</div></div>
-        <div class="btnrow"><button class="btn" data-act="cs-sent" data-id="${p.id}">${svg('check', 16)}已发样板，下一家</button><button class="btn btn--ghost" data-act="cs-next">先不发，下一家</button></div>
-        <p class="hint">按 WhatsApp 会打开对方的对话，信息已经填好；看一遍按发送，回来按「已发样板，下一家」。${waNo(p) ? '' : '这个号码是座机：问对方的 WhatsApp，在卡片「编辑」补上，或者用 Email。'}</p>`;
+        <div class="btnrow"><button class="btn" data-act="cs-sent" data-id="${p.id}">${svg('check', 16)}已发，下一家</button><button class="btn btn--ghost" data-act="cs-next">先不发，下一家</button></div>
+        <p class="hint">按 WhatsApp 会打开对方的对话，信息已经填好；看一遍按发送，回来按「已发，下一家」。${waNo(p) ? '' : '这个号码是座机：问对方的 WhatsApp，在卡片「编辑」补上，或者用 Email。'}</p>`;
     } else {
       body = `<button class="btn btn--block cs-dial" data-act="cs-dial" data-id="${p.id}">${svg('phone', 18)}拨打 ${esc(fmtPhone(callNo(p)))}</button>
         ${pv}
@@ -381,6 +383,7 @@
   }
 
   // ------------------------------------------------------------ finished mockup on the card (2026-11-09)
+  const hasMock = (p) => !!(p.preview_url && p.preview_password); // a mockup exists (only after in-person visits since 2026-11-15)
   const hasPv = (p) => !!(p.preview_url && p.preview_password && p.preview_msg && p.status !== 'preview_sent');
   function pvBlock(p) {
     if (!p.preview_url || !p.preview_password || ['do_not_contact', 'won', 'lost'].includes(p.status)) return '';
@@ -429,9 +432,10 @@
       body += `<div class="btnrow btnrow--end">${sentBtn}${moreBtn}</div>`;
     } else if (p.status === 'replied') {
       if (p.draft_reply && p.call_ok) {
-        body += `<div class="cs-yes">${svg('check', 18)}<b>电话说可以：现在发样板</b></div>`;
-        body += msgBox(p, 'draft_reply', '发给对方的信息（网址和密码已经填好）') + sendRow(p, 'draft_reply');
-        body += `<div class="btnrow btnrow--end"><button class="btn btn--ghost btn--sm" data-act="pv-sent" data-id="${p.id}">${svg('check', 16)}已发样板</button>${moreBtn}</div>`;
+        const pvOk = hasMock(p);
+        body += `<div class="cs-yes">${svg('check', 18)}<b>${pvOk ? '电话说可以：现在发样板' : '电话说可以：现在发示范网站和价钱'}</b></div>`;
+        body += msgBox(p, 'draft_reply', pvOk ? '发给对方的信息（网址和密码已经填好）' : '发给对方的信息（示范网站和价钱已经填好）') + sendRow(p, 'draft_reply');
+        body += `<div class="btnrow btnrow--end">${pvOk ? `<button class="btn btn--ghost btn--sm" data-act="pv-sent" data-id="${p.id}">${svg('check', 16)}已发样板</button>` : sentBtn}${moreBtn}</div>`;
       } else if (p.draft_reply) {
         body += `<div class="draft"><b>对方意思：</b>${esc(p.reply_summary || '')}<br><b>下一步：</b>${esc(p.reply_next || '')}</div>`;
         body += msgBox(p, 'draft_reply', 'AI 起草的回信（看过再发）') + sendRow(p, 'draft_reply');
@@ -442,7 +446,7 @@
       }
     } else if (['contacted', 'preview_sent', 'proposal_sent', 'call_booked'].includes(p.status) && (due || msgFirst || mode === 'full')) {
       if (p.followup) {
-        body += msgBox(p, 'followup', p.status === 'contacted' ? (p.touches <= 1 ? (p.cfollow_v ? '第 2 条：免费样板、每月 RM169、节日预购网店 RM399（真网店示范）、手机店家后台' : '第 2 条：给一个有用的资讯') : '最后一条') : p.status === 'preview_sent' ? ['跟进信息（第 1 条：网址密码、适合他的示范网站、三种开始方式：RM800 起 / 每月 RM169 / 节日预购网店 RM399、手机店家后台）', '跟进信息（第 2 条：换一个有用的角度）', '最后一条（礼貌收尾）'][Math.min(2, p.pv_followups || 0)] : '跟进信息') + sendRow(p, 'followup');
+        body += msgBox(p, 'followup', p.status === 'contacted' ? (p.touches <= 1 ? (p.demo_sent ? '跟进：示范网站发了之后（再附连结，说可以发书面报价）' : p.cfollow_v ? '第 2 条：示范网站、每月 RM169、节日预购网店 RM399、手机店家后台、书面报价' : '第 2 条：给一个有用的资讯') : '最后一条') : p.status === 'preview_sent' ? ['跟进信息（第 1 条：网址密码、适合他的示范网站、三种开始方式：RM800 起 / 每月 RM169 / 节日预购网店 RM399、手机店家后台）', '跟进信息（第 2 条：换一个有用的角度）', '最后一条（礼貌收尾）'][Math.min(2, p.pv_followups || 0)] : '跟进信息') + sendRow(p, 'followup');
         body += `<div class="btnrow btnrow--end"><button class="btn btn--ghost btn--sm" data-act="reply" data-id="${p.id}">${svg('reply', 16)}对方有回复</button>${sentBtn}${moreBtn}</div>`;
       } else {
         body += `<div class="btnrow"><button class="btn btn--sm" data-act="followup" data-id="${p.id}">${svg('pen', 16)}写跟进信息${p.status === 'preview_sent' ? `（第 ${Math.min(3, (p.pv_followups || 0) + 1)} 条）` : ''}</button><button class="btn btn--ghost btn--sm" data-act="reply" data-id="${p.id}">${svg('reply', 16)}对方有回复</button>${moreBtn}</div>`;
@@ -506,7 +510,7 @@
     const newForms = (S.forms || []).filter((f) => !f.seen);
     if (newForms.length) h += sect('网站上的新申请', newForms.length, newForms.map(formRow).join(''), '', 's-forms');
     if (S.inbox.length) h += inboxSect();
-    if (sendNow.length) h += sect('电话说可以，现在发样板', sendNow.length, sendNow.map((p) => card(p)).join(''), '', 's-send');
+    if (sendNow.length) h += sect('电话说可以，现在发样板 / 示范网站', sendNow.length, sendNow.map((p) => card(p)).join(''), '', 's-send');
     if (replied.length) h += sect('有回复，等你回', replied.length, replied.map((p) => card(p)).join(''), '', 's-replied');
     if (viewed.length) h += sect('刚看过样板（48 小时内）：趁现在跟进', viewed.length, viewed.map(viewedRow).join(''), '', 's-viewed');
     if (calls.length) h += sect('今天要再打的电话', calls.length, calls.map((p) => card(p)).join(''), '');
@@ -518,7 +522,7 @@
     $('[data-today-list]').innerHTML = h;
   }
   // ------------------------------------------------------------ website forms (2026-11-12): free mockup requests and AI chat leads from /api/form
-  const FORM_NAME = { 'mockup-request': '网站上申请免费样板', 'ai-chat-lead': 'AI 客服留下的资料' };
+  const FORM_NAME = { 'mockup-request': '网站上的报价申请', 'ai-chat-lead': 'AI 客服留下的资料' };
   const FORM_FIELD = { name: '名字', brand: '品牌', whatsapp: 'WhatsApp', instagram: 'Instagram', email: 'Email', contact: '联系方式', shop_url: '店铺链接', template: '喜欢的模板', package: '套餐', products: '产品数量', message: '留言', interest: '想要什么', language: '语言', transcript: '对话' };
   function formRow(f) {
     const rows = Object.entries(f.fields || {}).filter(([k, v]) => v && k !== 'consent').map(([k, v]) => `<li><b>${esc(FORM_FIELD[k] || k)}</b> ${esc(String(v).slice(0, k === 'transcript' ? 600 : 300))}</li>`).join('');
@@ -595,7 +599,7 @@
     let weakest = '';
     if (contacted >= 20) {
       if (replied / contacted < 0.1) weakest = '回复率偏低：开场白的观察要更具体，或者多用 WhatsApp / Email。';
-      else if (reached('preview_sent') < replied * 0.4) weakest = '有回复但很少要样板：回信时先用费用计算器算给对方看，再提免费样板。';
+      else if (reached('proposal_sent') < replied * 0.4) weakest = '有回复但很少发报价：回信时先发适合他的示范网站，用费用计算器算给对方看，再发书面报价。';
       else if (reached('won') === 0 && reached('proposal_sent') >= 3) weakest = '有报价没成交：想想信任感（前 3 位客户满意才付尾款、7 天上线保证）和更小的第一步（节日预购网店 RM399、月付 RM169）。';
     }
     $('[data-stats]').innerHTML = `<h2>数字</h2>
@@ -928,12 +932,12 @@
       }
       if (act === 'cs-wa') {
         window.open(waLink(waNo(p), textOf(t, p)), '_blank', 'noopener');
-        S.cq.ch = 'wa'; toast('WhatsApp 已打开，信息已经填好，看一遍再发送，回来按「已发样板，下一家」。');
+        S.cq.ch = 'wa'; toast('WhatsApp 已打开，信息已经填好，看一遍再发送，回来按「已发，下一家」。');
         return;
       }
       if (act === 'cs-sent') {
         busy(t, true, '记录中…');
-        const j = await api('mark', { id: p.id, event: 'preview_sent', url: p.preview_url, channel: S.cq.ch || 'wa' });
+        const j = hasMock(p) ? await api('mark', { id: p.id, event: 'preview_sent', url: p.preview_url, channel: S.cq.ch || 'wa' }) : await api('mark', { id: p.id, event: 'sent', channel: S.cq.ch || 'wa' });
         upsert(j.item); S.cq.sent++; S.cq.ch = ''; nextCall();
         return;
       }

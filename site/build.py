@@ -1045,7 +1045,7 @@ class Studio:
 <header class="s-hdr"><div class="s-wrap s-hdr__in">
   <a class="s-logo" href="{root}index.html" aria-label="Cartsmith Studio home"><svg class="s-mark" viewBox="0 0 100 100" width="30" height="30" aria-hidden="true"><path d="M72.98 30.72A30 30 0 1 0 72.98 69.28" fill="none" stroke="currentColor" stroke-width="14"/><rect x="66" y="43" width="14" height="14" fill="#ff5a2c"/></svg><span>cartsmith<em>studio</em></span></a>
   <nav class="s-nav" aria-label="Main">{nav}</nav>
-  <a class="s-btn s-btn--sm s-hdr__cta" href="{root}start.html">Free mockup</a>
+  <a class="s-btn s-btn--sm s-hdr__cta" href="{root}start.html">Free quote</a>
   <button class="s-menu" type="button" aria-label="Menu" aria-expanded="false" data-s-menu>{icon('menu')}</button>
 </div></header>
 <main id="main">
@@ -1056,7 +1056,7 @@ class Studio:
     <p>Websites that take orders, for Malaysian restaurants, cafés, bakeries and local brands. Built, launched and looked after by one person you can actually reach.</p>
     <p><a class="s-ig" href="{e(ig['profile'])}" rel="noopener">{icon('ig')} @{e(ig['handle'])}</a></p></div>
   <div><h4>Studio</h4><ul><li><a href="{root}templates.html">Demo websites</a></li><li><a href="{root}pricing.html">Pricing</a></li><li><a href="{root}why-us.html">Why Cartsmith</a></li><li><a href="{root}process.html">How it works</a></li></ul></div>
-  <div><h4>Free tools</h4><ul><li><a href="{root}shopee-fee-calculator.html">Shopee fee calculator</a></li><li><a href="{root}start.html">Free homepage mockup</a></li><li><a href="{root}faq.html">FAQ</a></li></ul></div>
+  <div><h4>Free tools</h4><ul><li><a href="{root}shopee-fee-calculator.html">Shopee fee calculator</a></li><li><a href="{root}start.html">Free quote</a></li><li><a href="{root}faq.html">FAQ</a></li></ul></div>
   <div><h4>Talk to us</h4><ul><li><a href="{e(ig['dm'])}" rel="noopener">DM on Instagram</a></li><li><a href="{root}start.html">Request form</a></li><li><button class="s-linkbtn" type="button" data-chat-open>Ask the AI assistant</button></li></ul></div>
 </div>
 <div class="s-wrap s-ftr__bottom"><span>© {YEAR} Cartsmith Studio · Malaysia</span><span><a href="{root}privacy.html">Privacy</a> · Demos use fictional brands and Pexels photos.</span></div></footer>
@@ -1119,7 +1119,7 @@ class Studio:
 {f'<p class="pkg__founding">{e(p["founding"])}</p>' if p.get("founding") else ""}
 <p class="pkg__after">+ <b>RM{self.d['care']['plans'][0]['price']} a month</b> maintenance, first month free</p>
 <p class="pkg__meta">{e(p['meta'])}</p><ul class="s-ticks">{feats}</ul>
-<a class="s-btn s-btn--block{'' if p.get('highlight') else ' s-btn--ghost'}" href="{root}start.html?package={p['id']}">Get a free mockup first</a></article>""")
+<a class="s-btn s-btn--block{'' if p.get('highlight') else ' s-btn--ghost'}" href="{root}start.html?package={p['id']}">Get a free quote</a></article>""")
         return '<div class="pkgs">' + "".join(out) + "</div>"
 
     def frag_starts(self, root):
@@ -1145,7 +1145,7 @@ class Studio:
                 if p.get("real_shop"):
                     btns += f'<a class="sm__link" href="{e(p["real_shop"])}">Try the real shop (CNY, in Chinese) →</a>'
             else:
-                btns = (f'<a class="s-btn s-btn--sm" href="{root}start.html?package={p["id"]}">Get a free mockup first</a>'
+                btns = (f'<a class="s-btn s-btn--sm" href="{root}start.html?package={p["id"]}">Get a free quote</a>'
                         f'<a class="sm__link" href="{root}pricing.html#start-{p["id"]}">Full terms →</a>')
             out.append(f'<article class="sm" id="sm-{p["id"]}"><div class="sm__top"><h3>{e(p["name"])}</h3>'
                        f'<p class="sm__price"><span>RM</span>{p["price"]:,}<small>{e(p["unit"])}</small></p></div>'

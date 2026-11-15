@@ -14,7 +14,13 @@ Built into the desk by `python3 site/build.py` (file: `sales/agent/desk-brief.md
 
 ## 2. The steps, in order (what the desk calls them)
 1. **Research** (Claude Code): public info only (articles, listings). Contacts only if publicly given to customers.
-2. **Free mockup made BEFORE we contact them** ("样板"): a private website with their name, real products, real prices
+2. **Since 2026-11-15 we no longer make free mockups**, except for shops Junyu visits in person (地推). Every other shop
+   is shown the complete demo website that fits their kind of business: 4 flagship demos (Maison Cendre fine dining,
+   Sireh & Salt restaurants and cafés, Dulang & Daun bakeries and food brands, Butter & Lantern festive pre-order shop)
+   and 6 shop templates (Little Chili Pantry homemade food, Dewlane skincare, Lowlight Roasters coffee and tea,
+   Plainfold fashion and accessories, Tailmate pet supplies, Voltnest gadgets). The card shows which one fits.
+   NEVER offer to make a sample website or mockup. The next step after interest is a written quote.
+   **Older mockups (made before 2026-11-15, or for visited shops)** are described here: a private website with their name, real products, real prices
    where published (each price says its source and year), "Ask for price" where we could not find one, their address
    and opening hours. Photos are stock placeholders (Pexels), never their own photos. Items marked "Example" are OUR
    suggestions (e.g. a gift box, a whole tray, a bean subscription) — they are not on their menu.
@@ -23,14 +29,15 @@ Built into the desk by `python3 site/build.py` (file: `sales/agent/desk-brief.md
    Ordering mode on the mockup: "pickup" (order ahead, choose a pick-up date; sometimes local delivery or courier for
    beans / jars), "booking" (restaurants: choose a date and time to dine in), or a normal online shop with shipping.
    "样板已检查 <date>" = Claude Code checked it live on phone and desktop; it is ready to send.
-3. **Phone call first** (连续打电话): ask for the owner → 15-second intro saying the sample website is ALREADY made and
-   what is on it → say "I'll WhatsApp you the link right after this call" (a statement, not "can I…?") → if they don't
-   object, confirm the WhatsApp number and their name.
+3. **Phone call first** (连续打电话): ask for the owner → 15-second intro: we've built a complete demo website for shops
+   like theirs (or, if the card has a mockup, that their sample website is ALREADY made and what is on it) → say "I'll
+   WhatsApp you the demo and our prices right after this call" (a statement, not "can I…?") → if they don't object,
+   confirm the WhatsApp number and their name.
    Outcomes: 说可以 (yes) / 没接 (no answer, try again tomorrow, 3 times max) / 改天再打 (call back on a date) /
    不需要 (no — never contact again) / 已经有网站 (they have a website — close politely, never pitch).
-4. **Send the mockup** by WhatsApp (or email) right after the call: short message = who we are, the sample website is
-   already made for them, link + password, private and deleted on the date, no cost or obligation, our own site at the
-   end (https://cartsmithstudio.com/). If we were in touch before (a call or a message), the message says so.
+4. **Send the demo** (or the mockup, if the card has one) by WhatsApp right after the call: who we are, the demo
+   website that fits them, the three ways to start, our own site at the end (https://cartsmithstudio.com/), and that
+   they can reply for a written quote. If we were in touch before (a call or a message), the message says so.
 5. **Second call 1–2 days later**, and written follow-ups if the call does not connect — see section 2b. At most
    three written follow-ups after the mockup, then stop.
 6. **Interested** → a 15-minute call → written quotation within 24 hours (valid 14 days) → 50% deposit → build →
@@ -126,9 +133,9 @@ lost · no_response · do_not_contact. "Next follow-up" and "next call" dates ar
 - **No questions in customer messages** (no "?" / "？"): a yes/no question ("Can we…?", "Would you like…?", "Did you
   have a chance…?") makes "no" the easy answer. Use statements and one easy next step ("Just reply here and we'll…",
   "Send us a few photos and we'll put them in"). The desk rewrites any message that still has a question.
-- If the mockup is ready and not sent yet: the message carries the link and password (no need to ask permission
-  first). If no mockup yet: offer it as a statement — we'd be happy to make them a free sample website; just reply
-  here and we'll send it within 1–2 working days.
+- If the card has a mockup that is ready and not sent yet: the message carries the link and password (no need to ask
+  permission first). Otherwise never offer a sample website or mockup (stopped 2026-11-15): point to the demo website
+  that fits their kind of business and offer a written quote; just reply here.
 - Never say the photos are theirs; say they are placeholders and we can put in theirs for free.
 - Never promise sales, rankings or delivery dates; never invent clients, reviews, numbers, prices or offers.
   If a price or detail is not in the files, say we will confirm.

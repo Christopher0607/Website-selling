@@ -146,7 +146,7 @@ Rules:
 - Cartsmith is new and has no clients yet: never claim or imply past clients, results or numbers.
 - Messages: warm, short (max ~70 words, mockup link messages a little longer), sound like a real person writing to another business owner, no fake urgency, no guarantees. Do not describe their own shop back to them; one specific detail is enough.
 - NO QUESTIONS in messages to customers — not at the end, not anywhere (no "?" and no "？"). "Can we…?", "Would you like…?", "Are you interested?", "Did you have a chance…?" make "no" the easy answer. Write statements with one easy next step instead: "We've made a free sample website for you: <link>", "Just reply here and we'll…", "Send us a few photos and we'll put them in for free". (Questions to the OWNER in Chinese are fine; this rule is for customer messages.)
-- If this customer's free mockup is ready and not sent yet, the message carries the mockup link and password (see "How our system works"). If there is no mockup yet, offer it as a statement: we'd be happy to make them a free sample website with their name and menu; just reply here and we'll send it within 1–2 working days. Do not pitch packages or prices in a first message.
+- If this customer has a mockup that is ready and not sent yet (since 2026-11-15 only shops we visited in person get one), the message carries the mockup link and password (see "How our system works"). Otherwise NEVER offer to make a sample website or mockup (we stopped making them on 2026-11-15): point to the complete demo website that fits their kind of business (in the customer file) and offer a written quote; just reply here. Do not pitch packages or prices in a first message.
 - Questions about the mockup (products, prices, photos, hours, "Example" items) are answered ONLY from "What is on their mockup" in the customer file; prices there carry their source and year.
 - Voice and sign-off: write as "we" (the studio) and sign off as "Cartsmith Studio". NEVER use a personal name (no "Junyu", no "俊宇", no "[Your name]").
 - No emojis or emoticons at all, no hashtags, no exclamation-mark streaks. Plain, professional, friendly.
@@ -274,7 +274,7 @@ function customerFile(p) {
   const parts = [
     profile(p),
     `Today in Malaysia: ${myDate()}`,
-    `Status: ${p.status}${p.call_ok ? ' (said YES on the phone on ' + p.call_ok + ': send the mockup now)' : ''}; first contact ${p.first_contact_date || '-'}; last contact ${p.last_contact_date || '-'}; next follow-up ${p.next_followup_date || '-'}; channels used: ${(p.channels || []).join(', ') || '-'}`,
+    `Status: ${p.status}${p.call_ok ? ' (said YES on the phone on ' + p.call_ok + (p.preview_url ? ': send the mockup now)' : ': send the demo website that fits and our prices now)') : ''}${p.demo_sent ? '; we sent them the demo website that fits on ' + p.demo_sent : ''}; first contact ${p.first_contact_date || '-'}; last contact ${p.last_contact_date || '-'}; next follow-up ${p.next_followup_date || '-'}; channels used: ${(p.channels || []).join(', ') || '-'}`,
     `Calls: ${p.calls || 0} (no answer ${p.call_misses || 0}); last call ${p.last_call_date || '-'}; next call ${p.next_call_date || '-'}`,
     `Contacts: WhatsApp ${fmtNo(p.whatsapp)}; phone ${fmtNo(p.phone)}; email ${p.email || '-'}; area ${p.area || '-'}; address ${p.address || '-'}`,
     mockupFile(p),
@@ -402,6 +402,9 @@ function mark(p, ev, url, channel) {
     // we answered their reply → back to the earlier stage, check again in 3 days
     p.status = p.prev_status && !['new', 'replied'].includes(p.prev_status) ? p.prev_status : 'contacted';
     p.next_followup_date = myDate(3); p.last_contact_date = today; p.draft_reply = ''; p.followup = '';
+    // 2026-11-15: no mockup → after the call we send the demo that fits; the next follow-up is the "demo sent" one
+    if (p.call_ok && !p.preview_url) p.demo_sent = today;
+    p.call_ok = '';
   } else if (ev === 'sent') {
     p.touches = (p.touches || 0) + 1;
     p.first_contact_date = p.first_contact_date || today;
@@ -588,16 +591,34 @@ const DEMOS = {
   'maison-cendre': { name: 'Maison Cendre', zh: '精品餐厅', kind: { en: 'chef-led restaurants like yours', zh: '像你们这样的精品餐厅', ms: 'restoran seperti anda' } },
   'sireh-salt': { name: 'Sireh & Salt', zh: '一般餐厅、咖啡馆', kind: { en: 'restaurants and cafés like yours', zh: '餐厅和咖啡馆', ms: 'restoran dan kafe seperti anda' } },
   'dulang-daun': { name: 'Dulang & Daun', zh: '烘焙、糕点、食品礼盒', kind: { en: 'bakeries and food brands like yours', zh: '烘焙和食品品牌', ms: 'kedai kek, kuih dan jenama makanan seperti anda' } },
+  // 2026-11-15: the 6 shop templates (site/templates/) for sellers of other products
+  'chili-pantry': { name: 'Little Chili Pantry', zh: '酱料、零食、干货冷冻食品', kind: { en: 'homemade food brands like yours', zh: '自家食品品牌', ms: 'jenama makanan buatan sendiri seperti anda' } },
+  dewlane: { name: 'Dewlane', zh: '护肤、美妆', kind: { en: 'skincare and beauty brands like yours', zh: '护肤和美妆品牌', ms: 'jenama penjagaan kulit dan kecantikan seperti anda' } },
+  lowlight: { name: 'Lowlight Roasters', zh: '咖啡豆、茶叶、饮品', kind: { en: 'coffee and tea brands like yours', zh: '咖啡和茶叶品牌', ms: 'jenama kopi dan teh seperti anda' } },
+  plainfold: { name: 'Plainfold', zh: '服装、饰品', kind: { en: 'fashion and accessory brands like yours', zh: '服装和饰品品牌', ms: 'jenama fesyen dan aksesori seperti anda' } },
+  tailmate: { name: 'Tailmate', zh: '宠物用品', kind: { en: 'pet brands like yours', zh: '宠物用品品牌', ms: 'jenama barangan haiwan peliharaan seperti anda' } },
+  voltnest: { name: 'Voltnest', zh: '3C、电子配件', kind: { en: 'gadget and accessory shops like yours', zh: '3C 和配件网店', ms: 'kedai gajet dan aksesori seperti anda' } },
 };
-const RX_GOODS = /oolong|hojicha|tea-?bags?|tea leaves|ginger tea|cuttlefish|satay fish|\bdried\b|\bfrozen\b|murukku|kerepek|keropok|crackers?|jewel|skincare|own brand|\bbak(?:e|ed|er|ers|ery|eries|es|ing)\b|cake|kuih|kueh|p[aâ]tiss|pastr|\btarts?\b|cookie|biscuit|bread|\bbuns?\b|donut|doughnut|croissant|brownie|macaron|mochi|dessert|gelato|ice cream|chocolate|kaya|sambal|sauce|hamper|gift|\bbeans?\b|roaster|roastery|snack|granola|\bjams?\b|honey|\bkek\b/;
+const RX_SKIN = /skin ?care|beauty|cosmetic|serum|\bsoaps?\b|perfume|fragrance|haircare|hair care|\bnails?\b|make-?up/;
+const RX_FASHION = /fashion|apparel|clothing|clothes|tudung|hijab|scarf|scarves|modest wear|baju|jewel|accessor|handbags?|tote bags?|wallets?|\bshoes?\b|leather|watches/;
+const RX_PET = /\bpets?\b|cat food|dog food|\bdogs?\b|\bcats?\b|kibble|aquarium/;
+const RX_GADGET = /gadget|phone case|electronic|charger|audio|earphone|computer|gaming|\btech\b/;
+const RX_DRINKS = /coffee beans?|roaster|roastery|drip bags?|oolong|hojicha|ginger tea|tea-?bags?|tea leaves|matcha powder|\bteas?\b/;
+const RX_PANTRY = /sambal|sauce|chil?li|snack|\bdried\b|\bfrozen\b|murukku|kerepek|keropok|cuttlefish|satay fish|crackers?|\bjams?\b|honey|kaya|granola|rempah|spice|paste|health foods?/;
+const RX_BAKERY = /\bbak(?:e|ed|er|ers|ery|eries|es|ing)\b|cake|kuih|kueh|p[aâ]tiss|pastr|\btarts?\b|cookie|biscuit|bread|\bbuns?\b|donut|doughnut|croissant|brownie|macaron|mochi|dessert|gelato|ice cream|chocolate|\bkek\b|rice cakes?/;
+const RX_GOODS = /own brand|\bbak(?:e|ed|er|ers|ery|eries|es|ing)\b|cake|kuih|kueh|p[aâ]tiss|pastr|\btarts?\b|cookie|biscuit|bread|\bbuns?\b|donut|doughnut|croissant|brownie|macaron|mochi|dessert|gelato|ice cream|chocolate|kaya|sambal|sauce|hamper|gift|\bbeans?\b|roaster|roastery|snack|granola|\bjams?\b|honey|\bkek\b/;
 const RX_FINE = /kaiseki|omakase|fine[- ]?dining|tasting menu|degustation|chef'?s (?:table|counter)|chef-led|french|wine|bistro|dinner[- ]only|steak|contemporary|modern european|private dining|upscale|luxury/;
 const RX_FOOD = /caf[eé]|kopitiam|eatery|kitchen|food|f&b|grill|noodle|nasi|\bmee\b|dim sum|ramen|sushi|\bbar\b|cater|coffee|\btea\b|juice|brunch|western|thai|korean|japanese|chinese|malay|indian|mamak|vegetarian|vegan|seafood|bbq|burger|pizza|pasta|hotpot|steamboat|laksa|kebab|canteen|diner|warung/;
 function demoFor(p) {
   const t = `${p.niche || ''} ${p.business_name || ''}`.toLowerCase();
   // 2026-11-15: sellers on Shopee / Lazada / TikTok Shop → the online shop demo, whatever they sell
   const online = /shopee|shope\.ee|lazada|tiktok/.test(String(p.store_url || '').toLowerCase());
-  const slug = online ? 'dulang-daun' : /restaurant|restoran|dining/.test(t) ? (RX_FINE.test(t) ? 'maison-cendre' : 'sireh-salt')
-    : RX_GOODS.test(t) ? 'dulang-daun' : RX_FINE.test(t) ? 'maison-cendre' : RX_FOOD.test(t) ? 'sireh-salt' : '';
+  const goods = RX_SKIN.test(t) ? 'dewlane' : RX_FASHION.test(t) ? 'plainfold' : RX_PET.test(t) ? 'tailmate' : RX_GADGET.test(t) ? 'voltnest' : '';
+  const cafe = /caf[eé]|kopitiam|restaurant|restoran|dining|eatery|bistro/.test(t);
+  const beans = /roaster|roastery|coffee beans?|drip bags?/.test(t); // roasters sell beans: the coffee shop template
+  const slug = goods || (!online && /restaurant|restoran|dining/.test(t) ? (RX_FINE.test(t) ? 'maison-cendre' : 'sireh-salt')
+    : beans ? 'lowlight' : RX_BAKERY.test(t) ? 'dulang-daun' : (online || !cafe) && RX_DRINKS.test(t) ? 'lowlight' : (online || !cafe) && RX_PANTRY.test(t) ? 'chili-pantry'
+    : RX_GOODS.test(t) || online ? 'dulang-daun' : RX_FINE.test(t) ? 'maison-cendre' : RX_FOOD.test(t) ? 'sireh-salt' : '');
   return slug ? { slug, url: `${STUDIO_URL}demo/${slug}/`, ...DEMOS[slug] } : null;
 }
 // 2026-11-13: the real festive shop on WordPress (sites/demo-festive: Chinese New Year, in Chinese, with the owner's phone
@@ -629,11 +650,11 @@ const PVFOLLOW = {
 // Contacted before (usually on Instagram), no mockup yet: the 2nd message (2026-11-13) is a fixed template — the free
 // mockup offer, the three ways to start, the dashboard and the matching demo. Later ones stay AI-written. These cards are
 // mostly Instagram-only, and an Instagram DM holds about 1,000 characters, so this one stays under that (check-desk.js).
-const CFOLLOW_V = 3;
+const CFOLLOW_V = 4; // 4 (2026-11-15): no free sample website any more; the demo that fits them + a written quote
 const CFOLLOW = {
-  zh: (n, d, fl) => `你好，我是 Cartsmith Studio，前几天联系过你们。\n我们可以先免费帮 ${n} 做一个样板网站，放你们自己的产品和价钱；不用钱，也不用马上决定。\n\n开始的方式：\n1. 不用先付钱：每个月 ${MONTHLY_PRICE}，付 12 个月，主机和维护都包括在内。\n2. ${festiveName('zh')}的节日预购网店：${FESTIVE_PRICE}，3 个工作天上线。${isRealShop(fl) ? '这是我们刚做好的真网店，可以试着下单（不收钱）' : '样子可以看这里'}：\n${fl}\n3. 自己的完整网站：一次性 ${FROM_PRICE} 起，之后每月维护费 RM99，第一个月免费。\n每个网站都附一个用手机就能管的店家后台：订单、付款、库存、导出 Excel。\n${d ? `\n给${d.kind.zh}做的完整示范网站：\n${d.url}\n` : ''}\n全部示范和价钱：${STUDIO_URL}\n想要免费样板的话，回复这里就好。\n— Cartsmith Studio`,
-  en: (n, d, fl) => `Hi, Cartsmith Studio here. We got in touch a few days ago.\nWe can make a free sample website for ${n} first, with your own products and prices. No cost, no obligation.\n\nWays to start:\n1. Nothing upfront: ${MONTHLY_PRICE} a month for 12 months, hosting and maintenance included.\n2. A festive pre-order shop for ${festiveName('en')}: ${FESTIVE_PRICE}, live in 3 working days. ${isRealShop(fl) ? 'A real one you can try (nothing is charged)' : 'What one looks like'}:\n${fl}\n3. Your own full website from ${FROM_PRICE} one-off, then RM99 a month maintenance (first month free).\nEvery website comes with a simple shop dashboard on your phone: orders, payments, stock and an Excel export.\n${d ? `\nA complete demo for ${d.kind.en}:\n${d.url}\n` : ''}\nAll our demos and prices: ${STUDIO_URL}\nIf you'd like the free sample website, just reply here.\n— Cartsmith Studio`,
-  ms: (n, d, fl) => `Hai, Cartsmith Studio di sini. Kami ada hubungi anda beberapa hari lepas.\nKami boleh buat contoh laman web percuma untuk ${n} dahulu, dengan produk dan harga anda sendiri. Tiada bayaran, tiada komitmen.\n\nCara untuk mula:\n1. Tiada bayaran awal: ${MONTHLY_PRICE} sebulan selama 12 bulan, hosting dan penyelenggaraan termasuk.\n2. Kedai pre-order untuk ${festiveName('ms')}: ${FESTIVE_PRICE}, siap dalam 3 hari bekerja. ${isRealShop(fl) ? 'Kedai sebenar untuk dicuba (tiada bayaran)' : 'Contohnya'}:\n${fl}\n3. Laman web penuh dari ${FROM_PRICE} sekali bayar, kemudian penyelenggaraan RM99 sebulan (bulan pertama percuma).\nSetiap laman web ada papan pemuka kedai di telefon: pesanan, bayaran, stok, eksport Excel.\n${d ? `\nDemo lengkap untuk ${d.kind.ms}:\n${d.url}\n` : ''}\nSemua demo dan harga kami: ${STUDIO_URL}\nUntuk contoh percuma, balas sahaja di sini.\n— Cartsmith Studio`,
+  zh: (n, d, fl) => `你好，我是 Cartsmith Studio，前几天联系过你们。\n${d ? `我们做好了给${d.kind.zh}的完整示范网站，每个按钮都可以按，可以看看 ${n} 自己的网站能做到什么：\n${d.url}\n` : ''}\n开始的方式：\n1. 不用先付钱：每个月 ${MONTHLY_PRICE}，付 12 个月，主机和维护都包括在内。\n2. ${festiveName('zh')}的节日预购网店：${FESTIVE_PRICE}，3 个工作天上线。${isRealShop(fl) ? '这是我们刚做好的真网店，可以试着下单（不收钱）' : '样子可以看这里'}：\n${fl}\n3. 自己的完整网站：一次性 ${FROM_PRICE} 起，之后每月维护费 RM99，第一个月免费。\n每个网站都附一个用手机就能管的店家后台：订单、付款、库存、导出 Excel。\n\n全部示范和价钱：${STUDIO_URL}\n想要 ${n} 的书面报价，回复这里就好，我们一个工作天内发给你。\n— Cartsmith Studio`,
+  en: (n, d, fl) => `Hi, Cartsmith Studio here. We got in touch a few days ago.\n${d ? `We've built a complete demo website for ${d.kind.en}. Every button works, so you can see what a website for ${n} could do:\n${d.url}\n` : ''}\nWays to start:\n1. Nothing upfront: ${MONTHLY_PRICE} a month for 12 months, hosting and maintenance included.\n2. A festive pre-order shop for ${festiveName('en')}: ${FESTIVE_PRICE}, live in 3 working days. ${isRealShop(fl) ? 'A real one you can try (nothing is charged)' : 'What one looks like'}:\n${fl}\n3. Your own full website from ${FROM_PRICE} one-off, then RM99 a month maintenance (first month free).\nEvery website comes with a simple shop dashboard on your phone: orders, payments, stock and an Excel export.\n\nAll our demos and prices: ${STUDIO_URL}\nFor a written quote for ${n}, just reply here and we'll send it within one working day.\n— Cartsmith Studio`,
+  ms: (n, d, fl) => `Hai, Cartsmith Studio di sini. Kami ada hubungi anda beberapa hari lepas.\n${d ? `Kami sudah siapkan laman web demo lengkap untuk ${d.kind.ms}. Semua butang boleh ditekan, jadi anda boleh lihat apa yang laman web ${n} boleh buat:\n${d.url}\n` : ''}\nCara untuk mula:\n1. Tiada bayaran awal: ${MONTHLY_PRICE} sebulan selama 12 bulan, hosting dan penyelenggaraan termasuk.\n2. Kedai pre-order untuk ${festiveName('ms')}: ${FESTIVE_PRICE}, siap dalam 3 hari bekerja. ${isRealShop(fl) ? 'Kedai sebenar untuk dicuba (tiada bayaran)' : 'Contohnya'}:\n${fl}\n3. Laman web penuh dari ${FROM_PRICE} sekali bayar, kemudian penyelenggaraan RM99 sebulan (bulan pertama percuma).\nSetiap laman web ada papan pemuka kedai di telefon: pesanan, bayaran, stok, eksport Excel.\n\nSemua demo dan harga kami: ${STUDIO_URL}\nUntuk sebut harga bertulis bagi ${n}, balas sahaja di sini dan kami hantar dalam satu hari bekerja.\n— Cartsmith Studio`,
 };
 const cFollow = (p) => (CFOLLOW[p.language] || CFOLLOW.en)(p.business_name, demoFor(p), festDemo(p));
 const PVMSG = {
@@ -659,7 +680,7 @@ function refreshPreviewMsgs(doc) {
       p.followup = pvFollow(p); p.followup_v = PVFOLLOW_V; changed = true;
     }
     // contacted, no mockup, one message so far: the 2nd message is the fixed template (unless an AI-written one is waiting)
-    if (p.status === 'contacted' && !p.preview_url && (p.touches || 0) <= 1 && (!p.followup || (p.cfollow_v && p.cfollow_v < CFOLLOW_V))) {
+    if (p.status === 'contacted' && !p.preview_url && !p.demo_sent && (p.touches || 0) <= 1 && (!p.followup || (p.cfollow_v && p.cfollow_v < CFOLLOW_V))) {
       p.followup = cFollow(p); p.cfollow_v = CFOLLOW_V; changed = true;
     }
   }
@@ -734,6 +755,12 @@ const POSTCALL = {
   en: (n, u, pw) => `Hi, this is Cartsmith Studio. Thanks for taking our call just now.\n\nHere's the free sample website we made for ${n}:\n${u || '[mockup link]'}\nPassword: ${pw || '[password]'}\n\nIt opens best on your phone; the photos are placeholders. It's private to you and will be deleted within 14 days. We'll give you a quick call in a couple of days to hear what you think, or just reply here, and no worries if it's not for you.\n\nAbout us: ${STUDIO_URL}\n— Cartsmith Studio`,
   ms: (n, u, pw) => `Hai, ini Cartsmith Studio. Terima kasih kerana sudi bercakap dengan kami tadi.\n\nIni contoh laman web percuma yang kami buat untuk ${n}:\n${u || '[pautan contoh]'}\nKata laluan: ${pw || '[kata laluan]'}\n\nBuka di telefon untuk tengok; gambar hanya contoh. Ia hanya untuk anda dan akan dipadam dalam 14 hari. Kami akan telefon dalam dua tiga hari untuk dengar pendapat anda, atau balas sahaja di sini, tiada masalah kalau tak berminat.\n\nTentang kami: ${STUDIO_URL}\n— Cartsmith Studio`,
 };
+// 2026-11-15: no mockup → the demo website that fits them, the ways to start and a written quote
+const POSTCALL_DEMO = {
+  zh: (n, d, fl) => `你好，我是 Cartsmith Studio，刚刚跟你通过电话，谢谢你抽时间。\n\n${d ? `这是电话里说的、给${d.kind.zh}的完整示范网站，每个按钮都可以按：\n${d.url}\n\n` : ''}开始的方式：\n${WAYS.zh(fl)}\n\n全部示范和价钱：${STUDIO_URL}\n想要 ${n} 的书面报价，回复这里就好；不合适也没关系。\n— Cartsmith Studio`,
+  en: (n, d, fl) => `Hi, this is Cartsmith Studio. Thanks for taking our call just now.\n\n${d ? `Here's the complete demo website for ${d.kind.en} we mentioned. Every button works:\n${d.url}\n\n` : ''}Ways to start:\n${WAYS.en(fl)}\n\nAll our demos and prices: ${STUDIO_URL}\nFor a written quote for ${n}, just reply here. No worries if it's not for you.\n— Cartsmith Studio`,
+  ms: (n, d, fl) => `Hai, ini Cartsmith Studio. Terima kasih kerana sudi bercakap dengan kami tadi.\n\n${d ? `Ini laman web demo lengkap untuk ${d.kind.ms} yang kami sebut tadi. Semua butang boleh ditekan:\n${d.url}\n\n` : ''}Cara untuk mula:\n${WAYS.ms(fl)}\n\nSemua demo dan harga kami: ${STUDIO_URL}\nUntuk sebut harga bertulis bagi ${n}, balas sahaja di sini. Tiada masalah kalau tak berminat.\n— Cartsmith Studio`,
+};
 function callInto(p, outcome, date) {
   if (!CALL_OUTCOMES.includes(outcome)) throw Object.assign(new Error('电话结果不对'), { code: 'bad_input' });
   const today = myDate();
@@ -756,12 +783,14 @@ function callInto(p, outcome, date) {
     p.next_call_date = '';
     p.next_followup_date = '';
     p.call_ok = today;
-    p.reply_summary = '电话：对方说可以，发样板给他看。';
-    p.reply_next = p.preview_url && p.preview_password
+    const pv = !!(p.preview_url && p.preview_password);
+    p.reply_summary = pv ? '电话：对方说可以，发样板给他看。' : '电话：对方说可以，发适合他的示范网站和价钱。';
+    p.reply_next = pv
       ? '样板已经做好，网址和密码已经填进下面的信息：按 WhatsApp 发给他，看一遍再按发送。'
-      : '做样板（跟 Claude Code 说「帮我做 ' + p.business_name + ' 的样板」），把网址和密码贴进下面的信息，再用 WhatsApp / Email 发出去。';
-    p.draft_reply = (POSTCALL[p.language] || POSTCALL.en)(p.business_name, p.preview_url, p.preview_password);
-    log(p, 'call', '可以发样板');
+      : '下面的信息已经附上适合他的示范网站和三种开始方式：按 WhatsApp 发给他。他要报价的话，跟 Claude Code 说「帮 ' + p.business_name + ' 做报价单」。';
+    p.draft_reply = pv ? (POSTCALL[p.language] || POSTCALL.en)(p.business_name, p.preview_url, p.preview_password)
+      : (POSTCALL_DEMO[p.language] || POSTCALL_DEMO.en)(p.business_name, demoFor(p), festDemo(p));
+    log(p, 'call', pv ? '可以发样板' : '可以发示范网站');
   } else if (outcome === 'callback') {
     const d = /^\d{4}-\d{2}-\d{2}$/.test(date || '') && date >= today ? date : myDate(1);
     p.next_call_date = d;
@@ -923,8 +952,10 @@ async function handle(action, b, doc) {
             ? `LAST polite message after the mockup: very short; the sample website stays up until ${p.preview_delete_by || 'its delete date'} and is then deleted; if the timing is not right, they can message us here any time. No price, no pressure, no questions`
             : hasPv && p.status !== 'preview_sent'
           ? 'they did not answer our earlier message; the free mockup is ready: send it now (link and password), say briefly that we wrote before'
+          : p.demo_sent && (p.touches || 0) <= 1
+            ? `FIRST follow-up after we sent the demo website that fits on ${p.demo_sent} (they said yes on the phone): short and friendly; the demo link again so it is easy to find (${demoFor(p) ? demoFor(p).url : STUDIO_URL}); one useful point for their kind of shop; we can send a written quote with fixed prices within one working day, they only need to reply here (for example how many items and how they take orders today); never offer a sample website or mockup; no pressure`
           : (p.touches || 0) <= 1
-            ? `gentle follow-up: one short, useful point for their kind of shop (e.g. taking pre-orders or bookings without answering every DM), then offer a free sample website as a statement with an easy next step; then the ways to start in one or two lines: nothing upfront and ${MONTHLY_PRICE} a month for 12 months, or a festive pre-order shop for ${FESTIVE_PRICE} (live in 3 working days) with the link ${festDemo(p)}; every website comes with a simple shop dashboard on the phone (no questions)`
+            ? `gentle follow-up: one short, useful point for their kind of shop (e.g. taking pre-orders or bookings without answering every DM), then the complete demo website that fits their kind of shop (${demoFor(p) ? demoFor(p).url : STUDIO_URL}) and a written quote, as a statement with an easy next step (never offer a sample website or mockup); then the ways to start in one or two lines: nothing upfront and ${MONTHLY_PRICE} a month for 12 months, or a festive pre-order shop for ${FESTIVE_PRICE} (live in 3 working days) with the link ${festDemo(p)}; every website comes with a simple shop dashboard on the phone (no questions)`
             : 'last polite message: short, no pressure, door open';
       const out = await ask(`Write the next message for this prospect: ${kind}.\n${customerFile(p)}`, MESSAGE);
       p.followup = await noQuestions(out.message);
