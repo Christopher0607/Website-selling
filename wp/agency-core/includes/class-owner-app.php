@@ -261,7 +261,7 @@ class AGC_Owner_App {
 			'shop'     => home_url( '/' ),
 			'admin'    => admin_url(),
 			'orders'   => admin_url( 'edit.php?post_type=shop_order' ),
-			'logout'   => wp_logout_url( self::url() ),
+			'logout'   => html_entity_decode( wp_logout_url( self::url() ), ENT_QUOTES ), // wp_logout_url() escapes & as &amp; (for HTML); the script needs a plain URL.
 			'user'     => $user->display_name,
 			'currency' => html_entity_decode( get_woocommerce_currency_symbol(), ENT_QUOTES, 'UTF-8' ),
 			'can'      => array(
