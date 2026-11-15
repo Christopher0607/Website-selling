@@ -125,6 +125,10 @@ class AGC_Receipts {
 		}
 		$back = $order->get_checkout_order_received_url();
 		$ref  = wp_get_referer();
+		if ( $ref && '/' === $ref[0] && '/' !== ( $ref[1] ?? '' ) ) {
+			// The form's own referer field is a path (/order/?o=…): make it a full address on this site (2026-11-15, skin thank-you page).
+			$ref = preg_replace( '#^(https?://[^/]+).*$#', '$1', home_url() ) . $ref;
+		}
 		if ( $ref && false !== strpos( $ref, (string) wp_parse_url( home_url(), PHP_URL_HOST ) ) ) {
 			$back = remove_query_arg( 'receipt', $ref );
 		}

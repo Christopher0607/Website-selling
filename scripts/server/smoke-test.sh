@@ -92,9 +92,17 @@ SM=$("${CURL[@]}" -o /dev/null -w '%{http_code}' "$URL/sitemap_index.xml" 2>/dev
   SM=$("${CURL[@]}" -o /dev/null -w '%{http_code}' -L "$URL/wp-sitemap.xml" 2>/dev/null || echo 000)
   [[ "$SM" == 200 ]] && pass "Sitemap" "/wp-sitemap.xml" || fail "Sitemap" "HTTP $SM"; }
 if [[ $SHOP == 1 ]]; then
-  check_200 "/shop/" "商店 Shop"
-  check_200 "/cart/" "购物车 Cart"
-  check_200 "/checkout/" "结账 Checkout" 302   # 购物车是空的时候会跳回购物车
+  SHOPLOC=$("${CURL[@]}" -o /dev/null -w '%{http_code} %{redirect_url}' "$URL/shop/" 2>/dev/null || echo 000)
+  if [[ "$SHOPLOC" =~ ^302\ .*/menu/$ ]]; then
+    # 店家自己的设计（agency-core class-skin.php，2026-11-15）：商店 → /menu/、购物车 → /order/
+    check_200 "/menu/" "菜单 Menu（店家设计）"
+    check_200 "/order/" "下单 Order（店家设计）"
+    check_200 "/festive/" "节日预购 Festive（店家设计）"
+  else
+    check_200 "/shop/" "商店 Shop"
+    check_200 "/cart/" "购物车 Cart"
+    check_200 "/checkout/" "结账 Checkout" 302   # 购物车是空的时候会跳回购物车
+  fi
 fi
 # 6. 不该被打开的文件
 XC=$("${CURL[@]}" -o /dev/null -w '%{http_code}' "$URL/xmlrpc.php" 2>/dev/null || echo 000)

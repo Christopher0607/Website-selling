@@ -6,7 +6,7 @@
  * - Collection only (no delivery yet): one zone for Malaysia with "Pick up at the bakery".
  * - Payment: DuitNow QR with a receipt upload (works on a real shop straight away); in preview mode also a demo
  *   online payment that charges nothing. The owner's own payment gateway goes in at handover.
- * - Items without a price (SKU TBT-X-…) stay as drafts: the owner types the price in the shop dashboard (/dian/) and
+ * - Items without a price stay as drafts: the owner types the price in the shop dashboard (/dian/) and
  *   switches them on.
  * - Products in CSV order; English titles for the shop pages.
  *
@@ -68,7 +68,7 @@ foreach ( $ids as $i => $id ) {
 	}
 	wp_update_post( array( 'ID' => $id, 'menu_order' => $i ) );
 	$priced = '' !== (string) $p->get_regular_price();
-	if ( 0 === strpos( (string) $p->get_sku(), 'TBT-X-' ) && ! $priced ) {
+	if ( ! $priced ) {
 		$p->set_status( 'draft' );
 		$p->save();
 		$off++;

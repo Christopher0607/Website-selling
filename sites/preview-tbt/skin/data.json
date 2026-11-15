@@ -1,0 +1,331 @@
+{
+ "menu": [
+  {
+   "id": "cranberry-country",
+   "cat": "loaves",
+   "n": "Cranberry Pumpkin Seed Country",
+   "d": "Country-style sourdough made with French flour, laced with cranberries and pumpkin seeds: a crunchy bite and a soft, spongy chew.",
+   "p": 14,
+   "tags": [
+    "pop"
+   ],
+   "heat": 0
+  },
+  {
+   "id": "wheat-country",
+   "cat": "loaves",
+   "n": "Home Milled Wheat Country",
+   "d": "A classic loaf from wheat we mill ourselves on our stone miller.",
+   "p": 12,
+   "tags": [
+    "pop"
+   ],
+   "heat": 0
+  },
+  {
+   "id": "cheddar-boule",
+   "cat": "loaves",
+   "n": "Cream Cheese Cheddar Boule",
+   "d": "Our bestseller: Japanese flour for a soft, light crumb, with Australian cream cheese and cheddar. Slice and serve.",
+   "p": 18,
+   "tags": [
+    "pop"
+   ],
+   "heat": 0
+  },
+  {
+   "id": "blueberry-rye",
+   "cat": "loaves",
+   "n": "Blueberry Raisin Cream Cheese Rye",
+   "d": "An original Baking Trip creation, country-style with rye flour. Good on its own, no butter or jam needed.",
+   "p": 12,
+   "tags": [],
+   "heat": 0
+  },
+  {
+   "id": "italian-country",
+   "cat": "loaves",
+   "n": "Italian Classic Country",
+   "d": "Our Italian baker friends’ way: saltless sourdough with a little sugar and olive oil, and a thin, crisp crust.",
+   "p": 13,
+   "tags": [],
+   "heat": 0,
+   "img": false
+  },
+  {
+   "id": "coffee-sourdough",
+   "cat": "loaves",
+   "n": "Sourdough Coffee",
+   "d": "A sourdough loaf made with coffee.",
+   "p": 15,
+   "tags": [],
+   "heat": 0,
+   "img": false
+  },
+  {
+   "id": "miso-loaf",
+   "cat": "loaves",
+   "n": "Miso Sourdough Loaf",
+   "d": "Sourdough with miso.",
+   "p": null,
+   "tags": [],
+   "heat": 0,
+   "img": false
+  },
+  {
+   "id": "choc-boule",
+   "cat": "loaves",
+   "n": "78% Dark Chocolate Boule",
+   "d": "Sourdough boule with 78% dark chocolate.",
+   "p": null,
+   "tags": [],
+   "heat": 0
+  },
+  {
+   "id": "milk-loaf",
+   "cat": "loaves",
+   "n": "Sourdough Milk Sandwich Loaf",
+   "d": "A soft milk loaf for sandwiches, made with sourdough.",
+   "p": null,
+   "tags": [],
+   "heat": 0
+  },
+  {
+   "id": "babka",
+   "cat": "loaves",
+   "n": "Cinnamon Babka",
+   "d": "Twisted sourdough babka with cinnamon.",
+   "p": null,
+   "tags": [],
+   "heat": 0
+  },
+  {
+   "id": "bagel",
+   "cat": "buns",
+   "n": "Classic Bagel",
+   "d": "The first sourdough bread we ever made: a confident chew, plain or with your own cream cheese.",
+   "p": 8,
+   "tags": [
+    "pop"
+   ],
+   "heat": 0
+  },
+  {
+   "id": "frank-roll",
+   "cat": "buns",
+   "n": "Smoked Chicken Frankfurter Sausage Roll",
+   "d": "Single-serving, sourdough-based.",
+   "p": null,
+   "tags": [],
+   "heat": 0
+  },
+  {
+   "id": "curry-pan",
+   "cat": "buns",
+   "n": "Japanese Curry Chicken Sausage Pan",
+   "d": "Single-serving, sourdough-based.",
+   "p": null,
+   "tags": [],
+   "heat": 0,
+   "img": false
+  },
+  {
+   "id": "bolognese-pan",
+   "cat": "buns",
+   "n": "Red Bolognese Sausage Pan",
+   "d": "Single-serving, sourdough-based.",
+   "p": null,
+   "tags": [],
+   "heat": 0,
+   "img": false
+  },
+  {
+   "id": "olive-cube",
+   "cat": "buns",
+   "n": "Black Olive & Cheddar Cube Pan",
+   "d": "Single-serving, sourdough-based.",
+   "p": null,
+   "tags": [],
+   "heat": 0,
+   "img": false
+  },
+  {
+   "id": "tomato-cheese-pan",
+   "cat": "buns",
+   "n": "Red Yeast Tomato Cheese Pan",
+   "d": "Single-serving, sourdough-based.",
+   "p": null,
+   "tags": [],
+   "heat": 0,
+   "img": false
+  },
+  {
+   "id": "pistachio-brioche",
+   "cat": "buns",
+   "n": "Pistachio Twist Brioche",
+   "d": "Single-serving, sourdough-based.",
+   "p": null,
+   "tags": [],
+   "heat": 0,
+   "img": false
+  },
+  {
+   "id": "sesame-truffle-roll",
+   "cat": "buns",
+   "n": "Black Sesame Truffle Butter Roll",
+   "d": "Single-serving, sourdough-based.",
+   "p": null,
+   "tags": [],
+   "heat": 0,
+   "img": false
+  },
+  {
+   "id": "grilled-cheese",
+   "cat": "sandwiches",
+   "n": "Grilled Cheese Sandwich",
+   "d": "On our sourdough, not too tough or sour. Double cheese (cheddar and mozzarella), caramelised onion, kimchi or gochujang tofu.",
+   "p": null,
+   "tags": [],
+   "heat": 0,
+   "img": false,
+   "o": [
+    {
+     "n": "Filling",
+     "one": true,
+     "def": 0,
+     "v": [
+      [
+       "Double grilled cheese",
+       0
+      ],
+      [
+       "Caramelised onion",
+       0
+      ],
+      [
+       "Kimchi",
+       0
+      ],
+      [
+       "Gochujang tofu",
+       0
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "amai-genmai",
+   "cat": "cakes",
+   "n": "Amai Genmai Pistachio Cake",
+   "d": "Our signature: Japanese green tea and roasted rice with pistachios and fresh cream, with a gentle bitterness. RM15–18 a slice in the shop; a whole cake is 10 slices.",
+   "p": null,
+   "tags": [
+    "pop"
+   ],
+   "heat": 0
+  },
+  {
+   "id": "black-sesame-cake",
+   "cat": "cakes",
+   "n": "Black Sesame Milk Pistachio Cake",
+   "d": "On rotation. RM15–18 a slice in the shop; a whole cake is 10 slices.",
+   "p": null,
+   "tags": [],
+   "heat": 0
+  },
+  {
+   "id": "tiramisu-cake",
+   "cat": "cakes",
+   "n": "Tiramisu with Baileys Irish Cream",
+   "d": "On rotation. RM15–18 a slice in the shop; a whole cake is 10 slices.",
+   "p": null,
+   "tags": [],
+   "heat": 0
+  },
+  {
+   "id": "thai-milk-tea-cake",
+   "cat": "cakes",
+   "n": "Thai Milk Tea Coconut Cake",
+   "d": "On rotation. RM15–18 a slice in the shop; a whole cake is 10 slices.",
+   "p": null,
+   "tags": [],
+   "heat": 0
+  },
+  {
+   "id": "coffee",
+   "cat": "drinks",
+   "n": "Hand Brewed Coffee",
+   "d": "Sumatra Aceh Gayo Ketiara Hutan or Nicaragua Finca Los Altiplanos.",
+   "p": 15,
+   "tags": [],
+   "heat": 0,
+   "o": [
+    {
+     "n": "Beans",
+     "one": true,
+     "def": 0,
+     "v": [
+      [
+       "Sumatra Aceh Gayo (cacao nibs, blackcurrant, ripe prune)",
+       0
+      ],
+      [
+       "Nicaragua Finca Los Altiplanos (red grape, chocolate)",
+       0
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "matcha-latte",
+   "cat": "drinks",
+   "n": "Matcha Latte",
+   "d": "For the garden seats outside.",
+   "p": null,
+   "tags": [],
+   "heat": 0,
+   "img": false
+  }
+ ],
+ "seasons": [
+  {
+   "id": "xmas",
+   "name": "Christmas 2026",
+   "cutoff": "2026-12-20",
+   "from": "2026-12-23",
+   "to": "2026-12-24",
+   "img": "babka",
+   "blurb": "Babka and whole cakes reserved before the holidays, picked up at the house on 23 or 24 December.",
+   "items": [
+    {
+     "id": "xmas-babka",
+     "n": "Cinnamon Babka",
+     "p": null,
+     "img": "babka",
+     "total": 30,
+     "left": 30,
+     "dep": 1,
+     "has": [
+      "Sourdough cinnamon babka",
+      "Pick up on 23 or 24 December"
+     ]
+    },
+    {
+     "id": "xmas-amai",
+     "n": "Whole Amai Genmai Pistachio Cake",
+     "p": null,
+     "img": "amai-genmai",
+     "total": 15,
+     "left": 15,
+     "dep": 1,
+     "has": [
+      "10 slices",
+      "Green tea, roasted rice, pistachio and fresh cream"
+     ]
+    }
+   ]
+  }
+ ]
+}

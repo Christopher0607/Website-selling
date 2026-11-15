@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Your pre-order — The Baking Trip</title>
+<meta name="description" content="Pre-order sourdough, bagels and cakes for pick-up at The Baking Trip, Happy Garden. Pre-order online for pick-up.">
+<meta name="theme-color" content="#2c2621">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231d3b2a'/%3E%3Cpath d='M20 44c0-14 10-24 26-26-2 16-12 26-26 26z' fill='%23e0a526'/%3E%3Cpath d='M20 44l16-16' stroke='%231d3b2a' stroke-width='3'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&amp;family=Manrope:wght@400;500;600;700;800&amp;display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-page="order">
+<a class="skip" href="#main">Skip to content</a>
+<!--demo--><div class="demobar">
+  <p><b>Private preview.</b> <span class="dm-long">Made by Cartsmith Studio for The Baking Trip: this is the real shop, not live yet. Nothing is charged.</span><span class="dm-short">Made for The Baking Trip by Cartsmith Studio. Not live yet.</span></p>
+  <a href="https://cartsmithstudio.com/" target="_blank" rel="noopener">Cartsmith Studio <span aria-hidden="true">&rarr;</span></a>
+</div><!--/demo-->
+<header class="hdr">
+  <div class="wrap hdr__in">
+    <a class="logo" href="/" aria-label="The Baking Trip, home">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M8 32C8 17 18 8 34 6c-2 16-11 26-26 26z" fill="currentColor"/><path d="M8 32 25 15" stroke="var(--paper)" stroke-width="2.2" stroke-linecap="round"/></svg>
+      <span>The Baking Trip</span>
+    </a>
+    <nav class="nav" id="nav" aria-label="Main">
+      <a href="/menu/" data-nav="menu">Breads &amp; cakes</a>
+      <a href="/order/" data-nav="order">Pre-order</a>
+      <a href="/catering/" data-nav="catering">Whole cakes</a>
+      <a href="/festive/" data-nav="festive">Christmas</a>
+      <!--demo--><a href="/dian/" data-nav="owner" class="nav__owner">Owner view</a><!--/demo-->
+    </nav>
+    <div class="hdr__right">
+      <span class="status" data-status></span>
+      <a class="bagbtn" href="/order/" aria-label="Your order"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8h12l-1 12H7L6 8z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 8V6a3 3 0 0 1 6 0v2" fill="none" stroke="currentColor" stroke-width="1.8"/></svg><b data-bag-count hidden>0</b></a>
+      <button class="burger" type="button" aria-label="Open menu" aria-controls="nav" aria-expanded="false" data-burger><span></span></button>
+    </div>
+  </div>
+</header>
+<main id="main">
+<section class="wrap" style="padding-top:30px">
+  <p class="kicker">Pick up at the house</p>
+  <h1 style="font-size:clamp(2rem,5vw,3.1rem)">Your pre-order</h1>
+  <p class="lead">Choose a day and time and it’s packed when you arrive.<!--demo--> Preview: nothing is charged.<!--/demo--></p>
+</section>
+<div class="wrap" data-order></div>
+
+</main>
+<footer class="ftr">
+  <div class="wrap ftr__grid">
+    <div>
+      <a class="logo logo--light" href="/"><span>The Baking Trip</span></a>
+      <p>A sourdough bakery in a house in Happy Garden: country loaves, bagels and buns baked from 5am, and cakes for celebrations.</p>
+      <p class="ftr__demo">A6, Jalan Rukun 7, Taman Gembira (Happy Garden), 58200 Kuala Lumpur<br>WhatsApp 019-576 1419 · IG @_thebakingtrip_</p>
+    </div>
+    <div data-ftr-hours><h3>Opening hours</h3><div data-hours></div></div>
+    <div>
+      <h3>On this website</h3>
+      <ul class="ftr__links">
+        <li><a href="/menu/">Breads &amp; cakes</a></li>
+        <li><a href="/order/">Pre-order for pick-up</a></li>
+        <li><a href="/catering/">Whole cakes</a></li>
+        <li><a href="/festive/">Christmas pre-orders</a></li>
+        <!--demo--><li><a href="/dian/">Owner view</a></li><!--/demo-->
+      </ul>
+    </div>
+  </div>
+  <div class="wrap ftr__base">
+    <!--demo--><p>A private preview by <a href="https://cartsmithstudio.com/">Cartsmith Studio</a> for The Baking Trip. Not live yet: nothing is charged. Photos and prices: Eat Drink KL (May 2023), used here only to preview; your website uses your own photos and today’s prices.</p>
+    <a class="ftr__cta" href="https://cartsmithstudio.com/pricing.html">Your own website from RM800</a><!--/demo-->
+    <!--live--><p>&copy; The Baking Trip</p><!--/live-->
+    <p class="ftr__legal"><a href="/track-order/">Track my order</a> · <a href="/shipping-returns/">Collection &amp; refunds</a> · <a href="/privacy/">Privacy</a> · <a href="/terms/">Terms</a></p>
+  </div>
+</footer>
+<div class="sheet" data-sheet hidden>
+  <div class="sheet__back" data-close></div>
+  <div class="sheet__panel" role="dialog" aria-modal="true" aria-labelledby="sheet-title" tabindex="-1"></div>
+</div>
+<div class="toast" data-toast role="status" aria-live="polite"></div>
+<!--AGC_SKIN--><script src="app.js"></script>
+</body>
+</html>

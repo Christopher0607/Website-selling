@@ -37,6 +37,25 @@ ARGS=(--no-plugins --brand "$SRC_DIR/brand-config.json" --force-pages)
 "$D/install-code.sh" "$SLUG_ARG" both
 "$D/setup-store.sh" "$SLUG_ARG" "${ARGS[@]}"
 
+# 店家自己的设计（2026-11-15，The Baking Trip：网站要跟给店家看的样板一模一样）：sites/<代号>/skin/ 有的话，
+# 网站用这套页面（agency-core 的 class-skin.php，festive.json 的 "skin": 1 打开），照片从 images/ 放进 skin 的 img/
+if [[ -d "$SRC_DIR/skin" ]]; then
+  site_vars "$SLUG_ARG"
+  SK="$SITE_PUBLIC/wp-content/uploads/agc-skin"
+  rm -rf -- "${SK:?}.new"
+  mkdir -p "$SK.new/img"
+  cp -a "$SRC_DIR/skin/." "$SK.new/"
+  cp -f "$SRC_DIR"/images/*.webp "$SK.new/img/" 2>/dev/null || true
+  chown -R "$SITE_USER:$SITE_USER" "$SK.new"
+  find "$SK.new" -type d -exec chmod 755 {} +
+  find "$SK.new" -type f -exec chmod 644 {} +
+  rm -rf -- "${SK:?}.old"
+  [[ -d "$SK" ]] && mv "$SK" "$SK.old"
+  mv "$SK.new" "$SK"
+  rm -rf -- "${SK:?}.old"
+  info "店家自己的设计：$(find "$SK" -maxdepth 1 -name '*.html' | wc -l) 页、$(find "$SK/img" -type f | wc -l) 张照片"
+fi
+
 # 节日预购网店（2026-11-13）：sites/<代号>/festive.json 有的话，套用节日设定、运送区域、付款方式、中文语言包、示范订单
 if [[ -f "$SRC_DIR/festive.json" ]]; then
   info "节日预购设定（festive.json）"
