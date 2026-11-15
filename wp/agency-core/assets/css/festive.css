@@ -60,8 +60,9 @@
 .agc-pay__steps { margin: 0; padding-left: 20px; display: grid; gap: 8px; }
 .agc-pay__note { font-size: .88rem; color: #50575e; margin: 12px 0 0; }
 .agc-receipt { margin-top: 16px; padding-top: 16px; border-top: 1px dashed rgba(0,0,0,.15); }
-.agc-receipt form { display: grid; gap: 10px; max-width: 520px; }
-.agc-receipt input[type=file] { max-width: 100%; }
+.agc-receipt form { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; max-width: 520px; }
+.agc-receipt form > * { min-width: 0; max-width: 100%; }
+.agc-receipt input[type=file] { width: 100%; max-width: 100%; }
 .agc-receipt__ok { background: #edfaef; border-left: 4px solid #00a32a; padding: 10px 12px; margin: 0 0 10px; }
 .agc-receipt__err { background: #fcf0f1; border-left: 4px solid #d63638; padding: 10px 12px; margin: 0 0 10px; }
 @media (max-width: 600px) {

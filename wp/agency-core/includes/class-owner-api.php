@@ -214,6 +214,8 @@ class AGC_Owner_API {
 		$s_rev  = 0.0;
 		$s_n    = 0;
 		$next   = array();
+		$roll   = AGC_Festive::rolling(); // everyday pre-orders: the second row counts this month, not the season.
+		$month  = AGC_Festive::now()->format( 'Y-m' );
 		foreach ( $orders as $o ) {
 			$b = self::bucket( $o );
 			++$counts[ $b ];
@@ -224,7 +226,7 @@ class AGC_Owner_API {
 					$t_rev += (float) $o->get_total();
 				}
 			}
-			if ( 'cancelled' !== $b && 'pending' !== $b ) {
+			if ( 'cancelled' !== $b && 'pending' !== $b && ( ! $roll || ( $created && $created->setTimezone( $tz )->format( 'Y-m' ) === $month ) ) ) {
 				++$s_n;
 				if ( $o->is_paid() ) {
 					$s_rev += (float) $o->get_total();
@@ -250,7 +252,8 @@ class AGC_Owner_API {
 				);
 			}
 		}
-		$cut = AGC_Festive::cutoff();
+		$cut  = AGC_Festive::cutoff();
+		$days = AGC_Festive::on() ? AGC_Festive::days() : array();
 		return array(
 			'counts'  => $counts,
 			'today'   => array( 'orders' => $t_n, 'revenue' => self::money( $t_rev ) ),
@@ -265,6 +268,8 @@ class AGC_Owner_API {
 				'cutoff_l' => $cut ? wp_date( _x( 'j M, g:i a', 'festive cut-off', 'agency-core' ), $cut->getTimestamp() ) : '',
 				'closed'   => AGC_Festive::closed(),
 				'early'    => AGC_Festive::early_pct(),
+				'rolling'  => $roll,
+				'next_day' => $days ? AGC_Festive::day_label( $days[0] ) : '',
 			),
 			'notify'  => count( (array) get_option( AGC_Festive::NOTIFY, array() ) ),
 			'paused'  => (bool) agc_get( 'shop_paused' ),
@@ -965,7 +970,7 @@ class AGC_Owner_API {
 	 */
 	private static function setting_keys() {
 		return array(
-			'fest_on', 'fest_name', 'fest_cutoff', 'fest_from', 'fest_to', 'fest_closed', 'fest_collect_slots', 'fest_delivery_slots',
+			'fest_on', 'fest_name', 'fest_cutoff', 'fest_from', 'fest_to', 'fest_closed', 'fest_rolling', 'fest_collect_slots', 'fest_delivery_slots',
 			'fest_courier_note', 'fest_early_end', 'fest_early_pct', 'fest_show_left', 'fest_low_stock', 'fest_notify',
 			'legal_name', 'business_email', 'business_phone', 'business_address', 'business_hours', 'announcement', 'shop_paused', 'shop_paused_msg',
 		);

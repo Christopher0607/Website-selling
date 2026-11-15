@@ -89,7 +89,9 @@ function open(raw,how){return crypto.subtle.importKey('raw',raw,'AES-GCM',false,
   try{localStorage.setItem(K,s64(raw))}catch(e){}
   tr('view','&h='+(how||'saved'));
   var h=new TextDecoder().decode(pt),m=h.match(/var H='([0-9a-f]+)'/);if(m){try{localStorage.setItem('pv_'+m[1],'1')}catch(e){}}
-  h=h.replace(/<head([^>]*)>/i,'<head$1><style>img[data-pv-src]{visibility:hidden}</style><script>'+RT.replace(/<\\/script/gi,'<\\\\/script')+'<\\/script>');
+  h=h.replace(/<head([^>]*)>/i,'<head$1><style id="pvh">html{visibility:hidden}</style><script>(function(){var d=0;function done(){if(d)return;d=1;var s=document.getElementById("pvh");if(s)s.parentNode.removeChild(s)}setTimeout(done,2500);function chk(){var ls=document.querySelectorAll("link[rel=stylesheet]"),n=0;for(var i=0;i<ls.length;i++){var l=ls[i],ok;try{ok=!!(l.sheet&&l.sheet.cssRules)}catch(e){ok=!!l.sheet}if(!ok){n++;l.addEventListener("load",chk,{once:true});l.addEventListener("error",chk,{once:true})}}if(!n)done()}document.addEventListener("DOMContentLoaded",chk)})()<\\/script><style>img[data-pv-src]{visibility:hidden}</style><script>'+RT.replace(/<\\/script/gi,'<\\\\/script')+'<\\/script>');
+  // the written page stays hidden until its stylesheets have loaded (2026-11-14: document.write does not hold back the
+  // first paint for stylesheets, so every page change flashed the page without styles)
   // only replace the password page once it has finished loading: if the saved key decrypts while the page is still
   // being read, document.open() does nothing and the store got written INSIDE the password page (its centred grid
   // squeezed the top bar and pushed the page sideways on phones)
@@ -153,7 +155,9 @@ const BRANCH_FILES = {
   'site/wrangler.jsonc': '// previews 分支：Cloudflare Worker「cartsmith-previews」，只放加密的样板（静态档案），网址 previews.cartsmithstudio.com\n{\n  "name": "cartsmith-previews",\n  "compatibility_date": "2025-06-01",\n  "assets": { "directory": "./public", "html_handling": "auto-trailing-slash", "not_found_handling": "none" }\n}\n',
   'site/public/index.html': '<!doctype html><meta charset="utf-8"><meta name="robots" content="noindex,nofollow"><title>Cartsmith Studio</title><p style="font:16px system-ui;padding:24px">Nothing here. <a href="' + SITE_URL + '/">Cartsmith Studio</a></p>\n',
   'site/public/robots.txt': 'User-agent: *\nDisallow: /\n',
-  'site/public/_headers': '/*\n  X-Robots-Tag: noindex, nofollow\n  Referrer-Policy: no-referrer\n',
+  // stylesheets are kept for 10 minutes (2026-11-14), so a page change does not wait for them again; photos (.enc) are not
+  // cached, because a republish encrypts them with a new key
+  'site/public/_headers': '/*\n  X-Robots-Tag: noindex, nofollow\n  Referrer-Policy: no-referrer\n/:slug/style.css\n  Cache-Control: public, max-age=600\n/:slug/theme.css\n  Cache-Control: public, max-age=600\n/:slug/assets/css/*\n  Cache-Control: public, max-age=600\n',
   'README.md': '# previews 分支\n\n只放**加密**的免费样板，每个样板 14 天内删除。不要合并到其他分支。说明见 `scripts/local/preview-publish.js`（在 ccr 分支）。\n',
 };
 
