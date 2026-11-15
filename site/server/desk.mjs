@@ -889,7 +889,7 @@ async function handle(action, b, doc) {
 
     case 'update': {
       const p = find(doc, b.id);
-      const allowed = ['business_name', 'instagram', 'whatsapp', 'email', 'phone', 'area', 'address', 'store_url', 'niche', 'observation', 'notes', 'message', 'followup', 'language', 'preview_url', ...CRITERIA];
+      const allowed = ['business_name', 'instagram', 'whatsapp', 'email', 'phone', 'area', 'address', 'store_url', 'niche', 'observation', 'notes', 'message', 'followup', 'language', 'preview_url', 'shop_url', 'shop_login', 'shop_admin_url', 'shop_owner', 'shop_note', ...CRITERIA]; // shop_*: the merchant's real shop and its dashboard (2026-11-15)
       for (const k of allowed) if (k in (b.fields || {})) p[k] = CRITERIA.includes(k) ? b.fields[k] === true : String(b.fields[k]).slice(0, 3000);
       if (b.fields && 'instagram' in b.fields) p.instagram = handleOf(p.instagram);
       if (b.fields && 'whatsapp' in b.fields) { p.whatsapp = waOf(p.whatsapp); if (String(b.fields.whatsapp).trim() && !p.whatsapp) throw Object.assign(new Error('WhatsApp 号码格式不对（例：012-345 6789）'), { code: 'bad_input' }); }
