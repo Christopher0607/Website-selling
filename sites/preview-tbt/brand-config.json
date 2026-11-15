@@ -1,0 +1,86 @@
+{
+  "_comment": "The Baking Trip（Happy Garden 的酸种面包店）的 WordPress 网店预览（2026-11-14）。真实店家，还没签约：只给店家本人看（Nginx 密码 + noindex），没成交 14 天内删除。资料来自 Eat Drink KL 2023-05 和 FMT 2023-07；价钱是报道写的，交付前要跟店家确认。",
+  "mode": "preview",
+  "site": {
+    "slug": "preview-tbt",
+    "domain": "preview-tbt.cartsmithstudio.com",
+    "name": "The Baking Trip",
+    "tagline": "Sourdough that takes more than 24 hours",
+    "language": "en"
+  },
+  "colors": {
+    "primary": "#2C2621",
+    "secondary": "#F2EADF",
+    "accent": "#9A5226",
+    "text": "#2C2621",
+    "background": "#FBF8F2"
+  },
+  "fonts": {
+    "heading": "Fraunces",
+    "body": "Nunito"
+  },
+  "assets": {
+    "logo": "",
+    "site_icon": ""
+  },
+  "whatsapp": {
+    "number": "60195761419",
+    "button_text": "WhatsApp",
+    "prefill": "Hi, I have a question about my order",
+    "general": "Hi, I have a question",
+    "floating_button": false,
+    "position": "right"
+  },
+  "store": {
+    "address": {
+      "line1": "A6, Jalan Rukun 7, Taman Gembira (Happy Garden)",
+      "city": "Kuala Lumpur",
+      "state": "Kuala Lumpur",
+      "postcode": "58200",
+      "country": "MY"
+    },
+    "currency": "MYR",
+    "sell_to": [
+      "MY"
+    ],
+    "shipping": {
+      "west_malaysia_flat_rate": 0,
+      "east_malaysia_flat_rate": 0,
+      "free_shipping_min": 0,
+      "local_pickup": true
+    }
+  },
+  "business": {
+    "legal_name": "The Baking Trip",
+    "ssm_no": "",
+    "email": "",
+    "phone": "019-576 1419",
+    "hours": "Wednesday to Sunday, 9am–6pm · closed Monday and Tuesday"
+  },
+  "social": {
+    "instagram": "https://www.instagram.com/_thebakingtrip_/",
+    "facebook": "",
+    "tiktok": "",
+    "shopee": "",
+    "xiaohongshu": "",
+    "youtube": ""
+  },
+  "tracking": {
+    "ga4_id": "",
+    "meta_pixel_id": ""
+  },
+  "email": {
+    "from_address": ""
+  },
+  "design": {
+    "radius": "12px",
+    "image_ratio": "1/1",
+    "announcement": "",
+    "trust_badges": [
+      "clock|Pre-order by the day before|Collect Wednesday to Sunday, 9am–6pm",
+      "gift|Baked from 5am|Every loaf takes more than 24 hours",
+      "card|Pay online or DuitNow QR|You get an order email straight away",
+      "truck|Pick up at the house|A6, Jalan Rukun 7, Happy Garden"
+    ]
+  }
+}

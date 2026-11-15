@@ -183,21 +183,59 @@ class AGC_Festive {
 	}
 
 	/**
+	 * Everyday pre-orders (2026-11-14): no first / last day set, customers choose up to N days ahead.
+	 *
+	 * @return int days ahead, 0 = a season with fixed dates
+	 */
+	public static function rolling() {
+		$n = (int) agc_get( 'fest_rolling' );
+		return ( $n > 0 && ! trim( (string) agc_get( 'fest_from' ) ) && ! trim( (string) agc_get( 'fest_to' ) ) ) ? min( 62, $n ) : 0;
+	}
+
+	/**
+	 * First and last collection day: the season's dates, or today … today + N in everyday mode.
+	 *
+	 * @return DateTimeImmutable[]|null [from, to]
+	 */
+	public static function range() {
+		$n = self::rolling();
+		if ( $n ) {
+			$today = self::now()->setTime( 0, 0 );
+			return array( $today, $today->modify( '+' . $n . ' days' ) );
+		}
+		$from = self::date_setting( 'fest_from' );
+		$to   = self::date_setting( 'fest_to' );
+		return ( $from && $to && $to >= $from ) ? array( $from, $to ) : null;
+	}
+
+	/**
+	 * Is this day off? Dates and weekdays (mon … sun) from the "days off" setting.
+	 *
+	 * @param DateTimeImmutable $d Day.
+	 * @return bool
+	 */
+	public static function is_closed_day( $d ) {
+		$closed = array_filter( array_map( static function ( $x ) {
+			return strtolower( trim( $x ) );
+		}, explode( ',', (string) agc_get( 'fest_closed' ) ) ) );
+		return in_array( $d->format( 'Y-m-d' ), $closed, true ) || in_array( strtolower( $d->format( 'D' ) ), $closed, true );
+	}
+
+	/**
 	 * Days a customer can still choose (Y-m-d list).
 	 *
 	 * @return string[]
 	 */
 	public static function days() {
-		$from = self::date_setting( 'fest_from' );
-		$to   = self::date_setting( 'fest_to' );
-		if ( ! $from || ! $to || $to < $from ) {
+		$range = self::range();
+		if ( ! $range ) {
 			return array();
 		}
-		$closed   = array_filter( array_map( 'trim', explode( ',', (string) agc_get( 'fest_closed' ) ) ) );
+		list( $from, $to ) = $range;
 		$earliest = self::now()->setTime( 0, 0 )->modify( '+1 day' ); // no same-day orders.
 		$out      = array();
 		for ( $d = $from; $d <= $to && count( $out ) < 62; $d = $d->modify( '+1 day' ) ) {
-			if ( $d >= $earliest && ! in_array( $d->format( 'Y-m-d' ), $closed, true ) ) {
+			if ( $d >= $earliest && ! self::is_closed_day( $d ) ) {
 				$out[] = $d->format( 'Y-m-d' );
 			}
 		}
@@ -492,6 +530,7 @@ class AGC_Festive {
 		$to     = self::date_setting( 'fest_to' );
 		$range  = ( $from && $to ) ? self::day_label( $from->format( 'Y-m-d' ) ) . ' – ' . self::day_label( $to->format( 'Y-m-d' ) ) : '';
 		$cls    = 'agc-fest agc-fest--' . $style;
+		$days   = self::rolling() ? self::days() : array();
 
 		if ( self::closed() ) {
 			$h  = '<div class="' . esc_attr( $cls ) . ' agc-fest--closed">';
@@ -517,7 +556,10 @@ class AGC_Festive {
 				. '<span><b>' . (int) floor( ( $secs % 86400 ) / 3600 ) . '</b> ' . esc_html__( 'hrs', 'agency-core' ) . '</span>'
 				. '<span><b>' . (int) floor( ( $secs % 3600 ) / 60 ) . '</b> ' . esc_html__( 'min', 'agency-core' ) . '</span></p>';
 		}
-		if ( $range ) {
+		if ( $days ) {
+			/* translators: %s: a day, e.g. Wed 18 Nov */
+			$h .= '<p class="agc-fest__days">' . esc_html( sprintf( __( 'Order ahead · next collection day: %s', 'agency-core' ), self::day_label( $days[0] ) ) ) . '</p>';
+		} elseif ( $range ) {
 			/* translators: %s: date range */
 			$h .= '<p class="agc-fest__days">' . esc_html( sprintf( __( 'Collection & delivery: %s', 'agency-core' ), $range ) ) . '</p>';
 		}
@@ -1036,7 +1078,8 @@ class AGC_Festive {
 	private static function season_orders() {
 		// Orders placed in the last ~8 months before the season ends, then keep the festive ones.
 		// (No meta query: the older order storage does not support it.)
-		$to    = self::date_setting( 'fest_to' );
+		$range = self::range();
+		$to    = $range ? $range[1] : null;
 		$since = ( $to ? $to : self::now() )->modify( '-240 days' )->getTimestamp();
 		$all   = wc_get_orders(
 			array(
@@ -1071,10 +1114,13 @@ class AGC_Festive {
 			$d = (string) $o->get_meta( self::DATE );
 			$days[ $d ? $d : 'courier' ] = true;
 		}
-		$from = self::date_setting( 'fest_from' );
-		$to   = self::date_setting( 'fest_to' );
+		$range = self::range();
+		$from  = $range ? $range[0] : null;
+		$to    = $range ? $range[1] : null;
 		for ( $d = $from; $from && $to && $d <= $to; $d = $d->modify( '+1 day' ) ) {
-			$days[ $d->format( 'Y-m-d' ) ] = true;
+			if ( ! self::is_closed_day( $d ) ) {
+				$days[ $d->format( 'Y-m-d' ) ] = true;
+			}
 		}
 		$days = array_keys( $days );
 		sort( $days );

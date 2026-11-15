@@ -18,3 +18,7 @@ __pycache__/
 site/dist/
 # 给潜在客户做的免费样板（含对方的照片和密码），不进 git
 clients/*/preview/
+
+# 真实店家的私人预览：照片建站时才下载（images-src.json），不进 git（2026-11-14）
+sites/preview-*/images/
+sites/preview-*/content/images/

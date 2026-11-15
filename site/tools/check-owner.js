@@ -17,8 +17,9 @@ const wait = (p, ms = 400) => p.waitForTimeout(ms);
 async function ready(p) { await p.waitForFunction(() => !document.querySelector('.ow-boot') && !document.querySelector('.main > .empty:only-child'), null, { timeout: 20000 }).catch(() => {}); await wait(p, 300); }
 async function overflow(p) { return p.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth); }
 
-// A customer orders on the website and pays by DuitNow (so there is always a "payment to check").
-async function shopOrderDuitNow(browser) {
+// A customer orders on the website (DuitNow → a "payment to check"; the demo online payment → paid, "to make").
+// Works on a shop with delivery (address fields) and on a collection-only shop (name, phone, email only).
+async function shopOrder(browser, pay = 'agc_duitnow', last = 'DuitNow') {
   const c = await browser.newContext({ viewport: { width: 390, height: 844 } });
   const s = await c.newPage();
   const settle = async () => { await s.waitForTimeout(500); await s.waitForFunction(() => !document.querySelector('.blockUI.blockOverlay'), null, { timeout: 20000 }).catch(() => {}); };
@@ -26,13 +27,14 @@ async function shopOrderDuitNow(browser) {
   await s.locator('li.product a.ajax_add_to_cart').first().click();
   await s.waitForTimeout(1500);
   await s.goto(BASE + '/checkout/');
-  await s.fill('#billing_first_name', 'Test'); await s.fill('#billing_last_name', 'DuitNow'); await s.fill('#billing_address_1', '1 Jalan Test'); await s.fill('#billing_city', 'Petaling Jaya');
-  await s.selectOption('select#billing_state', 'SGR'); await s.fill('#billing_postcode', '47300'); await s.fill('#billing_phone', '012-555 0000'); await s.fill('#billing_email', 'duitnow-test@example.com');
+  await s.fill('#billing_first_name', 'Test'); await s.fill('#billing_last_name', last);
+  if (await s.$('#billing_address_1')) { await s.fill('#billing_address_1', '1 Jalan Test'); await s.fill('#billing_city', 'Petaling Jaya'); await s.selectOption('select#billing_state', 'SGR'); await s.fill('#billing_postcode', '47300'); }
+  await s.fill('#billing_phone', '012-555 0000'); await s.fill('#billing_email', last.toLowerCase() + '-test@example.com');
   await s.evaluate(() => window.jQuery && window.jQuery(document.body).trigger('update_checkout')); await settle();
   await s.locator('input[name^="shipping_method"][value^="local_pickup"]').first().evaluate((e) => e.click()); await settle();
   await s.locator('.agc-fest-pick__days .agc-chip:not([disabled])').first().click();
   await s.locator('.agc-fest-pick__slots .agc-chip:not([disabled])').first().click();
-  await s.evaluate(() => { document.getElementById('payment_method_agc_duitnow').click(); const t = document.getElementById('terms'); if (t && !t.checked) t.click(); });
+  await s.evaluate((pm) => { document.getElementById('payment_method_' + pm).click(); const t = document.getElementById('terms'); if (t && !t.checked) t.click(); }, pay);
   await s.waitForTimeout(300);
   await Promise.all([s.waitForURL(/order-received/, { timeout: 45000 }), s.click('#place_order')]);
   await c.close();
@@ -75,14 +77,17 @@ async function shopOrderDuitNow(browser) {
   await p.click('.pill[data-f=all]');
   await wait(p, 800);
   const nAll = (await p.$$('.ocard')).length;
-  ok(nAll > 0, 'orders: list (' + nAll + ')');
-  await p.fill('.search input', '示范');
-  await wait(p, 1000);
-  ok((await p.$$('.ocard')).length > 0 && (await p.$$('.ocard')).length <= nAll, 'orders: search by name');
+  ok(true, 'orders: list (' + nAll + ' so far)');
+  const madeShop = await shopOrder(browser).catch((e) => { console.log('    ' + e.message.split('\n')[0]); return false; });
+  ok(madeShop, 'a customer orders on the website and pays by DuitNow');
+  await p.reload();
+  await p.waitForSelector('.search input');
+  await ready(p);
+  await p.fill('.search input', 'DuitNow');
+  await wait(p, 1200);
+  ok((await p.$$('.ocard')).length > 0 && /DuitNow/.test(await p.textContent('.ocard')), 'orders: search by name');
   await p.fill('.search input', '');
   await wait(p, 800);
-  const madeShop = await shopOrderDuitNow(browser).catch((e) => { console.log('    ' + e.message.split('\n')[0]); return false; });
-  ok(madeShop, 'a customer orders on the website and pays by DuitNow');
   await p.goto(BASE + '/dian/#/home');
   await ready(p);
   await p.goto(BASE + '/dian/#/orders?f=check');
@@ -102,31 +107,35 @@ async function shopOrderDuitNow(browser) {
   const moveBtn = await p.$('button:has-text("改日子"), button:has-text("Change day")');
   if (moveBtn) {
     await moveBtn.click();
-    const opt = await p.$('.sheet .btn--plain:not([disabled])');
+    const opt = await p.$('.sheet .btns .btn--plain:not([disabled])');
     if (opt) {
       const label = (await opt.textContent()).split(' · ')[0];
       await opt.click();
-      await wait(p, 1300);
+      await p.waitForFunction((l) => !document.querySelector('.scrim') && (document.querySelector('.when') || {}).textContent.includes(l), label, { timeout: 15000 }).catch(() => {});
       ok((await p.textContent('.when')).includes(label), 'change collection time (' + label + ')');
-    } else ok(true, 'change time: no other time free');
+      await p.waitForSelector('.toast', { state: 'detached', timeout: 15000 }).catch(() => {});
+    } else {
+      await p.click('.sheet .btn--block');
+      ok(true, 'change time: no other time free');
+    }
   } else ok(false, 'change time: button missing on an order that is not made yet');
   await p.click('.actbar .btn:not(.btn--danger)');
   await p.waitForSelector('.sheet');
   await p.click('.sheet .btn:not(.btn--plain)');
-  await p.waitForSelector('.toast');
-  await wait(p, 900);
+  const badgeIs = (re) => p.waitForFunction((src) => new RegExp(src).test((document.querySelector('.badge') || {}).textContent || ''), re.source, { timeout: 15000 }).catch(() => {});
+  await badgeIs(/要做|To make/);
   await ready(p);
   ok(/要做|To make/.test(await p.textContent('.badge')), '"Payment received" → to make (paid)');
-  await p.click('.actbar .btn');
-  await wait(p, 1200);
+  await p.click('.actbar .btn:not(.btn--danger)');
+  await badgeIs(/可以取货|Ready/);
   await ready(p);
   ok(/可以取货|Ready/.test(await p.textContent('.badge')), '"Ready" in one tap');
   await p.fill('textarea[aria-label]', 'Test note ' + Date.now());
   await p.click('.card .form .btn');
   await wait(p, 1200);
   ok(/Test note/.test(await p.textContent('.timeline')), 'add a private note');
-  await p.click('.actbar .btn');
-  await wait(p, 1200);
+  await p.click('.actbar .btn:not(.btn--danger)');
+  await badgeIs(/已完成|Done/);
   ok(/已完成|Done/.test(await p.textContent('.badge')), '"Done"');
   ok((await overflow(p)) <= 1, 'order detail fits the phone screen');
 
@@ -142,7 +151,8 @@ async function shopOrderDuitNow(browser) {
   await p.waitForSelector('.pcard');
   await ready(p);
   ok((await p.$$('.pcard')).length >= 8, 'products: list with photos, prices and stock');
-  await p.click('.pcard:has-text("花生饼"), .pcard:has-text("Peanut")');
+  const named = p.locator('.pcard:has-text("花生饼"), .pcard:has-text("Peanut")');
+  await ((await named.count()) ? named.first() : p.locator('.pcard').first()).click();
   await p.waitForSelector('.actbar');
   await ready(p);
   const priceIn = p.locator('input[type=number]').first();
@@ -160,6 +170,32 @@ async function shopOrderDuitNow(browser) {
   await p.locator('input[inputmode=numeric]').first().fill(oldStock);
   await p.click('.actbar .btn:not(.btn--plain)');
   await wait(p, 1500);
+  // A product waiting for a price (draft): the owner types the price, switches it on, it shows in the shop. Then put back.
+  await p.goto(BASE + '/dian/#/products');
+  await p.waitForSelector('.pcard');
+  await ready(p);
+  const draft = p.locator('.pcard:has(.badge:has-text("Draft")), .pcard:has(.badge:has-text("草稿"))').first();
+  if (await draft.count()) {
+    await draft.click();
+    await p.waitForSelector('.actbar');
+    await ready(p);
+    const dId = (p.url().match(/product\/(\d+)/) || [])[1];
+    const dName = (await p.locator('.form input[type=text]').first().inputValue()).trim();
+    await p.locator('input[type=number]').first().fill('9.90');
+    const swi = p.locator('.switch input[role=switch]').first();
+    if (!(await swi.isChecked())) await swi.click();
+    await p.click('.actbar .btn:not(.btn--plain)');
+    await p.waitForSelector('.toast');
+    await wait(p, 1200);
+    const v = await browser.newContext();
+    const vp = await v.newPage();
+    await vp.goto(BASE + '/?post_type=product&p=' + dId + '&nc=' + Date.now());
+    const shown = (await vp.textContent('body')).includes(dName) && /9\.90/.test(await vp.textContent('body'));
+    await v.close();
+    ok(shown, 'a product waiting for a price: type the price, switch on, it is in the shop (' + dName + ')');
+    const back = await p.evaluate(async (id) => (await fetch(AGC_OWNER.rest + 'products/' + id, { method: 'POST', credentials: 'same-origin', headers: { 'X-WP-Nonce': AGC_OWNER.nonce, 'Content-Type': 'application/json' }, body: JSON.stringify({ status: 'draft', regular_price: '' }) })).status, dId);
+    ok(back === 200, 'put back as a draft without a price');
+  }
   await p.goto(BASE + '/dian/#/product/new');
   await p.waitForSelector('.actbar');
   await ready(p);
@@ -205,7 +241,7 @@ async function shopOrderDuitNow(browser) {
   await p.reload();
   await p.waitForSelector('.slotrow');
   await ready(p);
-  ok((await p.locator('section').first().locator('input[type=text]').first().inputValue()) === oldName + ' TEST', 'settings: festive season saved');
+  ok((await p.locator('section').first().locator('input[type=text]').first().inputValue()).trim() === (oldName + ' TEST').trim(), 'settings: festive season saved');
   await p.locator('section').first().locator('input[type=text]').first().fill(oldName);
   await p.locator('section').first().locator('.form > .btn').first().click();
   await wait(p, 1500);
@@ -240,6 +276,14 @@ async function shopOrderDuitNow(browser) {
 
   console.log('Many orders at once');
   await p.goto(BASE + '/dian/#/orders?f=make');
+  await ready(p);
+  for (let i = (await p.$$('.ocard')).length; i < 2; i++) {
+    const paidOk = await shopOrder(browser, 'agc_demo_pay', 'Paid' + i).catch((e) => { console.log('    ' + e.message.split('\n')[0]); return false; });
+    ok(paidOk, 'a customer orders and pays online (preview payment) → "to make"');
+  }
+  await p.goto(BASE + '/dian/#/home');
+  await ready(p);
+  await p.goto(BASE + '/dian/#/orders?f=make');
   await p.waitForSelector('.ocard');
   await ready(p);
   await p.click('.pills button:has-text("选择"), .pills button:has-text("Select")');
@@ -262,7 +306,11 @@ async function shopOrderDuitNow(browser) {
     await p.waitForSelector('.lines');
     await ready(p);
     ok(!!(await p.$('a[href^="https://waze.com/ul"]')) && !!(await p.$('a[href^="https://www.google.com/maps/"]')), 'delivery order: Waze and Google Maps buttons');
-  } else ok(false, 'no delivery order to check');
+  } else {
+    const st = await p.evaluate(async () => (await (await fetch(AGC_OWNER.rest + 'settings', { credentials: 'same-origin', headers: { 'X-WP-Nonce': AGC_OWNER.nonce } })).json()).settings);
+    const dl = String(st.fest_delivery_slots || '').trim();
+    ok(!dl, dl ? 'no delivery order to check' : 'collection-only shop: no delivery orders (nothing to check)');
+  }
   await p.goto(BASE + '/dian/#/production');
   await ready(p);
   await p.click('.top__act button:has-text("清单"), .top__act button:has-text("List")');

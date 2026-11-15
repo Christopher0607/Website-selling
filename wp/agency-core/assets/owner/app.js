@@ -14,7 +14,7 @@
       f_check: 'Payment to check', f_make: 'To make', f_ready: 'Ready', f_done: 'Done', f_all: 'All', f_cancelled: 'Cancelled', f_pending: 'Not paid yet',
       today: 'Today', season: 'This season', orders_n: '{0} orders', revenue: 'Sales', paid: 'Paid', check: 'To check',
       tile_check: 'payments to check', tile_make: 'paid, to make', tile_ready: 'ready / on the way', tile_today: 'orders today', tile_rev: 'paid today', tile_season: 'orders this season', tile_sales: 'paid this season',
-      closes_in: 'Pre-orders close in {0} days {1} hrs', closes_at: 'Cut-off: {0}', closed: 'Pre-orders are closed', early_on: 'Early-bird {0}% off is on', season_off: 'Festive season is switched off', change: 'Change',
+      closes_in: 'Pre-orders close in {0} days {1} hrs', closes_at: 'Cut-off: {0}', closed: 'Pre-orders are closed', early_on: 'Early-bird {0}% off is on', season_off: 'Pre-orders are switched off', change: 'Change', every_day: 'Taking pre-orders every day', rolling_next: 'Next collection day: {0}', rolling_ahead: 'Customers can choose a day up to {0} days ahead.', tile_month: 'orders this month', tile_month_rev: 'paid this month', pause_hint_on: 'Switch off to pause: customers can still look at the shop, but cannot order.',
       next_days: 'Coming up', no_next: 'No collections or deliveries coming up.', stock_alert: 'Stock', low_left: 'Only {0} left', sold_out: 'Sold out', all_good: 'Stock looks fine.', notify_n: '{0} people asked to be told when you open again',
       search_orders: 'Name, phone or order no.', no_orders: 'No orders here.', load_more: 'Show more', items: 'Items', subtotal: 'Subtotal', shipping: 'Delivery', total: 'Total', payment: 'Payment',
       receipt: 'Payment receipt', see_receipt: 'Open receipt', no_receipt: 'No receipt uploaded yet.', customer: 'Customer', phone: 'Phone', email: 'Email', address: 'Address', send_to: 'Send to (gift)', note: 'Customer note', collect_at: 'Collect at',
@@ -30,7 +30,7 @@
       p_soldout: 'Mark as sold out', p_save: 'Save', p_delete: 'Delete product', p_delete_q: 'Delete “{0}”?', p_delete_p: 'It moves to the bin in WordPress and can be restored there.', p_view: 'View on the website', p_new: 'New product', uploading: 'Uploading photo…',
       c_search: 'Search customers', c_orders: '{0} orders', c_notify: 'Waiting for next season', c_copy: 'Copy all numbers', c_copied: 'Numbers copied', c_none: 'No customers yet.', c_notify_none: 'Nobody yet.',
       r_days: 'Last {0} days', r_sales: 'Paid sales', r_orders: 'Paid orders', r_avg: 'Average order', r_chart: 'Paid sales per day', r_top: 'Best sellers', r_pay: 'Payment methods', r_mode: 'Collection & delivery', r_export: 'Export orders (CSV)', r_qty: 'Sold', r_rev: 'Sales', r_none: 'No paid orders in this period.',
-      s_fest: 'Festive pre-orders', s_on: 'Festive season on', s_name: 'Season name', s_cutoff: 'Last day to order', s_cut_time: 'Until', s_from: 'First collection day', s_to: 'Last collection day', s_closed: 'Days off (YYYY-MM-DD, commas)',
+      s_fest: 'Pre-orders (every day or a festive season)', s_on: 'Taking pre-orders', s_name: 'Season name (empty for every day)', s_cutoff: 'Last day to order', s_cut_time: 'Until', s_from: 'First collection day', s_to: 'Last collection day', s_closed: 'Days off (YYYY-MM-DD or mon, tue …; commas)', s_rolling: 'Every day: customers can choose up to this many days ahead (leave the dates above empty)',
       s_collect: 'Self-collect times', s_delivery: 'Delivery times', s_from_t: 'From', s_to_t: 'To', s_cap: 'Orders', s_add_slot: 'Add a time', s_early_end: 'Early-bird until', s_early_pct: 'Early-bird discount %', s_show_left: 'Show how many are left', s_low: 'Say “only X left” at', s_notify: 'After the cut-off, collect numbers for next season', s_courier: 'Note for courier orders',
       s_shop: 'Shop details', s_legal: 'Business name', s_phone: 'Phone', s_email: 'Email', s_address: 'Address (also the collection point)', s_hours: 'Opening hours', s_announce: 'Announcement bar (empty = off)',
       s_duit: 'DuitNow QR', s_duit_on: 'Accept DuitNow QR', s_qr: 'Your DuitNow QR', s_qr_up: 'Upload QR', s_account: 'Name under the QR', s_duit_note: 'Note to customers', s_demo_qr: 'Demo store: a sample QR marked DEMO is shown until you upload yours.',
@@ -59,7 +59,7 @@
       f_check: '待确认付款', f_make: '要做', f_ready: '可以取货', f_done: '已完成', f_all: '全部', f_cancelled: '已取消', f_pending: '还没付款',
       today: '今天', season: '这一季', orders_n: '{0} 单', revenue: '销售额', paid: '已付款', check: '待确认',
       tile_check: '待确认付款', tile_make: '已付款，要做', tile_ready: '可以取货 / 送货中', tile_today: '今天的订单', tile_rev: '今天已收款', tile_season: '这一季的订单', tile_sales: '这一季已收款',
-      closes_in: '离截止还有 {0} 天 {1} 小时', closes_at: '截止：{0}', closed: '预购已经截止', early_on: '早鸟 {0}% 折扣进行中', season_off: '节日预购没有开启', change: '修改',
+      closes_in: '离截止还有 {0} 天 {1} 小时', closes_at: '截止：{0}', closed: '预购已经截止', early_on: '早鸟 {0}% 折扣进行中', season_off: '预购没有开启', change: '修改', every_day: '天天接预购', rolling_next: '最近的取货日：{0}', rolling_ahead: '客人可以选之后 {0} 天内的日子。', tile_month: '本月的订单', tile_month_rev: '本月已收款', pause_hint_on: '关掉就暂停接单：顾客还是可以看网店，但不能下单。',
       next_days: '接下来的取货 / 送货', no_next: '接下来没有取货或送货。', stock_alert: '库存', low_left: '只剩 {0} 份', sold_out: '已售完', all_good: '库存都正常。', notify_n: '{0} 人想在下次开放时收到通知',
       search_orders: '名字、电话或订单号', no_orders: '这里没有订单。', load_more: '显示更多', items: '产品', subtotal: '小计', shipping: '运送', total: '合计', payment: '付款方式',
       receipt: '付款收据', see_receipt: '打开收据', no_receipt: '顾客还没上传收据。', customer: '顾客', phone: '电话', email: '电邮', address: '地址', send_to: '送到（送礼）', note: '顾客备注', collect_at: '取货地点',
@@ -75,7 +75,7 @@
       p_soldout: '设为售完', p_save: '保存', p_delete: '删除产品', p_delete_q: '删除「{0}」？', p_delete_p: '会移到 WordPress 的回收站，需要时可以还原。', p_view: '在网站上看', p_new: '新产品', uploading: '正在上传照片…',
       c_search: '搜寻顾客', c_orders: '{0} 张订单', c_notify: '等下次开放的号码', c_copy: '复制全部号码', c_copied: '号码已复制', c_none: '还没有顾客。', c_notify_none: '还没有人留号码。',
       r_days: '最近 {0} 天', r_sales: '已收款', r_orders: '已付款订单', r_avg: '平均每单', r_chart: '每天已收款', r_top: '卖得最好', r_pay: '付款方式', r_mode: '取货 / 送货方式', r_export: '导出订单（CSV）', r_qty: '卖出', r_rev: '销售额', r_none: '这段时间没有已付款的订单。',
-      s_fest: '节日预购', s_on: '开启节日预购', s_name: '节日名称', s_cutoff: '截止日', s_cut_time: '时间', s_from: '第一天取货', s_to: '最后一天取货', s_closed: '中间休息的日子（YYYY-MM-DD，用逗号分开）',
+      s_fest: '预购（天天接单或节日）', s_on: '接受预购', s_name: '节日名称（天天接单就留空）', s_cutoff: '截止日', s_cut_time: '时间', s_from: '第一天取货', s_to: '最后一天取货', s_closed: '休息的日子（YYYY-MM-DD 或 mon、tue…，用逗号分开）', s_rolling: '天天接单：客人最多可以选之后几天（上面的日期留空）',
       s_collect: '自取时段', s_delivery: '送货时段', s_from_t: '从', s_to_t: '到', s_cap: '几单', s_add_slot: '加一个时段', s_early_end: '早鸟价到', s_early_pct: '早鸟折扣 %', s_show_left: '显示还剩几份', s_low: '剩几份时显示「只剩」', s_notify: '截止后收集号码，下次开放通知', s_courier: '快递订单的说明',
       s_shop: '店铺资料', s_legal: '店名 / 公司名', s_phone: '电话', s_email: '电邮', s_address: '地址（也是取货地点）', s_hours: '营业时间', s_announce: '网站顶部公告（空白 = 不显示）',
       s_duit: 'DuitNow QR', s_duit_on: '接受 DuitNow QR 付款', s_qr: '你的 DuitNow QR', s_qr_up: '上传 QR', s_account: 'QR 下面的户口名字', s_duit_note: '给顾客的说明', s_demo_qr: '示范网站：上传你自己的 QR 之前，会显示写着 DEMO 的示范 QR。',
@@ -376,7 +376,13 @@
       var f = s.fest;
       var fest;
       if (!f.on) fest = h('div', { class: 'card card--soft' }, h('div', { class: 'card__h' }, h('h2', null, t('season_off')), C.can.settings ? h('a', { href: '#/settings' }, t('change')) : null));
-      else {
+      else if (f.rolling) {
+        fest = h('div', { class: 'card card--soft' },
+          h('div', { class: 'card__h' }, h('h2', null, f.name || t('every_day')), C.can.settings ? h('a', { href: '#/settings' }, t('change')) : null),
+          h('p', { style: 'margin:0;font-weight:800;font-size:1.1rem' }, t('rolling_next', f.next_day || '—')),
+          h('p', { class: 'muted small', style: 'margin:2px 0 0' }, t('rolling_ahead', f.rolling)),
+          f.early ? h('p', { style: 'margin:8px 0 0' }, h('span', { class: 'badge b-soft' }, t('early_on', f.early))) : null);
+      } else {
         var secs = Math.max(0, f.cutoff - Date.now() / 1000);
         fest = h('div', { class: 'card card--soft' },
           h('div', { class: 'card__h' }, h('h2', null, f.name || t('s_fest')), C.can.settings ? h('a', { href: '#/settings' }, t('change')) : null),
@@ -392,11 +398,13 @@
           pz.disabled = true;
           api('settings', { method: 'POST', body: { settings: { shop_paused: !pz.checked } } }).then(function () {
             pzLabel.textContent = pz.checked ? t('paused_off') : t('paused_on');
+            pzHint.textContent = pz.checked ? t('pause_hint_on') : t('pause_hint');
             card.classList.toggle('stat--warn', !pz.checked);
             toast(t('saved'));
           }).catch(function (e) { pz.checked = !pz.checked; toast(t('error', e.message), true); }).then(function () { pz.disabled = false; });
         });
-        var card = h('div', { class: 'card' + (s.paused ? ' stat--warn' : '') }, h('label', { class: 'switch' }, h('span', { class: 'row' }, icon(s.paused ? 'pause' : 'check'), pzLabel), pz), h('p', { class: 'small muted', style: 'margin:2px 0 0' }, t('pause_hint')));
+        var pzHint = h('p', { class: 'small muted', style: 'margin:2px 0 0' }, s.paused ? t('pause_hint') : t('pause_hint_on'));
+        var card = h('div', { class: 'card' + (s.paused ? ' stat--warn' : '') }, h('label', { class: 'switch' }, h('span', { class: 'row' }, icon(s.paused ? 'pause' : 'check'), pzLabel), pz), pzHint);
         put(m, card);
       }
       put(m, h('div', { class: 'grid3', style: 'margin-bottom:14px' },
@@ -406,8 +414,8 @@
       put(m, h('div', { class: 'grid4', style: 'margin-bottom:14px' },
         h('div', { class: 'stat' }, h('b', null, s.today.orders), h('span', null, t('tile_today'))),
         h('div', { class: 'stat' }, h('b', null, s.today.revenue), h('span', null, t('tile_rev'))),
-        h('a', { class: 'stat', href: '#/orders?f=all' }, h('b', null, s.season.orders), h('span', null, t('tile_season'))),
-        h('a', { class: 'stat', href: '#/reports' }, h('b', null, s.season.revenue), h('span', null, t('tile_sales')))));
+        h('a', { class: 'stat', href: '#/orders?f=all' }, h('b', null, s.season.orders), h('span', null, t(s.fest.rolling ? 'tile_month' : 'tile_season'))),
+        h('a', { class: 'stat', href: '#/reports' }, h('b', null, s.season.revenue), h('span', null, t(s.fest.rolling ? 'tile_month_rev' : 'tile_sales')))));
       var cols = h('div', { class: 'cols' });
       put(cols, h('div', { class: 'card' }, h('div', { class: 'card__h' }, h('h2', null, t('next_days')), h('a', { href: '#/production' }, t('production'))),
         s.next.length ? h('table', { class: 'tbl' }, h('tbody', null, s.next.map(function (x) {
@@ -1110,20 +1118,20 @@
       var F = {
         on: sw(t('s_on'), +s.fest_on), name: h('input', { type: 'text', value: s.fest_name }),
         cutD: h('input', { type: 'date', value: cut[0] || '' }), cutT: h('input', { type: 'time', value: cut[1] || '23:59' }),
-        from: h('input', { type: 'date', value: s.fest_from }), to: h('input', { type: 'date', value: s.fest_to }), closed: h('input', { type: 'text', value: s.fest_closed, placeholder: '2027-02-03' }),
+        from: h('input', { type: 'date', value: s.fest_from }), to: h('input', { type: 'date', value: s.fest_to }), closed: h('input', { type: 'text', value: s.fest_closed, placeholder: 'mon, tue, 2027-02-03' }), rolling: h('input', { type: 'number', min: '0', max: '62', step: '1', value: s.fest_rolling }),
         collect: slotsEditor(s.fest_collect_slots), delivery: slotsEditor(s.fest_delivery_slots),
         earlyEnd: h('input', { type: 'date', value: s.fest_early_end }), earlyPct: h('input', { type: 'number', min: '0', max: '90', step: '1', value: s.fest_early_pct }),
         showLeft: sw(t('s_show_left'), +s.fest_show_left), low: h('input', { type: 'number', min: '0', step: '1', value: s.fest_low_stock }),
         notify: sw(t('s_notify'), +s.fest_notify), courier: h('input', { type: 'text', value: s.fest_courier_note })
       };
       put(m, section(t('s_fest'), [F.on.el, field(t('s_name'), F.name), h('div', { class: 'fields2' }, field(t('s_cutoff'), F.cutD), field(t('s_cut_time'), F.cutT)),
-        h('div', { class: 'fields2' }, field(t('s_from'), F.from), field(t('s_to'), F.to)), field(t('s_closed'), F.closed),
+        h('div', { class: 'fields2' }, field(t('s_from'), F.from), field(t('s_to'), F.to)), field(t('s_closed'), F.closed), field(t('s_rolling'), F.rolling),
         h('div', { class: 'field' }, h('span', null, t('s_collect')), F.collect.el), h('div', { class: 'field' }, h('span', null, t('s_delivery')), F.delivery.el),
         h('div', { class: 'fields2' }, field(t('s_early_end'), F.earlyEnd), field(t('s_early_pct'), F.earlyPct)), F.showLeft.el, field(t('s_low'), F.low), F.notify.el, field(t('s_courier'), F.courier)],
         function () {
           return api('settings', { method: 'POST', body: { settings: {
             fest_on: F.on.input.checked, fest_name: F.name.value, fest_cutoff: F.cutD.value ? F.cutD.value + (F.cutT.value && F.cutT.value !== '23:59' ? ' ' + F.cutT.value : '') : '',
-            fest_from: F.from.value, fest_to: F.to.value, fest_closed: F.closed.value, fest_collect_slots: F.collect.value(), fest_delivery_slots: F.delivery.value(),
+            fest_from: F.from.value, fest_to: F.to.value, fest_closed: F.closed.value, fest_rolling: F.rolling.value, fest_collect_slots: F.collect.value(), fest_delivery_slots: F.delivery.value(),
             fest_early_end: F.earlyEnd.value, fest_early_pct: F.earlyPct.value, fest_show_left: F.showLeft.input.checked, fest_low_stock: F.low.value, fest_notify: F.notify.input.checked, fest_courier_note: F.courier.value
           } } });
         }));

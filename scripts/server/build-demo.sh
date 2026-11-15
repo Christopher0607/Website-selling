@@ -11,6 +11,23 @@ start_log "$SLUG_ARG"
 SRC_DIR="$AGENCY_ROOT/sites/$SLUG_ARG"
 [[ -f "$SRC_DIR/brand-config.json" ]] || die "找不到 $SRC_DIR/brand-config.json"
 D="$AGENCY_ROOT/scripts/server"
+# 真实店家的私人预览（2026-11-14）：照片不进 git，建站时照 images-src.json 下载到 images/ 和 content/images/（只放在有密码的预览站）
+if [[ -f "$SRC_DIR/images-src.json" ]]; then
+  info "下载照片（images-src.json）"
+  mkdir -p "$SRC_DIR/images" "$SRC_DIR/content/images"
+  while IFS=$'\t' read -r NAME URL; do
+    [[ "$NAME" =~ ^[a-z0-9-]+$ ]] || continue
+    [[ -s "$SRC_DIR/images/$NAME.webp" ]] && continue
+    TMP="$(mktemp -d)"
+    if curl -sfL --max-time 60 "$URL" -o "$TMP/in" && convert "$TMP/in" -auto-orient -strip -resize '1600x1600>' "$TMP/out.png" && cwebp -quiet -q 82 -metadata none "$TMP/out.png" -o "$SRC_DIR/images/$NAME.webp"; then
+      :
+    else
+      warn "照片下载失败：$NAME"
+    fi
+    rm -rf "$TMP"
+  done < <(jq -r '.images | to_entries[] | [.key, .value] | @tsv' "$SRC_DIR/images-src.json")
+  cp -f "$SRC_DIR"/images/*.webp "$SRC_DIR/content/images/" 2>/dev/null || true
+fi
 if ! site_exists "$SLUG_ARG"; then
   "$D/clone-site.sh" master "$SLUG_ARG" "$SLUG_ARG.$STUDIO_DOMAIN" --noindex "${NEW[@]}"
 fi
@@ -25,7 +42,10 @@ if [[ -f "$SRC_DIR/festive.json" ]]; then
   info "节日预购设定（festive.json）"
   site_vars "$SLUG_ARG"
   FW="$SITE_HOME/tmp/festive-$$"; mkdir -p "$FW"
-  cp "$SRC_DIR/festive.json" "$AGENCY_ROOT/scripts/server/php/festive-setup.php" "$FW/"
+  # 店家自己的设定（sites/<代号>/setup.php，例如只有自取、英文）优先；没有的话用节日示范的 festive-setup.php
+  SETUP="$AGENCY_ROOT/scripts/server/php/festive-setup.php"; [[ -f "$SRC_DIR/setup.php" ]] && SETUP="$SRC_DIR/setup.php"
+  cp "$SRC_DIR/festive.json" "$SETUP" "$FW/"
+  SETUP_NAME="$(basename "$SETUP")"
   chown -R "$SITE_USER:$SITE_USER" "$FW"
   mkdir -p "$SITE_HOME/private" && chown "$SITE_USER:$SITE_USER" "$SITE_HOME/private" && chmod 700 "$SITE_HOME/private"
   wpx "$SLUG_ARG" agc import "$FW/festive.json" || die "节日设定失败"
@@ -35,7 +55,7 @@ if [[ -f "$SRC_DIR/festive.json" ]]; then
     wpx "$SLUG_ARG" language theme install kadence zh_CN >/dev/null 2>&1 || true
   fi
   SEED=""; grep -q '"mode": "demo"' "$SRC_DIR/brand-config.json" && SEED="seed"
-  wpx "$SLUG_ARG" eval-file "$FW/festive-setup.php" $SEED || die "节日网店设定失败"
+  wpx "$SLUG_ARG" eval-file "$FW/$SETUP_NAME" $SEED || die "网店设定失败（$SETUP_NAME）"
   rm -rf "$FW"
   clear_cache "$SLUG_ARG"
 fi

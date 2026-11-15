@@ -84,6 +84,7 @@ class AGC_Settings {
 			'fest_from'            => '',
 			'fest_to'              => '',
 			'fest_closed'          => '',
+			'fest_rolling'         => '',
 			'fest_collect_slots'   => "10:00–13:00|6\n14:00–18:00|6",
 			'fest_delivery_slots'  => "11:00–14:00|10\n15:00–19:00|10",
 			'fest_delivery_zone'   => 'Klang Valley',
@@ -183,7 +184,8 @@ class AGC_Settings {
 					'fest_cutoff'         => array( 'text', __( 'Last day to order: YYYY-MM-DD (until 23:59) or YYYY-MM-DD HH:MM', 'agency-core' ) ),
 					'fest_from'           => array( 'text', __( 'First collection / delivery day (YYYY-MM-DD)', 'agency-core' ) ),
 					'fest_to'             => array( 'text', __( 'Last collection / delivery day (YYYY-MM-DD)', 'agency-core' ) ),
-					'fest_closed'         => array( 'text', __( 'Days off in between (YYYY-MM-DD, separated by commas)', 'agency-core' ) ),
+					'fest_closed'         => array( 'text', __( 'Days off (YYYY-MM-DD or weekdays such as mon, tue; separated by commas)', 'agency-core' ) ),
+					'fest_rolling'        => array( 'text', __( 'Everyday pre-orders: how many days ahead customers can choose (leave the first and last day empty)', 'agency-core' ) ),
 					'fest_collect_slots'  => array( 'textarea', __( 'Self-collect times, one per line: time|orders per day (e.g. 10:00–13:00|6)', 'agency-core' ) ),
 					'fest_delivery_slots' => array( 'textarea', __( 'Delivery times, one per line: time|orders per day', 'agency-core' ) ),
 					'fest_delivery_zone'  => array( 'text', __( 'Shipping zone for local delivery (its name contains this word)', 'agency-core' ) ),
@@ -341,9 +343,14 @@ class AGC_Settings {
 			$out[ $k ] = preg_match( '/^\d{4}-\d{2}-\d{2}$/', trim( (string) $out[ $k ] ) ) ? trim( (string) $out[ $k ] ) : '';
 		}
 		$out['fest_cutoff'] = preg_match( '/^\d{4}-\d{2}-\d{2}( \d{2}:\d{2})?$/', trim( (string) $out['fest_cutoff'] ) ) ? trim( (string) $out['fest_cutoff'] ) : '';
-		$out['fest_closed'] = implode( ', ', array_filter( array_map( 'trim', explode( ',', (string) $out['fest_closed'] ) ), static function ( $d ) {
-			return (bool) preg_match( '/^\d{4}-\d{2}-\d{2}$/', $d );
-		} ) );
+		// dates and weekdays (mon … sun), e.g. "mon, tue, 2026-12-25" (2026-11-14: shops closed on the same days every week)
+		$out['fest_closed'] = implode( ', ', array_unique( array_filter( array_map( static function ( $d ) {
+			$d = strtolower( trim( $d ) );
+			return preg_match( '/^(mon|tue|wed|thu|fri|sat|sun)/', $d ) && ! preg_match( '/\d/', $d ) ? substr( $d, 0, 3 ) : $d;
+		}, explode( ',', (string) $out['fest_closed'] ) ), static function ( $d ) {
+			return (bool) preg_match( '/^(\d{4}-\d{2}-\d{2}|mon|tue|wed|thu|fri|sat|sun)$/', $d );
+		} ) ) );
+		$out['fest_rolling'] = is_numeric( $out['fest_rolling'] ) && (int) $out['fest_rolling'] > 0 ? (string) min( 62, (int) $out['fest_rolling'] ) : '';
 		foreach ( array( 'fest_early_pct', 'fest_low_stock', 'fest_item_limit' ) as $k ) {
 			$out[ $k ] = is_numeric( $out[ $k ] ) ? (string) max( 0, (float) $out[ $k ] ) : '';
 		}
