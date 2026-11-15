@@ -230,7 +230,7 @@
       h('button', { type: 'button', 'aria-label': '+', onclick: function () { qty = Math.min(30, qty + 1); qn.textContent = qty; label(); } }, '+'));
     btn.addEventListener('click', function () { addLine({ id: it.id, qty: qty, sel: sel.map(function (x) { return x.slice().sort(); }), note: note.value.trim() }); closeSheet(); });
     label();
-    sheet(it.n, [it.img ? h('img', { class: 'tq-sheet__img', src: it.img, alt: '' }) : null, it.d ? h('p', { class: 'tq-muted' }, it.d) : null, groups,
+    sheet(it.n, [it.img ? h('img', { class: 'tq-sheet__img', src: it.img, alt: '', onerror: function () { this.remove(); } }) : null, it.d ? h('p', { class: 'tq-muted' }, it.d) : null, groups,
       h('label', { class: 'tq-field' }, h('span', null, t('item_note')), note)], [step, btn]);
   }
   function openCart() {
