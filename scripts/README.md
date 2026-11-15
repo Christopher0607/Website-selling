@@ -25,7 +25,7 @@
 | `ops-setup.sh` / `ops-runner.sh` | 自动更新小帮手（2026-11-13）：cron 每 5 分钟拉 GitHub、更新插件和子主题、执行 `ops/jobs/` 里没跑过的脚本；报告在 `http://<IP>/agency-ops-<代号>/`（见 `ops/README.md`）；关掉：`sudo rm /etc/cron.d/agency-ops` |
 | `smoke-test.sh <网址> [--site 代号] [--shop] [--expect-noindex]` | 快速检查（任何电脑都能跑） |
 | `site-inventory.sh` | 所有站点：WP 版本、待更新、SSL 到期、磁盘、最后备份 |
-| `site-config.sh <代号> [--ssl] [--basic-auth on\|off] [--noindex on\|off] [--show]` | 改 Nginx 层设定 |
+| `site-config.sh <代号> [--ssl] [--basic-auth on\|off] [--noindex on\|off] [--open-app on\|off] [--show]` | 改 Nginx 层设定（`--open-app`：有 basic auth 时，店家后台 `/dian/` 和桌上点单 `/table/` 不用先过浏览器的密码框，2026-11-15） |
 | `go-live.sh <代号> --domain <店家域名> [--owner-user u --owner-email e] [--remove-user tbttest] [--yes]` | 交付上线（2026-11-15）：备份 → 关示范模式 / 示范付款 → 删测试订单和帐号 → 换域名 + SSL → 关网站密码、开放给 Google → 店家「自己设密码」连结。不加 `--yes` 只显示会做什么 |
 | `install-code.sh <代号\|all> [plugin\|theme\|both]` | 安装 / 更新 agency-core 插件和子主题 |
 | `delete-site.sh <代号> [--no-backup]` | 删除站点（要输入代号确认），并检查没有残留 |

@@ -32,7 +32,7 @@ EOF
 
 # 根据站点登记文件产生 Nginx 设定
 render_nginx() {
-  local slug="$1"; load_site "$slug"
+  local slug="$1"; AUTH_OPEN_APP=0; load_site "$slug" # 登记没写的站点 = 0（不要沿用上一个站点的值）
   local u="${slug//-/_}" names="$DOMAIN" conf; conf="$(nginx_conf_path "$slug")"
   [[ "${WWW:-0}" == "1" ]] && names="$DOMAIN www.$DOMAIN"
   local cert="/etc/letsencrypt/live/$DOMAIN/fullchain.pem"
@@ -45,7 +45,10 @@ render_nginx() {
     echo "  index index.php index.html;"
     echo "  access_log $SITE_HOME/logs/access.log;"
     echo "  error_log $SITE_HOME/logs/error.log warn;"
-    if [[ "${BASIC_AUTH:-0}" == "1" ]]; then
+    if [[ "${BASIC_AUTH:-0}" == "1" && "${AUTH_OPEN_APP:-0}" == "1" ]]; then
+      echo "  auth_basic \$agc_auth_$u;"
+      echo "  auth_basic_user_file $(htpasswd_path "$slug");"
+    elif [[ "${BASIC_AUTH:-0}" == "1" ]]; then
       echo "  auth_basic \"Private preview\";"
       echo "  auth_basic_user_file $(htpasswd_path "$slug");"
     fi
@@ -76,6 +79,20 @@ render_nginx() {
 
   {
     echo "# 由 agency 脚本产生 —— 站点 $slug（不要手动修改，用 site-config.sh）"
+    if [[ "${BASIC_AUTH:-0}" == "1" && "${AUTH_OPEN_APP:-0}" == "1" ]]; then
+      # 2026-11-15：预览网店整站有 basic auth，但店家后台（自己的登入页）和桌上扫码点单（每桌有钥匙）不用先过浏览器的密码框。
+      # 看原本的网址（\$request_uri），所以 WordPress 内部转到 index.php 以后也一样。
+      echo "map \$request_uri \$agc_auth_$u {"
+      echo "  default \"Private preview\";"
+      echo "  ~^/(dian|owner)(/|\\?|\$) off;"
+      echo "  ~^/table/ off;"
+      echo "  ~^/wp-json/agc/v1/(owner|table)/ off;"
+      echo "  ~^/wp-admin/admin-post\\.php off;"
+      echo "  ~^/wp-login\\.php\\?action=logout off;"
+      echo "  ~^/wp-content/plugins/agency-core/assets/ off;"
+      echo "  ~^/wp-content/uploads/ off;"
+      echo "}"
+    fi
     if [[ "${CACHE:-1}" == "1" ]]; then
       echo "fastcgi_cache_path $AGENCY_CACHE_DIR/$slug levels=1:2 keys_zone=agc_$u:10m max_size=256m inactive=60m use_temp_path=off;"
     fi

@@ -5,11 +5,12 @@ source "$(dirname "$0")/../lib/site.sh"
 
 usage() {
   cat <<EOF
-用法: sudo $0 <站点代号> [--ssl] [--basic-auth on|off] [--noindex on|off] [--cache on|off] [--www on|off] [--show]
+用法: sudo $0 <站点代号> [--ssl] [--basic-auth on|off] [--noindex on|off] [--cache on|off] [--www on|off] [--open-app on|off] [--show]
 
   --ssl            申请（或重新申请）SSL 证书，网址改为 https
   --basic-auth     开 / 关密码保护（PageSpeed 测试前可以暂时关掉，测完马上开回来）
   --noindex        开 / 关 noindex 标头（WordPress 的设定由 apply-brand.sh 的 mode 控制）
+  --open-app       basic auth 开着的时候，店家后台 /dian/ 和桌上扫码点单 /table/ 不用先过浏览器的密码框（它们有自己的登入 / 钥匙）
   --show           显示目前设定和 basic auth 密码
 EOF
 }
@@ -27,6 +28,7 @@ while [[ $# -gt 0 ]]; do
     --noindex) set_reg "$SLUG_ARG" NOINDEX "$(onoff "$2")"; CHANGED=1; shift 2;;
     --cache) set_reg "$SLUG_ARG" CACHE "$(onoff "$2")"; CHANGED=1; shift 2;;
     --www) set_reg "$SLUG_ARG" WWW "$(onoff "$2")"; CHANGED=1; shift 2;;
+    --open-app) set_reg "$SLUG_ARG" AUTH_OPEN_APP "$(onoff "$2")"; CHANGED=1; shift 2;;
     --show)
       cat "$SITE_REG"; grep -E '^BASIC_AUTH_(USER|PASS)=' "$AGENCY_SECRETS_DIR/$SLUG_ARG.env" 2>/dev/null || true; shift;;
     *) usage; die "不认识的参数 $1";;

@@ -10,7 +10,7 @@
 - **桌上扫码点单（2026-11-15，agency-core 1.8.0，俊宇地推后决定先做基本版）：** `festive.json` 的 `table_on` / `table_list`（先放 1-8 张桌子），服务器用 `ops/jobs/010-tbt-table-qr.sh` 打开。
   - 客人：扫桌上的 QR → `/table/?t=<桌子>&k=<钥匙>` → 只列有价钱的产品（现在 8 样），选项（咖啡豆）和备注 → 送到厨房 → 手机上看到「准备中 / 做好了 / 已付款」，可以一直加点；吃完到柜台付款。
   - 店家后台：「厨房」（平板或旧手机开着，新单有提示声，按「做好了」）、「桌子」（哪张桌子还没付、多少钱 → 「收到钱了」选现金 / DuitNow / 刷卡 / 收银机）、「打印桌上 QR」。
-  - 预览网址有 basic auth：客人扫码也要输入看网站的密码；上线后（`go-live.sh` 关掉 basic auth、换店家域名）**要重新打印 QR**（QR 里面是网址）。
+  - 预览网址有 basic auth（看网站的帐号密码），但店家后台 `/dian/` 和桌上点单 `/table/` 不用先过浏览器的密码框（2026-11-15 晚 `ops/jobs/011-tbt-dashboard-open.sh`，`site-config.sh --open-app on`）：店家后台用店家帐号登录，桌上点单靠每张桌子的钥匙。上线后（`go-live.sh` 关掉 basic auth、换店家域名）**要重新打印 QR**（QR 里面是网址）。
   - 不接收银系统、不用厨房打印机（决定第 40 项）。测试：`OWNER_USER=… OWNER_PASS=… node site/tools/check-table.js <网址>`（25 项，会下 3 张测试单，最后都结帐或取消）。
 - **资料：**
   - `brand-config.json`：店名、颜色（深咖啡 / 米色 / 焦糖）、字体 Fraunces + Nunito、WhatsApp 019-576 1419、地址 A6 Jalan Rukun 7 Taman Gembira、营业 星期三至日 9am–6pm
