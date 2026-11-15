@@ -79,11 +79,13 @@ to end the call politely — and then nothing happens. Seven mockups went out; o
 - **All contact is on WhatsApp (2026-11-13, Junyu).** Instagram is no longer used to reach owners. Follow-ups go as a
   WhatsApp message first; a call is optional after it, never instead of it. Never write "we messaged you on Instagram".
   Shops with no WhatsApp number are parked until someone adds one.
-- **Contacted before, no mockup yet** (mostly Instagram-only shops, 2026-11-13): the 2nd message is a ready-made template
-  on the card — the free sample website offer, the three ways to start (RM169 a month, the RM399 festive shop with its
-  link, RM800 one-off + maintenance), the phone dashboard, the demo that fits them. It stays under 1,000 characters
-  because an Instagram DM holds about that much. Later messages are AI-written: short, one useful point, the free mockup
-  offer, RM169 / RM399 in one or two lines.
+- **Contacted before, no mockup** (2026-11-15 version): the 2nd message is a ready-made template on the card — the demo
+  that fits them with its link, the three ways to start (RM169 a month, the RM399 festive shop with its link, RM800
+  one-off + maintenance), the phone dashboard, and "reply here for a written quote within one working day". It stays
+  under 1,000 characters. Later messages are AI-written: short, one useful point, the demo link, RM169 / RM399 in one or
+  two lines, the written quote. Never offer a sample website or mockup.
+- **Said yes on the phone, no mockup:** the card's message carries the demo that fits and our prices; once Junyu marks it
+  sent, the card records "demo sent" and the next follow-up is the demo link again plus the written-quote offer.
 - **Respect "not ready" and "no".** Thank them, close, never chase. Example (Hideaway Café, 11-11): "menu changes daily,
   whole cakes are old-school manual pre-orders, not ready to go online yet, will remember you" → we thanked them, said
   the sample stays up until 23 Nov, and stopped. Baba Beng already had an online store → closed, no more messages.
