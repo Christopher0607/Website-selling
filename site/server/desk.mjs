@@ -589,12 +589,14 @@ const DEMOS = {
   'sireh-salt': { name: 'Sireh & Salt', zh: '一般餐厅、咖啡馆', kind: { en: 'restaurants and cafés like yours', zh: '餐厅和咖啡馆', ms: 'restoran dan kafe seperti anda' } },
   'dulang-daun': { name: 'Dulang & Daun', zh: '烘焙、糕点、食品礼盒', kind: { en: 'bakeries and food brands like yours', zh: '烘焙和食品品牌', ms: 'kedai kek, kuih dan jenama makanan seperti anda' } },
 };
-const RX_GOODS = /\bbak(?:e|ed|er|ers|ery|eries|es|ing)\b|cake|kuih|kueh|p[aâ]tiss|pastr|\btarts?\b|cookie|biscuit|bread|\bbuns?\b|donut|doughnut|croissant|brownie|macaron|mochi|dessert|gelato|ice cream|chocolate|kaya|sambal|sauce|hamper|gift|\bbeans?\b|roaster|roastery|snack|granola|\bjams?\b|honey|\bkek\b/;
+const RX_GOODS = /oolong|hojicha|tea-?bags?|tea leaves|ginger tea|cuttlefish|satay fish|\bdried\b|\bfrozen\b|murukku|kerepek|keropok|crackers?|jewel|skincare|own brand|\bbak(?:e|ed|er|ers|ery|eries|es|ing)\b|cake|kuih|kueh|p[aâ]tiss|pastr|\btarts?\b|cookie|biscuit|bread|\bbuns?\b|donut|doughnut|croissant|brownie|macaron|mochi|dessert|gelato|ice cream|chocolate|kaya|sambal|sauce|hamper|gift|\bbeans?\b|roaster|roastery|snack|granola|\bjams?\b|honey|\bkek\b/;
 const RX_FINE = /kaiseki|omakase|fine[- ]?dining|tasting menu|degustation|chef'?s (?:table|counter)|chef-led|french|wine|bistro|dinner[- ]only|steak|contemporary|modern european|private dining|upscale|luxury/;
 const RX_FOOD = /caf[eé]|kopitiam|eatery|kitchen|food|f&b|grill|noodle|nasi|\bmee\b|dim sum|ramen|sushi|\bbar\b|cater|coffee|\btea\b|juice|brunch|western|thai|korean|japanese|chinese|malay|indian|mamak|vegetarian|vegan|seafood|bbq|burger|pizza|pasta|hotpot|steamboat|laksa|kebab|canteen|diner|warung/;
 function demoFor(p) {
   const t = `${p.niche || ''} ${p.business_name || ''}`.toLowerCase();
-  const slug = /restaurant|restoran|dining/.test(t) ? (RX_FINE.test(t) ? 'maison-cendre' : 'sireh-salt')
+  // 2026-11-15: sellers on Shopee / Lazada / TikTok Shop → the online shop demo, whatever they sell
+  const online = /shopee|shope\.ee|lazada|tiktok/.test(String(p.store_url || '').toLowerCase());
+  const slug = online ? 'dulang-daun' : /restaurant|restoran|dining/.test(t) ? (RX_FINE.test(t) ? 'maison-cendre' : 'sireh-salt')
     : RX_GOODS.test(t) ? 'dulang-daun' : RX_FINE.test(t) ? 'maison-cendre' : RX_FOOD.test(t) ? 'sireh-salt' : '';
   return slug ? { slug, url: `${STUDIO_URL}demo/${slug}/`, ...DEMOS[slug] } : null;
 }
