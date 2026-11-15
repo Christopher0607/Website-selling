@@ -3,7 +3,7 @@
 - **是什么（2026-11-14）：** 给 The Baking Trip（Happy Garden 的天然酵母面包店，工作台卡片 p065）看的**真网店**：客人选面包、选取货日子和时段、网上付款或 DuitNow QR；店家用手机在 `/dian/` 看订单、确认付款、按「可以取货」、改价钱、上架新产品。成交后就是交付的网站（换成店家自己的付款网关、照片、价钱，关掉示范模式和密码）。
 - **网址：** `https://preview-tbt.cartsmithstudio.com`（有密码：basic auth 帐号 `tbt`；noindex）。店家后台 `https://preview-tbt.cartsmithstudio.com/dian/`（帐号 `thebakingtrip`，shop_manager）。**密码都在工作台 The Baking Trip 卡片的笔记里**，不写在这里。
 - **示范模式：** 顶部横幅写明是 Cartsmith Studio 做的私人预览、不收钱；可以下测试订单（只有「Online banking (FPX), cards, e-wallets」示范付款 = 直接当作已付款，和 DuitNow 示范 QR，写着 DEMO DO NOT PAY），**不收任何钱**。
-- **怎么建：** 服务器上的小帮手跑 `ops/jobs/005-preview-tbt.sh`：等 DNS（`preview-tbt` A 记录 → 服务器，DNS only）→ `build-demo.sh preview-tbt`（从 master 复制 → 品牌、产品、页面 → `festive.json` → `setup.php`）→ 开 basic auth → 建店家帐号和测试帐号。
+- **怎么建：** 服务器上的小帮手跑 `ops/jobs/006-preview-tbt.sh`（005 第一次跑就停了，已换成 006）：等 DNS（`preview-tbt` A 记录 → 服务器，DNS only）→ `build-demo.sh preview-tbt`（从 master 复制 → 品牌、产品、页面 → `festive.json` → `setup.php`）→ 开 basic auth → 建店家帐号和测试帐号。
   - 第一次建的时候会删掉从 master 复制过来的测试订单、顾客、优惠码（`setup.php`，记号 `agc_preview_clean`）；之后重建不会删订单。
   - 重建会把产品换回 `products.csv`（`--replace-products`）：店家在后台改过的价钱会被盖掉，所以给店家用了之后就**不要再跑 build-demo**，改东西用后台或 WP-CLI。
 - **资料：**

@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # The Baking Trip 的私人预览网店（2026-11-14，俊宇：把 The Baking Trip 的后台做出来，交付时店家可以直接用）
 #   网址 https://preview-tbt.cartsmithstudio.com （WordPress + WooCommerce + 店家后台 /dian/），有密码（basic auth）+ noindex。
+#   （005 第一次跑就停了：common.sh 的严格模式遇到 DNS 还没有记录就直接结束；这个是修好的版本）
 #   等 Cloudflare 的 DNS（preview-tbt → 这台服务器，DNS only）好了才建；还没好就 exit 75，5 分钟后再试。
 #   照片建站时从 The Baking Trip 自己公开的照片下载（sites/preview-tbt/images-src.json），不进 git，只在有密码的预览站。
 #   密码都不写进记录：basic auth、店家帐号、测试帐号的密码 = sha256(报告代号 + 后缀) 前 32 个字，两边各自算。
@@ -11,6 +12,7 @@ set -u
 source /etc/agency/agency.conf
 R="${AGENCY_OPS_ROOT:-${AGENCY_ROOT:-/opt/agency}}"
 source "$R/scripts/lib/common.sh"
+set +eo pipefail # common.sh turns on strict mode; this job checks every step itself (005 stopped on the DNS lookup before the domain existed)
 S=preview-tbt
 H="$S.$STUDIO_DOMAIN"
 
@@ -18,7 +20,7 @@ IP="$(curl -s --noproxy '*' --max-time 5 http://169.254.169.254/metadata/v1/inte
 [[ "$IP" =~ ^[0-9]+(\.[0-9]+){3}$ ]] || IP="$(curl -s --max-time 8 https://api.ipify.org)"
 [[ "$IP" =~ ^[0-9]+(\.[0-9]+){3}$ ]] || { echo "等：读不到这台服务器的 IP"; exit 75; }
 command -v resolvectl >/dev/null && resolvectl flush-caches >/dev/null 2>&1
-got="$(getent ahostsv4 "$H" | awk '{print $1; exit}')"
+got="$(getent ahostsv4 "$H" 2>/dev/null | awk '{print $1; exit}')" || got=""
 if [[ "$got" != "$IP" ]]; then
   echo "等 DNS：$H 要指到 $IP（现在是 ${got:-还没有记录}）。Cloudflare → DNS → Add record：A、preview-tbt、$IP、DNS only（灰色云）"
   exit 75
