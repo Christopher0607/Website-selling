@@ -609,16 +609,19 @@ const RX_BAKERY = /\bbak(?:e|ed|er|ers|ery|eries|es|ing)\b|cake|kuih|kueh|p[aâ]
 const RX_GOODS = /own brand|\bbak(?:e|ed|er|ers|ery|eries|es|ing)\b|cake|kuih|kueh|p[aâ]tiss|pastr|\btarts?\b|cookie|biscuit|bread|\bbuns?\b|donut|doughnut|croissant|brownie|macaron|mochi|dessert|gelato|ice cream|chocolate|kaya|sambal|sauce|hamper|gift|\bbeans?\b|roaster|roastery|snack|granola|\bjams?\b|honey|\bkek\b/;
 const RX_FINE = /kaiseki|omakase|fine[- ]?dining|tasting menu|degustation|chef'?s (?:table|counter)|chef-led|french|wine|bistro|dinner[- ]only|steak|contemporary|modern european|private dining|upscale|luxury/;
 const RX_FOOD = /caf[eé]|kopitiam|eatery|kitchen|food|f&b|grill|noodle|nasi|\bmee\b|dim sum|ramen|sushi|\bbar\b|cater|coffee|\btea\b|juice|brunch|western|thai|korean|japanese|chinese|malay|indian|mamak|vegetarian|vegan|seafood|bbq|burger|pizza|pasta|hotpot|steamboat|laksa|kebab|canteen|diner|warung/;
+// everyday places that only open for dinner are not fine dining (2026-11-15: a tze char seafood restaurant got Maison Cendre)
+const RX_CASUAL = /tze ?char|zi ?char|dai ?chow|seafood restaurant|kopitiam|hawker|mamak|nasi kandar|noodle|dim sum/;
 function demoFor(p) {
   const t = `${p.niche || ''} ${p.business_name || ''}`.toLowerCase();
+  const fine = RX_FINE.test(t) && !RX_CASUAL.test(t);
   // 2026-11-15: sellers on Shopee / Lazada / TikTok Shop → the online shop demo, whatever they sell
   const online = /shopee|shope\.ee|lazada|tiktok/.test(String(p.store_url || '').toLowerCase());
   const goods = RX_SKIN.test(t) ? 'dewlane' : RX_FASHION.test(t) ? 'plainfold' : RX_PET.test(t) ? 'tailmate' : RX_GADGET.test(t) ? 'voltnest' : '';
   const cafe = /caf[eé]|kopitiam|restaurant|restoran|dining|eatery|bistro/.test(t);
   const beans = /roaster|roastery|coffee beans?|drip bags?/.test(t); // roasters sell beans: the coffee shop template
-  const slug = goods || (!online && /restaurant|restoran|dining/.test(t) ? (RX_FINE.test(t) ? 'maison-cendre' : 'sireh-salt')
+  const slug = goods || (!online && /restaurant|restoran|dining/.test(t) ? (fine ? 'maison-cendre' : 'sireh-salt')
     : beans ? 'lowlight' : RX_BAKERY.test(t) ? 'dulang-daun' : (online || !cafe) && RX_DRINKS.test(t) ? 'lowlight' : (online || !cafe) && RX_PANTRY.test(t) ? 'chili-pantry'
-    : RX_GOODS.test(t) || online ? 'dulang-daun' : RX_FINE.test(t) ? 'maison-cendre' : RX_FOOD.test(t) ? 'sireh-salt' : '');
+    : RX_GOODS.test(t) || online ? 'dulang-daun' : fine ? 'maison-cendre' : RX_FOOD.test(t) ? 'sireh-salt' : '');
   return slug ? { slug, url: `${STUDIO_URL}demo/${slug}/`, ...DEMOS[slug] } : null;
 }
 // 2026-11-13: the real festive shop on WordPress (sites/demo-festive: Chinese New Year, in Chinese, with the owner's phone
