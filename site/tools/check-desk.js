@@ -70,10 +70,10 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
   ok(true, 'p001 appears under follow-ups when due');
   // contacted, no mockup yet: the 2nd message is a ready-made template (2026-11-13), short enough for an Instagram DM
   const tplFu = await p.inputValue('#c-p001 textarea[data-field="followup"]');
-  ok(/免费帮 Glow Lab 做一个样板网站/.test(tplFu) && /每个月 RM169/.test(tplFu) && /RM399/.test(tplFu) && tplFu.includes('https://demo-festive.cartsmithstudio.com/') && /店家后台/.test(tplFu) && /每月维护费 RM99/.test(tplFu)
+  ok(/完整示范网站/.test(tplFu) && /\/demo\/dewlane\//.test(tplFu) && /Glow Lab 的书面报价/.test(tplFu) && !/样板/.test(tplFu) && /每个月 RM169/.test(tplFu) && /RM399/.test(tplFu) && tplFu.includes('https://demo-festive.cartsmithstudio.com/') && /店家后台/.test(tplFu) && /每月维护费 RM99/.test(tplFu)
     && tplFu.length <= 1000 && !/[?？]/.test(tplFu.replace(/https?:\/\/\S+/g, '')) && !(await p.$('#c-p001 [data-ig-long]')),
-    'contacted, no mockup: the 2nd message is ready (free sample, RM169, RM399 festive shop, dashboard, under 1,000 characters, no questions)');
-  ok(/免费样板、每月 RM169、节日预购网店 RM399/.test(await p.textContent('#c-p001')), 'the card says what the ready-made message covers');
+    'contacted, no mockup: the 2nd message is ready (matching demo, written quote, no mockup offer, RM169, RM399 festive shop, dashboard, under 1,000 characters, no questions)');
+  ok(/示范网站、每月 RM169、节日预购网店 RM399/.test(await p.textContent('#c-p001')), 'the card says what the ready-made message covers');
   const order = await p.$$eval('#c-p001 .send__btns button', (bs) => bs.map((x) => x.dataset.act));
   ok(order[0] === 'wa' && order.includes('call') && !order.includes('copyopen') && !(await p.$('#c-p001 [data-send-hint]')), 'follow-up (2026-11-13, all on WhatsApp): WhatsApp first, call after, no Instagram button: ' + order.join(','));
   await p.click('#c-p001 [data-act="sent"]');
@@ -404,6 +404,8 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
     const base5 = { created: '2026-11-10', platform: 'other', store_url: '', instagram: '', whatsapp: '', email: '', niche: 'cafe', input: 'x', notes: '', brand_clear: true, sales_signal: true, active_social: true, no_or_weak_website: true, budget_signal: true, score: 5, fit: 'good', template: 'chili-pantry', status: 'new', touches: 0, history: [], language: 'en' };
     d5.items.unshift({ ...base5, ...pv, id: 'p904', business_name: 'Kopi Test', phone: '60178704324', observation: 'Their kuih sells out every single afternoon', message: 'Hi Kopi Test, we saw that your kuih sells out every single afternoon and your regulars love the pandan ones... may we send you a free mockup?', preview_msg: 'Hi, old long message with shipping placeholders' });
     d5.items.unshift({ ...base5, ...pv, id: 'p905', business_name: 'Roti Test', phone: '60191234567', preview_url: 'https://previews--cartsmith.netlify.app/m-roti-test-1234abcd/', preview_password: 'roti4321', preview_slug: 'm-roti-test-1234abcd', preview_msg: 'old' });
+    // 2026-11-15: no more free mockups (except in-person visits): a card without one sends the demo that fits after a yes on the phone
+    d5.items.unshift({ ...base5, id: 'p906', business_name: 'Serum Test', phone: '60192223333', niche: 'skincare', language: 'zh', observation: 'Handmade skincare sold on Instagram' });
     fs.writeFileSync(STORE, JSON.stringify(d5));
     await p.reload();
     await p.evaluate(() => { window.DESK_NOW = '2026-11-10T07:00:00Z'; }); // 15:00 in Malaysia
@@ -438,6 +440,23 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
     const r5 = JSON.parse(fs.readFileSync(STORE, 'utf8')).items.find((x) => x.id === 'p905');
     ok(r5.draft_reply.includes('m-roti-test-1234abcd') && r5.draft_reply.includes('roti4321') && r5.draft_reply.includes('cartsmithstudio.com') && !r5.draft_reply.includes('netlify.app') && !/\[mockup link\]/.test(r5.draft_reply), 'after a good call the message has the link and password filled in');
     await shot('pv-first');
+    if (!(await p.$('#l-p906'))) await p.click('[data-expand="p906"]');
+    await p.click('#l-p906 [data-act="call"]');
+    await p.waitForSelector('#l-p906 [data-callout]');
+    ok(/可以发示范/.test(await p.textContent('#l-p906 [data-callout]')), 'no mockup: the call outcome button says send the demo');
+    await p.click('#l-p906 [data-act="call-out"][data-out="ok"]');
+    await p.waitForSelector('#l-p906 textarea[data-field="draft_reply"]');
+    const r7 = JSON.parse(fs.readFileSync(STORE, 'utf8')).items.find((x) => x.id === 'p906');
+    ok(r7.draft_reply.includes('/demo/dewlane/') && !/样板|mockup|sample website/i.test(r7.draft_reply) && /现在发示范网站和价钱/.test(await p.textContent('#l-p906')) && !(await p.$('#l-p906 [data-act="pv-sent"]')),
+      'no mockup: after a yes the message has the matching demo (skincare → Dewlane), no mockup offer, no 已发样板 button');
+    await p.click('#l-p906 .btnrow--end [data-act="sent"]');
+    await p.waitForFunction(() => !document.querySelector('#l-p906 textarea[data-field="draft_reply"]'));
+    const r7b = JSON.parse(fs.readFileSync(STORE, 'utf8')).items.find((x) => x.id === 'p906');
+    ok(r7b.status === 'contacted' && !!r7b.demo_sent && !r7b.call_ok && !!r7b.next_followup_date && !r7b.preview_delete_by, '已发送 records the demo as sent: contacted, follow-up date, no mockup delete date');
+    await p.click('#l-p906 [data-act="followup"]');
+    await p.waitForSelector('#l-p906 textarea[data-field="followup"]');
+    const callsD = await (await fetch('http://localhost:9920/__calls')).json();
+    ok(callsD.some((c) => /FIRST follow-up after we sent the demo/.test(c.task || '')), 'the next follow-up is the "demo sent" one (link again + written quote)');
     await p.click('[data-tab="today"]');
   }
 
@@ -455,7 +474,7 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
     await p.reload();
     await p.waitForSelector('#s-forms');
     const ft = await p.textContent('#s-forms');
-    ok(/网站上申请免费样板/.test(ft) && /Kedai Aina/.test(ft) && /@kedai\.aina/.test(ft) && /AI 客服留下的资料/.test(ft) && /0123456789/.test(ft), 'Today shows the new website requests with their details');
+    ok(/网站上的报价申请/.test(ft) && /Kedai Aina/.test(ft) && /@kedai\.aina/.test(ft) && /AI 客服留下的资料/.test(ft) && /0123456789/.test(ft), 'Today shows the new website requests with their details');
     await p.click('#s-forms [data-act="form-seen"]');
     await p.waitForFunction(() => document.querySelectorAll('#s-forms [data-form-row]').length === 1 || !document.querySelector('#s-forms'));
     await p.reload();
@@ -705,7 +724,7 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
     await p.click('#c-p961 [data-act="call"]');
     await p.waitForSelector('#c-p961 [data-callout]');
     const co = await p.textContent('#c-p961 [data-callout]');
-    ok(/有兴趣/.test(co) && /还没看：重发/.test(co) && !/可以发样板/.test(co), 'second call: its own outcome buttons (interested / not looked yet)');
+    ok(/有兴趣/.test(co) && /还没看：重发/.test(co) && !/可以发样板|可以发示范/.test(co), 'second call: its own outcome buttons (interested / not looked yet)');
     await p.click('#c-p961 [data-act="call-cancel"]');
     // not looked yet → link again now, call again on the date
     const n1 = await api4({ action: 'call', id: 'p962', outcome: 'notyet', date: '2099-01-03' });
