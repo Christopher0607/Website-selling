@@ -22,3 +22,6 @@ clients/*/preview/
 # 真实店家的私人预览：照片建站时才下载（images-src.json），不进 git（2026-11-14）
 sites/preview-*/images/
 sites/preview-*/content/images/
+
+# 客户文件的 PDF / HTML（报价单、合约、订金单、收据）不进 git：repo 是公开的（2026-11-15）
+clients/c*/out/

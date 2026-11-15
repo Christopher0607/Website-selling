@@ -1,0 +1,61 @@
+{
+  "_comment": "The Baking Trip as our first client (2026-11-15: Junyu, prepare everything as if they said yes). Only public business information here: the repo is public. Fill the studio SSM / bank lines after the SSM registration and the business account. Produce the PDFs: python3 scripts/local/client-docs.py clients/c001-the-baking-trip/client.json",
+  "code": "c001-the-baking-trip",
+  "date": "2026-11-15",
+  "studio": {
+    "name": "Cartsmith Studio",
+    "ssm": "[SSM no. — registration in progress]",
+    "address": "[business address]",
+    "email": "[email]",
+    "phone": "[WhatsApp]",
+    "web": "cartsmithstudio.com",
+    "signatory": "[name on the SSM certificate]",
+    "bank": "[bank]",
+    "account_name": "Cartsmith Studio",
+    "account_no": "[account no.]"
+  },
+  "client": {
+    "name": "The Baking Trip",
+    "legal": "[registered business name]",
+    "ssm": "[SSM no.]",
+    "address": "A6, Jalan Rukun 7, Taman Gembira (Happy Garden), 58200 Kuala Lumpur",
+    "phone": "019-576 1419",
+    "preview": "https://previews.cartsmithstudio.com/m-the-baking-trip-69eefe98/"
+  },
+  "quote": {
+    "no": "Q-2026-001",
+    "valid_days": 14,
+    "recommended": "growth",
+    "first_clients": true,
+    "highlights": [
+      "Your menu online in the design you have seen: breads, bagels, buns, cakes and coffee, with photos, prices and “sold out”",
+      "Customers pre-order for pick-up: they choose the day and the time (Monday and Tuesday closed), with a limit per time slot so you never take more than you can bake",
+      "Payment by DuitNow QR with receipt upload from day one; online payment (FPX, cards, e-wallets) once your payment gateway is approved; or “send the order on WhatsApp”",
+      "Christmas pre-orders (babka and whole cakes) with a cut-off date and how many are left; whole-cake requests come to your email and WhatsApp",
+      "Promo codes, order emails, “track my order”, collection and refund policy, privacy notice and terms (drafts for your lawyer)",
+      "Your own shop dashboard on your phone: new orders, “payment received”, “ready”, what to bake tomorrow, prices and sold-out in one tap"
+    ],
+    "feature_edits": {
+      "Table bookings or festive pre-orders with cut-off dates": "Festive pre-orders with cut-off dates (Christmas, Chinese New Year)",
+      "Free-delivery threshold & vouchers": "Promo codes / vouchers",
+      "Delivery areas, West / East Malaysia shipping rates": null
+    },
+    "starter_note": "up to 20 items; pick-up orders with day and time, DuitNow / online payment; without per-slot limits, the Christmas pre-order page and promo codes",
+    "not_included": "photography, a new logo, paid ads; the domain name (a .com.my is about RM60–80 a year, paid to the registrar in your name); payment gateway fees (paid to the gateway; DuitNow QR straight to your bank has no gateway fee)"
+  },
+  "invoice": {
+    "no": "INV-2026-001",
+    "package": "growth"
+  },
+  "receipt": {
+    "no": "R-2026-001",
+    "amount": null,
+    "for": "Deposit (50%), online ordering website",
+    "paid_on": "",
+    "method": ""
+  },
+  "agreement": {
+    "no": "A-2026-001",
+    "timeline_days": 7
+  }
+}
