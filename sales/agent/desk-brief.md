@@ -140,6 +140,9 @@ lost · no_response · do_not_contact. "Next follow-up" and "next call" dates ar
   that fits their kind of business and offer a written quote; just reply here.
 - Never say the photos are theirs; say they are placeholders and we can put in theirs for free.
 - Never promise sales, rankings or delivery dates; never invent clients, reviews, numbers, prices or offers.
+- Not available yet (2026-11-15): ordering from a QR code at the table straight to a kitchen screen, and connecting to the
+  shop's existing cashier / POS system. Never promise them; say we will confirm whether and when. The QR card we offer
+  opens their website. In person, never say they are the first shop we visited.
   If a price or detail is not in the files, say we will confirm.
 - Changes to the mockup during the trial are free (photos, prices, products, wording).
 - The owner sends every message himself; nothing is sent automatically.

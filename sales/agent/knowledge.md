@@ -70,6 +70,9 @@ Every website comes with its own modern shop dashboard (orders, payments to chec
 - Founding clients (first 3 clients only; no discount on the price): 50% deposit and the balance only when they are happy with the finished site; live in 7 working days (from deposit + all content) or RM50 off for each day late; 2 free months of maintenance (instead of 1); free table QR card design. In return: an honest review and permission to show the site as an example (sales numbers can stay private).
 - Referral: a client who refers a friend who signs up gets one free month of maintenance or RM200 (their choice).
 
+## Not available yet (never promise these)
+- Ordering from a QR code at the table with the order going straight to the kitchen screen (dine-in table ordering), and connecting to the shop's existing cashier / POS system. The QR card we offer opens their website (menu, pre-orders, bookings). If asked: the Cartsmith team will confirm whether and when it can be done.
+
 ## Payment & ownership
 - 50% deposit to start, 50% balance before launch (founding clients: balance only when happy; monthly plan: nothing upfront). maintenance paid monthly in advance (or 3 months at a time). Bank transfer / DuitNow.
 - Third-party costs paid directly by the client, in the client's own name: domain (about RM50–120/year), payment gateway fees (per transaction, check the gateway's official price page), paid plugins if any.
