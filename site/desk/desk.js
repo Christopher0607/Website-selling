@@ -373,6 +373,13 @@
   // this device is Junyu's: his own opens of a mockup are not counted (same site: cartsmithstudio.com and previews.cartsmithstudio.com)
   function markStaff() { try { document.cookie = 'cs_staff=1; Max-Age=31536000; Path=/; SameSite=Lax' + (location.protocol === 'https:' ? '; Secure' : ''); } catch (e) { /* ignore */ } }
 
+  // ------------------------------------------------------------ the merchant's real shop and its dashboard (2026-11-15)
+  function shopBlock(p) {
+    if (!p.shop_url) return '';
+    const row = (label, url, login, act) => `<div class="pvbox__row"><b>${label}</b><a href="${esc(url)}" target="_blank" rel="noopener">打开</a>${login ? `<span><code>${esc(login)}</code></span><button class="linkbtn" data-act="${act}" data-id="${p.id}">复制网址和登入</button>` : ''}</div>`;
+    return `<div class="pvbox pvbox--shop">${row('网店', p.shop_url, p.shop_login, 'copy-shop')}${p.shop_admin_url ? row('店家后台', p.shop_admin_url, p.shop_owner, 'copy-dian') : ''}${p.shop_note ? `<small>${esc(p.shop_note)}</small>` : ''}</div>`;
+  }
+
   // ------------------------------------------------------------ finished mockup on the card (2026-11-09)
   const hasPv = (p) => !!(p.preview_url && p.preview_password && p.preview_msg && p.status !== 'preview_sent');
   function pvBlock(p) {
@@ -408,6 +415,7 @@
     if (p.observation) body += `<p class="obs">${esc(p.observation)}</p>`;
     if (p.verify && p.status === 'new') body += `<p class="verify">${svg('pin', 14)}<span>发之前看一眼：${esc(p.verify)}</span></p>`;
     body += contacts(p);
+    body += shopBlock(p);
     body += pvBlock(p);
     // 2026-11-13: after the mockup, the follow-up message comes first (WhatsApp); the second call is an option below it
     const msgFirst = p.status === 'preview_sent' && !!p.followup && secondDue(p) && S.calling !== p.id;
@@ -858,6 +866,8 @@
       }
       if (['wa', 'email', 'copyopen'].includes(act)) S.pendingField = t.dataset.field || '';
       if (act === 'copy-pv') { copy(`${p.preview_url}\n密码：${p.preview_password}`); toast('网址和密码已复制。'); return; }
+      if (act === 'copy-shop') { copy(`${p.shop_url}\n${p.shop_login || ''}`.trim()); toast('网店网址和登入已复制。'); return; }
+      if (act === 'copy-dian') { copy(`${p.shop_admin_url}\n${p.shop_owner || ''}`.trim()); toast('店家后台网址和登入已复制。'); return; }
       if (act === 'wa') {
         if (!okNow('发 WhatsApp')) return;
         window.open(waLink(waNo(p), textOf(t, p)), '_blank', 'noopener');
