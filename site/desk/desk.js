@@ -143,10 +143,11 @@
   function visitList(q) {
     const open = ['new', 'contacted', 'replied', 'preview_sent'];
     const items = S.items.filter((p) => p.address && open.includes(p.status) && !/^在家做/.test(p.address) && (!q || [p.business_name, p.area, p.address].join(' ').toLowerCase().includes(q)));
-    if (!items.length) return '<div class="empty">还没有带地址的商家。每天新找的商家会附上地区和地址；以前的也可以在「编辑」补上。</div>';
+    const tips = '<p class="hint"><a href="call-script.html#visit" target="_blank" rel="noopener">上门拜访：台词、时间和注意事项</a></p>';
+    if (!items.length) return tips + '<div class="empty">还没有带地址的商家。每天新找的商家会附上地区和地址；以前的也可以在「编辑」补上。</div>';
     const groups = {};
     items.forEach((p) => { (groups[p.area || '其他'] = groups[p.area || '其他'] || []).push(p); });
-    return Object.keys(groups).sort((a, b) => groups[b].length - groups[a].length || a.localeCompare(b)).map((area) => `<section class="visit"><h3>${esc(area)} <small>${groups[area].length} 家</small></h3>${groups[area].map((p) => `<div class="visit__row"><div><b>${esc(p.business_name)}</b><small>${esc(STATUS[p.status] || p.status)}${callNo(p) ? ' · ' + esc(fmtPhone(callNo(p))) : ''}</small><small>${esc(p.address)}</small></div><a class="btn btn--ghost btn--sm" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.business_name + ' ' + p.address)}" target="_blank" rel="noopener">${svg('pin', 14)}地图</a></div>`).join('')}</section>`).join('') + '<p class="hint">建议平日 14:30–17:00 去；买一样东西，用手机给老板看他们的样板。</p>';
+    return tips + Object.keys(groups).sort((a, b) => groups[b].length - groups[a].length || a.localeCompare(b)).map((area) => `<section class="visit"><h3>${esc(area)} <small>${groups[area].length} 家</small></h3>${groups[area].map((p) => `<div class="visit__row"><div><b>${esc(p.business_name)}</b><small>${esc(STATUS[p.status] || p.status)}${callNo(p) ? ' · ' + esc(fmtPhone(callNo(p))) : ''}</small><small>${esc(p.address)}</small></div><a class="btn btn--ghost btn--sm" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.business_name + ' ' + p.address)}" target="_blank" rel="noopener">${svg('pin', 14)}地图</a></div>`).join('')}</section>`).join('') + '<p class="hint">建议平日 15:00–17:00 去；开口先说「只要 5 分钟」，用手机给老板看他们的样板或示范网站。</p>';
   }
 
 
