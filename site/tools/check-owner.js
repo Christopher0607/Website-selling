@@ -282,7 +282,7 @@ async function shopOrder(browser, pay = 'agc_duitnow', last = 'DuitNow') {
   await p.locator('section').first().locator('input[type=text]').first().fill(oldName);
   await p.locator('section').first().locator('.form > .btn').first().click();
   await wait(p, 1500);
-  ok((await p.$$('section')).length === 4, 'settings: festive, shop details, DuitNow, delivery fees');
+  ok((await p.$$('section')).length === 5, 'settings: festive, table QR ordering (2026-11-15), shop details, DuitNow, delivery fees');
   ok((await overflow(p)) <= 1, 'settings fit the phone screen');
 
   console.log('New order (phone / WhatsApp / counter) — an add-on');

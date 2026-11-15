@@ -271,6 +271,8 @@ class AGC_Owner_App {
 			),
 			'demo'     => (bool) agc_get( 'demo_mode' ),
 			'manual'   => (bool) agc_get( 'owner_manual_orders' ),
+			'table'    => class_exists( 'AGC_Table' ) && AGC_Table::on(),
+			'qrjs'     => AGC_URL . 'assets/owner/qrcode.js?v=' . AGC_VERSION,
 		);
 		$v = AGC_VERSION . '.' . filemtime( AGC_DIR . 'assets/owner/app.js' );
 		self::head( self::site_name() . ' · ' . __( 'Shop dashboard', 'agency-core' ) );

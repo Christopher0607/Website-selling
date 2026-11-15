@@ -51,7 +51,13 @@
       cp_new: 'New coupon', cp_code: 'Code', cp_type: 'Discount', cp_percent: '% off', cp_fixed: 'RM off', cp_amount: 'Amount', cp_min: 'Minimum spend (RM, optional)', cp_limit: 'How many times it can be used (empty = no limit)', cp_exp: 'Valid until (optional)', cp_free: 'Also free delivery', cp_on: 'Active',
       cp_used: 'used {0}×', cp_of: 'used {0} of {1}', cp_expired: 'Expired', cp_off: 'Off', cp_none: 'No coupons yet.', cp_delete: 'Delete coupon', cp_delete_q: 'Delete coupon {0}?',
       tm_owner: 'Owner', tm_staff: 'Staff', tm_add: 'Add a staff account', tm_name: 'Name', tm_email: 'Email', tm_hint: 'Staff can handle orders, production, products and customers. They cannot change settings or the team.', tm_link: 'Send this link to {0}. It lets them set their own password (one time, 24 hours):', tm_copy: 'Copy link', tm_wa: 'Send on WhatsApp', tm_remove: 'Remove', tm_remove_q: 'Remove {0}?', tm_remove_p: 'They will not be able to log in any more.', tm_you: 'you',
-      c_tap: 'Tap a customer to see their orders.', all_orders: 'All orders'
+      c_tap: 'Tap a customer to see their orders.', all_orders: 'All orders',
+      kitchen: 'Kitchen', tables: 'Tables', k_empty: 'Nothing to make. Orders from the table QR codes appear here by themselves.', k_done: 'Done', k_undo: 'Undo', k_recent: 'Done in the last 30 minutes',
+      k_sound: 'Turn on sound', k_sound_on: 'Sound on', k_new: 'New table order', k_min: '{0} min', k_now: 'now', k_hint: 'Leave this screen open in the kitchen (a tablet or an old phone). It updates by itself.',
+      tb_table: 'Table {0}', tb_free: 'Free', tb_ready: 'All served', tb_making: 'Kitchen making', tb_pay: 'Payment received', tb_pay_q: 'Table {0} paid {1}?', tb_how: 'How did they pay?',
+      m_card: 'Card', m_pos: 'Shop cashier', tb_cancel: 'Cancel this order', tb_cancel_p: 'The items go back into stock.', tb_qr: 'Print table QR codes', tb_qr_hint: 'Print, cut and put one on each table. Customers scan it, order on their phone and pay at the counter. If the website address changes, print them again.',
+      tb_scan: 'Scan to order', tb_scan2: 'Pay at the counter', tb_off: 'Table QR ordering is off. Turn it on in Settings.', tb_due: 'To pay', tb_none: 'No tables yet. Add them in Settings.', tb_test: 'Open this table\'s menu',
+      tb_open_n: '{0} tables with an open bill', s_table: 'Table QR ordering', s_table_on: 'Customers can order from the QR code on their table', s_table_list: 'Tables (e.g. 1-12, or 1,2,3,Patio)', s_table_note: 'Message on the table menu (optional)', k_open: 'Open the kitchen screen', tb_unpaid: 'table orders not paid yet'
     },
     zh: {
       home: '概况', orders: '订单', production: '生产', products: '产品', more: '更多', customers: '顾客', reports: '报表', settings: '设定',
@@ -96,7 +102,13 @@
       cp_new: '新增优惠码', cp_code: '优惠码', cp_type: '折扣方式', cp_percent: '打折 %', cp_fixed: '减 RM', cp_amount: '数目', cp_min: '最低消费（RM，可不填）', cp_limit: '可以用几次（空白 = 不限）', cp_exp: '有效到（可不填）', cp_free: '同时免运费', cp_on: '启用',
       cp_used: '用了 {0} 次', cp_of: '用了 {0} / {1} 次', cp_expired: '已过期', cp_off: '已停用', cp_none: '还没有优惠码。', cp_delete: '删除优惠码', cp_delete_q: '删除优惠码 {0}？',
       tm_owner: '老板', tm_staff: '员工', tm_add: '新增员工帐号', tm_name: '名字', tm_email: '电邮', tm_hint: '员工可以处理订单、生产、产品和顾客，不能改设定和员工帐号。', tm_link: '把这个连结发给 {0}，让他自己设定密码（只能用一次、24 小时内有效）：', tm_copy: '复制连结', tm_wa: '用 WhatsApp 发', tm_remove: '移除', tm_remove_q: '移除 {0}？', tm_remove_p: '移除后这个人就不能再登录。', tm_you: '你',
-      c_tap: '点顾客可以看他所有的订单。', all_orders: '全部订单'
+      c_tap: '点顾客可以看他所有的订单。', all_orders: '全部订单',
+      kitchen: '厨房', tables: '桌子', k_empty: '没有要做的单。客人在桌上扫码点的单会自己出现在这里。', k_done: '做好了', k_undo: '退回', k_recent: '30 分钟内做好的',
+      k_sound: '打开提示声', k_sound_on: '提示声已打开', k_new: '新的桌上点单', k_min: '{0} 分钟', k_now: '刚刚', k_hint: '把这个画面开着放在厨房（平板或旧手机），会自己更新。',
+      tb_table: '{0} 号桌', tb_free: '空', tb_ready: '都做好了', tb_making: '厨房在做', tb_pay: '收到钱了', tb_pay_q: '{0} 号桌付了 {1}？', tb_how: '怎么付的？',
+      m_card: '刷卡', m_pos: '收银机', tb_cancel: '取消这一单', tb_cancel_p: '东西会放回库存。', tb_qr: '打印桌上 QR', tb_qr_hint: '打印出来剪开，每张桌子放一张。客人扫码用手机点单，吃完到柜台付款。网址换了要重新打印。',
+      tb_scan: '扫码点单', tb_scan2: '吃完到柜台付款', tb_off: '桌上扫码点单还没打开，在「设定」打开。', tb_due: '要付', tb_none: '还没有桌子，在「设定」加。', tb_test: '打开这张桌子的菜单',
+      tb_open_n: '{0} 张桌子还没付款', s_table: '桌上扫码点单', s_table_on: '客人可以扫桌上的 QR 点单', s_table_list: '桌子（例如 1-12，或 1,2,3,外面）', s_table_note: '桌上菜单的提示（可以不填）', k_open: '打开厨房画面', tb_unpaid: '桌上还没付的单'
     }
   };
   function t(k) {
@@ -149,7 +161,9 @@
     team: '<circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4.3-6 8-6s7 2 8 6"/>',
     map: '<path d="M12 21s-7-6.2-7-12a7 7 0 0 1 14 0c0 5.8-7 12-7 12z"/><circle cx="12" cy="9" r="2.5"/>',
     check: '<path d="M5 12.5 10 17l9-10"/>',
-    pause: '<rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/>'
+    pause: '<rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/>',
+    kitchen: '<path d="M4 11h16v2a7 7 0 0 1-7 7h-2a7 7 0 0 1-7-7z"/><path d="M8 7.5c0-1.5 1-1.8 1-3.5M12 7.5c0-1.5 1-1.8 1-3.5M16 7.5c0-1.5 1-1.8 1-3.5"/>',
+    tables: '<rect x="3" y="3" width="7.5" height="7.5" rx="1.8"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.8"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.8"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.8"/>'
   };
   function icon(n) {
     var s = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -287,6 +301,7 @@
   var NAV = [['home', 'home'], ['orders', 'orders'], ['production', 'production'], ['products', 'products'], ['more', 'more']];
   var SIDE = [['home', 'home'], ['orders', 'orders'], ['production', 'production'], ['products', 'products'], ['customers', 'customers'], ['coupons', 'tag'], ['reports', 'reports'], ['settings', 'settings'], ['team', 'team']];
   if (!C.can || !C.can.admin) SIDE = SIDE.filter(function (x) { return x[0] !== 'team'; });
+  if (C.table) SIDE.splice(2, 0, ['kitchen', 'kitchen'], ['tables', 'tables']); // table QR ordering (2026-11-15)
   if (!C.can || !C.can.products) { NAV = NAV.filter(function (x) { return x[0] !== 'products'; }); SIDE = SIDE.filter(function (x) { return x[0] !== 'products'; }); }
   if (!C.can || !C.can.settings) SIDE = SIDE.filter(function (x) { return x[0] !== 'settings'; });
   var el = {};
@@ -315,10 +330,10 @@
     document.title = title + ' · ' + C.site;
   }
   function setNav(k) {
-    var map = { order: 'orders', 'new-order': 'orders', product: 'products', customers: 'more', reports: 'more', settings: 'more', coupons: 'more', coupon: 'more', team: 'more', print: 'production' };
+    var map = { order: 'orders', 'new-order': 'orders', product: 'products', customers: 'more', reports: 'more', settings: 'more', coupons: 'more', coupon: 'more', team: 'more', print: 'production', kitchen: 'more', tables: 'more', table: 'more', 'table-qr': 'more' };
     var navK = map[k] || k;
     [].forEach.call(el.nav.querySelectorAll('a'), function (a) { a.classList.toggle('is-on', a.getAttribute('data-k') === navK); });
-    var sideK = { order: 'orders', 'new-order': 'orders', product: 'products', coupon: 'coupons', print: 'production' }[k] || k;
+    var sideK = { order: 'orders', 'new-order': 'orders', product: 'products', coupon: 'coupons', print: 'production', table: 'tables', 'table-qr': 'tables' }[k] || k;
     [].forEach.call(el.side.querySelectorAll('a[data-k]'), function (a) { a.classList.toggle('is-on', a.getAttribute('data-k') === sideK); });
   }
   function badges() {
@@ -416,6 +431,9 @@
         h('div', { class: 'stat' }, h('b', null, s.today.revenue), h('span', null, t('tile_rev'))),
         h('a', { class: 'stat', href: '#/orders?f=all' }, h('b', null, s.season.orders), h('span', null, t(s.fest.rolling ? 'tile_month' : 'tile_season'))),
         h('a', { class: 'stat', href: '#/reports' }, h('b', null, s.season.revenue), h('span', null, t(s.fest.rolling ? 'tile_month_rev' : 'tile_sales')))));
+      if (s.table) put(m, h('div', { class: 'grid2', style: 'margin-bottom:14px' },
+        h('a', { class: 'stat', href: '#/kitchen' }, h('b', null, h('span', { class: 'row', style: 'gap:8px;font-size:inherit;color:inherit' }, icon('kitchen'), t('kitchen'))), h('span', null, t('k_open'))),
+        h('a', { class: 'stat' + (s.counts.table ? ' stat--warn' : ''), href: '#/tables' }, h('b', null, s.counts.table), h('span', null, t('tb_unpaid')))));
       var cols = h('div', { class: 'cols' });
       put(cols, h('div', { class: 'card' }, h('div', { class: 'card__h' }, h('h2', null, t('next_days')), h('a', { href: '#/production' }, t('production'))),
         s.next.length ? h('table', { class: 'tbl' }, h('tbody', null, s.next.map(function (x) {
@@ -1138,6 +1156,13 @@
       var B = { legal: h('input', { type: 'text', value: s.legal_name }), phone: h('input', { type: 'tel', value: s.business_phone }), email: h('input', { type: 'email', value: s.business_email }),
         address: h('textarea', { rows: 2, value: s.business_address }), hours: h('input', { type: 'text', value: s.business_hours }), ann: h('input', { type: 'text', value: s.announcement }),
         pause: sw(t('paused_on'), +s.shop_paused), pauseMsg: h('input', { type: 'text', value: s.shop_paused_msg }) };
+      var TB = { on: sw(t('s_table_on'), +s.table_on), list: h('input', { type: 'text', value: s.table_list || '', placeholder: '1-10' }), note: h('textarea', { rows: 2, value: s.table_note || '' }) };
+      put(m, section(t('s_table'), [TB.on.el, field(t('s_table_list'), TB.list), field(t('s_table_note'), TB.note)], function () {
+        var was = !!C.table;
+        return api('settings', { method: 'POST', body: { settings: { table_on: TB.on.input.checked, table_list: TB.list.value, table_note: TB.note.value } } }).then(function () {
+          if (was !== TB.on.input.checked) setTimeout(function () { location.reload(); }, 600);
+        });
+      }));
       put(m, section(t('s_shop'), [field(t('s_legal'), B.legal), h('div', { class: 'fields2' }, field(t('s_phone'), B.phone), field(t('s_email'), B.email)), field(t('s_address'), B.address), field(t('s_hours'), B.hours), field(t('s_announce'), B.ann), B.pause.el, field(t('pause_msg'), B.pauseMsg)],
         function () { return api('settings', { method: 'POST', body: { settings: { legal_name: B.legal.value, business_phone: B.phone.value, business_email: B.email.value, business_address: B.address.value, business_hours: B.hours.value, announcement: B.ann.value, shop_paused: B.pause.input.checked, shop_paused_msg: B.pauseMsg.value } } }); }));
       var D = dd.duitnow;
@@ -1166,11 +1191,159 @@
     });
   };
 
+  /* ------------------------------------------------------------------ table QR ordering (2026-11-15) */
+  function ago(ts, now) { var m = Math.max(0, Math.floor(((now || Date.now() / 1000) - ts) / 60)); return m < 1 ? t('k_now') : t('k_min', m); }
+  var AUDIO = null;
+  function beep() {
+    try {
+      if (!AUDIO) return;
+      [0, 0.32].forEach(function (at) {
+        var o = AUDIO.createOscillator(), g = AUDIO.createGain();
+        o.type = 'sine'; o.frequency.value = 880; o.connect(g); g.connect(AUDIO.destination);
+        var t0 = AUDIO.currentTime + at;
+        g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(0.5, t0 + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.25);
+        o.start(t0); o.stop(t0 + 0.3);
+      });
+    } catch (e) { /* no sound */ }
+  }
+  var WAKE = null;
+  function keepAwake() {
+    try { if (navigator.wakeLock && !WAKE) navigator.wakeLock.request('screen').then(function (l) { WAKE = l; l.addEventListener('release', function () { WAKE = null; }); }).catch(function () {}); } catch (e) { /* not supported */ }
+  }
+  function pollWhile(r, fn, ms) {
+    var id = setInterval(function () { if (!live(r)) { clearInterval(id); return; } if (!document.hidden) fn(); }, ms);
+  }
+  function tableOff(m) { put(m, h('div', { class: 'card empty' }, h('p', null, t('tb_off')), C.can.settings ? h('a', { class: 'btn btn--ghost', href: '#/settings' }, t('settings')) : null)); }
+
+  VIEWS.kitchen = function (r) {
+    setTop(t('kitchen'), C.site);
+    var seen = null;
+    var soundBtn = h('button', { class: 'btn btn--sm' + (AUDIO ? ' btn--plain' : ''), type: 'button', onclick: function () {
+      try { AUDIO = AUDIO || new (window.AudioContext || window.webkitAudioContext)(); AUDIO.resume(); beep(); } catch (e) { /* no sound */ }
+      soundBtn.textContent = t('k_sound_on'); soundBtn.className = 'btn btn--sm btn--plain';
+    } }, AUDIO ? t('k_sound_on') : t('k_sound'));
+    el.act.innerHTML = ''; put(el.act, soundBtn);
+    keepAwake();
+    function draw(d) {
+      var m = live(r); if (!m) return;
+      if (!d.on) { m.innerHTML = ''; tableOff(m); return; }
+      var ids = d.todo.map(function (o) { return o.id; });
+      if (seen && ids.some(function (id) { return seen.indexOf(id) === -1; })) { beep(); if (navigator.vibrate) navigator.vibrate([200, 100, 200]); toast(t('k_new')); }
+      seen = ids;
+      m.innerHTML = '';
+      if (!d.todo.length) put(m, h('div', { class: 'card empty' }, h('p', null, t('k_empty')), h('p', { class: 'small muted' }, t('k_hint'))));
+      put(m, h('div', { class: 'kgrid' }, d.todo.map(function (o) {
+        var late = d.now - o.created > 15 * 60;
+        var btn = h('button', { class: 'btn kt__done', type: 'button', onclick: function () {
+          btn.disabled = true;
+          api('kitchen/' + o.id, { method: 'POST', body: { done: true } }).then(draw).catch(function (e) { btn.disabled = false; toast(t('error', e.message), true); });
+        } }, icon('check'), t('k_done'));
+        return h('article', { class: 'kt' + (late ? ' kt--late' : '') },
+          h('div', { class: 'kt__hd' }, h('b', { class: 'kt__table' }, t('tb_table', o.table)), h('span', { class: 'kt__no' }, '#' + o.number), h('span', { class: 'kt__age' }, ago(o.created, d.now))),
+          h('ul', { class: 'kt__items' }, o.items.map(function (it) {
+            return h('li', null, h('b', null, it.qty + '×'), h('span', null, it.name, it.opts ? h('small', null, it.opts) : null, it.note ? h('em', null, it.note) : null));
+          })),
+          o.note ? h('p', { class: 'kt__note' }, o.note) : null, btn);
+      })));
+      if (d.done.length) put(m, h('div', { class: 'card', style: 'margin-top:14px' }, h('div', { class: 'card__h' }, h('h2', null, t('k_recent'))),
+        h('table', { class: 'tbl' }, h('tbody', null, d.done.map(function (o) {
+          var undo = h('button', { class: 'btn btn--plain btn--sm', type: 'button', onclick: function () { undo.disabled = true; api('kitchen/' + o.id, { method: 'POST', body: { done: false } }).then(draw).catch(function (e) { undo.disabled = false; toast(t('error', e.message), true); }); } }, t('k_undo'));
+          return h('tr', null, h('td', null, h('b', null, t('tb_table', o.table)), ' #' + o.number), h('td', { class: 'small muted' }, o.items.map(function (it) { return it.qty + '× ' + it.name; }).join(', ')), h('td', { class: 'r' }, o.status === 'completed' ? h('span', { class: 'badge b-done' }, t('paid')) : undo));
+        })))));
+    }
+    return api('kitchen').then(function (d) { draw(d); pollWhile(r, function () { api('kitchen').then(draw).catch(function () {}); }, 6000); });
+  };
+
+  VIEWS.tables = function (r) {
+    setTop(t('tables'), C.site);
+    el.act.innerHTML = ''; put(el.act, h('a', { class: 'btn btn--sm btn--plain', href: '#/table-qr' }, icon('print'), t('tb_qr')));
+    function draw(d) {
+      var m = live(r); if (!m) return;
+      m.innerHTML = '';
+      if (!C.table) { tableOff(m); return; }
+      if (!d.tables.length) { put(m, h('div', { class: 'card empty' }, h('p', null, t('tb_none')))); return; }
+      var open = d.tables.filter(function (x) { return x.orders.length; }).length;
+      if (open) put(m, h('p', { class: 'muted', style: 'margin:0 0 10px' }, t('tb_open_n', open)));
+      put(m, h('div', { class: 'tgrid' }, d.tables.map(function (x) {
+        var busy = x.orders.length > 0;
+        return h('a', { class: 'tcard' + (busy ? (x.ready ? ' tcard--ready' : ' tcard--busy') : ''), href: '#/table/' + encodeURIComponent(x.table) },
+          h('b', { class: 'tcard__n' }, x.table),
+          busy ? [h('span', { class: 'tcard__sum' }, x.total_f), h('span', { class: 'tcard__meta' }, (x.orders.length === 1 && !ZH ? '1 order' : t('orders_n', x.orders.length)) + ' · ' + ago(x.since, d.now)), h('span', { class: 'tcard__st' }, x.ready ? t('tb_ready') : t('tb_making'))]
+            : h('span', { class: 'tcard__meta' }, t('tb_free')));
+      })));
+    }
+    return api('tables').then(function (d) { draw(d); pollWhile(r, function () { api('tables').then(draw).catch(function () {}); }, 10000); });
+  };
+
+  VIEWS.table = function (r) {
+    var name = decodeURIComponent(r.id || '');
+    setTop(t('tb_table', name), C.site, true);
+    function draw(d) {
+      var m = live(r); if (!m) return;
+      var x = d.tables.filter(function (y) { return y.table === name; })[0];
+      m.innerHTML = '';
+      if (!x) { put(m, h('div', { class: 'card empty' }, h('p', null, t('no_orders')))); return; }
+      if (!x.orders.length) put(m, h('div', { class: 'card empty' }, h('p', null, t('tb_free'))));
+      x.orders.forEach(function (o) {
+        var cancel = h('button', { class: 'btn btn--plain btn--sm', type: 'button', onclick: function () {
+          confirmBox(t('cancel_q', o.number), t('tb_cancel_p'), t('yes_cancel'), t('keep'), true).then(function (ok) {
+            if (!ok) return;
+            api('tables/cancel/' + o.id, { method: 'POST' }).then(function (dd) { toast(t('saved')); draw(dd); }).catch(function (e) { toast(t('error', e.message), true); });
+          });
+        } }, t('tb_cancel'));
+        put(m, h('div', { class: 'card' }, h('div', { class: 'card__h' }, h('h2', null, '#' + o.number + ' · ' + ago(o.created, d.now)), h('span', { class: 'badge ' + (o.done ? 'b-ready' : 'b-make') }, o.done ? t('tb_ready') : t('tb_making'))),
+          h('table', { class: 'tbl' }, h('tbody', null, o.items.map(function (it) {
+            return h('tr', null, h('td', null, it.qty + '× ' + it.name, it.opts ? h('div', { class: 'small muted' }, it.opts) : null, it.note ? h('div', { class: 'small muted' }, it.note) : null), h('td', { class: 'r' }, it.total));
+          }))), o.note ? h('p', { class: 'small muted' }, o.note) : null,
+          h('div', { class: 'row', style: 'justify-content:space-between;margin-top:8px' }, cancel, h('b', null, o.total_f))));
+      });
+      if (x.orders.length) {
+        var pay = h('button', { class: 'btn', type: 'button', style: 'flex:1', onclick: function () {
+          var ids = x.orders.map(function (o) { return o.id; });
+          sheet(t('tb_pay_q', name, x.total_f), t('tb_how'), [
+            { label: t('m_cash'), v: 'cash' }, { label: t('m_duitnow'), v: 'duitnow' }, { label: t('m_card'), v: 'card' }, { label: t('m_pos'), v: 'pos' }, { label: t('m_other'), v: 'other', cls: 'btn--plain' }
+          ]).then(function (method) {
+            if (!method) return;
+            pay.disabled = true;
+            api('tables/pay', { method: 'POST', body: { table: name, method: method, ids: ids } }).then(function () { toast(t('saved')); location.hash = '#/tables'; })
+              .catch(function (e) { pay.disabled = false; toast(t('error', e.message), true); });
+          });
+        } }, icon('check'), t('tb_pay'));
+        put(m, h('div', { class: 'actbar' }, h('div', { class: 'tdue' }, h('span', null, t('tb_due')), h('b', null, x.total_f)), pay));
+      }
+      put(m, h('p', { class: 'small', style: 'margin-top:14px' }, h('a', { href: x.link, target: '_blank', rel: 'noopener' }, t('tb_test'))));
+    }
+    return api('tables').then(function (d) { draw(d); pollWhile(r, function () { if (!document.querySelector('.scrim')) api('tables').then(draw).catch(function () {}); }, 10000); });
+  };
+
+  function loadQR() {
+    if (window.qrcode) return Promise.resolve();
+    return new Promise(function (ok, no) { var sc = document.createElement('script'); sc.src = C.qrjs; sc.onload = ok; sc.onerror = no; document.head.appendChild(sc); });
+  }
+  VIEWS['table-qr'] = function (r) {
+    setTop(t('tb_qr'), C.site, true);
+    el.act.innerHTML = ''; put(el.act, h('button', { class: 'btn btn--sm', type: 'button', onclick: function () { window.print(); } }, icon('print'), t('print')));
+    return Promise.all([api('tables'), loadQR()]).then(function (res) {
+      var d = res[0], m = live(r); if (!m) return;
+      m.innerHTML = '';
+      if (!C.table) { tableOff(m); return; }
+      put(m, h('p', { class: 'muted noprint' }, t('tb_qr_hint')));
+      put(m, h('div', { class: 'qrsheet' }, d.tables.map(function (x) {
+        var box = h('div', { class: 'qrcard__code' });
+        var q = window.qrcode(0, 'M'); q.addData(x.link); q.make();
+        box.innerHTML = q.createSvgTag({ cellSize: 4, margin: 2, scalable: true }); // SVG made by the QR library from our own link
+        return h('div', { class: 'qrcard' }, h('div', { class: 'qrcard__site' }, d.site), h('div', { class: 'qrcard__t' }, t('tb_table', x.table)), box,
+          h('div', { class: 'qrcard__scan' }, t('tb_scan')), h('div', { class: 'qrcard__pay' }, t('tb_scan2')));
+      })));
+    });
+  };
+
   /* ------------------------------------------------------------------ more (phone) */
   VIEWS.more = function (r) {
     setTop(t('more'), C.site);
     var m = live(r); if (!m) return; m.innerHTML = '';
     var links = [['customers', 'customers'], ['coupons', 'tag'], ['reports', 'reports']];
+    if (C.table) links.unshift(['kitchen', 'kitchen'], ['tables', 'tables']);
     if (C.can.settings) links.push(['settings', 'settings']);
     if (C.can.admin) links.push(['team', 'team']);
     put(m, h('div', { class: 'card', style: 'padding:6px' }, links.map(function (x) {

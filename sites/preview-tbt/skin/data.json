@@ -1,4 +1,26 @@
 {
+ "cats": [
+  [
+   "loaves",
+   "Sourdough loaves"
+  ],
+  [
+   "buns",
+   "Bagels & buns"
+  ],
+  [
+   "sandwiches",
+   "Sandwiches"
+  ],
+  [
+   "cakes",
+   "Cakes"
+  ],
+  [
+   "drinks",
+   "Coffee"
+  ]
+ ],
  "menu": [
   {
    "id": "cranberry-country",

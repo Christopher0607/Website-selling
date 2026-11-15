@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.8.0 — 2026-11-15（桌上扫码点单：俊宇第一次地推后决定先做基本版）
+- 新设定 Settings → Agency → Table QR ordering（店家后台「设定 → 桌上扫码点单」也可以改）：`table_on`、`table_list`（例如 `1-12` 或 `1,2,3,Patio`）、`table_note`、`table_cats`。默认关闭。
+- 客人页面 `/table/?t=<桌子>&k=<钥匙>`：钥匙是用资料库里的秘密算的（`agc_table_secret`），猜不到别的桌子；网址换了要重印 QR。菜单：有店家自己的设计（skin）就用它的 data.json（同样的产品、选项、照片，`cats` 是分类名称），不然用上架的简单产品；只放有价钱的；价钱一律从 WooCommerce 算。可以加备注、看自己的单「准备中 / 做好了 / 已付款」，同一桌可以一直加点。
+- 每张桌上单是一张 WooCommerce 订单（保留 = 还没付，`_agc_table` = 桌子），库存、报表、Excel 照常；不寄电邮。暂停接单时不能点。
+- 店家后台：「厨房」画面（自己每 6 秒更新、新单有提示声和震动、做好了 / 退回、超过 15 分钟变色、保持屏幕常亮）、「桌子」画面（哪张桌子还没付、多少钱）→ 结帐「收到钱了」选现金 / DuitNow / 刷卡 / 收银机 / 其他、取消一张单（库存放回）、「打印桌上 QR」（一桌一张，浏览器产生，用 qrcode-generator MIT）。
+- 还没付的桌上单不放进一般的订单清单；付了以后在「已完成」，报表「取货方式」显示「堂食（桌上扫码）」。
+- 测试 `site/tools/check-table.js`（25 项）；`check-owner.js` 设定页现在有 5 个区块。
+
 ## 1.6.1 — 2026-11-13（工作台「流量」）
 - 新设定 `studio_hits`（Settings → Agency → Tracking）：填 `https://cartsmithstudio.com/assets/js/hit.js`，这个站的访客就算进 Cartsmith 工作台的「流量」分页。只给我们自己的示范站（demo-festive 已打开），不放客户网站；登录的人不算
 
