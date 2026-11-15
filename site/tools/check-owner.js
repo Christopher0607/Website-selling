@@ -19,7 +19,43 @@ async function overflow(p) { return p.evaluate(() => document.documentElement.sc
 
 // A customer orders on the website (DuitNow → a "payment to check"; the demo online payment → paid, "to make").
 // Works on a shop with delivery (address fields) and on a collection-only shop (name, phone, email only).
+let SKIN = null;
+async function isSkin(browser) {
+  if (SKIN !== null) return SKIN;
+  const c = await browser.newContext();
+  const s = await c.newPage();
+  await s.goto(BASE + '/shop/');
+  SKIN = /\/menu\/$/.test(s.url()) && !!(await s.$('[data-menu]'));
+  await c.close();
+  return SKIN;
+}
+async function skinOrder(browser, pay, last, code) {
+  const c = await browser.newContext({ viewport: { width: 390, height: 844 } });
+  const s = await c.newPage();
+  await s.goto(BASE + '/menu/');
+  await s.locator('[data-add]:not([disabled])').first().click();
+  await s.waitForTimeout(300);
+  await s.goto(BASE + '/order/');
+  await s.locator('[data-day]').first().click();
+  await s.locator('[data-time]').first().click();
+  await s.fill('#o-name', 'Test ' + last);
+  await s.fill('#o-phone', '012-555 0000');
+  await s.fill('#o-email', last.toLowerCase() + '-test@example.com');
+  if (code) {
+    await s.fill('#o-code', code);
+    await s.click('[data-apply]');
+    await s.waitForTimeout(1200);
+    const sum = await s.textContent('.summary');
+    await c.close();
+    return sum;
+  }
+  await s.locator('input[name=pay][value=' + ({ agc_duitnow: 'duitnow', agc_demo_pay: 'online' }[pay] || 'wa') + ']').check();
+  await Promise.all([s.waitForURL(/\/order\/\?o=\d+&k=/, { timeout: 45000 }), s.click('[data-place]')]);
+  await c.close();
+  return true;
+}
 async function shopOrder(browser, pay = 'agc_duitnow', last = 'DuitNow') {
+  if (await isSkin(browser)) return skinOrder(browser, pay, last);
   const c = await browser.newContext({ viewport: { width: 390, height: 844 } });
   const s = await c.newPage();
   const settle = async () => { await s.waitForTimeout(500); await s.waitForFunction(() => !document.querySelector('.blockUI.blockOverlay'), null, { timeout: 20000 }).catch(() => {}); };
@@ -189,8 +225,9 @@ async function shopOrder(browser, pay = 'agc_duitnow', last = 'DuitNow') {
     await wait(p, 1200);
     const v = await browser.newContext();
     const vp = await v.newPage();
-    await vp.goto(BASE + '/?post_type=product&p=' + dId + '&nc=' + Date.now());
-    const shown = (await vp.textContent('body')).includes(dName) && /9\.90/.test(await vp.textContent('body'));
+    await vp.goto(BASE + ((await isSkin(browser)) ? '/menu/?nc=' : '/?post_type=product&p=' + dId + '&nc=') + Date.now());
+    const body = await vp.textContent('body');
+    const shown = (await isSkin(browser)) ? new RegExp(dName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '[\\s\\S]{0,400}RM9\\.90').test(body) : body.includes(dName) && /9\.90/.test(body);
     await v.close();
     ok(shown, 'a product waiting for a price: type the price, switch on, it is in the shop (' + dName + ')');
     const back = await p.evaluate(async (id) => (await fetch(AGC_OWNER.rest + 'products/' + id, { method: 'POST', credentials: 'same-origin', headers: { 'X-WP-Nonce': AGC_OWNER.nonce, 'Content-Type': 'application/json' }, body: JSON.stringify({ status: 'draft', regular_price: '' }) })).status, dId);
@@ -327,6 +364,10 @@ async function shopOrder(browser, pay = 'agc_duitnow', last = 'DuitNow') {
   await Promise.all([p.waitForURL(/#\/coupons$/), p.click('.actbar .btn')]);
   await ready(p);
   ok(new RegExp(code).test(await p.textContent('.main')), 'coupon created');
+  if (await isSkin(browser)) {
+    const sum = await skinOrder(browser, '', 'Coupon', code);
+    ok(new RegExp(code, 'i').test(sum) && /applied/.test(sum), 'the coupon works on the order page');
+  } else {
   const shop = await browser.newContext({ viewport: { width: 390, height: 844 } });
   const sp = await shop.newPage();
   await sp.goto(BASE + '/');
@@ -338,6 +379,7 @@ async function shopOrder(browser, pay = 'agc_duitnow', last = 'DuitNow') {
   await sp.waitForTimeout(2500);
   ok(new RegExp(code, 'i').test(await sp.textContent('.cart_totals')), 'the coupon works in the shop cart');
   await shop.close();
+  }
   await p.click('.pcard:has-text("' + code + '")');
   await p.waitForSelector('.actbar');
   await p.click('button.btn--danger');
@@ -355,12 +397,23 @@ async function shopOrder(browser, pay = 'agc_duitnow', last = 'DuitNow') {
   await p.waitForTimeout(800);
   const v1 = await browser.newContext();
   const vp = await v1.newPage();
+  if (await isSkin(browser)) {
+    await vp.goto(BASE + '/order/?nc=' + Date.now());
+    await vp.waitForTimeout(800);
+    ok(/Orders paused/.test(await vp.textContent('[data-status]')), 'paused: the website says orders are paused');
+    await pz.click();
+    await p.waitForTimeout(1500);
+    await vp.goto(BASE + '/?nc=' + Date.now());
+    await vp.waitForTimeout(800);
+    ok(!/Orders paused/.test(await vp.textContent('[data-status]')), 'switched back on: orders open again');
+  } else {
   await vp.goto(BASE + '/?nc=' + Date.now());
   ok(!!(await vp.$('.agc-paused')) && !(await vp.$('li.product a.add_to_cart_button')), 'paused: the shop shows the message and nothing can be added to the cart');
   await pz.click();
   await p.waitForTimeout(1500);
   await vp.goto(BASE + '/?nc=' + Date.now());
   ok(!(await vp.$('.agc-paused')) && !!(await vp.$('li.product a.add_to_cart_button')), 'switched back on: orders open again');
+  }
   await v1.close();
 
   if (process.env.OWNER_IS_ADMIN !== '0') {

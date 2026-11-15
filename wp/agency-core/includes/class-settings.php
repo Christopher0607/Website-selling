@@ -46,6 +46,7 @@ class AGC_Settings {
 			'ga4_id'               => '',
 			'meta_pixel_id'        => '',
 			'studio_hits'          => '',
+			'skin'                 => 0,
 			// Business details (footer, legal pages).
 			'legal_name'           => '',
 			'ssm_no'               => '',
@@ -130,6 +131,7 @@ class AGC_Settings {
 					'demo_checkout_notice' => array( 'text', __( 'Checkout notice', 'agency-core' ) ),
 					'demo_test_orders'     => array( 'checkbox', __( 'Allow test orders in demo mode (only DuitNow QR and the demo online payment; nothing is charged)', 'agency-core' ) ),
 					'concept_label'        => array( 'text', __( 'Footer label (e.g. "Concept Project")', 'agency-core' ) ),
+					'skin'                 => array( 'checkbox', __( 'Use the shop\'s own design (pages in wp-content/uploads/agc-skin, copied by build-demo.sh) instead of the theme', 'agency-core' ) ),
 				),
 			),
 			'tracking' => array(
