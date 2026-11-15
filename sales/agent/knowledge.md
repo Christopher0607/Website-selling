@@ -70,8 +70,11 @@ Every website comes with its own modern shop dashboard (orders, payments to chec
 - Founding clients (first 3 clients only; no discount on the price): 50% deposit and the balance only when they are happy with the finished site; live in 7 working days (from deposit + all content) or RM50 off for each day late; 2 free months of maintenance (instead of 1); free table QR card design. In return: an honest review and permission to show the site as an example (sales numbers can stay private).
 - Referral: a client who refers a friend who signs up gets one free month of maintenance or RM200 (their choice).
 
+## Table QR ordering (since 2026-11-15)
+- For cafés and restaurants: customers scan the QR on their table, order on their phone (options and notes), and pay at the counter. The kitchen sees the table number and the order on a tablet or phone (with a sound), marks it done, and the customer's phone shows "Ready". The counter sees what each table owes and marks it paid (cash, DuitNow, card or their cashier). Printable QR codes for every table. The price is in the written quote.
+
 ## Not available yet (never promise these)
-- Ordering from a QR code at the table with the order going straight to the kitchen screen (dine-in table ordering), and connecting to the shop's existing cashier / POS system. The QR card we offer opens their website (menu, pre-orders, bookings). If asked: the Cartsmith team will confirm whether and when it can be done.
+- Connecting to the shop's existing cashier / POS system, kitchen printers, and paying at the table. If asked: the Cartsmith team will check their cashier system and confirm whether and when it can be done.
 
 ## Payment & ownership
 - 50% deposit to start, 50% balance before launch (founding clients: balance only when happy; monthly plan: nothing upfront). maintenance paid monthly in advance (or 3 months at a time). Bank transfer / DuitNow.

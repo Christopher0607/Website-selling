@@ -67,6 +67,11 @@ class AGC_Settings {
 			// Checkout.
 			'my_checkout'          => 1,
 			'owner_manual_orders'  => 0,
+			// Table QR ordering (2026-11-15).
+			'table_on'             => 0,
+			'table_list'           => '1-10',
+			'table_note'           => '',
+			'table_cats'           => '',
 			// Store UX.
 			'announcement'         => '',
 			'shop_paused'          => 0,
@@ -198,6 +203,15 @@ class AGC_Settings {
 					'fest_low_stock'      => array( 'text', __( 'Say "Only X left" at or below', 'agency-core' ) ),
 					'fest_notify'         => array( 'checkbox', __( 'After the cut-off, ask for a WhatsApp number to tell them when you open again', 'agency-core' ) ),
 					'fest_item_limit'     => array( 'text', __( 'Items included in the plan (a warning above this; 0 = no warning)', 'agency-core' ) ),
+				),
+			),
+			'table'    => array(
+				'title'  => __( 'Table QR ordering', 'agency-core' ),
+				'fields' => array(
+					'table_on'   => array( 'checkbox', __( 'Customers scan the QR on their table, order on their phone and pay at the counter (kitchen and bill screens in the shop dashboard)', 'agency-core' ) ),
+					'table_list' => array( 'text', __( 'Tables (e.g. 1-12, or 1,2,3,Patio)', 'agency-core' ) ),
+					'table_note' => array( 'textarea', __( 'Message on the table menu (e.g. "Drinks are served at the counter")', 'agency-core' ) ),
+					'table_cats' => array( 'text', __( 'Only these categories on the table menu (slugs, comma separated; empty = all)', 'agency-core' ) ),
 				),
 			),
 			'aichat'   => array(

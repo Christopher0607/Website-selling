@@ -281,3 +281,46 @@ h1, h2, h3 { margin: 0; line-height: 1.25; }
 .actbar--bulk { flex-wrap: wrap; }
 .actbar--bulk .small { flex: 1 0 100%; }
 .actbar--bulk .btn { flex: 1 1 0; min-width: 0; white-space: normal; line-height: 1.2; padding: 6px 8px; }
+
+/* 2026-11-15 桌上扫码点单：厨房、桌子、桌上 QR */
+.kgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; align-items: start; }
+.kt { background: var(--card); border: 2px solid var(--line); border-radius: var(--r); padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+.kt--late { border-color: var(--s-check); }
+.kt__hd { display: flex; align-items: baseline; gap: 8px; }
+.kt__table { font-size: 1.5rem; line-height: 1.1; }
+.kt__no { color: var(--muted); font-weight: 700; }
+.kt__age { margin-left: auto; font-weight: 800; color: var(--muted); font-variant-numeric: tabular-nums; }
+.kt--late .kt__age { color: var(--s-check); }
+.kt__items { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.kt__items li { display: flex; gap: 10px; font-size: 1.12rem; line-height: 1.3; }
+.kt__items li > b { flex: none; min-width: 2.2em; }
+.kt__items small, .kt__items em { display: block; font-size: .9rem; color: var(--muted); }
+.kt__items em { font-style: normal; font-weight: 800; color: var(--s-check); }
+.kt__note { margin: 0; padding: 8px 10px; border-radius: 10px; background: var(--s-check-bg); color: var(--s-check); font-weight: 700; }
+.kt__done { width: 100%; min-height: 52px; font-size: 1.05rem; }
+.tgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+.tcard { display: flex; flex-direction: column; gap: 2px; min-height: 112px; background: var(--card); border: 1px solid var(--line); border-radius: var(--r); padding: 12px; text-decoration: none; color: var(--ink); }
+.tcard__n { font-size: 1.6rem; line-height: 1.1; }
+.tcard__sum { font-weight: 800; font-size: 1.1rem; font-variant-numeric: tabular-nums; }
+.tcard__meta, .tcard__st { font-size: .82rem; color: var(--muted); font-weight: 600; }
+.tcard--busy { background: var(--s-make-bg); border-color: transparent; }
+.tcard--busy .tcard__st { color: var(--s-make); }
+.tcard--ready { background: var(--s-ready-bg); border-color: transparent; }
+.tcard--ready .tcard__st { color: var(--s-ready); }
+.tdue { display: flex; flex-direction: column; justify-content: center; margin-right: 12px; }
+.tdue span { font-size: .8rem; color: var(--muted); font-weight: 700; }
+.tdue b { font-size: 1.3rem; font-variant-numeric: tabular-nums; }
+.sheet .btns { flex-wrap: wrap; }
+.sheet .btns .btn { min-width: 40%; }
+.qrsheet { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+.qrcard { background: #fff; border: 1px dashed #bbb; border-radius: 14px; padding: 14px; text-align: center; break-inside: avoid; page-break-inside: avoid; }
+.qrcard__site { font-size: .85rem; color: #555; font-weight: 700; }
+.qrcard__t { font-size: 1.7rem; font-weight: 900; margin: 2px 0 6px; color: #111; }
+.qrcard__code svg { width: 100%; max-width: 180px; height: auto; display: block; margin: 0 auto; }
+.qrcard__scan { font-weight: 900; font-size: 1.05rem; margin-top: 6px; color: #111; }
+.qrcard__pay { font-size: .82rem; color: #555; }
+@media print {
+  .qrsheet { grid-template-columns: repeat(3, 1fr); gap: 8mm; }
+  .qrcard { border: 1px dashed #999; }
+  body:has(.qrsheet) .top { display: none; }
+}

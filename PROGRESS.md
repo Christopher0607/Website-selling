@@ -99,7 +99,7 @@
 
 ## 建议区（Claude Code 想到但还没做的改进）
 
-- **桌上扫码点单（2026-11-15 俊宇地推后提出，等俊宇决定范围）：** 客人扫桌上的 QR → 菜单 → 下单带桌号 → 厨房的平板 / 手机马上看到桌号和单子（有提示声，做好按完成）→ 结帐时柜台看到这一桌的总数。接店家现有的收银系统要先知道是哪一家（各家有没有开放接口我还没查）。建议先做在 agency-core + `/dian/` 里，在 preview-tbt 测试。
+- 桌上扫码点单接收银系统：先问店家用哪一家（StoreHub、Qashier、Eats365……），再查有没有开放接口、要不要钱（基本版已做好，见工作日志 4.31）。
 - 工作室首页的标题和内容还是「Online stores for Shopee & TikTok sellers」，但现在的客户主要是餐厅、咖啡馆、烘焙店；样板顶部和 WhatsApp 信息都会链接到首页，建议改成以餐饮为主（菜单、自取 / 订位、节日预订），要俊宇同意再做（改程式要一次部署）
 - 工作室网站做一个中文版首页（/zh/），给只看中文的卖家（现在是英文为主 + 中文副标题）
 - Netlify 免费方案没有真正的密码保护：样板用「随机网址 + 密码页 + noindex」。如果以后很多样板，考虑 Netlify Pro（约 USD 20/月，先问）或服务器版 make-preview.sh
@@ -114,6 +114,7 @@
 
 | 日期 | 任务 | 结果 | 网址 / 文件 | 未解决的问题 |
 |---|---|---|---|---|
+| 2026-11-15 | 4.31 桌上扫码点单基本版（俊宇：用默认，开始做） | agency-core 1.8.0：客人扫桌上的 QR → 手机点单（选项、备注）→ 店家后台「厨房」画面（提示声、做好了）→ 客人手机显示做好了 → 「桌子」画面看每张桌子要付多少 →「收到钱了」（现金 / DuitNow / 刷卡 / 收银机）→ 已付款；可以取消一张单（库存放回）；「打印桌上 QR」一桌一张。有店家设计的网店用它的菜单和照片，一般网店用上架产品；中文网店全中文。本机测试：The Baking Trip 25/25、Butter & Lantern（一般网店、中文、Patio 桌）25/25，`check-owner` 46/46、`check-skin` 24/24、`check-festive-wp` 21/21；印出来的 QR 解码后就是那张桌子的网址。服务器：`ops/jobs/010-tbt-table-qr.sh` 打开 The Baking Trip 的桌上点单（1-8 号桌）；报价单加了一项「桌上点单」 | `wp/agency-core/includes/class-table.php`、`assets/table/`、`assets/owner/`、`site/tools/check-table.js`、`sites/preview-tbt/` | 不接收银系统、不用打印机（决定第 40 项）；预览网址有 basic auth，客人扫码要输入看网站的密码；上线换域名后要重印 QR；桌子数目要问店家 |
 | 2026-11-15 | 4.30 地推反省整理成上门脚本（俊宇：第一次地推 The Baking Trip 的反省） | 工作台「电话脚本」加第 7 部分「上门拜访」：平日 15:00–17:00 去、开口说只要 5 分钟、不说「第一家」、等 15 分钟没空就留价钱表约时间、3 分钟展示顺序、只讲现在做得到的（桌上扫码点单和接收银系统还没有，不当场答应）、最快上线时间的说法；拜访清单最上面有连结；AI（工作台和网站客服）也知道桌上扫码点单还没有、不能答应 | `site/desk/call-script.html#visit`、`site/desk/desk.js`、`sales/agent/` | 桌上扫码点单要不要做、做到哪里，等俊宇决定（见建议区） |
 | 2026-11-15 | 4.29 不再做免费样板（俊宇：除了地推，其他都用已经做好的 4 个精品示范 + 6 个电商模板） | ① 决定第 39 条；② 工作台：每张卡按行业配示范（护肤 Dewlane、服装饰品 Plainfold、宠物 Tailmate、3C Voltnest、咖啡和茶 Lowlight、酱料零食 Chili Pantry、烘焙礼盒 Dulang & Daun、餐厅 Sireh & Salt / Maison Cendre），没有样板的卡片电话说可以 →「可以发示范」→ 信息附示范网站 + 三种开始方式 → 按「已发送」记录 `demo_sent`，下一条跟进是「再附连结 + 可以发书面报价」；第 2 条现成信息 CFOLLOW v4 改成示范 + 书面报价；AI 规则不再提样板；电话台词、`desk-brief.md` 都改了；③ 工作室网站：表单页、首页、流程、FAQ、价钱、模板、为什么选我们、费用计算器、私隐、页首页尾按钮都改成「先看示范 + 1 个工作天内书面报价」；网站 AI 客服和 `knowledge.md` 同步；④ 定时任务本来就全部停用了；⑤ 工作台上 36 家还没联系的商家，开场白原本写「免费帮你做样板」，用工作台自己的「重写」全部改成「示范网站连结 + 书面报价」（只改草稿，没有发出去）；⑥ 吃饭的配对修正：煮炒 / 海鲜楼 / kopitiam 等就算「只开晚上」也配一般餐厅 Sireh & Salt（以前 Sin Chua Kee 被配到精品餐厅） | `site/server/desk.mjs`、`site/desk/`、`site/pages/`、`site/studio.json`、`site/build.py`、`site/server/chat.mjs`、`sales/agent/` | 已经发出去的样板照旧跟进到删除日；地推时要做样板就跟 Claude Code 说 |
 | 2026-11-15 | 4.28 把第一个客户要的东西都准备好（俊宇：工作台没有后台的入口；先当作 The Baking Trip 已经要了，SSM 等所有东西先做好） | ① 工作台卡片新增「网店 · 店家后台」区块（网址、帐号密码、打开 / 复制），The Baking Trip 卡片已经填好，网址和密码以后不换；② `docs/13-business-setup.md` 开业清单：SSM（ezBiz，商号 RM60/年）、商业户口、电子发票（门槛已提高到 RM3 百万，我们不用开）、收据、报税、律师，都是 11-15 上网查的，附来源；③ 客户文件产生器 `scripts/local/client-docs.py`：报价单（推荐 Growth RM1,600，另附 Starter RM800 和月付 RM169×12，前 3 位客户保障）、服务合约草稿（`templates/service-agreement.md`，要律师看）、50% 订金单、收据、资料清单（含付款网关费用比较：Billplz / HitPay / toyyibPay / DuitNow 直接转帐），PDF 不进 git；④ 交付上线脚本 `scripts/server/go-live.sh`（备份 → 关示范 → 删测试资料 → 换域名 + SSL → 开放 Google → 店家自己设密码），在本机复制的网店上测试通过，上线后没有横幅、没有 noindex、付款只剩真的方式 | `clients/c001-the-baking-trip/`、`docs/13-business-setup.md`、`scripts/server/go-live.sh`、工作台卡片 | 俊宇：注册 SSM、开商业户口，把号码给我填进文件；第一次签约前请律师看合约草稿；店家还没正式答应（卡片状态没有改成「成交」） |

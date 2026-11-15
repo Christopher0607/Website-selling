@@ -122,10 +122,13 @@ class AGC_Owner_API {
 	 * Which list an order belongs to.
 	 *
 	 * @param WC_Order $o Order.
-	 * @return string check|make|ready|done|cancelled|pending
+	 * @return string check|make|ready|done|cancelled|pending|table
 	 */
 	private static function bucket( $o ) {
 		$s = $o->get_status();
+		if ( class_exists( 'AGC_Table' ) && AGC_Table::is_open( $o ) ) {
+			return 'table'; // eaten here, not paid yet: the kitchen and tables screens show it.
+		}
 		if ( 'on-hold' === $s ) {
 			return 'check';
 		}
@@ -186,6 +189,7 @@ class AGC_Owner_API {
 			'total_f'  => self::money( $o->get_total() ),
 			'items'    => implode( ', ', $items ),
 			'mode'     => (string) $o->get_meta( AGC_Festive::MODE ),
+			'table'    => (string) $o->get_meta( '_agc_table' ),
 			'day'      => $day,
 			'day_l'    => $day ? AGC_Festive::day_label( $day ) : '',
 			'slot'     => (string) $o->get_meta( AGC_Festive::SLOT ),
@@ -208,7 +212,7 @@ class AGC_Owner_API {
 		$orders = self::recent_orders();
 		$tz     = wp_timezone();
 		$today  = AGC_Festive::now()->format( 'Y-m-d' );
-		$counts = array_fill_keys( array( 'check', 'make', 'ready', 'done', 'cancelled', 'pending' ), 0 );
+		$counts = array_fill_keys( array( 'check', 'make', 'ready', 'done', 'cancelled', 'pending', 'table' ), 0 );
 		$t_rev  = 0.0;
 		$t_n    = 0;
 		$s_rev  = 0.0;
@@ -226,7 +230,7 @@ class AGC_Owner_API {
 					$t_rev += (float) $o->get_total();
 				}
 			}
-			if ( 'cancelled' !== $b && 'pending' !== $b && ( ! $roll || ( $created && $created->setTimezone( $tz )->format( 'Y-m' ) === $month ) ) ) {
+			if ( 'cancelled' !== $b && 'pending' !== $b && 'table' !== $b && ( ! $roll || ( $created && $created->setTimezone( $tz )->format( 'Y-m' ) === $month ) ) ) {
 				++$s_n;
 				if ( $o->is_paid() ) {
 					$s_rev += (float) $o->get_total();
@@ -273,6 +277,7 @@ class AGC_Owner_API {
 			),
 			'notify'  => count( (array) get_option( AGC_Festive::NOTIFY, array() ) ),
 			'paused'  => (bool) agc_get( 'shop_paused' ),
+			'table'   => class_exists( 'AGC_Table' ) && AGC_Table::on(),
 		);
 	}
 
@@ -298,7 +303,7 @@ class AGC_Owner_API {
 			if ( $f && 'all' !== $f && $b !== $f ) {
 				continue;
 			}
-			if ( ( ! $f || 'all' === $f ) && 'pending' === $b ) {
+			if ( ( ! $f || 'all' === $f ) && in_array( $b, array( 'pending', 'table' ), true ) ) {
 				continue;
 			}
 			if ( $from && ( ! $o->get_date_created() || $o->get_date_created()->getTimestamp() < $from ) ) {
@@ -628,7 +633,7 @@ class AGC_Owner_API {
 			$pm          = $o->get_payment_method_title() ? $o->get_payment_method_title() : '—';
 			$pay[ $pm ]  = ( $pay[ $pm ] ?? 0 ) + 1;
 			$m           = (string) $o->get_meta( AGC_Festive::MODE );
-			$ml          = $m ? AGC_Festive::mode_label( $m ) : '—';
+			$ml          = $m ? AGC_Festive::mode_label( $m ) : ( $o->get_meta( '_agc_table' ) ? __( 'Eat in (table QR)', 'agency-core' ) : '—' );
 			$mode[ $ml ] = ( $mode[ $ml ] ?? 0 ) + 1;
 		}
 		usort( $top, static fn( $a, $b ) => $b['revenue'] <=> $a['revenue'] );
@@ -973,6 +978,7 @@ class AGC_Owner_API {
 			'fest_on', 'fest_name', 'fest_cutoff', 'fest_from', 'fest_to', 'fest_closed', 'fest_rolling', 'fest_collect_slots', 'fest_delivery_slots',
 			'fest_courier_note', 'fest_early_end', 'fest_early_pct', 'fest_show_left', 'fest_low_stock', 'fest_notify',
 			'legal_name', 'business_email', 'business_phone', 'business_address', 'business_hours', 'announcement', 'shop_paused', 'shop_paused_msg',
+			'table_on', 'table_list', 'table_note',
 		);
 	}
 
