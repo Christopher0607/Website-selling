@@ -177,6 +177,33 @@ class AGC_Table {
 	/* ------------------------------------------------------------------ menu */
 
 	/**
+	 * The shop has its own design (The Baking Trip's skin, or a whole site design like the studio demos).
+	 *
+	 * @return bool
+	 */
+	private static function skin_on() {
+		return ( class_exists( 'AGC_Skin' ) && AGC_Skin::on() ) || ( class_exists( 'AGC_Site' ) && AGC_Site::on() );
+	}
+
+	/**
+	 * The design's menu: data.json (skin), or the site design's own lists with WooCommerce prices (site.json "table").
+	 *
+	 * @return array{menu: array, cats: array, table_hero?: string}
+	 */
+	private static function skin_data() {
+		if ( class_exists( 'AGC_Site' ) && AGC_Site::on() ) {
+			list( $d ) = AGC_Site::lists();
+			$t         = (array) AGC_Site::spec( 'table', array() );
+			return array(
+				'menu'       => (array) ( $d[ $t['menu'] ?? 'MENU' ] ?? array() ),
+				'cats'       => (array) AGC_Site::val( (string) ( $t['cats'] ?? 'CATS' ), array() ),
+				'table_hero' => (string) ( $t['hero'] ?? '' ),
+			);
+		}
+		return AGC_Skin::data();
+	}
+
+	/**
 	 * What the table menu shows: categories and items with live prices.
 	 *
 	 * @return array{cats: array, items: array}
@@ -185,8 +212,8 @@ class AGC_Table {
 		$only  = array_filter( array_map( 'sanitize_title', explode( ',', (string) agc_get( 'table_cats' ) ) ) );
 		$cats  = array();
 		$items = array();
-		if ( class_exists( 'AGC_Skin' ) && AGC_Skin::on() ) {
-			$d     = AGC_Skin::data();
+		if ( self::skin_on() ) {
+			$d     = self::skin_data();
 			$named = array();
 			foreach ( (array) ( $d['cats'] ?? array() ) as $c ) {
 				if ( is_array( $c ) && isset( $c[0], $c[1] ) ) {
@@ -204,7 +231,7 @@ class AGC_Table {
 					continue; // no price yet: not on the table menu.
 				}
 				$cats[ $cat ] = $named[ $cat ] ?? ucwords( str_replace( array( '-', '_' ), ' ', $cat ) );
-				$img          = array_key_exists( 'img', $it ) && false === $it['img'] ? '' : AGC_Skin::url() . '/img/' . ( ! empty( $it['img'] ) ? $it['img'] : $id ) . '.webp';
+				$img          = ! empty( $it['imgUrl'] ) ? (string) $it['imgUrl'] : ( array_key_exists( 'img', $it ) && false === $it['img'] ? '' : AGC_Skin::url() . '/img/' . ( ! empty( $it['img'] ) ? $it['img'] : $id ) . '.webp' );
 				$items[]      = array(
 					'id'   => $id,
 					'cat'  => $cat,
@@ -258,7 +285,7 @@ class AGC_Table {
 	 * @return WC_Product|null
 	 */
 	private static function product( $id ) {
-		if ( preg_match( '/^p(\d+)$/', $id, $m ) && ! ( class_exists( 'AGC_Skin' ) && AGC_Skin::on() ) ) {
+		if ( preg_match( '/^p(\d+)$/', $id, $m ) && ! ( self::skin_on() ) ) {
 			$p = wc_get_product( (int) $m[1] );
 		} else {
 			$pid = wc_get_product_id_by_sku( $id );
@@ -316,7 +343,7 @@ class AGC_Table {
 	private static function page( $t ) {
 		$site  = html_entity_decode( get_bloginfo( 'name' ), ENT_QUOTES, 'UTF-8' );
 		$zh    = 0 === strpos( get_locale(), 'zh' );
-		$skin  = class_exists( 'AGC_Skin' ) && AGC_Skin::on();
+		$skin  = self::skin_on();
 		$fonts = '';
 		$css   = '';
 		if ( $skin ) {
@@ -331,7 +358,7 @@ class AGC_Table {
 		$hero   = '';
 		$logo   = '';
 		if ( $skin ) {
-			$d = AGC_Skin::data();
+			$d = self::skin_data();
 			foreach ( array( (string) ( $d['table_hero'] ?? '' ), 'hero' ) as $h ) {
 				if ( '' !== $h && preg_match( '/^[a-z0-9-]+$/', $h ) && file_exists( AGC_Skin::dir() . '/img/' . $h . '.webp' ) ) {
 					$hero = AGC_Skin::url() . '/img/' . $h . '.webp';
@@ -357,6 +384,8 @@ class AGC_Table {
 			'note'    => (string) agc_get( 'table_note' ),
 			'stopped' => $t ? self::stopped() : '',
 			'demo'    => (bool) agc_get( 'demo_mode' ),
+			// studio demo websites: "See the restaurant's side" opens the real kitchen screen with the demo account
+			'ownerLink' => class_exists( 'AGC_Demo_Access' ) && AGC_Demo_Access::on() ? add_query_arg( 'hash', '/kitchen', AGC_Demo_Access::login_url( 'dian' ) ) : '',
 			'hero'    => $hero,
 			'logo'    => $logo,
 			'address' => (string) agc_get( 'business_address' ),

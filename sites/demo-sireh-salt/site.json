@@ -1,0 +1,774 @@
+{
+ "slug": "sireh-salt",
+ "spec": {
+  "lists": [
+   {
+    "var": "MENU",
+    "cats": "CATS"
+   },
+   {
+    "var": "SEASONS",
+    "items": "items",
+    "stock": "left"
+   }
+  ],
+  "order": {
+   "hours": "HOURS",
+   "zones": "ZONES",
+   "min": "DELIVERY_MIN",
+   "free": "FREE_DELIVERY",
+   "prep": 30,
+   "busy": 20,
+   "first": 15,
+   "last": 30,
+   "step": 15,
+   "days": 8
+  },
+  "book": {
+   "rules": "BOOK",
+   "hours": "HOURS",
+   "tables": 6,
+   "first": 0,
+   "last": 90,
+   "step": 30,
+   "prep": 30,
+   "days": 15,
+   "deposit": {
+    "from": "depositFrom",
+    "amount": "deposit",
+    "per": "booking",
+    "pay": "later"
+   }
+  },
+  "voucher": {
+   "product": "gift-voucher",
+   "name": "Gift voucher",
+   "min": 30,
+   "max": 1000,
+   "months": 12,
+   "prefix": "GIFT-"
+  },
+  "table": {
+   "menu": "MENU",
+   "cats": "CATS",
+   "hero": "interior"
+  },
+  "redirects": {
+   "dian.html": "/?agc_demo=dian&hash=/kitchen",
+   "table.html": "@table"
+  },
+  "shop": "/menu.html",
+  "coupons": [
+   {
+    "from": "PROMO",
+    "code": "code",
+    "percent": "pct"
+   }
+  ],
+  "tables": "1-12",
+  "featured": "SIGNATURE"
+ },
+ "data": {
+  "MENU": [
+   {
+    "id": "nasi-lemak",
+    "cat": "rice",
+    "n": "Nasi Lemak Ayam Berempah",
+    "d": "Coconut rice, spiced fried chicken, our house sambal, egg, peanuts and crispy anchovies.",
+    "p": 18.9,
+    "tags": [
+     "pop"
+    ],
+    "heat": 1,
+    "o": [
+     {
+      "n": "Sambal",
+      "one": true,
+      "def": 1,
+      "v": [
+       [
+        "Mild",
+        0
+       ],
+       [
+        "Original",
+        0
+       ],
+       [
+        "Extra pedas",
+        0
+       ]
+      ]
+     },
+     {
+      "n": "Add",
+      "v": [
+       [
+        "Extra egg",
+        2
+       ],
+       [
+        "Extra sambal",
+        1.5
+       ],
+       [
+        "Swap to beef rendang",
+        4
+       ]
+      ]
+     }
+    ]
+   },
+   {
+    "id": "rendang",
+    "cat": "rice",
+    "n": "Beef Rendang Rice",
+    "d": "Beef slow-cooked for six hours with kerisik and spices, coconut rice and acar.",
+    "p": 24.9,
+    "tags": [
+     "pop"
+    ],
+    "heat": 1,
+    "o": [
+     {
+      "n": "Rice",
+      "one": true,
+      "def": 0,
+      "v": [
+       [
+        "Coconut rice",
+        0
+       ],
+       [
+        "White rice",
+        0
+       ],
+       [
+        "Turmeric rice",
+        1
+       ]
+      ]
+     },
+     {
+      "n": "Add",
+      "v": [
+       [
+        "Fried egg",
+        2
+       ],
+       [
+        "Extra rendang",
+        8
+       ]
+      ]
+     }
+    ]
+   },
+   {
+    "id": "ayam-percik",
+    "cat": "rice",
+    "n": "Ayam Percik",
+    "d": "Chicken leg grilled with a coconut-chilli glaze, with ulam, sambal belacan and rice.",
+    "p": 22.9,
+    "tags": [
+     "new"
+    ],
+    "heat": 1,
+    "o": [
+     {
+      "n": "Add",
+      "v": [
+       [
+        "Extra percik sauce",
+        1.5
+       ],
+       [
+        "Fried egg",
+        2
+       ]
+      ]
+     }
+    ]
+   },
+   {
+    "id": "laksa",
+    "cat": "noodles",
+    "n": "Curry Laksa",
+    "d": "Rich coconut curry broth with prawns, tofu puffs, long beans, egg and a spoon of sambal.",
+    "p": 19.9,
+    "tags": [
+     "pop"
+    ],
+    "heat": 2,
+    "o": [
+     {
+      "n": "Noodles",
+      "one": true,
+      "def": 2,
+      "v": [
+       [
+        "Yellow mee",
+        0
+       ],
+       [
+        "Bihun",
+        0
+       ],
+       [
+        "Mix",
+        0
+       ]
+      ]
+     },
+     {
+      "n": "Add",
+      "v": [
+       [
+        "Cockles",
+        3
+       ],
+       [
+        "Extra prawns",
+        5
+       ],
+       [
+        "No sambal",
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   {
+    "id": "mee-kari",
+    "cat": "noodles",
+    "n": "Mee Kari Ayam",
+    "d": "A lighter chicken curry with potato, egg and fresh coriander.",
+    "p": 17.9,
+    "tags": [],
+    "heat": 1,
+    "o": [
+     {
+      "n": "Noodles",
+      "one": true,
+      "def": 0,
+      "v": [
+       [
+        "Yellow mee",
+        0
+       ],
+       [
+        "Bihun",
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   {
+    "id": "kway-teow",
+    "cat": "noodles",
+    "n": "Wok-fried Kway Teow",
+    "d": "Flat rice noodles fried over a roaring flame with prawns, egg, bean sprouts and chives.",
+    "p": 18.9,
+    "tags": [],
+    "heat": 1,
+    "o": [
+     {
+      "n": "Spice",
+      "one": true,
+      "def": 1,
+      "v": [
+       [
+        "Not spicy",
+        0
+       ],
+       [
+        "Normal",
+        0
+       ],
+       [
+        "Spicy",
+        0
+       ]
+      ]
+     },
+     {
+      "n": "Add",
+      "v": [
+       [
+        "Extra prawns",
+        5
+       ],
+       [
+        "Extra egg",
+        2
+       ]
+      ]
+     }
+    ]
+   },
+   {
+    "id": "satay",
+    "cat": "grill",
+    "n": "Chicken Satay",
+    "d": "Charcoal-grilled skewers with peanut sauce, nasi impit, cucumber and red onion.",
+    "p": 22,
+    "tags": [
+     "pop"
+    ],
+    "heat": 0,
+    "per": "10 sticks",
+    "o": [
+     {
+      "n": "Size",
+      "one": true,
+      "def": 0,
+      "v": [
+       [
+        "10 sticks",
+        0
+       ],
+       [
+        "20 sticks",
+        20
+       ]
+      ]
+     }
+    ]
+   },
+   {
+    "id": "sambal-udang",
+    "cat": "grill",
+    "n": "Sambal Udang Petai",
+    "d": "Prawns and petai tossed in a slow-fried sambal. Best shared, with rice.",
+    "p": 34.9,
+    "tags": [],
+    "heat": 3,
+    "o": [
+     {
+      "n": "Petai",
+      "one": true,
+      "def": 0,
+      "v": [
+       [
+        "With petai",
+        0
+       ],
+       [
+        "No petai",
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   {
+    "id": "prawns",
+    "cat": "grill",
+    "n": "Grilled Tiger Prawns",
+    "d": "Four tiger prawns grilled over charcoal, with a chilli-lime dip.",
+    "p": 42,
+    "tags": [
+     "chef"
+    ],
+    "heat": 1
+   },
+   {
+    "id": "roti",
+    "cat": "small",
+    "n": "Roti Jala & Chicken Curry",
+    "d": "Lacy pancakes made to order, with chicken and potato curry for dipping.",
+    "p": 14.9,
+    "tags": [],
+    "heat": 1
+   },
+   {
+    "id": "cendol",
+    "cat": "dessert",
+    "n": "Cendol Gula Melaka",
+    "d": "Shaved ice, pandan jelly, red beans, coconut milk and Melaka palm sugar.",
+    "p": 9.9,
+    "tags": [
+     "pop"
+    ],
+    "heat": 0,
+    "o": [
+     {
+      "n": "Add",
+      "v": [
+       [
+        "Extra gula melaka",
+        1
+       ],
+       [
+        "Pulut (glutinous rice)",
+        2
+       ]
+      ]
+     }
+    ]
+   },
+   {
+    "id": "mango-snow",
+    "cat": "dessert",
+    "n": "Mango Sago Snow",
+    "d": "Fresh mango, sago and milk snow ice. Big enough to share.",
+    "p": 12.9,
+    "tags": [
+     "new"
+    ],
+    "heat": 0
+   },
+   {
+    "id": "kuih",
+    "cat": "dessert",
+    "n": "Nyonya Kuih Platter",
+    "d": "Six pieces of the day: kuih lapis, seri muka, ondeh-ondeh and more.",
+    "p": 15,
+    "tags": [],
+    "heat": 0,
+    "per": "6 pcs"
+   },
+   {
+    "id": "kopi",
+    "cat": "drinks",
+    "n": "Kopi Ais",
+    "d": "Local roast coffee with condensed milk, over ice.",
+    "p": 6.5,
+    "tags": [],
+    "heat": 0,
+    "o": [
+     {
+      "n": "Sweetness",
+      "one": true,
+      "def": 0,
+      "v": [
+       [
+        "Normal",
+        0
+       ],
+       [
+        "Less sweet",
+        0
+       ],
+       [
+        "Kosong (no sugar)",
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   {
+    "id": "teh",
+    "cat": "drinks",
+    "n": "Teh Tarik Ais",
+    "d": "Pulled milk tea, poured long for the foam, over ice.",
+    "p": 6.5,
+    "tags": [
+     "pop"
+    ],
+    "heat": 0,
+    "o": [
+     {
+      "n": "Sweetness",
+      "one": true,
+      "def": 0,
+      "v": [
+       [
+        "Normal",
+        0
+       ],
+       [
+        "Less sweet",
+        0
+       ]
+      ]
+     }
+    ]
+   }
+  ],
+  "CATS": [
+   [
+    "rice",
+    "Rice"
+   ],
+   [
+    "noodles",
+    "Noodles"
+   ],
+   [
+    "grill",
+    "Grill & sharing"
+   ],
+   [
+    "small",
+    "Small plates"
+   ],
+   [
+    "dessert",
+    "Desserts"
+   ],
+   [
+    "drinks",
+    "Drinks"
+   ]
+  ],
+  "SEASONS": [
+   {
+    "id": "yearend",
+    "name": "Christmas & year-end",
+    "cutoff": "2026-12-20",
+    "from": "2026-12-23",
+    "to": "2026-12-31",
+    "img": "family",
+    "blurb": "Sharing feasts for Christmas and New Year’s Eve, ready to pick up hot or reheat at home.",
+    "items": [
+     {
+      "id": "feast4",
+      "n": "Year-End Rendang Feast for 4",
+      "p": 228,
+      "img": "rendang",
+      "total": 30,
+      "left": 11,
+      "dep": 0.5,
+      "has": [
+       "Beef rendang (800 g)",
+       "Ayam percik, 4 pieces",
+       "Sambal udang petai",
+       "Coconut rice for 4",
+       "Acar and ulam"
+      ]
+     },
+     {
+      "id": "satay60",
+      "n": "Satay Party Tray (60 sticks)",
+      "p": 128,
+      "img": "satay",
+      "total": 40,
+      "left": 23,
+      "dep": 0.5,
+      "has": [
+       "60 chicken satay",
+       "Peanut sauce, 1 litre",
+       "Nasi impit, cucumber and onion"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "cny",
+    "name": "Chinese New Year 2027",
+    "cutoff": "2027-01-30",
+    "from": "2027-02-01",
+    "to": "2027-02-05",
+    "img": "lanterns",
+    "blurb": "Reunion dinner without the kitchen marathon. Pick up from 1 to 5 February; Chinese New Year falls on 6 February 2027.",
+    "items": [
+     {
+      "id": "reunion6",
+      "n": "Reunion Set for 6",
+      "p": 388,
+      "img": "feast",
+      "total": 40,
+      "left": 9,
+      "dep": 0.5,
+      "has": [
+       "Beef rendang",
+       "Ayam percik",
+       "Sambal udang petai",
+       "Nyonya chap chai",
+       "Wok-fried kway teow",
+       "Kuih platter"
+      ]
+     },
+     {
+      "id": "prosperity10",
+      "n": "Prosperity Set for 10",
+      "p": 628,
+      "img": "family",
+      "total": 25,
+      "left": 4,
+      "dep": 0.5,
+      "has": [
+       "Everything in the Reunion Set, for 10",
+       "Grilled tiger prawns (10)",
+       "Chicken satay (30 sticks)",
+       "Cendol for 10"
+      ]
+     },
+     {
+      "id": "cookies3",
+      "n": "Festive Cookie Jars (set of 3)",
+      "p": 68,
+      "img": "cookies",
+      "total": 120,
+      "left": 37,
+      "dep": 1,
+      "has": [
+       "Kuih bangkit",
+       "Pineapple tarts",
+       "Peanut cookies"
+      ]
+     },
+     {
+      "id": "kuih30",
+      "n": "Nyonya Kuih Tray (30 pcs)",
+      "p": 85,
+      "img": "kuih-tray",
+      "total": 30,
+      "left": 12,
+      "dep": 1,
+      "has": [
+       "Five kinds of kuih, six of each",
+       "Packed in a gift box"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "raya",
+    "name": "Hari Raya 2027",
+    "cutoff": "2027-03-01",
+    "from": "2027-03-05",
+    "to": "2027-03-09",
+    "img": "kuih-tray",
+    "blurb": "Open-house trays and kuih raya. Hari Raya Aidilfitri is expected on 10 March 2027, subject to the official announcement.",
+    "items": [
+     {
+      "id": "openhouse20",
+      "n": "Open House Tray for 20",
+      "p": 520,
+      "img": "catering",
+      "total": 20,
+      "left": 14,
+      "dep": 0.5,
+      "has": [
+       "Beef rendang",
+       "Ayam percik",
+       "Nasi impit and kuah kacang",
+       "Chicken satay (40 sticks)",
+       "Kuih platter"
+      ]
+     },
+     {
+      "id": "kuihraya4",
+      "n": "Kuih Raya Jars (set of 4)",
+      "p": 88,
+      "img": "cookies",
+      "total": 100,
+      "left": 58,
+      "dep": 1,
+      "has": [
+       "Tart nenas",
+       "Biskut dahlia",
+       "Semperit",
+       "Kuih bangkit"
+      ]
+     }
+    ]
+   }
+  ],
+  "ZONES": [
+   {
+    "re": "^4[67]\\d{3}$",
+    "fee": 6,
+    "eta": "35–50 min",
+    "area": "Petaling Jaya and Subang"
+   },
+   {
+    "re": "^5\\d{4}$",
+    "fee": 10,
+    "eta": "45–70 min",
+    "area": "Kuala Lumpur"
+   }
+  ],
+  "HOURS": {
+   "0": [
+    [
+     600,
+     1320
+    ]
+   ],
+   "1": [],
+   "2": [
+    [
+     690,
+     900
+    ],
+    [
+     1050,
+     1320
+    ]
+   ],
+   "3": [
+    [
+     690,
+     900
+    ],
+    [
+     1050,
+     1320
+    ]
+   ],
+   "4": [
+    [
+     690,
+     900
+    ],
+    [
+     1050,
+     1320
+    ]
+   ],
+   "5": [
+    [
+     690,
+     900
+    ],
+    [
+     1050,
+     1320
+    ]
+   ],
+   "6": [
+    [
+     600,
+     1320
+    ]
+   ]
+  },
+  "BOOK": {
+   "max": 12,
+   "depositFrom": 8,
+   "deposit": 50,
+   "counts": true,
+   "seats": [
+    "Indoor",
+    "Outdoor terrace",
+    "No preference"
+   ],
+   "bigGroup": "More than 12? <a href=\"catering.html#private\">Book the private dining room</a>.",
+   "cancel": "Free cancellation up to 2 hours before. Demo: no table is held."
+  },
+  "DELIVERY": true,
+  "DELIVERY_MIN": 40,
+  "FREE_DELIVERY": 120,
+  "PROMO": {
+   "code": "SIREH10",
+   "pct": 10
+  },
+  "REF": "SS",
+  "BRAND": "Sireh & Salt",
+  "SIGNATURE": [
+   "nasi-lemak",
+   "laksa",
+   "rendang",
+   "satay",
+   "ayam-percik",
+   "cendol"
+  ],
+  "ADDRESS": "G-12, Jalan Demo 3/7, 46000 Petaling Jaya (demo address)"
+ }
+}
