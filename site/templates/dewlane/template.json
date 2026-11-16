@@ -12,7 +12,7 @@
   "order_prefix": "DW",
   "header": "center",
   "logo": {"text": "dewlane", "mark": "<svg width='26' height='26' viewBox='0 0 26 26' aria-hidden='true'><path d='M13 2c4 5.5 7 9.3 7 13.2A7 7 0 0 1 6 15.2C6 11.3 9 7.5 13 2Z' fill='none' stroke='currentColor' stroke-width='1.6'/></svg>"},
-  "announcement": ["Free shipping in West & East Malaysia over RM150", "New: Travel Minis — the whole routine in your carry-on", "Pay with FPX online banking, cards or e-wallets"],
+  "announcement": ["Free shipping in West & East Malaysia over RM150", "New: Travel Minis for your carry-on", "Pay with FPX online banking, cards or e-wallets"],
   "shipping": {"west": 8, "east": 15, "free_min": 150},
   "coupon": {"code": "WELCOME10", "pct": 10},
   "footer_blurb": "Simple, gentle skincare made for Malaysian weather. Fewer steps, better skin days.",

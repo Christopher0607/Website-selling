@@ -14,7 +14,7 @@
 | img/serum.webp | [Pexels 35909808](https://www.pexels.com/photo/35909808/) | Dew Serum | Pexels License（免费商用，不需署名） |
 | img/serum-2.webp | [Pexels 8140898](https://www.pexels.com/photo/8140898/) | Dew Serum 2 | Pexels License（免费商用，不需署名） |
 | img/cream.webp | [Pexels 6690234](https://www.pexels.com/photo/6690234/) | Barrier Cream | Pexels License（免费商用，不需署名） |
-| img/gel.webp | [Pexels 7796160](https://www.pexels.com/photo/7796160/) | Water Gel | Pexels License（免费商用，不需署名） |
+| img/gel.webp | [Pexels 6387868](https://www.pexels.com/photo/6387868/) | Water Gel（2026-11-16 换：原来的 7796160 是一罐咖啡色的泥，看起来跟 Clay Mask 一样） | Pexels License（免费商用，不需署名） |
 | img/sun.webp | [Pexels 8533216](https://www.pexels.com/photo/8533216/) | Daily Sun Fluid | Pexels License（免费商用，不需署名） |
 | img/oil.webp | [Pexels 7796813](https://www.pexels.com/photo/7796813/) | Night Oil | Pexels License（免费商用，不需署名） |
 | img/mask.webp | [Pexels 6167443](https://www.pexels.com/photo/6167443/) | Clay Mask | Pexels License（免费商用，不需署名） |

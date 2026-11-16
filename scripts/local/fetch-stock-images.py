@@ -70,7 +70,21 @@ def main():
         kb = os.path.getsize(out) // 1024
         print(f"  {img.get('dest', 'images')}/{img['file']:<28} pexels {pid:<10} {crop:<8} {kb} KB")
         rows.append(f"| {img.get('dest', 'images')}/{img['file']} | [Pexels {pid}](https://www.pexels.com/photo/{pid}/) | {img.get('note', '')} | Pexels License（免费商用，不需署名） |")
-    with open(os.path.join(site, "image-sources.md"), "w", encoding="utf-8") as fh:
+    md = os.path.join(site, "image-sources.md")
+    if os.path.exists(md):
+        # 2026-11-16: only replace the rows of the photos fetched this time; keep every other row (a one-photo
+        # stock.json used to wipe the whole list)
+        lines = open(md, encoding="utf-8").read().rstrip("\n").split("\n")
+        for r in rows:
+            key = r.split(" | ")[0] + " |"
+            hit = [i for i, ln in enumerate(lines) if ln.startswith(key)]
+            if hit:
+                lines[hit[0]] = r
+            else:
+                lines.append(r)
+        open(md, "w", encoding="utf-8").write("\n".join(lines) + "\n")
+        return
+    with open(md, "w", encoding="utf-8") as fh:
         fh.write("# 图片来源 Image sources\n\n")
         fh.write("> 查证日期 2026-11-07。Pexels License：免费、可商用、不需要署名；不可原样转售、不可暗示照片中的人或品牌代言。\n")
         fh.write("> 这些照片只用在**概念作品（样板站）**示范版面；客户正式网站一律用客户自己的产品照片。\n\n")

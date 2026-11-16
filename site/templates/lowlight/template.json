@@ -12,7 +12,7 @@
   "order_prefix": "LR",
   "header": "center",
   "logo": {"text": "Lowlight", "mark": "<svg width='24' height='24' viewBox='0 0 24 24' aria-hidden='true'><ellipse cx='12' cy='12' rx='7' ry='10' fill='none' stroke='currentColor' stroke-width='1.5'/><path d='M12 2.5c-2.5 4-2.5 15 0 19' fill='none' stroke='currentColor' stroke-width='1.5'/></svg>"},
-  "announcement": ["Roasted every Monday — shipped within 48 hours", "Free shipping over RM150", "Choose your grind at checkout — whole bean, espresso, filter or French press"],
+  "announcement": ["Roasted every Monday — shipped within 48 hours", "Free shipping over RM150", "Whole bean or ground to suit your brewer"],
   "shipping": {"west": 8, "east": 15, "free_min": 150},
   "coupon": {"code": "WELCOME10", "pct": 10},
   "footer_blurb": "A small roastery for people who take their time. Roasted on Mondays, at your door by Thursday.",
