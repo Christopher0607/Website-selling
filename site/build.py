@@ -167,7 +167,8 @@ class Store:
         url = f'{sp}p/{p["id"]}.html'
         extra = ""
         if p.get("specs_short"):
-            extra += f'<p class="card__specs">{e(p["specs_short"])}</p>'
+            # one span per spec, so a line only breaks between specs ("65 W" and "USB-C to C" stay whole)
+            extra += '<p class="card__specs">' + '<span class="card__sep">&nbsp;· </span>'.join(f'<span>{e(x)}</span>' for x in p["specs_short"].split(" · ")) + '</p>'
         if p.get("roast"):
             extra += self.roast_meter(p["roast"], small=True)
         if p.get("notes"):
@@ -476,7 +477,9 @@ if(h===window.__pvHash){try{localStorage.setItem('pv_'+h,'1');}catch(e){}documen
             return f'<section class="{cls}"><div class="wrap"><p class="statement">{e(s["text"])}</p>{by}</div></section>'
         if typ == "table":
             head = "".join(f"<th>{e(h)}</th>" for h in s["head"])
-            rows = "".join("<tr>" + "".join((f"<th scope=row>{e(c)}</th>" if j == 0 else f"<td>{e(c)}</td>") for j, c in enumerate(r)) + "</tr>" for r in s["rows"])
+            # a number stays with its unit when a phone wraps the cell ("30–40 cm", "10,000 mAh")
+            unit = lambda c: (f'<span class="nw">{e(c)}</span>' if len(c) <= 10 else re.sub(r"(\d) (cm|mm|kg|g|mAh|Wh|W|ml|m)\b", "\\1&nbsp;\\2", e(c)))
+            rows = "".join("<tr>" + "".join((f"<th scope=row>{unit(c)}</th>" if j == 0 else f"<td>{unit(c)}</td>") for j, c in enumerate(r)) + "</tr>" for r in s["rows"])
             note = f'<p class="muted small">{e(s["note"])}</p>' if s.get("note") else ""
             return f'<section class="{cls}"><div class="wrap">{self.sec_head(s, sp)}<div class="tbl-wrap"><table class="tbl"><thead><tr>{head}</tr></thead><tbody>{rows}</tbody></table></div>{note}</div></section>'
         if typ == "faq":
@@ -750,22 +753,22 @@ if(h===window.__pvHash){try{localStorage.setItem('pv_'+h,'1');}catch(e){}documen
         pk = self.pickup
         if pk and self.booking:
             sub, ship_h, ret_h = "Bookings and common questions.", "Bookings", "Changes &amp; refunds"
-            ship_sec = f"""<div class="tbl-wrap"><table class="tbl"><thead><tr><th>How</th><th>Where</th><th>Notes</th></tr></thead><tbody>
-    <tr><th scope="row">Dine-in</th><td>{e(pk['pickup'])}</td><td>{e(pk.get('pickup_note', ''))}</td></tr></tbody></table></div>
+            ship_sec = f"""<div class="tbl-wrap"><table class="tbl tbl--stack"><thead><tr><th>How</th><th>Where</th><th>Notes</th></tr></thead><tbody>
+    <tr><th scope="row">Dine-in</th><td data-l="Where">{e(pk['pickup'])}</td><td data-l="Notes">{e(pk.get('pickup_note', ''))}</td></tr></tbody></table></div>
   <p>Choose your date and preferred time at checkout.</p>"""
         elif pk:
-            drow = (f'<tr><th scope="row">Delivery</th><td>{e(pk["delivery"])}</td><td>Depends on distance, confirmed with you{(" · " + e(pk["delivery_note"])) if pk.get("delivery_note") else ""}</td></tr>'
+            drow = (f'<tr><th scope="row">Delivery</th><td data-l="Where">{e(pk["delivery"])}</td><td data-l="Fee">Depends on distance, confirmed with you{(" · " + e(pk["delivery_note"])) if pk.get("delivery_note") else ""}</td></tr>'
                     if pk.get("delivery") else "")
             sub, ship_h, ret_h = "Pick-up, delivery and common questions.", "Pick-up &amp; delivery", "Changes &amp; refunds"
-            ship_sec = f"""<div class="tbl-wrap"><table class="tbl"><thead><tr><th>How</th><th>Where</th><th>Fee</th></tr></thead><tbody>
-    <tr><th scope="row">Pick-up</th><td>{e(pk['pickup'])}</td><td>Free{(" · " + e(pk["pickup_note"])) if pk.get("pickup_note") else ""}</td></tr>
+            ship_sec = f"""<div class="tbl-wrap"><table class="tbl tbl--stack"><thead><tr><th>How</th><th>Where</th><th>Fee</th></tr></thead><tbody>
+    <tr><th scope="row">Pick-up</th><td data-l="Where">{e(pk['pickup'])}</td><td data-l="Fee">Free{(" · " + e(pk["pickup_note"])) if pk.get("pickup_note") else ""}</td></tr>
     {drow}</tbody></table></div>
   <p>Choose your pick-up or delivery date at checkout.</p>"""
         else:
             sub, ship_h, ret_h = "Shipping, returns and common questions.", "Shipping", "Returns &amp; exchanges"
-            ship_sec = f"""<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Where</th><th>Fee</th><th>Delivery time</th></tr></thead><tbody>
-    <tr><th scope="row">West Malaysia</th><td>{rm(s['west'])} · free over {rm0(s['free_min'])}</td><td>2–4 working days</td></tr>
-    <tr><th scope="row">Sabah, Sarawak &amp; Labuan</th><td>{rm(s['east'])} · free over {rm0(s['free_min'])}</td><td>4–7 working days</td></tr></tbody></table></div>
+            ship_sec = f"""<div class="tbl-wrap"><table class="tbl tbl--stack"><thead><tr><th>Where</th><th>Fee</th><th>Delivery time</th></tr></thead><tbody>
+    <tr><th scope="row">West Malaysia</th><td data-l="Fee">{rm(s['west'])} · free over {rm0(s['free_min'])}</td><td data-l="Delivery time">2–4 working days</td></tr>
+    <tr><th scope="row">Sabah, Sarawak &amp; Labuan</th><td data-l="Fee">{rm(s['east'])} · free over {rm0(s['free_min'])}</td><td data-l="Delivery time">4–7 working days</td></tr></tbody></table></div>
   <p>Orders placed before 2pm on working days are packed the same day. You'll get a tracking number as soon as your parcel ships.</p>"""
         contact = e(self.pv["contact"]) if self.pv and self.pv.get("contact") else "Chat with us using the button at the bottom of the page, or message us on Instagram. We reply within one working day."
         return f"""<div class="wrap wrap--narrow help">

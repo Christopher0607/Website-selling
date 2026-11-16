@@ -191,6 +191,8 @@ p { margin: 0 0 1em; }
 .card__title a { text-decoration: none; }
 .card__title a:hover { text-decoration: underline; }
 .card__specs { font: 500 .78rem/1.3 ui-monospace, "JetBrains Mono", monospace; color: var(--muted); margin: 0 0 6px; }
+.card__specs span { white-space: nowrap; }
+.card__specs .card__sep { white-space: normal; }
 .card__notes { font-size: .82rem; color: var(--muted); margin: 0 0 6px; }
 .card__swatches { display: flex; gap: 6px; margin: 2px 0 8px; }
 .dot { width: 14px; height: 14px; border-radius: 50%; background: var(--sw); box-shadow: inset 0 0 0 1px rgba(0,0,0,.18); }
@@ -280,6 +282,7 @@ p { margin: 0 0 1em; }
 .tbl thead th { font-size: .78rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; background: var(--soft); }
 .tbl tbody tr:last-child > * { border-bottom: 0; }
 .tbl tbody th { font-weight: 600; }
+.tbl .nw { white-space: nowrap; } /* short values ("30–40 cm", "10,000 mAh") never split */
 
 /* faq */
 .qas { border-top: 1px solid var(--line); }
@@ -307,7 +310,8 @@ p { margin: 0 0 1em; }
 .nl--lg .btn { min-height: 52px; }
 
 /* roast meter */
-.roast { display: flex; align-items: center; gap: 10px; font-size: .85rem; margin: 0 0 12px; }
+.roast { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; font-size: .85rem; margin: 0 0 12px; }
+.roast__name { white-space: nowrap; } /* "Light-medium" moves under the meter on narrow cards instead of breaking in two */
 .roast__label { color: var(--muted); text-transform: uppercase; letter-spacing: .1em; font-size: .72rem; }
 .roast__dots { display: inline-flex; gap: 4px; }
 .roast__dots i { width: 22px; height: 6px; border-radius: 3px; background: rgba(127,127,127,.25); }
@@ -538,7 +542,16 @@ p { margin: 0 0 1em; }
   .nl input { flex: none; width: 100%; } /* flex:1 in a column squashed the field to ~22px tall */
   .nl .btn { width: 100%; }
   .buy__row .qty { height: 52px; }
-  .tbl th, .tbl td { padding: 12px 14px; }
+  .tbl th, .tbl td { padding: 12px 10px; white-space: normal; } /* size charts and comparisons fit the phone instead of scrolling sideways */
+  .tbl th:first-child, .tbl td:first-child { padding-left: 14px; }
+  /* help page tables: one block per row on phones (a sideways-scrolling table hid the "free over RM150" part) */
+  .tbl--stack thead { display: none; }
+  .tbl--stack tr { display: block; padding: 12px 14px; border-bottom: 1px solid var(--line); }
+  .tbl--stack tbody tr:last-child { border-bottom: 0; }
+  .tbl.tbl--stack th, .tbl.tbl--stack td { display: block; padding: 0; border: 0; white-space: normal; }
+  .tbl--stack tbody th { margin-bottom: 4px; }
+  .tbl.tbl--stack td { display: grid; grid-template-columns: 7.5em 1fr; gap: 8px; padding: 2px 0; }
+  .tbl--stack td::before { content: attr(data-l); color: var(--muted); font-size: .85rem; }
   .gallery__thumbs { overflow-x: auto; }
   .thumb { width: 64px; height: 64px; flex: none; }
   .line { grid-template-columns: 64px 1fr auto; }

@@ -11,6 +11,7 @@
 body { font-weight: 600; }
 .announce { font-weight: 800; }
 .logo__txt { font-weight: 700; font-size: 1.7rem; color: var(--fg); }
+.ftr .logo__txt { color: inherit; } /* the footer is dark: the dark brand name was invisible there */
 .hdr__nav a { font-weight: 800; }
 .btn { font-weight: 800; box-shadow: 0 4px 0 rgba(0,0,0,.12); }
 .btn:hover { transform: translateY(-2px); }

@@ -12,7 +12,7 @@
   "order_prefix": "VN",
   "header": "left",
   "logo": {"text": "voltnest", "mark": "<svg width='28' height='28' viewBox='0 0 28 28' aria-hidden='true'><rect width='28' height='28' rx='8' fill='#c6ff3d'/><path d='M15.5 5 8 15.5h5.2L12 23l8-10.5h-5.3L15.5 5Z' fill='#0b1220'/></svg>"},
-  "announcement": ["Order by 3pm — ships the same working day", "12-month warranty on every charger and power bank", "Free shipping over RM150"],
+  "announcement": ["Order by 3pm — ships the same working day", "12-month warranty on chargers & power banks", "Free shipping over RM150"],
   "shipping": {"west": 8, "east": 15, "free_min": 150},
   "coupon": {"code": "WELCOME10", "pct": 10},
   "footer_blurb": "Chargers, cables and audio that do what the box says. Tested, warrantied, shipped fast.",
