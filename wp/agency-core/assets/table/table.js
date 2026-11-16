@@ -65,7 +65,8 @@
     lang: ['Language', '语言', 'Bahasa'],
     remove: ['Remove', '删除', 'Buang'],
     menu: ['Menu', '菜单', 'Menu'],
-    at: ['at {0}', '{0}', 'pada {0}']
+    at: ['at {0}', '{0}', 'pada {0}'],
+    owner_side: ['See the restaurant’s side →', '看店家那边 →', 'Lihat sebelah kedai →']
   };
   var LANGS = [['en', 'EN'], ['zh', '中文'], ['ms', 'BM']];
   var LI = { en: 0, zh: 1, ms: 2 };
@@ -183,7 +184,7 @@
   function draw() {
     document.documentElement.lang = lang === 'zh' ? 'zh-Hans' : (lang === 'ms' ? 'ms' : 'en');
     app.innerHTML = '';
-    if (C.demo) put(app, h('div', { class: 'tq-demo' }, t('demo')));
+    if (C.demo) put(app, h('div', { class: 'tq-demo' }, t('demo'), C.ownerLink ? [' ', h('a', { href: C.ownerLink }, t('owner_side'))] : null));
 
     // header: the shop's logo and name, language, my bill
     billBtn = h('button', { class: 'tq-iconbtn tq-billbtn', type: 'button', 'aria-label': t('bill'), onclick: function () { openBill(); }, hidden: !orders.length }, icon('receipt'), h('span', null, t('bill')), h('b', { hidden: true }));

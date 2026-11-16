@@ -639,7 +639,7 @@
   ];
   var OST = ['New', 'Preparing', 'Ready', 'Collected'], BST = ['New', 'Confirmed', 'Seated'];
   function pageOwner() {
-    var tab = 'orders', root = $('[data-owner]');
+    var tab = location.hash === '#tables' ? 'tables' : 'orders', root = $('[data-owner]');
     function stMap() { return load('ost', {}); }
     function paint() {
       var o = owner(), sm = stMap(), mine = load('orders', []), myb = bookings();
@@ -736,7 +736,7 @@
     });
     var st = status();
     window.AGC_TABLE = {
-      table: t, key: 'demo', rest: REST, site: BRAND, shop: 'index.html', zh: false, cur: 'RM', demo: true,
+      table: t, key: 'demo', rest: REST, site: BRAND, shop: 'index.html', zh: false, cur: 'RM', demo: true, ownerLink: 'owner.html#tables',
       menu: { cats: CATS.filter(function (c) { return items.some(function (it) { return it.cat === c[0]; }); }), items: items },
       note: 'Drinks come first; mains in about 15 minutes.',
       stopped: st.cls === 'closed' && o.status === 'closed' ? 'Ordering at the table is paused today. Please order at the counter.' : '',
