@@ -289,3 +289,5 @@
 @media (prefers-reduced-motion: reduce) {
   .tq *, .tq *::before, .tq *::after { animation: none !important; transition: none !important; }
 }
+
+.tq-demo a { color: var(--tq-gold); font-weight: 800; white-space: nowrap; }
