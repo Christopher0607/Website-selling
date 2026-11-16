@@ -564,3 +564,6 @@ button.bagbtn { cursor: pointer; padding: 0; }
 }
 /* desktop: every day visible, no sideways scrolling (2026-11-12) */
 @media (min-width: 900px) { .days { flex-wrap: wrap; overflow: visible; } }
+
+/* 2026-11-16: the quantity control inside a hamper item stays one row (".hitem div" made it a column) */
+.hitem .qty { flex: none; flex-direction: row; padding: 0; gap: 0; align-self: flex-start; margin-top: auto; }

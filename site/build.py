@@ -1209,8 +1209,8 @@ class Studio:
              "Tasting menus, reservations with deposits, private dining.",
              ["Dining room, chef’s counter and private salon bookings", "Places left, deposits and a waitlist when it is full", "Seasonal dinners, takeaway and gift cards", "Your side: tonight’s covers and dishes running out"]),
             ("sireh-salt", "Sireh &amp; Salt", "Everyday restaurant or café", "demo/sireh-salt/index.html", "#1d3b2a", ("See the owner side", "demo/sireh-salt/owner.html"),
-             "Menu, pick-up and delivery orders, table bookings.",
-             ["Menu with options and sold-out dishes", "Pick-up and delivery, paid online or sent to WhatsApp", "Table bookings and festive pre-orders", "Your side: orders, bookings and sold-out switches"]),
+             "Menu, pick-up and delivery orders, table bookings, order from the table.",
+             ["Menu with options and sold-out dishes", "Pick-up and delivery, paid online or sent to WhatsApp", "Order from the table by QR, pay at the counter", "Table bookings and festive pre-orders", "Your side: orders, tables, bookings and sold-out switches"]),
             ("dulang-daun", "Dulang &amp; Daun", "Food gifts &amp; online shop", "demo/dulang-daun/index.html", "#123c3a", ("See the owner side", "demo/dulang-daun/owner.html"),
              "Gift boxes and hampers, shipped across Malaysia.",
              ["Sizes, flavours, bundles and vouchers", "West and East Malaysia shipping, parcel tracking", "Build-your-own hamper, gift orders with a card", "Your side: pack, ship, stock and the waiting list"]),
@@ -1486,6 +1486,10 @@ def build_flagships():
         for f in os.listdir(src):
             if f.endswith((".css", ".js")):
                 shutil.copy(os.path.join(src, f), os.path.join(out, f))
+        # 2026-11-16: a demo with a table QR ordering page uses the real customer page from agency-core (one design for both)
+        if os.path.isfile(os.path.join(src, "pages", "table.html")):
+            for f in ("table.js", "table.css"):
+                shutil.copy(os.path.join(HERE, "..", "wp", "agency-core", "assets", "table", f), os.path.join(out, f))
         layout = open(os.path.join(src, "layout.html"), encoding="utf-8").read()
         for fn in sorted(os.listdir(os.path.join(src, "pages"))):
             if not fn.endswith(".html"):
@@ -1499,8 +1503,10 @@ def build_flagships():
                         k, v = part.split(":", 1)
                         meta[k.strip()] = v.strip()
                 body = body[m.end():]
-            html = (layout.replace("{{TITLE}}", e(meta.get("title", slug))).replace("{{DESC}}", e(meta.get("description", "")))
-                    .replace("{{PAGE}}", e(meta.get("page", fn[:-5]))).replace("{{BODY}}", body))
+            # "layout: none": the page is a whole HTML document of its own (e.g. the table QR ordering page, no site header)
+            frame = "{{BODY}}" if meta.get("layout") == "none" else layout
+            html = (frame.replace("{{BODY}}", body).replace("{{TITLE}}", e(meta.get("title", slug))).replace("{{DESC}}", e(meta.get("description", "")))
+                    .replace("{{PAGE}}", e(meta.get("page", fn[:-5]))))
             write(f"demo/{slug}/{fn}", html)
             n += 1
     return n

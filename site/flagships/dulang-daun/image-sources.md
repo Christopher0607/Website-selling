@@ -20,7 +20,7 @@
 | img/hamper-ong.webp | [Pexels 29653182](https://www.pexels.com/photo/29653182/) | CNY hamper | Pexels License（免费商用，不需署名） |
 | img/hamper-thanks.webp | [Pexels 8014845](https://www.pexels.com/photo/8014845/) | Thank-you box | Pexels License（免费商用，不需署名） |
 | img/hamper-raya.webp | [Pexels 10819659](https://www.pexels.com/photo/10819659/) | Raya open house box | Pexels License（免费商用，不需署名） |
-| img/hamper-basket.webp | [Pexels 16897958](https://www.pexels.com/photo/16897958/) | Family basket | Pexels License（免费商用，不需署名） |
+| img/hamper-basket.webp | [Pexels 16897958](https://www.pexels.com/photo/16897958/) | Family basket（2026-11-16：罐子上原本的俄文标签改成虚构品牌 Dulang & Daun 的标签） | Pexels License（免费商用，可以修改，不需署名） |
 | img/cookie-jars.webp | [Pexels 7541729](https://www.pexels.com/photo/7541729/) | Cookie jars set | Pexels License（免费商用，不需署名） |
 | img/kuih-box.webp | [Pexels 35327227](https://www.pexels.com/photo/35327227/) | Kuih box | Pexels License（免费商用，不需署名） |
 | img/packing.webp | [Pexels 7857523](https://www.pexels.com/photo/7857523/) | Packing an order by hand | Pexels License（免费商用，不需署名） |

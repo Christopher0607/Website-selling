@@ -1,0 +1,28 @@
+<!--
+title: Table ordering — Sireh & Salt (demo website)
+description: Scan the QR on your table, order on your phone and pay at the counter. The kitchen sees the table number at once. Demo by Cartsmith Studio.
+page: table
+layout: none
+-->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#fbf7ef">
+<title>{{TITLE}}</title>
+<meta name="description" content="{{DESC}}">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231d3b2a'/%3E%3Cpath d='M20 44c0-14 10-24 26-26-2 16-12 26-26 26z' fill='%23e0a526'/%3E%3Cpath d='M20 44l16-16' stroke='%231d3b2a' stroke-width='3'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&amp;family=Manrope:wght@400;500;600;700;800&amp;display=swap">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="table.css">
+</head>
+<body class="tq tq--skin" data-page="{{PAGE}}">
+<div id="tq" class="tq-app"><p class="tq-boot">Loading…</p></div>
+<noscript><p class="tq-boot">Please turn on JavaScript to order.</p></noscript>
+<script src="app.js"></script>
+<script src="table.js"></script>
+</body>
+</html>

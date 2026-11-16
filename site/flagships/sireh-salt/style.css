@@ -425,3 +425,8 @@ textarea.input { min-height: 90px; resize: vertical; }
 .nophoto { width: 100%; height: 100%; min-height: 160px; display: grid; place-items: center; background: repeating-linear-gradient(135deg, var(--cream) 0 14px, var(--paper) 14px 28px); border: 1.5px dashed var(--line); border-radius: inherit; color: var(--muted); font-weight: 700; font-size: .9rem; }
 .mitem:not(:has(> img)) { grid-template-columns: 1fr; }
 .fset > .nophoto { aspect-ratio: 4 / 3; height: auto; border-radius: var(--r) var(--r) 0 0; }
+
+/* 2026-11-16: owner view, Tables tab (table QR ordering) */
+.otab { border-top: 1px dashed var(--line); padding: 10px 0 0; margin: 10px 0 0; }
+.otab .linkbtn { min-height: 34px; font-size: .82rem; color: var(--muted); }
+.tile--wide { grid-column: 1 / -1; min-height: 260px; }

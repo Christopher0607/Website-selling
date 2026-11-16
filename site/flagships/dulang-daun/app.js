@@ -241,7 +241,7 @@
 
   // ------------------------------------------------------------------ product page
   function pageProduct() {
-    var id = new URLSearchParams(location.search).get('p'), p = prod(id), root = $('[data-pdp]');
+    var id = new URLSearchParams(location.search).get('p'), p = prod(id) || (id ? null : (P.filter(function (x) { return x.badge === 'Bestseller'; })[0] || P[0])), root = $('[data-pdp]');
     if (!p) { root.innerHTML = '<div class="panel empty" style="margin:40px 0"><h2>We couldn’t find that product</h2><a class="btn" href="shop.html">See everything</a></div>'; return; }
     document.title = p.n + ' — Dulang & Daun (demo website)';
     var sel = {}, img = 0, qty = 1;
