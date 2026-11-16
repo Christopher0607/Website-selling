@@ -137,6 +137,13 @@ async function customerOrder(browser, link, note) {
   const paid = done.data.orders.filter((o) => [first.number, second].includes(String(o.number)));
   ok(paid.length === 2 && paid.every((o) => o.paid && o.table === T.table && /Cash|现金/.test(o.pay)), 'both orders are now paid (cash) and in the "done" list with their table');
 
+  // close the day (2026-11-16): today's bills, by payment method, the table still open elsewhere
+  const day = (await api(staff, 'tables/day')).data;
+  const bill = day.bills.find((x) => x.table === T.table && x.numbers.map(String).includes(first.number));
+  ok(!!bill && bill.numbers.length === 2 && /Cash|现金/.test(bill.method) && day.methods.some((x) => x.key === 'cash' && x.total >= bill.total), `close the day: one bill for both orders of the table, paid cash (${bill ? bill.total_f : '-'})`);
+  await staff.goto(BASE + '/dian/#/close');
+  await staff.waitForSelector('.closecard');
+  ok((await staff.textContent('.main')).includes(bill ? bill.total_f : 'x') && (await staff.textContent('.closecard__sum')).trim() === day.total_f, 'close the day screen: the total and the bill are shown');
   // the customer's phone shows "Paid"
   await cp.waitForSelector('.tq-state--paid', { timeout: 25000 }).catch(() => {});
   ok(await cp.locator('.tq-state--paid').count() >= 2, 'customer sees "Paid"');

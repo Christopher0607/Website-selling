@@ -1490,6 +1490,11 @@ def build_flagships():
         if os.path.isfile(os.path.join(src, "pages", "table.html")):
             for f in ("table.js", "table.css"):
                 shutil.copy(os.path.join(HERE, "..", "wp", "agency-core", "assets", "table", f), os.path.join(out, f))
+        # 2026-11-16: a demo with the kitchen & counter screens runs the real shop dashboard (agency-core assets/owner)
+        if os.path.isfile(os.path.join(src, "pages", "dian.html")):
+            os.makedirs(os.path.join(out, "owner-app"), exist_ok=True)
+            for f in ("app.js", "app.css", "qrcode.js", "icon.svg"):
+                shutil.copy(os.path.join(HERE, "..", "wp", "agency-core", "assets", "owner", f), os.path.join(out, "owner-app", f))
         layout = open(os.path.join(src, "layout.html"), encoding="utf-8").read()
         for fn in sorted(os.listdir(os.path.join(src, "pages"))):
             if not fn.endswith(".html"):

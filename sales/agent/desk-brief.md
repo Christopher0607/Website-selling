@@ -141,7 +141,9 @@ lost · no_response · do_not_contact. "Next follow-up" and "next call" dates ar
 - Never say the photos are theirs; say they are placeholders and we can put in theirs for free.
 - Never promise sales, rankings or delivery dates; never invent clients, reviews, numbers, prices or offers.
 - Table QR ordering exists since 2026-11-15 (agency-core 1.8.0): scan the QR on the table → order on the phone → kitchen
-  screen with the table number → pay at the counter. Not available yet: connecting to the shop's cashier / POS system,
+  screen with the table number → pay at the counter → "close the day" record (since 2026-11-16: total per payment method,
+  every bill, what sold, unpaid tables, Excel). Demo to send: https://cartsmithstudio.com/demo/sireh-salt/table.html?t=5
+  (its "See the restaurant's side" link opens the kitchen and counter screens). Not available yet: connecting to the shop's cashier / POS system,
   kitchen printers, paying at the table. Never promise those; ask which cashier system they use and say we will confirm.
   In person, never say they are the first shop we visited.
   If a price or detail is not in the files, say we will confirm.
