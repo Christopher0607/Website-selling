@@ -212,6 +212,7 @@ class AGC_Table {
 					'p'    => (float) $p->get_price(),
 					'img'  => $img,
 					'o'    => array_values( (array) ( $it['o'] ?? array() ) ),
+					'tags' => array_values( array_intersect( (array) ( $it['tags'] ?? array() ), array( 'pop', 'new', 'chef', 'hot' ) ) ),
 					'sold' => ! $p->is_in_stock(),
 					'left' => $p->managing_stock() && null !== $p->get_stock_quantity() ? max( 0, (int) $p->get_stock_quantity() ) : null,
 				);
@@ -237,6 +238,7 @@ class AGC_Table {
 					'p'    => (float) $p->get_price(),
 					'img'  => $img ? $img : '',
 					'o'    => array(),
+					'tags' => $p->is_featured() ? array( 'pop' ) : array(),
 					'sold' => ! $p->is_in_stock(),
 					'left' => $p->managing_stock() && null !== $p->get_stock_quantity() ? max( 0, (int) $p->get_stock_quantity() ) : null,
 				);
@@ -325,6 +327,22 @@ class AGC_Table {
 		}
 		$accent = (string) agc_get( 'accent_color' );
 		$accent = preg_match( '/^#[0-9a-fA-F]{6}$/', $accent ) ? $accent : '';
+		$hero   = '';
+		$logo   = '';
+		if ( $skin ) {
+			$d = AGC_Skin::data();
+			foreach ( array( (string) ( $d['table_hero'] ?? '' ), 'hero' ) as $h ) {
+				if ( '' !== $h && preg_match( '/^[a-z0-9-]+$/', $h ) && file_exists( AGC_Skin::dir() . '/img/' . $h . '.webp' ) ) {
+					$hero = AGC_Skin::url() . '/img/' . $h . '.webp';
+					break;
+				}
+			}
+			if ( preg_match( '#<a class="logo"[^>]*>\s*(<svg[^>]*>.*?</svg>)#s', $idx, $m ) ) {
+				$logo = $m[1]; // the shop's own logo mark from its design files.
+			}
+		} elseif ( get_site_icon_url( 96 ) ) {
+			$logo = '<img src="' . esc_url( get_site_icon_url( 96 ) ) . '" alt="">';
+		}
 		$ver    = AGC_VERSION . '.' . (int) @filemtime( AGC_DIR . 'assets/table/table.js' ) . '.' . (int) @filemtime( AGC_DIR . 'assets/table/table.css' ); // phpcs:ignore WordPress.PHP.NoSilencedErrors
 		$cfg    = array(
 			'table'   => $t,
@@ -338,6 +356,10 @@ class AGC_Table {
 			'note'    => (string) agc_get( 'table_note' ),
 			'stopped' => $t ? self::stopped() : '',
 			'demo'    => (bool) agc_get( 'demo_mode' ),
+			'hero'    => $hero,
+			'logo'    => $logo,
+			'address' => (string) agc_get( 'business_address' ),
+			'hours'   => (string) agc_get( 'business_hours' ),
 		);
 		/* translators: 1: table, 2: shop */
 		$title = $t ? sprintf( __( 'Table %1$s · %2$s', 'agency-core' ), $t, $site ) : $site;
@@ -350,6 +372,7 @@ class AGC_Table {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#fbf8f2">
 <title><?php echo esc_html( $title ); ?></title>
 		<?php echo $fonts; // phpcs:ignore WordPress.Security.EscapeOutput -- the skin's own font links. ?>
 		<?php if ( $css ) : ?>
