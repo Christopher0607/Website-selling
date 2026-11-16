@@ -59,6 +59,31 @@
   var WA = 'https://wa.me/?text=';
   var SEED_ORDER = { no: 'DD-2041', phone: '0123456789', name: 'Demo customer', date: '', st: 'Shipped', trk: 'DEMO-TRK-77314', region: 'west', state: 'Selangor', items: [{ n: 'Terima Kasih Box', qty: 2, unit: 78, opts: '' }], total: 156 };
 
+  // ------------------------------------------------------------------ the WordPress version (docs/14-wordpress-demos.md)
+  // site/tools/export-demo-data.js reads these lists for the WordPress site (products, rules the server checks)
+  if (window.__agcExport) window.__agcExport({ P: P, CATS: CATS, BOXES: BOXES, RIBBONS: RIBBONS, STATES: STATES, EAST: EAST, SHIP: SHIP, CUTOFF: CUTOFF, VOUCHER: VOUCHER, TIERS: TIERS, SEED_ORDER: SEED_ORDER, BRAND: 'Dulang & Daun' });
+  // On WordPress the page gets window.AGC_LIVE: the same products with names, prices, stock and photos from WooCommerce.
+  // Orders, back-in-stock requests and corporate enquiries go to the real shop; tracking reads real orders.
+  var LIVE = window.AGC_LIVE || null, LIVE_IMG = {};
+  if (LIVE && LIVE.data && LIVE.data.P) {
+    P = LIVE.data.P.map(function (p) {
+      p = Object.assign({ v: [], img: [], short: '', d: '', ship: 'all', hamper: false, cat: '' }, p);
+      p.img = Array.isArray(p.img) ? p.img.slice() : [];
+      if (p.imgUrl) { p.img[0] = 'wc-' + p.id; LIVE_IMG['wc-' + p.id] = p.imgUrl; }
+      return p;
+    });
+  }
+  function pimg(n) { return LIVE_IMG[n] || 'img/' + n + '.webp'; } // the product photo, or one changed / added in WooCommerce
+  function send(path, body, ok, fail) {
+    var btns = Array.prototype.slice.call(document.querySelectorAll('[data-place],[data-track] button[type=submit],[data-corp-form] button[type=submit],[data-notify] button[type=submit]'));
+    btns.forEach(function (b) { b.disabled = true; });
+    fetch(LIVE.rest + path, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+      .then(function (r) { return r.json().then(function (j) { if (!r.ok) { var er = new Error((j && j.message) || 'Something went wrong. Please try again.'); er.status = r.status; throw er; } return j; }); })
+      .then(function (j) { btns.forEach(function (b) { b.disabled = false; }); if (j.payUrl) { location.href = j.payUrl; return; } ok(j); })
+      .catch(function (e) { btns.forEach(function (b) { b.disabled = false; }); if (fail) fail(e); else toast(e.message || 'Something went wrong. Please try again.'); });
+  }
+  var CODES = {}, repaint = null;
+
   // ------------------------------------------------------------------ helpers
   function $(s, el) { return (el || document).querySelector(s); }
   function $$(s, el) { return Array.prototype.slice.call((el || document).querySelectorAll(s)); }
@@ -86,8 +111,8 @@
   };
 
   // ------------------------------------------------------------------ stock (the owner can change it) and cart
-  function owner() { var o = load('owner', {}); o.out = o.out || {}; o.back = o.back || {}; return o; }
-  function setOwner(o) { save('owner', o); }
+  function owner() { if (LIVE) return { out: LIVE.owner.sold || {}, back: {} }; var o = load('owner', {}); o.out = o.out || {}; o.back = o.back || {}; return o; }
+  function setOwner(o) { if (LIVE) return; save('owner', o); }
   function isOut(p) { var o = owner(); return o.back[p.id] ? false : !!(o.out[p.id] || p.out); }
   function variantOut(p, label) { var o = owner(); if (o.back[p.id]) return false; return p.v.some(function (g) { return (g.out || []).indexOf(label) >= 0; }); }
   function fromPrice(p) { return p.p; }
@@ -127,9 +152,9 @@
     var sub = subtotal(), deal = multiDeal(), last = prod(lastId || c[c.length - 1].id), pair = last && last.pair && prod(last.pair);
     var inCart = function (id) { return c.some(function (l) { return l.id === id; }); };
     return shipNote(sub - deal.off) + c.map(function (l, i) {
-      return '<div class="cline"><img src="img/' + esc(l.img) + '.webp" alt=""><div><h4>' + esc(l.n) + '</h4>' + (l.opts ? '<p>' + esc(l.opts) + '</p>' : '') + '<div class="qty"><button type="button" data-cq="' + i + ':-1" aria-label="One less">−</button><output>' + l.qty + '</output><button type="button" data-cq="' + i + ':1" aria-label="One more">+</button></div></div><b>' + rm(l.unit * l.qty) + '</b></div>';
+      return '<div class="cline"><img src="' + esc(pimg(l.img)) + '" alt=""><div><h4>' + esc(l.n) + '</h4>' + (l.opts ? '<p>' + esc(l.opts) + '</p>' : '') + '<div class="qty"><button type="button" data-cq="' + i + ':-1" aria-label="One less">−</button><output>' + l.qty + '</output><button type="button" data-cq="' + i + ':1" aria-label="One more">+</button></div></div><b>' + rm(l.unit * l.qty) + '</b></div>';
     }).join('') +
-      (pair && !inCart(pair.id) && !isOut(pair) ? '<div class="upsell"><img src="img/' + pair.img[0] + '.webp" alt=""><div><b>Goes well with: ' + esc(pair.n) + '</b>' + rm(pair.p) + '</div><button class="btn btn--sm btn--ghost" type="button" data-quick="' + pair.id + '">Add</button></div>' : '') +
+      (pair && !inCart(pair.id) && !isOut(pair) ? '<div class="upsell"><img src="' + pimg(pair.img[0]) + '" alt=""><div><b>Goes well with: ' + esc(pair.n) + '</b>' + rm(pair.p) + '</div><button class="btn btn--sm btn--ghost" type="button" data-quick="' + pair.id + '">Add</button></div>' : '') +
       '<div class="drawer__foot"><div class="totals">' + (deal.off ? '<div><span>Kerepek: any 3 for RM27</span><span>−' + rm(deal.off) + '</span></div>' : '') + '<div class="grand"><span>Subtotal</span><span>' + rm(sub - deal.off) + '</span></div></div>' +
       '<p class="small muted" style="margin:8px 0 12px">Shipping, vouchers and gift options at checkout. You can also send the order on WhatsApp.</p><a class="btn btn--block" href="checkout.html">Checkout</a></div>';
   }
@@ -188,7 +213,7 @@
   }
   function card(p) {
     var out = isOut(p);
-    return '<article class="pcard' + (out ? ' is-out' : '') + '"><a class="pcard__img" href="product.html?p=' + p.id + '" tabindex="-1" aria-hidden="true"><img src="img/' + p.img[0] + '.webp" alt="" loading="lazy" width="600" height="600">' + (p.img[1] ? '<img src="img/' + p.img[1] + '.webp" alt="" loading="lazy" width="600" height="600">' : '') + '</a><div class="pcard__badges">' + badgeHTML(p) + '</div>' +
+    return '<article class="pcard' + (out ? ' is-out' : '') + '"><a class="pcard__img" href="product.html?p=' + p.id + '" tabindex="-1" aria-hidden="true"><img src="' + pimg(p.img[0]) + '" alt="" loading="lazy" width="600" height="600">' + (p.img[1] ? '<img src="' + pimg(p.img[1]) + '" alt="" loading="lazy" width="600" height="600">' : '') + '</a><div class="pcard__badges">' + badgeHTML(p) + '</div>' +
       '<div class="pcard__body"><h3><a href="product.html?p=' + p.id + '">' + esc(p.n) + '</a></h3><p>' + esc(p.short) + '</p><div class="pcard__foot"><span class="price">' + (p.v.some(function (g) { return g.o.some(function (x) { return x[1]; }); }) ? '<small class="muted">from </small>' : '') + rm(fromPrice(p)) + '</span>' +
       '<button class="addbtn" type="button" data-quick="' + p.id + '">' + (out ? 'Notify me' : p.v.length ? 'Choose' : 'Add') + '</button></div></div></article>';
   }
@@ -250,7 +275,7 @@
     function paint() {
       var u = unitOf(p, sel), b = blocked(), r = region(), pair = p.pair && prod(p.pair);
       var label = p.v.map(function (g, gi) { return g.o[sel[gi]][0]; }).join(' · ');
-      root.innerHTML = '<div class="pdp"><div class="gallery"><div class="gallery__main"><img src="img/' + p.img[img] + '.webp" alt="' + esc(p.n) + ' (placeholder photo)" width="760" height="760"></div>' + (p.img.length > 1 ? '<div class="gallery__thumbs">' + p.img.map(function (x, i) { return '<button type="button" class="' + (i === img ? 'is-on' : '') + '" data-img="' + i + '" aria-label="Photo ' + (i + 1) + '"><img src="img/' + x + '.webp" alt=""></button>'; }).join('') + '</div>' : '') + '</div>' +
+      root.innerHTML = '<div class="pdp"><div class="gallery"><div class="gallery__main"><img src="' + pimg(p.img[img]) + '" alt="' + esc(p.n) + ' (placeholder photo)" width="760" height="760"></div>' + (p.img.length > 1 ? '<div class="gallery__thumbs">' + p.img.map(function (x, i) { return '<button type="button" class="' + (i === img ? 'is-on' : '') + '" data-img="' + i + '" aria-label="Photo ' + (i + 1) + '"><img src="' + pimg(x) + '" alt=""></button>'; }).join('') + '</div>' : '') + '</div>' +
         '<div><p class="crumbs"><a href="shop.html">Shop</a> / ' + esc((CATS.filter(function (c) { return c[0] === p.cat; })[0] || ['', ''])[1]) + '</p><div class="pcard__badges" style="position:static;flex-direction:row;margin-bottom:10px">' + badgeHTML(p) + '</div><h1>' + esc(p.n) + '</h1><p class="lead" style="margin-bottom:6px">' + esc(p.short) + '</p>' +
         '<div class="pdp__price">' + rm(u) + (label ? '<small>' + esc(label) + '</small>' : '') + '</div>' +
         p.v.map(function (g, gi) {
@@ -260,7 +285,7 @@
           : '<div class="buyrow"><div class="qty"><button type="button" data-q="-1" aria-label="One less">−</button><output>' + qty + '</output><button type="button" data-q="1" aria-label="One more">+</button></div><button class="btn" type="button" data-add>Add to cart · ' + rm(u * qty) + '</button></div>') +
         '<ul class="perks"><li>' + ICON.truck + '<span>' + (p.ship === 'west' ? 'West Malaysia only (fresh, no preservatives). ' + SHIP.west.days + '.' : 'Ships to West Malaysia in ' + SHIP.west.days + ', East Malaysia in ' + SHIP.east.days + '.') + ' Free over ' + rm(SHIP[r].free) + '.</span></li><li>' + ICON.gift + '<span>Add a gift message and send it straight to someone at checkout.</span></li><li>' + ICON.leaf + '<span>Made in small batches in a home kitchen.</span></li></ul>' +
         '<div class="acc"><details open><summary>About this</summary><p>' + esc(p.d) + '</p>' + (p.has ? '<ul>' + p.has.map(function (h) { return '<li>' + esc(h) + '</li>'; }).join('') + '</ul>' : '') + '</details>' + (p.ing ? '<details><summary>Ingredients</summary><p>' + esc(p.ing) + '</p></details>' : '') + '<details><summary>Keeping</summary><p>' + esc(p.keep) + '</p></details><details><summary>Shipping &amp; returns</summary><p>Packed by hand, sent with a tracked courier. Arrived damaged? Send us a photo on WhatsApp within 48 hours and we’ll replace it.</p></details></div>' +
-        (pair && !isOut(pair) && !b ? '<div class="fbt"><h3>Often bought together</h3><div class="fbt__row"><img src="img/' + p.img[0] + '.webp" alt=""><span class="plus">+</span><img src="img/' + pair.img[0] + '.webp" alt=""><span><b>' + esc(pair.n) + '</b><br><small class="muted">' + rm(pair.p) + '</small></span></div><button class="btn btn--ghost btn--sm" type="button" data-both>Add both · ' + rm(u + pair.p) + '</button></div>' : '') +
+        (pair && !isOut(pair) && !b ? '<div class="fbt"><h3>Often bought together</h3><div class="fbt__row"><img src="' + pimg(p.img[0]) + '" alt=""><span class="plus">+</span><img src="' + pimg(pair.img[0]) + '" alt=""><span><b>' + esc(pair.n) + '</b><br><small class="muted">' + rm(pair.p) + '</small></span></div><button class="btn btn--ghost btn--sm" type="button" data-both>Add both · ' + rm(u + pair.p) + '</button></div>' : '') +
         '</div></div>' +
         '<div class="stickyadd' + (b ? '' : ' is-on') + '"><div><b>' + esc(p.n) + '</b><small>' + rm(u) + (label ? ' · ' + esc(label) : '') + '</small></div><button class="btn btn--sm" type="button" data-add>Add to cart</button></div>';
     }
@@ -278,6 +303,7 @@
       var v = e.target.contact.value.trim();
       if (!phoneOk(v)) { toast('Add a WhatsApp number, e.g. 012-345 6789.'); return; }
       var w = load('notify', []), label = p.v.map(function (g, gi) { return g.o[sel[gi]][0]; }).join(' · ');
+      if (LIVE && !e.agcSent) { var nf = e.target; return send('site/notify', { id: p.id, name: p.n, opt: isOut(p) ? '' : label, contact: v }, function () { var ev = new Event('submit', { bubbles: true, cancelable: true }); ev.agcSent = true; nf.dispatchEvent(ev); }); }
       w.unshift({ id: p.id, n: p.n, opt: isOut(p) ? '' : label, contact: v, at: Date.now() }); save('notify', w.slice(0, 50));
       $('[data-notify-box]').innerHTML = '<h3>' + ICON.check.replace('<svg', '<svg width="18" height="18"') + ' You’re on the list</h3><p class="small" style="margin:0">We’ll WhatsApp ' + esc(v) + ' once when ' + esc(p.n) + (label && !isOut(p) ? ' (' + esc(label) + ')' : '') + ' is back. Demo: nothing is sent; the owner view shows the waiting list.</p>';
     });
@@ -300,7 +326,7 @@
         '<section class="panel"><h2>2. Fill it</h2><p class="muted small" style="margin:0">' + f + ' of ' + b.slots + ' filled. Items that keep at least 3 weeks only, so the box travels well.</p><div class="slotsbar" aria-hidden="true">' + Array.apply(null, Array(b.slots)).map(function (_, i) { return '<i class="' + (i < f ? 'is-full' : '') + '"></i>'; }).join('') + '</div>' +
         '<div class="hgrid" style="margin-top:12px">' + pool.map(function (p) {
           var q = S.items[p.id] || 0, out = isOut(p);
-          return '<div class="hitem' + (q ? ' is-in' : '') + '"><img src="img/' + p.img[0] + '.webp" alt="" loading="lazy"><div><h4>' + esc(p.n) + '</h4><span class="price" style="font-size:.95rem">' + rm(p.p) + '</span>' + (out ? '<span class="tag tag--out" style="align-self:flex-start">Sold out</span>' : '<div class="qty"><button type="button" data-hi="' + p.id + ':-1" aria-label="One less">−</button><output>' + q + '</output><button type="button" data-hi="' + p.id + ':1" aria-label="One more"' + (f >= b.slots ? ' disabled' : '') + '>+</button></div>') + '</div></div>';
+          return '<div class="hitem' + (q ? ' is-in' : '') + '"><img src="' + pimg(p.img[0]) + '" alt="" loading="lazy"><div><h4>' + esc(p.n) + '</h4><span class="price" style="font-size:.95rem">' + rm(p.p) + '</span>' + (out ? '<span class="tag tag--out" style="align-self:flex-start">Sold out</span>' : '<div class="qty"><button type="button" data-hi="' + p.id + ':-1" aria-label="One less">−</button><output>' + q + '</output><button type="button" data-hi="' + p.id + ':1" aria-label="One more"' + (f >= b.slots ? ' disabled' : '') + '>+</button></div>') + '</div></div>';
         }).join('') + '</div></section>' +
         '<section class="panel"><h2>3. Ribbon and card</h2><div class="field"><span>Ribbon</span><div class="ribbons">' + RIBBONS.map(function (r) { return '<button type="button" data-ribbon="' + r[0] + '" class="' + (S.ribbon === r[0] ? 'is-on' : '') + '" style="background:' + r[1] + '" aria-label="' + r[0] + ' ribbon" aria-pressed="' + (S.ribbon === r[0]) + '"></button>'; }).join('') + '</div></div>' +
         '<div class="field"><label for="h-msg">Message on the card <small>(optional, free)</small></label><input class="input" id="h-msg" maxlength="120" placeholder="Happy Chinese New Year, with love from…" value="' + esc(S.msg) + '"></div></section></div>' +
@@ -320,7 +346,7 @@
       }
       if (e.target.closest('[data-hadd]')) {
         var b = box(), list = Object.keys(S.items).map(function (k) { return S.items[k] + ' × ' + prod(k).n; });
-        addLine({ key: 'hamper-' + Date.now(), id: 'custom-hamper', n: 'Your own hamper (' + b.n + ')', img: 'hamper-thanks', qty: 1, unit: Math.round(total() * 100) / 100, opts: list.join(', ') + ' · ' + S.ribbon + ' ribbon' + (S.msg ? ' · card: “' + S.msg + '”' : ''), ship: 'all' });
+        addLine({ key: 'hamper-' + Date.now(), id: 'custom-hamper', n: 'Your own hamper (' + b.n + ')', img: 'hamper-thanks', qty: 1, unit: Math.round(total() * 100) / 100, opts: list.join(', ') + ' · ' + S.ribbon + ' ribbon' + (S.msg ? ' · card: “' + S.msg + '”' : ''), ship: 'all', hb: { box: S.box, items: JSON.parse(JSON.stringify(S.items)), ribbon: S.ribbon, msg: S.msg } });
         S.items = {}; S.msg = ''; paint();
       }
     });
@@ -332,6 +358,18 @@
   function discount(code, sub) {
     code = String(code || '').trim().toUpperCase();
     if (!code) return { ok: true, amt: 0 };
+    if (LIVE) {
+      var r = CODES[code];
+      if (!r) {
+        CODES[code] = { pending: true };
+        fetch(LIVE.rest + 'site/coupon', { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ code: code, sub: sub }) })
+          .then(function (x) { return x.json(); }).then(function (j) { CODES[code] = j && 'ok' in j ? j : { ok: false, msg: 'That code doesn’t work.' }; if (repaint) repaint(); })
+          .catch(function () { delete CODES[code]; });
+      }
+      if (!r || r.pending) return { ok: false, msg: 'Checking the code…' };
+      if (!r.ok) return { ok: false, msg: r.msg };
+      return { ok: true, amt: r.type === 'percent' ? Math.round(sub * r.amount) / 100 : Math.min(sub, r.amount), label: r.label };
+    }
     if (code === VOUCHER.code) return sub >= VOUCHER.min ? { ok: true, amt: Math.round(sub * VOUCHER.pct) / 100, label: VOUCHER.pct + '% off (' + code + ')' } : { ok: false, msg: code + ' needs a minimum order of ' + rm(VOUCHER.min) + '.' };
     return { ok: false, msg: 'That code doesn’t work. Try ' + VOUCHER.code + ' (demo).' };
   }
@@ -350,6 +388,7 @@
     var S = load('checkout', { name: '', phone: '', email: '', addr: '', pc: '', city: '', state: 'Selangor', method: 'std', gift: false, to: '', msg: '', code: '', pay: 'online' });
     var root = $('[data-checkout]');
     function keep() { save('checkout', S); }
+    var srv = null;
     function reg() { return EAST.indexOf(S.state) >= 0 ? 'east' : 'west'; }
     function calc() {
       var sub = subtotal(), deal = multiDeal().off, r = reg(), d = discount(S.code, sub - deal), disc = d.ok ? d.amt : 0, after = sub - deal - disc;
@@ -376,11 +415,11 @@
         (S.gift ? '<div class="row2" style="margin-top:12px"><div class="field"><label for="c-to">Their name</label><input class="input" id="c-to" data-k="to" value="' + esc(S.to) + '"></div><div class="field"><label for="c-msg">Card message</label><input class="input" id="c-msg" data-k="msg" maxlength="120" value="' + esc(S.msg) + '"></div></div>' : '') + '</section>' +
         '<section class="panel"><h2>4. Payment</h2><div class="pay"><label class="payopt"><input type="radio" name="pay" value="online"' + (S.pay === 'online' ? ' checked' : '') + '><span><b>Pay online</b><small>FPX online banking, cards and e-wallets. Demo: no money is taken.</small></span></label><label class="payopt"><input type="radio" name="pay" value="wa"' + (S.pay === 'wa' ? ' checked' : '') + '><span><b>Order on WhatsApp</b><small>Your order arrives on our WhatsApp, already filled in. Pay by bank transfer or DuitNow when we reply.</small></span></label></div></section></div>' +
         '<aside class="summary panel"><h2>Order summary</h2>' + c.map(function (l, i) {
-          return '<div class="cline"><img src="img/' + esc(l.img) + '.webp" alt=""><div><h4>' + esc(l.n) + '</h4>' + (l.opts ? '<p>' + esc(l.opts) + '</p>' : '') + '<div class="qty"><button type="button" data-cq="' + i + ':-1" aria-label="One less">−</button><output>' + l.qty + '</output><button type="button" data-cq="' + i + ':1" aria-label="One more">+</button></div></div><b>' + rm(l.unit * l.qty) + '</b></div>';
+          return '<div class="cline"><img src="' + esc(pimg(l.img)) + '" alt=""><div><h4>' + esc(l.n) + '</h4>' + (l.opts ? '<p>' + esc(l.opts) + '</p>' : '') + '<div class="qty"><button type="button" data-cq="' + i + ':-1" aria-label="One less">−</button><output>' + l.qty + '</output><button type="button" data-cq="' + i + ':1" aria-label="One more">+</button></div></div><b>' + rm(l.unit * l.qty) + '</b></div>';
         }).join('') +
         '<div class="field" style="margin-top:14px"><label for="c-code">Voucher code</label><div style="display:flex;gap:8px"><input class="input" id="c-code" placeholder="' + VOUCHER.code + '" value="' + esc(S.code) + '" autocapitalize="characters"><button class="btn btn--ghost btn--sm" type="button" data-apply>Apply</button></div>' + (S.code && !k.d.ok ? '<small style="color:var(--chili)">' + esc(k.d.msg) + '</small>' : (k.disc ? '<small style="color:var(--ok)">' + esc(k.d.label) + ' applied</small>' : '')) + '</div>' +
         '<div class="totals"><div><span>Subtotal</span><span>' + rm(k.sub) + '</span></div>' + (k.deal ? '<div><span>Kerepek: any 3 for RM27</span><span>−' + rm(k.deal) + '</span></div>' : '') + (k.disc ? '<div><span>Voucher</span><span>−' + rm(k.disc) + '</span></div>' : '') + '<div><span>Shipping</span><span>' + (k.ship ? rm(k.ship) : 'Free') + '</span></div><div class="grand"><span>Total</span><span>' + rm(k.total) + '</span></div></div>' +
-        '<button class="btn btn--block' + (S.pay === 'wa' ? ' btn--wa' : '') + '" type="button" data-place style="margin-top:14px">' + (S.pay === 'wa' ? ICON.wa + 'Send order on WhatsApp' : 'Pay ' + rm(k.total)) + '</button><p class="small muted center" style="margin-top:10px">Demo website: nothing is charged or sent.</p></aside></div>';
+        '<button class="btn btn--block' + (S.pay === 'wa' ? ' btn--wa' : '') + '" type="button" data-place style="margin-top:14px">' + (S.pay === 'wa' ? ICON.wa + 'Send order on WhatsApp' : 'Pay ' + rm(k.total)) + '</button><p class="small muted center" style="margin-top:10px">' + (LIVE ? 'Demo website: nothing is charged. Other visitors can open this demo’s back office, so use a made-up name and number.' : 'Demo website: nothing is charged or sent.') + '</p></aside></div>';
     }
     root.addEventListener('click', function (e) {
       if (e.target.closest('[data-apply]')) { S.code = $('#c-code').value.trim().toUpperCase(); keep(); paint(); return; }
@@ -403,7 +442,8 @@
       else if (!S.addr.trim() || !/^\d{5}$/.test(S.pc.trim()) || !S.city.trim()) err = 'Add the full delivery address with a 5-digit postcode.';
       else if (S.gift && !S.to.trim()) err = 'Add the name of the person receiving the gift.';
       if (err) { toast(err); return; }
-      var o = { no: 'DD-' + seq(), date: today(), items: c, sub: k.sub, deal: k.deal, disc: k.disc, ship: k.ship, method: S.method === 'express' ? 'express' : 'standard', total: k.total, name: S.name.trim(), phone: S.phone.trim(), addr: S.addr.trim(), pc: S.pc.trim(), city: S.city.trim(), state: S.state, region: k.r, gift: S.gift ? { to: S.to.trim(), msg: S.msg.trim() } : null, pay: S.pay, st: 'Paid', at: Date.now() };
+      if (LIVE && !srv) return send('site/order', { kind: 'ship', lines: c.map(function (l) { return { id: l.id, qty: l.qty, opts: l.opts, hamper: l.hb }; }), state: S.state, method: S.method, addr: S.addr.trim(), pc: S.pc.trim(), city: S.city.trim(), code: k.disc ? S.code : '', gift: S.gift ? { to: S.to.trim(), msg: S.msg } : null, name: S.name.trim(), phone: S.phone.trim(), email: S.email || '', pay: S.pay === 'wa' ? 'wa' : 'online', total: k.total }, function (r) { srv = r; place(); srv = null; });
+      var o = { no: srv ? srv.no : 'DD-' + seq(), date: today(), items: c, sub: srv ? srv.sub : k.sub, deal: k.deal, disc: srv ? srv.disc : k.disc, ship: srv ? srv.fee : k.ship, method: S.method === 'express' ? 'express' : 'standard', total: k.total, name: S.name.trim(), phone: S.phone.trim(), addr: S.addr.trim(), pc: S.pc.trim(), city: S.city.trim(), state: S.state, region: k.r, gift: S.gift ? { to: S.to.trim(), msg: S.msg.trim() } : null, pay: S.pay, st: 'Paid', at: Date.now() };
       if (S.pay === 'wa') o.st = 'New';
       var all = load('orders', []); all.unshift(o); save('orders', all.slice(0, 30));
       save('cart', []); updateCount(); S.code = ''; S.gift = false; S.to = ''; S.msg = ''; keep();
@@ -415,6 +455,7 @@
         '<div class="btns" style="justify-content:center;margin-top:18px"><a class="btn" href="track.html?o=' + o.no + '">Track this order</a><a class="btn btn--ghost" href="owner.html">See it in the owner view</a></div></div>';
       window.scrollTo(0, 0);
     }
+    repaint = paint;
     paint();
   }
 
@@ -433,11 +474,17 @@
     function find(no, ph) { no = String(no || '').trim().toUpperCase(); return allOrders().filter(function (o) { return o.no === no && (!ph || digits(o.phone) === digits(ph)); })[0]; }
     form.addEventListener('submit', function (e) {
       e.preventDefault();
+      if (LIVE) {
+        return send('site/track', { no: form.no.value, phone: form.phone.value }, function (r) {
+          show({ no: r.no, st: r.st, trk: r.tracking, items: (r.items || []).map(function (l) { return { n: l.n, qty: l.qty }; }), date: r.when || today(), phone: r.phone });
+        }, function () { out.innerHTML = '<div class="note note--bad" style="margin-top:16px">' + ICON.info + '<span>We couldn’t find that order with that phone number. Check the order number in your email or WhatsApp, or try the demo order ' + SEED_ORDER.no + ' with ' + SEED_ORDER.phone + '.</span></div>'; });
+      }
       var o = find(form.no.value, form.phone.value);
       if (!o) { out.innerHTML = '<div class="note note--bad" style="margin-top:16px">' + ICON.info + '<span>We couldn’t find that order with that phone number. Check the order number in your email or WhatsApp, or try the demo order DD-2041 with 012-345 6789.</span></div>'; return; }
       show(o);
     });
-    if (q) { var o = find(q); if (o) { form.no.value = o.no; show(o); } }
+    if (q && LIVE) form.no.value = q; // the real order: the phone number is asked for
+    else if (q) { var o = find(q); if (o) { form.no.value = o.no; show(o); } }
   }
 
   // ------------------------------------------------------------------ corporate gifts
@@ -454,13 +501,14 @@
     root.addEventListener('change', function (e) { if (e.target.id === 'k-box') { S.box = e.target.value; paint(); } });
     root.addEventListener('input', function (e) { if (e.target.id === 'k-qty') { var v = parseInt(e.target.value, 10); if (v >= 1 && v <= 5000) { S.qty = v; var pos = e.target.selectionStart; paint(); var el = $('#k-qty'); el.focus(); try { el.setSelectionRange(pos, pos); } catch (err) { /* number inputs */ } } } });
     paint();
-    var form = $('[data-corp-form]');
+    var form = $('[data-corp-form]'), csrv = null;
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       if (!form.reportValidity()) return;
       var f = {}; new FormData(form).forEach(function (v, k) { f[k] = String(v).trim(); });
       if (!phoneOk(f.phone)) { toast('Add a mobile number we can reach you on.'); return; }
-      var ref = 'DD-Q' + seq(), p = prod(S.box);
+      if (LIVE && !csrv) { var cp = prod(S.box); f.box = cp.n; f.quantity = S.qty; f.estimate = rm(cp.p * S.qty * (100 - tier(S.qty)) / 100); return send('site/enquiry', { type: 'Corporate gifts', name: f.name, phone: f.phone, email: f.email || '', fields: f }, function (r) { csrv = r; if (form.requestSubmit) form.requestSubmit(); else form.dispatchEvent(new Event('submit', { cancelable: true })); csrv = null; }); }
+      var ref = csrv ? csrv.ref : 'DD-Q' + seq(), p = prod(S.box);
       var text = 'Corporate gift enquiry (demo website): Dulang & Daun\n' + ref + '\n' + S.qty + ' × ' + p.n + ' (estimate ' + rm(p.p * S.qty * (100 - tier(S.qty)) / 100) + ')\nCompany: ' + f.company + '\nDeliver by: ' + (f.date ? fmtDay(f.date) : 'to confirm') + ' · ' + (f.where || 'one address') + (f.notes ? '\nNotes: ' + f.notes : '') + '\nContact: ' + f.name + ' · ' + f.phone + (f.email ? ' · ' + f.email : '');
       form.outerHTML = '<div class="panel done"><div class="done__icon">' + ICON.check + '</div><p class="kicker" style="justify-content:center">Enquiry sent (demo)</p><p class="ref">' + ref + '</p><h2 style="margin-top:10px">Thank you, ' + esc(f.name) + '</h2><p class="lead" style="margin:0 auto 14px">You’ll get a written quote with a photo of a sample box within one working day.</p><details style="max-width:520px;margin:0 auto;text-align:left"><summary class="linkbtn">What the shop receives</summary><div class="waprev" style="margin-top:10px">' + esc(text) + '</div></details></div>';
     });
@@ -468,7 +516,18 @@
 
   // ------------------------------------------------------------------ owner view
   var OST = ['New', 'Paid', 'Packed', 'Shipped', 'Delivered'];
+  function liveOwner() {
+    // On WordPress the owner's side is the real one: the shop dashboard (/dian/) and WordPress + WooCommerce admin.
+    var dl = LIVE.demoLogin || {}, root = $('[data-owner]');
+    $$('[data-reset]').forEach(function (b) { b.hidden = true; });
+    $$('p.small, .small.muted').forEach(function (x) { if (/in your browser|this browser/.test(x.textContent)) x.textContent = 'This demo runs on real WordPress + WooCommerce. Your test orders and requests are saved there; the demo is put back every night.'; });
+    if (root) root.innerHTML = '<div class="panel" style="padding:26px"><p class="kicker">The real back office</p><h2 style="margin-top:6px">Open it on your phone</h2>' +
+      '<p class="muted">Orders to pack and ship, payments to check, back-in-stock requests, corporate enquiries, stock and prices, in the shop’s own dashboard. No password needed for this demo.</p>' +
+      '<div class="btns" style="margin-top:16px"><a class="btn" data-live-dian href="' + esc(dl.dian || LIVE.dian) + '">Open the shop dashboard</a><a class="btn btn--ghost" data-live-admin href="' + esc(dl.admin || LIVE.admin) + '">Open WordPress admin</a></div>' +
+      '<p class="small muted" style="margin-top:14px">WordPress admin is the full WooCommerce back office (orders, products, coupons, reports). The shop dashboard is the simple phone version the owner uses every day.</p></div>';
+  }
   function pageOwner() {
+    if (LIVE) return liveOwner();
     var tab = 'orders', root = $('[data-owner]');
     function paint() {
       var o = owner(), orders = allOrders(), waits = load('notify', []);

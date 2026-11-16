@@ -399,9 +399,125 @@ async function maisonCendre(b) {
   await restrictions(b);
 }
 
+async function dulangDaun(b) {
+  await common(b, ['index', 'shop', 'product', 'hamper', 'checkout', 'track', 'corporate', 'owner']);
+  const p = await newPage(b);
+
+  console.log('Products and prices from WooCommerce');
+  await p.goto(BASE + '/shop.html');
+  ok((await p.$$('[data-grid] .pcard')).length === 14, 'shop: 14 products (WooCommerce)');
+  await p.goto(BASE + '/product.html?p=sambal-bilis');
+  await p.click('[data-v="0:1"]');
+  ok(/RM28\.00/.test(await p.textContent('.pdp__price')), '380 g: RM16 (WooCommerce) + RM12 = RM28');
+  await p.click('.buyrow [data-add]');
+  await p.waitForSelector('[data-drawer]:not([hidden])');
+  await p.click('[data-cart-close] >> nth=1');
+
+  console.log('Back in stock: the request goes to the shop’s list');
+  await p.goto(BASE + '/product.html?p=pineapple-tarts');
+  await p.click('[data-v="0:1"]');
+  await p.fill('[data-notify] input', '012-345 6789');
+  await p.click('[data-notify] button');
+  await p.waitForFunction(() => /on the list/.test(document.querySelector('[data-notify-box]').textContent), null, { timeout: 15000 });
+  ok(true, 'sold-out option (40 pcs): "notify me" saved');
+
+  console.log('Multi-buy deal and the build-your-own hamper');
+  await p.goto(BASE + '/product.html?p=kerepek');
+  await p.click('.buyrow [data-q="1"]');
+  await p.click('.buyrow [data-q="1"]');
+  await p.click('.buyrow [data-add]');
+  await p.waitForSelector('[data-drawer]:not([hidden])');
+  ok(/any 3 for RM27/.test(await p.textContent('[data-cart-body]')), 'kerepek: any 3 for RM27');
+  await p.goto(BASE + '/hamper.html');
+  await p.click('[data-box="S"]');
+  for (const id of ['butter-cookies', 'pandan-cookies', 'kopi', 'sambal-udang']) await p.click(`[data-hi="${id}:1"]`);
+  ok(/RM113\.00/.test(await p.textContent('.summary')), 'a full small box: RM18 + 4 items = RM113');
+  await p.click('[data-hadd]');
+  await p.waitForSelector('[data-drawer]:not([hidden])');
+
+  console.log('Checkout: East Malaysia, a code, a gift → a real WooCommerce order');
+  await p.goto(BASE + '/product.html?p=kaya');
+  await p.click('.buyrow [data-add]');
+  await p.goto(BASE + '/checkout.html');
+  await p.fill('#c-name', 'Test Buyer');
+  await p.fill('#c-phone', '012-345 6789');
+  await p.fill('#c-addr', '8 Jalan Test');
+  await p.fill('#c-pc', '88000');
+  await p.fill('#c-city', 'Kota Kinabalu');
+  await p.selectOption('#c-state', 'Sabah');
+  ok(/ships to West Malaysia only/.test(await p.textContent('[data-checkout]')), 'fresh kaya is refused for East Malaysia');
+  await p.click('.summary .cline:has-text("Pandan Kaya") [data-cq$=":-1"]');
+  await p.fill('#c-code', 'WELCOME10');
+  await p.click('[data-apply]');
+  await p.waitForFunction(() => /10% off/.test(document.querySelector('.summary').textContent), null, { timeout: 15000 });
+  await p.check('[data-gift]');
+  await p.fill('#c-to', 'Auntie Mei');
+  await p.fill('#c-msg', 'Happy new year');
+  ok(/RM166\.20/.test(await p.textContent('.summary')), 'total RM166.20 (RM168 after the deal, −10%, RM15 to Sabah)');
+  await p.click('[data-place]');
+  await p.waitForSelector('.done .ref', { timeout: 20000 });
+  const dno = (await p.textContent('.done .ref')).trim();
+  ok(/^DD-\d+$/.test(dno) && /A gift for Auntie Mei/.test(await p.textContent('.done')) && /RM166\.20/.test(await p.textContent('.done')), 'order placed and paid (demo payment): ' + dno);
+  await p.click('.done a[href^="track.html"]');
+  await p.fill('#t-phone', '012-345 6789');
+  await p.click('[data-track] button');
+  await p.waitForSelector('.timeline', { timeout: 15000 });
+  ok(/Order received/.test(await p.textContent('[data-track-out]')), 'tracking the new order (number + phone): "Order received"');
+
+  console.log('WhatsApp order');
+  await p.goto(BASE + '/product.html?p=butter-cookies');
+  await p.click('.buyrow [data-add]');
+  await p.goto(BASE + '/checkout.html');
+  await p.selectOption('#c-state', 'Selangor');
+  await p.fill('#c-pc', '47400');
+  await p.fill('#c-city', 'Petaling Jaya');
+  await p.click('label.payopt:has-text("Order on WhatsApp")');
+  await p.click('[data-place]');
+  await p.waitForSelector('.waprev', { timeout: 20000 });
+  ok(/Butter Cookies/.test(await p.textContent('.waprev')), 'WhatsApp order: saved, and the message is filled in');
+
+  console.log('Tracking the sample order');
+  await p.goto(BASE + '/track.html');
+  await p.fill('#t-no', 'DD-2041');
+  await p.fill('#t-phone', '012-345 6789');
+  await p.click('[data-track] button');
+  await p.waitForSelector('.timeline', { timeout: 15000 });
+  ok(/With the courier/.test(await p.textContent('[data-track-out]')) && /DEMO-TRK-77314/.test(await p.textContent('[data-track-out]')), 'DD-2041: with the courier, tracking number shown');
+
+  console.log('Corporate gifts enquiry');
+  await p.goto(BASE + '/corporate.html');
+  await p.fill('#k-qty', '60');
+  await p.fill('#q-company', 'Test Sdn Bhd');
+  await p.fill('#q-name', 'Test Buyer');
+  await p.fill('#q-phone', '012-345 6789');
+  await p.click('[data-corp-form] button[type=submit]');
+  await p.waitForSelector('.done .ref', { timeout: 20000 });
+  const eref = (await p.textContent('.done .ref')).trim();
+  ok(/^DD-E\d+$/.test(eref) && /60 × Terima Kasih Box/.test(await p.textContent('.done .waprev')), 'corporate enquiry saved: ' + eref);
+
+  console.log('The back office');
+  await p.goto(BASE + '/owner.html');
+  await p.click('[data-live-dian]');
+  await p.waitForURL(/\/dian\//);
+  await p.waitForFunction(() => /Overview/.test(document.body.textContent), null, { timeout: 20000 });
+  const sum = await p.evaluate(async () => (await fetch(window.AGC_OWNER.rest + 'summary', { headers: { 'X-WP-Nonce': window.AGC_OWNER.nonce }, credentials: 'same-origin' })).json());
+  ok(sum && sum.notify >= 1, 'shop dashboard: the back-in-stock list has the request (' + (sum && sum.notify) + ')');
+  const all = await p.evaluate(async () => (await fetch(window.AGC_OWNER.rest + 'orders?bucket=all', { headers: { 'X-WP-Nonce': window.AGC_OWNER.nonce }, credentials: 'same-origin' })).json());
+  const mine = ((all && all.orders) || []).find((o) => o.number === dno.replace('DD-', ''));
+  ok(!!mine && mine.bucket === 'make' && /Auntie Mei|Sabah/.test(JSON.stringify(mine)), 'shop dashboard: the order ' + dno + ' is under "To make" (paid), with the Sabah address');
+  const a = await admin(b);
+  const ord = (await adminText(a, '/wp-admin/admin.php?page=wc-orders')) + (await adminText(a, '/wp-admin/edit.php?post_type=shop_order'));
+  ok(ord.includes(dno.replace('DD-', '')), 'WordPress admin → Orders: ' + dno);
+  ok((await adminText(a, '/wp-admin/edit.php?post_type=agc_enquiry')).includes(eref), 'WordPress admin → Enquiries: ' + eref);
+  ok(p.errors.length === 0, 'no JavaScript errors' + (p.errors.length ? ': ' + p.errors.slice(0, 3).join(' | ') : ''));
+  await a.context().close();
+  await p.context().close();
+  await restrictions(b);
+}
+
 (async () => {
   const b = await chromium.launch();
-  const run = { 'sireh-salt': sirehSalt, 'maison-cendre': maisonCendre }[DEMO];
+  const run = { 'sireh-salt': sirehSalt, 'maison-cendre': maisonCendre, 'dulang-daun': dulangDaun }[DEMO];
   if (!run) { console.log('还没有这个示范的测试：' + DEMO); process.exit(2); }
   try { await run(b); } catch (e) { ok(false, 'stopped: ' + e.message.split('\n')[0] + ' @ ' + ((e.stack || '').match(/check-wp-demo\.js:(\d+)/) || [])[1]); }
   await b.close();

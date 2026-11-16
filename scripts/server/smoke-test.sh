@@ -105,7 +105,12 @@ if [[ $SHOP == 1 ]]; then
     check_200 "/index.html" "首页 Home（网站设计）"
   else
     check_200 "/shop/" "商店 Shop"
-    check_200 "/cart/" "购物车 Cart"
+    CARTLOC=$("${CURL[@]}" -o /dev/null -w '%{http_code} %{redirect_url}' "$URL/cart/" 2>/dev/null || echo 000)
+    if [[ "$CARTLOC" =~ ^302\ .*\.html$ ]]; then
+      pass "购物车 Cart" "/cart/ → 网站设计自己的页面（${CARTLOC#* }）"
+    else
+      check_200 "/cart/" "购物车 Cart"
+    fi
     check_200 "/checkout/" "结账 Checkout" 302   # 购物车是空的时候会跳回购物车
   fi
 fi

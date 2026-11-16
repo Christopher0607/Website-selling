@@ -403,10 +403,8 @@ class AGC_Site {
 				$f['price'] => (float) $p->get_price(),
 				'tags'      => array(),
 			);
-			$it[ $f['img'] ] = $img ? null : false;
-			if ( $img ) {
-				$it['imgUrl'] = (string) wp_get_attachment_image_url( $img, 'large' );
-			}
+			$it[ $f['img'] ] = null;
+			$it['imgUrl']    = $img ? (string) wp_get_attachment_image_url( $img, 'large' ) : (string) wc_placeholder_img_src( 'large' );
 			$out[] = $it;
 		}
 		return $out;
@@ -469,7 +467,7 @@ class AGC_Site {
 		$same = array( 'AGC_Skin', 'same_site' );
 		register_rest_route( self::NS, '/site/data', array( 'methods' => 'GET', 'callback' => array( __CLASS__, 'live' ), 'permission_callback' => $pub ) );
 		register_rest_route( self::NS, '/site/coupon', array( 'methods' => 'POST', 'callback' => array( 'AGC_Skin', 'rest_coupon' ), 'permission_callback' => $same ) );
-		foreach ( array( 'order', 'book', 'voucher', 'enquiry', 'track' ) as $r ) {
+		foreach ( array( 'order', 'book', 'voucher', 'enquiry', 'track', 'notify' ) as $r ) {
 			register_rest_route( self::NS, '/site/' . $r, array( 'methods' => 'POST', 'callback' => array( __CLASS__, 'rest_' . $r ), 'permission_callback' => $same ) );
 		}
 	}
@@ -587,9 +585,18 @@ class AGC_Site {
 	 */
 	private static function lines( $rows ) {
 		$out = array();
+		$box = (array) self::spec( 'hamper', array() );
 		foreach ( array_slice( (array) $rows, 0, 40 ) as $row ) {
 			$id  = sanitize_text_field( (string) ( $row['id'] ?? '' ) );
 			$qty = max( 1, min( 99, (int) ( $row['qty'] ?? 1 ) ) );
+			if ( $box && (string) ( $box['product'] ?? '' ) === $id ) {
+				$h = self::hamper_line( (array) ( $row['hamper'] ?? array() ), $box );
+				if ( is_wp_error( $h ) ) {
+					return $h;
+				}
+				$out[] = array( $h[0], $qty, $h[1], $h[2], '', array( 'id' => $id ) );
+				continue;
+			}
 			$hit = self::item( $id );
 			if ( ! $hit || ! $hit[1] ) {
 				return self::err( __( 'Something in your order is no longer available. Please check your order again.', 'agency-core' ), 409 );
@@ -605,6 +612,29 @@ class AGC_Site {
 			$unit = (float) $p->get_price();
 			$opts = array();
 			$sel  = (array) ( $row['sel'] ?? array() );
+			if ( isset( $it['v'] ) && is_array( $it['v'] ) ) { // shop variants, chosen by label ("200 g · Extra pedas")
+				$want = array_map( 'trim', explode( '·', (string) ( $row['opts'] ?? '' ) ) );
+				foreach ( array_values( $it['v'] ) as $gi => $g ) {
+					$pick = null;
+					foreach ( (array) ( $g['o'] ?? array() ) as $o ) {
+						if ( (string) $o[0] === (string) ( $want[ $gi ] ?? '' ) ) {
+							$pick = $o;
+						}
+					}
+					$pick = $pick ? $pick : ( $g['o'][0] ?? null );
+					if ( ! $pick ) {
+						continue;
+					}
+					if ( in_array( (string) $pick[0], array_map( 'strval', (array) ( $g['out'] ?? array() ) ), true ) ) {
+						/* translators: 1: product, 2: option */
+						return self::err( sprintf( __( 'Sorry, %1$s (%2$s) is sold out.', 'agency-core' ), $p->get_name(), $pick[0] ), 409 );
+					}
+					$unit  += (float) $pick[1];
+					$opts[] = (string) $pick[0];
+				}
+				$out[] = array( $p, $qty, $unit, implode( ' · ', $opts ), sanitize_text_field( (string) ( $row['note'] ?? '' ) ), $it );
+				continue;
+			}
 			foreach ( array_values( (array) ( $it['o'] ?? array() ) ) as $gi => $g ) {
 				$picked = array_map( 'intval', (array) ( $sel[ $gi ] ?? array() ) );
 				if ( ! $picked && ! empty( $g['one'] ) ) {
@@ -685,7 +715,7 @@ class AGC_Site {
 	 * @param string   $why Note when unpaid.
 	 * @return string The pay page when the shop's own gateway takes the money, else ''.
 	 */
-	private static function pay( $o, $pay, $why = '' ) {
+	private static function pay( $o, $pay, $why = '', $wa_title = '' ) {
 		$gws = WC()->payment_gateways() ? WC()->payment_gateways()->payment_gateways() : array();
 		$o->update_meta_data( self::PAY, $pay );
 		if ( 'online' === $pay ) {
@@ -705,7 +735,7 @@ class AGC_Site {
 			$o->update_status( 'on-hold', __( 'Waiting for the DuitNow payment and receipt.', 'agency-core' ) );
 		} else {
 			$o->set_payment_method( '' );
-			$o->set_payment_method_title( 'wa' === $pay ? __( 'Sent on WhatsApp, pay at pick-up or by transfer', 'agency-core' ) : __( 'Pay later', 'agency-core' ) );
+			$o->set_payment_method_title( 'wa' === $pay ? ( $wa_title ? $wa_title : __( 'Sent on WhatsApp, pay at pick-up or by transfer', 'agency-core' ) ) : __( 'Pay later', 'agency-core' ) );
 			$o->save();
 			$o->update_status( 'on-hold', $why ? $why : __( 'Not paid yet.', 'agency-core' ) );
 		}
@@ -791,6 +821,9 @@ class AGC_Site {
 		}
 		if ( 'festive' === ( $b['kind'] ?? '' ) ) {
 			return self::festive_order( $b, $who, $lines );
+		}
+		if ( 'ship' === ( $b['kind'] ?? '' ) ) {
+			return self::ship_order( $b, $who, $lines );
 		}
 		$r    = (array) self::spec( 'order' );
 		$mode = 'delivery' === ( $b['mode'] ?? '' ) && ! empty( $r['zones'] ) ? 'delivery' : 'pickup';
@@ -920,6 +953,176 @@ class AGC_Site {
 			'deposit' => $full ? (float) $o->get_total() : $dep,
 			'payUrl'  => $go,
 		);
+	}
+
+	/**
+	 * A build-your-own gift box: the box, the items (only those allowed in a box), a ribbon and a card.
+	 * Spec "hamper": { "product": "custom-hamper", "boxes": "BOXES", "list": "P", "flag": "hamper" }
+	 *
+	 * @param array $h   { box, items: { id: qty }, ribbon, msg }.
+	 * @param array $box Spec.
+	 * @return array|WP_Error [ product, unit price, description ]
+	 */
+	private static function hamper_line( $h, $box ) {
+		$p = self::product( (string) $box['product'] );
+		$b = null;
+		foreach ( (array) self::val( (string) ( $box['boxes'] ?? 'BOXES' ), array() ) as $x ) {
+			if ( (string) ( $x['id'] ?? '' ) === (string) ( $h['box'] ?? '' ) ) {
+				$b = $x;
+			}
+		}
+		if ( ! $p || ! $b ) {
+			return self::err( __( 'Choose a box for your hamper.', 'agency-core' ) );
+		}
+		$unit  = (float) ( $b['p'] ?? 0 );
+		$count = 0;
+		$list  = array();
+		foreach ( (array) ( $h['items'] ?? array() ) as $id => $q ) {
+			$q   = max( 0, (int) $q );
+			$hit = self::item( (string) $id );
+			if ( ! $q ) {
+				continue;
+			}
+			if ( ! $hit || ! $hit[1] || empty( $hit[0][ $box['flag'] ?? 'hamper' ] ) || ! $hit[1]->is_in_stock() ) {
+				return self::err( __( 'Something in your hamper is no longer available. Please check it again.', 'agency-core' ), 409 );
+			}
+			$unit  += (float) $hit[1]->get_price() * $q;
+			$count += $q;
+			$list[] = $q . ' × ' . $hit[1]->get_name();
+		}
+		if ( ! $count || $count > (int) ( $b['slots'] ?? 0 ) ) {
+			return self::err( __( 'Fill your hamper (it holds a set number of items).', 'agency-core' ) );
+		}
+		$ribbon = sanitize_text_field( (string) ( $h['ribbon'] ?? '' ) );
+		$msg    = sanitize_text_field( (string) ( $h['msg'] ?? '' ) );
+		/* translators: 1: box size, 2: items, 3: ribbon */
+		$desc = sprintf( __( '%1$s box: %2$s · %3$s ribbon', 'agency-core' ), (string) ( $b['n'] ?? '' ), implode( ', ', $list ), $ribbon ) . ( $msg ? ' · card: “' . $msg . '”' : '' );
+		return array( $p, round( $unit, 2 ), $desc );
+	}
+
+	/**
+	 * Online shop order, shipped by courier (Dulang & Daun).
+	 *
+	 * Body: { kind: ship, lines, state, method: std|express, addr, pc, city, code, gift: { to, msg }, name, phone, email, pay, total }
+	 * Spec "ship": { "states_east": "EAST", "rates": "SHIP", "deal": "multi" }   rates: { west: { std, express, free }, east: { std, free } }
+	 *
+	 * @param array $b     Body.
+	 * @param array $who   Customer.
+	 * @param array $lines Lines.
+	 * @return array|WP_Error
+	 */
+	private static function ship_order( $b, $who, $lines ) {
+		$r      = (array) self::spec( 'ship', array() );
+		$state  = sanitize_text_field( (string) ( $b['state'] ?? '' ) );
+		$east   = in_array( $state, array_map( 'strval', (array) self::val( (string) ( $r['states_east'] ?? 'EAST' ), array() ) ), true );
+		$region = $east ? 'east' : 'west';
+		$addr   = sanitize_text_field( (string) ( $b['addr'] ?? '' ) );
+		$pc     = preg_replace( '/\D/', '', (string) ( $b['pc'] ?? '' ) );
+		$city   = sanitize_text_field( (string) ( $b['city'] ?? '' ) );
+		if ( '' === $addr || 5 !== strlen( $pc ) || '' === $city || '' === $state ) {
+			return self::err( __( 'Add the full delivery address with a 5-digit postcode.', 'agency-core' ) );
+		}
+		foreach ( $lines as $x ) {
+			if ( $east && 'west' === ( $x[5]['ship'] ?? '' ) ) {
+				/* translators: %s: product */
+				return self::err( sprintf( __( '%s ships to West Malaysia only.', 'agency-core' ), $x[0]->get_name() ), 409 );
+			}
+		}
+		// "3 for RM27": the deal goes into the line price, so a % code works on what the customer actually pays.
+		$deal = (string) ( $r['deal'] ?? 'multi' );
+		foreach ( $lines as $i => $x ) {
+			$m = (array) ( $x[5][ $deal ] ?? array() );
+			if ( empty( $m['n'] ) ) {
+				continue;
+			}
+			$n     = 0;
+			foreach ( $lines as $y ) {
+				$n += (string) ( $y[5]['id'] ?? '' ) === (string) ( $x[5]['id'] ?? '' ) ? $y[1] : 0;
+			}
+			$off   = floor( $n / (int) $m['n'] ) * ( (int) $m['n'] * (float) $x[0]->get_price() - (float) $m['price'] );
+			$share = $n ? $off * $x[1] / $n : 0;
+			if ( $share > 0 ) {
+				$lines[ $i ][2] = round( ( $x[2] * $x[1] - $share ) / $x[1], 4 );
+				/* translators: 1: how many, 2: price */
+				$lines[ $i ][3] = trim( $x[3] . ' · ' . sprintf( __( '%1$d for RM%2$s', 'agency-core' ), (int) $m['n'], (string) $m['price'] ), ' ·' );
+			}
+		}
+		$o = self::new_order( $lines );
+		self::set_who( $o, $who );
+		$o->set_shipping_first_name( $who[0] );
+		$o->set_shipping_address_1( $addr );
+		$o->set_shipping_postcode( $pc );
+		$o->set_shipping_city( $city );
+		$o->set_shipping_state( $state );
+		$o->set_shipping_country( 'MY' );
+		$o->set_shipping_phone( $who[1] );
+		$o->set_billing_address_1( $addr );
+		$o->set_billing_postcode( $pc );
+		$o->set_billing_city( $city );
+		$code = (string) ( $b['code'] ?? '' );
+		if ( '' !== $code ) {
+			$res = $o->apply_coupon( wc_format_coupon_code( $code ) );
+			if ( is_wp_error( $res ) ) {
+				$o->delete( true );
+				return self::err( wp_strip_all_tags( $res->get_error_message() ), 409 );
+			}
+		}
+		$o->calculate_totals( false );
+		$rates  = (array) self::val( (string) ( $r['rates'] ?? 'SHIP' ), array() );
+		$rr     = (array) ( $rates[ $region ] ?? array() );
+		$after  = (float) $o->get_subtotal() - (float) $o->get_discount_total();
+		$method = 'express' === ( $b['method'] ?? '' ) && ! $east && isset( $rates['west']['express'] ) ? 'express' : 'std';
+		$fee    = 'express' === $method ? (float) $rates['west']['express'] : ( $after >= (float) ( $rr['free'] ?? PHP_INT_MAX ) ? 0.0 : (float) ( $rr['std'] ?? 0 ) );
+		$ship   = new WC_Order_Item_Shipping();
+		/* translators: 1: West / East Malaysia, 2: standard / express */
+		$ship->set_method_title( sprintf( __( '%1$s, %2$s', 'agency-core' ), $east ? __( 'East Malaysia', 'agency-core' ) : __( 'West Malaysia', 'agency-core' ), 'express' === $method ? __( 'express', 'agency-core' ) : __( 'standard', 'agency-core' ) ) );
+		$ship->set_method_id( 'flat_rate' );
+		$ship->set_total( $fee );
+		$o->add_item( $ship );
+		$gift = (array) ( $b['gift'] ?? array() );
+		$note = sanitize_textarea_field( (string) ( $b['notes'] ?? '' ) );
+		if ( ! empty( $gift['to'] ) ) {
+			/* translators: 1: who it's for, 2: card message */
+			$note = trim( sprintf( __( 'Gift for %1$s. Card: %2$s. No prices in the box.', 'agency-core' ), sanitize_text_field( (string) $gift['to'] ), sanitize_text_field( (string) ( $gift['msg'] ?? '-' ) ) ) . ( $note ? "\n" . $note : '' ) );
+			$o->update_meta_data( '_agc_gift_to', sanitize_text_field( (string) $gift['to'] ) );
+		}
+		if ( $note ) {
+			$o->set_customer_note( $note );
+		}
+		$o->update_meta_data( AGC_Festive::MODE, 'delivery' );
+		$o->calculate_totals( false );
+		if ( isset( $b['total'] ) && abs( (float) $b['total'] - (float) $o->get_total() ) > 0.05 ) {
+			$o->delete( true );
+			return self::err( __( 'Some prices have just changed. Please check your order again.', 'agency-core' ), 409 );
+		}
+		$pay = 'wa' === ( $b['pay'] ?? '' ) ? 'wa' : 'online';
+		$go  = self::pay( $o, $pay, __( 'Order also sent on WhatsApp; waiting for payment.', 'agency-core' ), __( 'Sent on WhatsApp, pay by bank transfer or DuitNow', 'agency-core' ) );
+		return self::summary( $o ) + array( 'payUrl' => $go );
+	}
+
+	/**
+	 * "Tell me when it's back": the shop's notify list (the shop dashboard shows it).
+	 *
+	 * @param WP_REST_Request $req Request.
+	 * @return array|WP_Error
+	 */
+	public static function rest_notify( $req ) {
+		$b     = (array) $req->get_json_params();
+		$c     = trim( (string) ( $b['contact'] ?? '' ) );
+		$phone = preg_replace( '/\D+/', '', $c );
+		if ( strlen( $phone ) < 9 || strlen( $phone ) > 15 ) {
+			return self::err( __( 'Add a mobile number we can WhatsApp.', 'agency-core' ) );
+		}
+		$list = (array) get_option( AGC_Festive::NOTIFY, array() );
+		if ( count( $list ) < 5000 ) {
+			$list[] = array(
+				'p'    => $phone,
+				't'    => time(),
+				'item' => sanitize_text_field( trim( (string) ( $b['name'] ?? '' ) . ' ' . (string) ( $b['opt'] ?? '' ) ) ),
+			);
+			update_option( AGC_Festive::NOTIFY, $list, false );
+		}
+		return array( 'ok' => true );
 	}
 
 	/* ------------------------------------------------------------------ bookings */
@@ -1320,9 +1523,16 @@ class AGC_Site {
 	 */
 	public static function rest_track( $req ) {
 		$b     = (array) $req->get_json_params();
-		$no    = (int) preg_replace( '/\D/', '', (string) ( $b['no'] ?? '' ) );
+		$ref   = strtoupper( sanitize_text_field( (string) ( $b['no'] ?? '' ) ) );
+		$no    = (int) preg_replace( '/\D/', '', $ref );
 		$phone = substr( preg_replace( '/\D/', '', (string) ( $b['phone'] ?? '' ) ), -7 );
-		$o     = $no ? wc_get_order( $no ) : null;
+		$o     = null;
+		$hits  = wc_get_orders( array( 'limit' => 1, 'meta_key' => self::REF, 'meta_value' => $ref ) ); // phpcs:ignore WordPress.DB.SlowDBQuery
+		if ( $hits ) {
+			$o = $hits[0]; // a reference of its own (the demo's sample order DD-2041)
+		} elseif ( $no ) {
+			$o = wc_get_order( $no );
+		}
 		if ( ! $o || strlen( $phone ) < 7 || substr( preg_replace( '/\D/', '', (string) $o->get_billing_phone() ), -7 ) !== $phone ) {
 			return self::err( __( 'We couldn’t find that order. Check the order number and the phone number you used.', 'agency-core' ), 404 );
 		}
@@ -1333,9 +1543,14 @@ class AGC_Site {
 				'qty' => (int) $it->get_quantity(),
 			);
 		}
-		$st = $o->get_status();
+		$st   = $o->get_status();
+		$trk  = (string) $o->get_meta( '_agc_tracking' );
+		$step = in_array( $st, array( 'pending', 'on-hold', 'failed' ), true ) ? 'New' : ( 'processing' === $st ? 'Paid' : ( 'agc-ready' === $st ? 'Packed' : ( 'completed' === $st ? ( $o->get_meta( '_agc_delivered' ) || ! $trk ? 'Delivered' : 'Shipped' ) : 'Paid' ) ) );
 		return array(
-			'no'      => self::prefix() . '-' . $o->get_order_number(),
+			'st'      => $step,
+			'phone'   => (string) $o->get_billing_phone(),
+			'when'    => $o->get_date_created() ? $o->get_date_created()->date( 'Y-m-d' ) : '',
+			'no'      => $o->get_meta( self::REF ) ? (string) $o->get_meta( self::REF ) : self::prefix() . '-' . $o->get_order_number(),
 			'status'  => $st,
 			'label'   => wc_get_order_status_name( $st ),
 			'date'    => $o->get_date_created() ? $o->get_date_created()->date_i18n( 'j M Y' ) : '',
