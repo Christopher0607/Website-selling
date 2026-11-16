@@ -415,3 +415,15 @@ textarea.input { min-height: 84px; resize: vertical; }
   .cartbtn span { display: none; }
 }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
+
+/* 2026-11-16: owner order rows on phones: details on top, status and button underneath (they squeezed the name and items);
+   festival switcher in one scrollable row */
+@media (max-width: 600px) {
+  .orow { grid-template-columns: minmax(0, 1fr) !important; gap: 8px; }
+  .orow__act { justify-content: flex-start; align-items: center; }
+  .festbar { flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto; scrollbar-width: none; }
+  .festbar::-webkit-scrollbar { display: none; }
+  .festbar > span { flex: none; }
+  .festbar__btns { flex-wrap: nowrap; }
+  .festbar button { flex: none; white-space: nowrap; }
+}

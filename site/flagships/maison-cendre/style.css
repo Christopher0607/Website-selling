@@ -422,3 +422,13 @@ textarea.input { min-height: 96px; resize: vertical; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
 /* desktop: every day visible, no sideways scrolling (2026-11-12) */
 @media (min-width: 900px) { .days { flex-wrap: wrap; overflow: visible; } }
+
+/* 2026-11-16: private dining spaces stack on phones (were 4 narrow columns); menu / season tabs scroll in one row */
+.grid--spaces { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+@media (max-width: 980px) { .grid--spaces { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 600px) {
+  .grid--spaces { grid-template-columns: 1fr; }
+  .mtabs { flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+  .mtabs::-webkit-scrollbar { display: none; }
+  .mtabs button { flex: none; padding: 12px 15px; letter-spacing: .14em; }
+}

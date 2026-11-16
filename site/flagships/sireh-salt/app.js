@@ -661,11 +661,25 @@
             return '<div class="orow" style="grid-template-columns:1fr auto"><span><b>' + esc(x.n) + '</b><br><small class="muted">' + leftOf(x) + ' of ' + x.total + ' left</small></span><div class="qty"><button type="button" data-left="' + x.id + ':-1" aria-label="One fewer left">−</button><output>' + leftOf(x) + '</output><button type="button" data-left="' + x.id + ':1" aria-label="One more left">+</button></div></div>';
           }).join('');
         }).join(''),
+        tables: (function () {
+          var open = tables().filter(function (x) { return x.st === 'open'; });
+          if (!open.length) return '<p class="small muted" style="margin:0">No open tables. Open <a href="table.html?t=5" target="_blank" rel="noopener">table 5’s menu</a> on your phone, send an order, and it appears here.</p>';
+          var by = {};
+          open.forEach(function (x) { (by[x.table] = by[x.table] || []).push(x); });
+          return Object.keys(by).sort(function (a, b) { return a.localeCompare(b, undefined, { numeric: true }); }).map(function (tb) {
+            var list = by[tb], sum = list.reduce(function (s2, x) { return s2 + x.total; }, 0);
+            return '<div class="ocard"><div class="ocard__top"><b>Table ' + esc(tb) + '</b><b>' + rm(sum) + '</b></div>' + list.slice().reverse().map(function (x) {
+              return '<div class="otab"><div class="ocard__top"><small class="muted">' + esc(x.number) + ' · ' + fmtTime(new Date(x.at).getHours() * 60 + new Date(x.at).getMinutes()) + '</small><button type="button" class="ost ost--' + (x.kitchen === 'done' ? 'Ready' : 'Preparing') + '" data-tdone="' + x.id + '">' + (x.kitchen === 'done' ? 'Ready' : 'Mark done') + '</button></div>' +
+                '<p style="margin:2px 0 0">' + x.lines.map(function (l) { return esc(l.qty + ' × ' + l.n + (l.o ? ' (' + l.o + ')' : '') + (l.note ? ' · “' + l.note + '”' : '')); }).join('<br>') + '</p>' + (x.note ? '<p class="small muted" style="margin:4px 0 0">' + esc(x.note) + '</p>' : '') +
+                '<button type="button" class="linkbtn small" data-tcancel="' + x.id + '">Cancel this order</button></div>';
+            }).join('') + '<button type="button" class="btn btn--sm" style="width:100%;margin-top:10px" data-tpaid="' + esc(tb) + '">Paid at the counter · ' + rm(sum) + '</button></div>';
+          }).join('');
+        })(),
         status: '<div class="ostatus">' + [['auto', 'Normal', 'Open and closed by your opening hours'], ['busy', 'Busy', 'Customers see “busy”; pick-up times start 20 minutes later'], ['closed', 'Closed today', 'Holiday or full house: today’s ordering and booking switch off']].map(function (s) {
           return '<button type="button" data-status-set="' + s[0] + '" class="' + (o.status === s[0] ? 'is-on' : '') + '">' + s[1] + '<small>' + s[2] + '</small></button>';
         }).join('') + '</div><p class="small muted">Right now the website says: <b>' + esc(status().text) + '</b></p>'
       };
-      root.innerHTML = '<div class="phone"><div class="phone__screen"><div class="phone__top"><small>' + esc(BRAND) + ' · ' + fmtDay(today()) + '</small><h3>' + (newCount ? newCount + ' new order' + (newCount === 1 ? '' : 's') : 'All caught up') + '</h3><div class="otabs" role="tablist">' + [['orders', 'Orders'], ['bookings', 'Bookings'], ['menu', 'Menu'], ['festive', 'Festive'], ['status', 'Status']].map(function (x) { return '<button type="button" role="tab" data-tab="' + x[0] + '" class="' + (tab === x[0] ? 'is-on' : '') + '" aria-selected="' + (tab === x[0]) + '">' + x[1] + '</button>'; }).join('') + '</div></div><div class="opane">' + panes[tab] + '</div></div></div>';
+      root.innerHTML = '<div class="phone"><div class="phone__screen"><div class="phone__top"><small>' + esc(BRAND) + ' · ' + fmtDay(today()) + '</small><h3>' + (newCount ? newCount + ' new order' + (newCount === 1 ? '' : 's') : 'All caught up') + '</h3><div class="otabs" role="tablist">' + [['orders', 'Orders'], ['tables', 'Tables' + (tables().filter(function (x) { return x.st === 'open'; }).length ? ' (' + tables().filter(function (x) { return x.st === 'open'; }).length + ')' : '')], ['bookings', 'Bookings'], ['menu', 'Menu'], ['festive', 'Festive'], ['status', 'Status']].map(function (x) { return '<button type="button" role="tab" data-tab="' + x[0] + '" class="' + (tab === x[0] ? 'is-on' : '') + '" aria-selected="' + (tab === x[0]) + '">' + x[1] + '</button>'; }).join('') + '</div></div><div class="opane">' + panes[tab] + '</div></div></div>';
     }
     root.addEventListener('click', function (e) {
       var x;
@@ -673,6 +687,18 @@
       if ((x = e.target.closest('[data-ost]'))) {
         var id = x.getAttribute('data-ost'), list = x.getAttribute('data-kind') === 'b' ? BST : OST, sm = stMap();
         var cur = list.indexOf(x.textContent); sm[id] = list[(cur + 1) % list.length]; save('ost', sm); paint(); return;
+      }
+      if ((x = e.target.closest('[data-tdone]'))) {
+        var tl = tables(), tid = +x.getAttribute('data-tdone');
+        tl.forEach(function (y) { if (y.id === tid) y.kitchen = y.kitchen === 'done' ? 'new' : 'done'; }); save('tables', tl); paint(); return;
+      }
+      if ((x = e.target.closest('[data-tpaid]'))) {
+        var tp = tables(), tname = x.getAttribute('data-tpaid');
+        tp.forEach(function (y) { if (y.table === tname && y.st === 'open') { y.st = 'paid'; y.kitchen = 'done'; } }); save('tables', tp); paint(); toast('Table ' + tname + ' is paid and free again.'); return;
+      }
+      if ((x = e.target.closest('[data-tcancel]'))) {
+        var tc = tables(), cid = +x.getAttribute('data-tcancel');
+        tc.forEach(function (y) { if (y.id === cid) y.st = 'cancelled'; }); save('tables', tc); paint(); toast('Order cancelled.'); return;
       }
       if ((x = e.target.closest('[data-left]'))) {
         var pr = x.getAttribute('data-left').split(':'), f = fitem(pr[0]), o = owner();
@@ -688,14 +714,78 @@
     var reset = $('[data-reset]');
     if (reset) reset.addEventListener('click', function () {
       if (!confirm('Reset the demo? This clears the orders, bookings, vouchers and owner changes made in this browser.')) return;
-      ['owner', 'orders', 'bookings', 'vouchers', 'ost', 'bag', 'checkout', 'enquiries', 'seq'].forEach(function (k) { try { localStorage.removeItem(KEY + k); } catch (err) { /* ignore */ } });
+      ['owner', 'orders', 'bookings', 'vouchers', 'ost', 'bag', 'checkout', 'enquiries', 'seq', 'tables'].forEach(function (k) { try { localStorage.removeItem(KEY + k); } catch (err) { /* ignore */ } });
       tab = 'orders'; paint(); shared.refresh(); toast('Demo reset.');
     });
     paint();
   }
 
+  // ------------------------------------------------------------------ table QR ordering (2026-11-16)
+  // The same customer page a real restaurant gets (agency-core assets/table/table.js, copied here by build.py).
+  // In this demo the browser stands in for the restaurant: orders are kept here (localStorage) and show up in the
+  // owner view under "Tables", where the kitchen marks them done and the counter marks the table paid.
+  function tables() { return load('tables', []); }
+  function tableState(x) { return x.st === 'cancelled' ? 'cancelled' : (x.st === 'paid' ? 'paid' : (x.kitchen === 'done' ? 'ready' : 'kitchen')); }
+  function pageTable() {
+    var q = new URLSearchParams(location.search);
+    var t = String(q.get('t') || '5').replace(/[^A-Za-z0-9 -]/g, '').slice(0, 12) || '5';
+    var o = owner();
+    var REST = 'demo-table/';
+    var items = MENU.filter(hasPrice).map(function (it) {
+      return { id: it.id, cat: it.cat, n: it.n, d: it.d, p: priceOf(it), img: picOf(it), o: it.o || [], tags: (it.tags || []).filter(function (x) { return ['pop', 'new', 'chef', 'hot'].indexOf(x) !== -1; }), sold: !!o.sold[it.id], left: null };
+    });
+    var st = status();
+    window.AGC_TABLE = {
+      table: t, key: 'demo', rest: REST, site: BRAND, shop: 'index.html', zh: false, cur: 'RM', demo: true,
+      menu: { cats: CATS.filter(function (c) { return items.some(function (it) { return it.cat === c[0]; }); }), items: items },
+      note: 'Drinks come first; mains in about 15 minutes.',
+      stopped: st.cls === 'closed' && o.status === 'closed' ? 'Ordering at the table is paused today. Please order at the counter.' : '',
+      hero: 'img/interior.webp',
+      logo: '<svg viewBox="0 0 40 40" aria-hidden="true"><path d="M8 32C8 17 18 8 34 6c-2 16-11 26-26 26z" fill="currentColor"/><path d="M8 32 25 15" stroke="var(--paper)" stroke-width="2.2" stroke-linecap="round"/></svg>',
+      address: 'G-12, Jalan Demo 3/7, 46000 Petaling Jaya (demo address)', hours: ''
+    };
+    var realFetch = window.fetch ? window.fetch.bind(window) : null;
+    function reply(code, body) { return Promise.resolve(new Response(JSON.stringify(body), { status: code, headers: { 'Content-Type': 'application/json' } })); }
+    window.fetch = function (url, init) {
+      url = String(url);
+      if (url.indexOf(REST) !== 0) return realFetch(url, init);
+      var path = url.slice(REST.length);
+      if (path.indexOf('order') === 0) {
+        var b = {}; try { b = JSON.parse((init && init.body) || '{}'); } catch (e) { /* empty */ }
+        var ow = owner(), lines = [], total = 0;
+        if (ow.status === 'closed') return reply(409, { message: 'Ordering at the table is paused today. Please order at the counter.' });
+        for (var i = 0; i < (b.items || []).length && i < 40; i++) {
+          var row = b.items[i], it = item(row.id), qty = Math.max(1, Math.min(30, +row.qty || 1));
+          if (!it || !hasPrice(it)) return reply(409, { message: 'Something in your order is no longer on the menu. Please check your order again.' });
+          if (ow.sold[it.id]) return reply(409, { message: it.n + ' has just sold out. Please check your order again.' });
+          var unit = priceOf(it), opts = [];
+          (it.o || []).forEach(function (g, gi) {
+            var picked = (row.sel && row.sel[gi]) || [];
+            if (!picked.length && g.one) picked = [g.def || 0];
+            (g.one ? picked.slice(0, 1) : picked).forEach(function (vi) { var v = g.v[vi]; if (v) { unit += +v[1] || 0; opts.push(v[0]); } });
+          });
+          total += unit * qty;
+          lines.push({ qty: qty, n: it.n, o: opts.join(', '), note: String(row.note || '').slice(0, 120), p: Math.round(unit * qty * 100) / 100 });
+        }
+        total = Math.round(total * 100) / 100;
+        if (!lines.length) return reply(400, { message: 'Your order is empty.' });
+        if (typeof b.total === 'number' && Math.abs(b.total - total) > 0.01) return reply(409, { message: 'Some prices have just changed. Please check your order again.' });
+        var list = tables();
+        var ord = { id: Date.now(), key: Math.random().toString(36).slice(2, 10), number: REF + '-T' + (101 + list.length), table: t, at: Date.now(), lines: lines, note: String(b.notes || '').slice(0, 300), total: total, kitchen: 'new', st: 'open' };
+        list.unshift(ord); save('tables', list.slice(0, 60));
+        return reply(200, { id: ord.id, number: ord.number, key: ord.key, total: total });
+      }
+      if (path.indexOf('status') === 0) {
+        var qs = new URLSearchParams(path.split('?')[1] || ''), ids = String(qs.get('o') || '').split(',');
+        return reply(200, { orders: tables().filter(function (x) { return ids.indexOf(String(x.id)) !== -1; }).map(function (x) { return { id: x.id, number: x.number, state: tableState(x), total: x.total }; }) });
+      }
+      return reply(404, { message: 'Not found' });
+    };
+  }
+
   // ------------------------------------------------------------------ start
   shared.refresh = function () { var st = status(); $$('[data-status]').forEach(function (el) { el.textContent = st.text; el.className = 'status status--' + st.cls; }); $$('[data-status-long]').forEach(function (el) { el.textContent = st.long; }); updateBag(); };
+  if (document.body && document.body.getAttribute('data-page') === 'table') pageTable();
   var PAGES = { home: pageHome, menu: pageMenu, order: pageOrder, book: pageBook, festive: pageFestive, catering: pageCatering, vouchers: pageVouchers, owner: pageOwner };
   document.addEventListener('DOMContentLoaded', function () {
     shared();

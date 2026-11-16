@@ -531,12 +531,56 @@ const ok = (c, m) => { console.log((c ? '  ✅ ' : '  ❌ ') + m); if (!c) fail+
   await p.click('[data-sheet-add]');
   await p.goto(S + 'product.html?p=kopi');
   await p.click('.buyrow [data-add]');
-  for (const u of ['sireh-salt/index', 'sireh-salt/menu', 'sireh-salt/order', 'sireh-salt/book', 'sireh-salt/festive', 'sireh-salt/catering', 'sireh-salt/vouchers', 'sireh-salt/owner',
+  for (const u of ['sireh-salt/index', 'sireh-salt/menu', 'sireh-salt/order', 'sireh-salt/book', 'sireh-salt/festive', 'sireh-salt/catering', 'sireh-salt/vouchers', 'sireh-salt/owner', 'sireh-salt/table',
     'dulang-daun/index', 'dulang-daun/shop', 'dulang-daun/product', 'dulang-daun/hamper', 'dulang-daun/checkout', 'dulang-daun/track', 'dulang-daun/corporate', 'dulang-daun/owner',
     'maison-cendre/index', 'maison-cendre/menu', 'maison-cendre/book', 'maison-cendre/private', 'maison-cendre/festive', 'maison-cendre/order', 'maison-cendre/gift', 'maison-cendre/owner', 'butter-lantern/index', 'butter-lantern/checkout', 'butter-lantern/order', 'butter-lantern/owner']) {
     await p.goto(BASE + '/demo/' + u + '.html' + (u.endsWith('product') ? '?p=sambal-bilis' : ''));
     const w = await p.evaluate(() => Math.max(document.documentElement.scrollWidth, window.innerWidth));
     ok(w <= phoneW + 1, `phone ${u}.html: fits the phone width (${w}px)`);
+  }
+  // 2026-11-16: phone layout fixes found in the page-by-page review
+  await p.goto(BASE + '/demo/maison-cendre/private.html');
+  const packW = await p.$$eval('[data-spaces] .pack', (els) => els.map((x) => x.getBoundingClientRect().width));
+  ok(packW.length === 4 && packW.every((w) => w > phoneW * 0.7), 'Maison Cendre private dining: the four spaces stack on a phone (not four narrow columns)');
+  await p.goto(BASE + '/demo/maison-cendre/menu.html');
+  const tabTops = await p.$$eval('.mtabs button', (els) => [...new Set(els.map((x) => Math.round(x.getBoundingClientRect().top)))].length);
+  ok(tabTops === 1, 'Maison Cendre menus: the menu tabs sit in one row on a phone');
+  await p.goto(BASE + '/demo/dulang-daun/hamper.html');
+  const qs = await p.$$eval('.hitem .qty', (els) => els.map((x) => { const r = x.getBoundingClientRect(); return [Math.round(r.width), Math.round(r.height)]; }));
+  ok(qs.length > 3 && qs.every((q) => q[0] > q[1] * 1.6) && new Set(qs.map((q) => q[1])).size === 1, 'Dulang & Daun hamper: the − 0 + controls are one row and all the same size');
+  await p.goto(BASE + '/demo/dulang-daun/product.html');
+  ok(/Sambal Ikan Bilis/.test(await p.textContent('[data-pdp]')), 'Dulang & Daun product page without a product shows the bestseller (not an error)');
+  await p.goto(BASE + '/demo/butter-lantern/owner.html');
+  const rowW = await p.$$eval('.orow > :nth-child(2)', (els) => els.slice(0, 4).map((x) => x.getBoundingClientRect().width));
+  ok(rowW.length > 0 && rowW.every((w) => w > phoneW * 0.6), 'Butter & Lantern owner view: order details use the full width on a phone');
+  ok(!/WooCommerce dashboard/.test(await p.textContent('body')), 'Butter & Lantern owner view talks about our own phone dashboard');
+  // table QR ordering in the restaurant demo: order at table 5 → owner view "Tables" → mark done → the customer sees Ready → paid
+  {
+    const tc = await b.newContext({ ...devices['iPhone 13'], reducedMotion: 'reduce' });
+    const tp = await tc.newPage();
+    tp.on('pageerror', (e) => errors.push(e.message));
+    await tp.goto(R + 'table.html?t=5');
+    await tp.waitForSelector('.tq-item');
+    ok((await tp.textContent('.tq-ticket')).includes('5') && await tp.locator('.tq-item').count() >= 10, 'table page: table 5 with the restaurant menu');
+    await tp.locator('.tq-item:has-text("Teh Tarik") .tq-add').click();
+    await tp.waitForSelector('.tq-sheet--item .tq-btn');
+    await tp.click('.tq-sheet--item .tq-btn');
+    await tp.click('.tq-bar__btn');
+    await tp.click('.tq-sheet--cart .tq-btn');
+    await tp.waitForSelector('.tq-sent [data-order]');
+    const no = await tp.getAttribute('.tq-sent [data-order]', 'data-order');
+    ok(/^SS-T\d+$/.test(no), `table order sent (${no})`);
+    const op = await tc.newPage();
+    op.on('pageerror', (e) => errors.push(e.message));
+    await op.goto(R + 'owner.html');
+    await op.click('[data-tab="tables"]');
+    ok((await op.textContent('[data-owner]')).includes(no), 'owner view: the table order is under Tables');
+    await op.click('[data-tdone]');
+    await tp.waitForSelector('.tq-state--ready', { timeout: 20000 }).catch(() => {});
+    ok(await tp.locator('.tq-state--ready').count() > 0, 'the customer sees Ready after the kitchen marks it done');
+    await op.click('[data-tpaid]');
+    ok(/No open tables/.test(await op.textContent('[data-owner]')), '"Paid at the counter" frees the table');
+    await tc.close();
   }
   ok(!errors.length, 'no JavaScript errors' + (errors.length ? ': ' + errors.slice(0, 4).join(' | ') : ''));
   await b.close();

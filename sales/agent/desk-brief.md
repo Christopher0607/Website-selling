@@ -100,7 +100,7 @@ business ("Full demo website that fits them"); use that one:
 - Fine dining, chef-led or upmarket restaurants: https://cartsmithstudio.com/demo/maison-cendre/ (tasting menus,
   reservations with deposits and a waitlist, private dining, seasonal dinners; owner side at /demo/maison-cendre/owner.html).
 - Everyday restaurants, cafés, caterers: https://cartsmithstudio.com/demo/sireh-salt/ (ordering, bookings, festive pre-orders,
-  catering, vouchers; the owner side at /demo/sireh-salt/owner.html shows how they would run it from their phone).
+  catering, vouchers, ordering from the table by QR at table.html?t=5; the owner side at /demo/sireh-salt/owner.html shows how they would run it from their phone).
 - The small first step (RM399 festive pre-order shop), two versions:
   - **The real one** (2026-11-13): https://demo-festive.cartsmithstudio.com/ — the actual WordPress shop a client gets
     (Chinese New Year, in Chinese; fictional bakery, nothing is charged). People can place a test order and see the order

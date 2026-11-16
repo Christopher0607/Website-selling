@@ -73,7 +73,7 @@
 .tq .tq-hero h1 { font: 600 clamp(1.9rem, 7.4vw, 2.7rem)/1.04 var(--tq-serif); letter-spacing: -.02em; margin: 0 0 8px; color: #fff; }
 .tq-hero__sub { margin: 0; color: rgba(255, 255, 255, .88); font-size: .98rem; line-height: 1.45; }
 .tq-ticket { position: absolute; z-index: 1; top: 16px; right: 16px; width: 86px; height: 86px; border-radius: 50%; background: var(--tq-bg); color: var(--tq-ink); display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 10px 26px rgba(0, 0, 0, .25); border: 3px solid var(--tq-gold); text-align: center; }
-.tq-ticket span { font: 800 .62rem/1 var(--tq-sans); letter-spacing: .16em; text-transform: uppercase; color: var(--tq-warm); }
+.tq-ticket span { font: 800 .7rem/1 var(--tq-sans); letter-spacing: .14em; text-transform: uppercase; color: var(--tq-warm); }
 .tq-ticket b { font: 700 2rem/1 var(--tq-serif); margin-top: 3px; max-width: 74px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .tq-steps { list-style: none; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 14px 0 0; padding: 0; }
 .tq-steps li { position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; padding: 12px 6px 10px; background: var(--tq-card); border: 1px solid var(--tq-line); border-radius: 16px; font-size: .8rem; font-weight: 700; line-height: 1.25; }
