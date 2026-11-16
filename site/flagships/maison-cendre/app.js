@@ -71,6 +71,25 @@
   var MAPS = 'https://www.google.com/maps/search/?api=1&query=Kuala+Lumpur';
   var WA = 'https://wa.me/?text=';
 
+  // ------------------------------------------------------------------ the WordPress version (docs/14-wordpress-demos.md)
+  // site/tools/export-demo-data.js reads these lists for the WordPress site (products, rules the server checks)
+  if (window.__agcExport) window.__agcExport({ MENU: MENU, CATS: CATS, TASTING: TASTING, SEATS: SEATS, DIETS: DIETS, SEASONS: SEASONS, ZONES: ZONES.map(function (z) { return { re: z.re.source, fee: z.fee, eta: z.eta, area: z.area }; }), HOURS: HOURS, DELIVERY_MIN: DELIVERY_MIN, FREE_DELIVERY: FREE_DELIVERY, PROMO: PROMO, ADDRESS: ADDRESS, BRAND: 'Maison Cendre' });
+  // On WordPress the page gets window.AGC_LIVE: the same lists with names, prices, stock and photos from WooCommerce. Orders,
+  // reservations, gift cards and enquiries then go to the real restaurant back office, not to this browser.
+  var LIVE = window.AGC_LIVE || null;
+  if (LIVE && LIVE.data) { if (LIVE.data.MENU) MENU = LIVE.data.MENU; if (LIVE.data.SEASONS) SEASONS = LIVE.data.SEASONS; }
+  function pic(x) { return x.imgUrl || 'img/' + x.img + '.webp'; }
+  function send(path, body, ok) {
+    var btns = Array.prototype.slice.call(document.querySelectorAll('[data-place],[data-confirm],[data-forder],[data-gbuy],form[data-private] button[type=submit]'));
+    btns.forEach(function (b) { b.disabled = true; });
+    fetch(LIVE.rest + path, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+      .then(function (r) { return r.json().then(function (j) { if (!r.ok) throw new Error((j && j.message) || 'Something went wrong. Please try again.'); return j; }); })
+      .then(function (j) { btns.forEach(function (b) { b.disabled = false; }); if (j.payUrl) { location.href = j.payUrl; return; } ok(j); })
+      .catch(function (e) { btns.forEach(function (b) { b.disabled = false; }); toast(e.message || 'Something went wrong. Please try again.'); });
+  }
+  function liveLines(b) { return b.map(function (l) { var k = String(l.key || ''), sel = []; try { k = k.slice(k.indexOf('|') + 1); sel = JSON.parse(k.slice(0, k.indexOf('|'))); } catch (e) { sel = []; } return { id: l.id, qty: l.qty, sel: sel, note: l.note || '' }; }); }
+  var CODES = {}, repaint = null;
+
   // ------------------------------------------------------------------ helpers
   function $(s, el) { return (el || document).querySelector(s); }
   function $$(s, el) { return Array.prototype.slice.call((el || document).querySelectorAll(s)); }
@@ -100,8 +119,8 @@
   function toast(t) { var el = $('[data-toast]'); if (!el) return; el.textContent = t; el.classList.add('is-on'); clearTimeout(toast.t); toast.t = setTimeout(function () { el.classList.remove('is-on'); }, 2800); }
 
   // ------------------------------------------------------------------ owner settings, bookings, bag
-  function owner() { var o = load('owner', {}); o.out = o.out || {}; o.price = o.price || {}; o.left = o.left || {}; o.status = o.status || 'auto'; return o; }
-  function setOwner(o) { save('owner', o); }
+  function owner() { if (LIVE) return { out: LIVE.owner.sold || {}, price: {}, left: LIVE.owner.left || {}, status: LIVE.owner.status || 'auto' }; var o = load('owner', {}); o.out = o.out || {}; o.price = o.price || {}; o.left = o.left || {}; o.status = o.status || 'auto'; return o; }
+  function setOwner(o) { if (LIVE) return; save('owner', o); }
   function item(id) { for (var i = 0; i < MENU.length; i++) if (MENU[i].id === id) return MENU[i]; return null; }
   function priceOf(it) { var o = owner(); return typeof o.price[it.id] === 'number' ? o.price[it.id] : it.p; }
   function isOut(id) { return !!owner().out[id]; }
@@ -154,6 +173,7 @@
     return out.filter(function (t) { return t >= minT; });
   }
   function leftAt(seat, d, t) {
+    if (LIVE) { if (d === today() && owner().status === 'full') return 0; var x = (LIVE.bookedBy || {})[seat + '|' + d + '|' + t] || [0, 0]; return Math.max(0, ((LIVE.seatCap || {})[seat] || 6) - (seat === 'counter' ? x[1] : x[0])); }
     if (d === today() && owner().status === 'full') return 0;
     var mine = bookings().filter(function (b) { return b.date === d && b.time === t && b.seat === seat && !b.wait; });
     if (seat === 'counter') { var seats = 2 + hash('c' + d + t) % 7; return Math.max(0, seats - mine.reduce(function (a, b) { return a + b.pax; }, 0)); }
@@ -206,7 +226,7 @@
   function tagsHTML(it) { return (isOut(it.id) ? '<span class="tag tag--out">Not available tonight</span>' : '') + it.tags.map(function (t) { return '<span class="tag' + (t === 'sig' ? ' tag--sig' : '') + '">' + TAGS[t] + '</span>'; }).join(''); }
   function mrow(it) {
     var photo = it.img && ['scallop', 'wagyu', 'chocolate', 'duck'].indexOf(it.id) >= 0;
-    return '<div class="mrow' + (photo ? ' mrow--photo' : '') + (isOut(it.id) ? ' is-out' : '') + '" id="m-' + it.id + '">' + (photo ? '<img class="mrow__photo" src="img/' + it.img + '.webp" alt="" loading="lazy">' : '') +
+    return '<div class="mrow' + (photo ? ' mrow--photo' : '') + (isOut(it.id) ? ' is-out' : '') + '" id="m-' + it.id + '">' + (photo ? '<img class="mrow__photo" src="' + pic(it) + '" alt="" loading="lazy">' : '') +
       '<span class="mrow__name">' + esc(it.n) + '</span><span class="mrow__price">' + rm(priceOf(it)) + '</span><p class="mrow__desc">' + esc(it.d) + '</p>' + (it.tags.length || isOut(it.id) ? '<div class="mrow__tags">' + tagsHTML(it) + '</div>' : '') + '</div>';
   }
   function tastingHTML(t, dark) {
@@ -248,7 +268,7 @@
   function pageBook() {
     var S = { seat: new URLSearchParams(location.search).get('seat') || 'room', date: '', time: 0, pax: 2, occ: '', diet: [], name: '', phone: '', notes: '' };
     if (!SEATS[S.seat]) S.seat = 'room';
-    var root = $('[data-book]');
+    var root = $('[data-book]'), bsrv = null;
     function deposit() { return S.seat === 'counter' ? 100 * S.pax : S.pax >= 6 ? 50 * S.pax : 0; }
     function paint() {
       var seat = SEATS[S.seat];
@@ -294,8 +314,9 @@
     function confirmBooking() {
       var err = !S.time ? 'Choose a time first.' : !S.name.trim() ? 'Add your name.' : !phoneOk(S.phone) ? 'Add a mobile number, so we can confirm on WhatsApp.' : '';
       if (err) { toast(err); return; }
-      var wait = leftAt(S.seat, S.date, S.time) === 0, dep = wait ? 0 : deposit();
-      var b = { ref: 'MC-' + seq(), seat: S.seat, date: S.date, time: S.time, pax: S.pax, occ: S.occ, diet: S.diet.slice(), notes: S.notes.trim(), name: S.name.trim(), phone: S.phone.trim(), dep: dep, wait: wait, st: wait ? 'Waitlist' : 'New', at: Date.now() };
+      if (LIVE && !bsrv) return send('site/book', { seat: S.seat, date: S.date, time: S.time, pax: S.pax, occ: S.occ, notes: S.notes.trim(), name: S.name.trim(), phone: S.phone.trim(), extra: { diet: S.diet } }, function (r) { bsrv = r; if (!r.wait) { var k = S.seat + '|' + S.date + '|' + S.time, x = (LIVE.bookedBy = LIVE.bookedBy || {})[k] || [0, 0]; LIVE.bookedBy[k] = [x[0] + 1, x[1] + S.pax]; } confirmBooking(); bsrv = null; });
+      var wait = bsrv ? !!bsrv.wait : leftAt(S.seat, S.date, S.time) === 0, dep = bsrv ? bsrv.deposit : wait ? 0 : deposit();
+      var b = { ref: bsrv ? bsrv.ref : 'MC-' + seq(), seat: S.seat, date: S.date, time: S.time, pax: S.pax, occ: S.occ, diet: S.diet.slice(), notes: S.notes.trim(), name: S.name.trim(), phone: S.phone.trim(), dep: dep, wait: wait, st: wait ? 'Waitlist' : 'New', at: Date.now() };
       var all = bookings(); all.unshift(b); save('bookings', all.slice(0, 40));
       var text = (wait ? 'Waitlist request' : 'Reservation') + ' (demo website): Maison Cendre\n' + b.ref + ' · ' + SEATS[b.seat].n + ' · ' + b.pax + ' guest' + (b.pax === 1 ? '' : 's') + ' · ' + fmtDay(b.date) + ', ' + fmtTime(b.time) + (b.occ ? '\nOccasion: ' + b.occ : '') + (b.diet.length ? '\nDietary: ' + b.diet.join(', ') : '') + (b.notes ? '\nNotes: ' + b.notes : '') + (dep ? '\nDeposit paid: ' + rm(dep) : '') + '\nName: ' + b.name + ' · ' + b.phone;
       root.innerHTML = '<div class="panel done" style="margin:36px 0 90px"><div class="done__icon">' + ICON.check + '</div><p class="kicker" style="justify-content:center">' + (wait ? 'You are on the waitlist (demo)' : 'Reservation received (demo)') + '</p><p class="ref">' + b.ref + '</p>' +
@@ -311,7 +332,7 @@
   // ------------------------------------------------------------------ takeaway
   function dishCard(it) {
     var out = isOut(it.id);
-    return '<article class="dish' + (out ? ' is-out' : '') + '" id="t-' + it.id + '"><div class="dish__img' + (it.img ? '' : ' dish__img--none') + '">' + (it.img ? '<img src="img/' + it.img + '.webp" alt="' + esc(it.n) + ' (placeholder photo)" loading="lazy" width="760" height="570">' : '<span>' + esc(it.n) + '</span>') + '<div class="dish__tags">' + (out ? '<span class="tag tag--out">Not available tonight</span>' : it.tags.indexOf('sig') >= 0 ? '<span class="tag tag--sig">Signature</span>' : '') + '</div></div>' +
+    return '<article class="dish' + (out ? ' is-out' : '') + '" id="t-' + it.id + '"><div class="dish__img' + (it.img || it.imgUrl ? '' : ' dish__img--none') + '">' + (it.img || it.imgUrl ? '<img src="' + pic(it) + '" alt="' + esc(it.n) + ' (placeholder photo)" loading="lazy" width="760" height="570">' : '<span>' + esc(it.n) + '</span>') + '<div class="dish__tags">' + (out ? '<span class="tag tag--out">Not available tonight</span>' : it.tags.indexOf('sig') >= 0 ? '<span class="tag tag--sig">Signature</span>' : '') + '</div></div>' +
       '<div class="dish__body"><h3>' + esc(it.n) + '</h3><p>' + esc(it.d) + '</p><div class="dish__foot"><span class="price">' + rm(priceOf(it)) + '</span><button class="addbtn" type="button" data-add="' + it.id + '"' + (out ? ' disabled' : '') + '>' + (out ? 'Unavailable' : 'Add') + '</button></div></div></article>';
   }
   function addDirect(it, qty, sel, note) {
@@ -350,6 +371,18 @@
   function discountFor(c, sub) {
     c = String(c || '').trim().toUpperCase();
     if (!c) return { ok: true, amt: 0 };
+    if (LIVE) {
+      var r = CODES[c];
+      if (!r) {
+        CODES[c] = { pending: true };
+        fetch(LIVE.rest + 'site/coupon', { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ code: c, sub: sub }) })
+          .then(function (x) { return x.json(); }).then(function (j) { CODES[c] = j && 'ok' in j ? j : { ok: false, msg: 'That code doesn’t work.' }; if (repaint) repaint(); })
+          .catch(function () { delete CODES[c]; });
+      }
+      if (!r || r.pending) return { ok: false, msg: 'Checking the code…' };
+      if (!r.ok) return { ok: false, msg: r.msg };
+      return { ok: true, amt: r.type === 'percent' ? Math.round(sub * r.amount) / 100 : Math.min(sub, r.amount), label: r.label };
+    }
     if (c === PROMO.code) return { ok: true, amt: Math.round(sub * PROMO.pct) / 100, label: PROMO.pct + '% off (' + c + ')' };
     var v = vouchers().filter(function (x) { return x.code === c; })[0];
     if (v && !v.used) return { ok: true, amt: Math.min(sub, v.amt), label: 'Gift card ' + c, voucher: c };
@@ -358,7 +391,7 @@
   }
   function pageOrder() {
     var S = load('checkout', { mode: 'pickup', date: '', time: 0, pc: '', addr: '', name: '', phone: '', notes: '', code: '', pay: 'online' });
-    var root = $('[data-order]'), menuEl = $('[data-takeaway]');
+    var root = $('[data-order]'), menuEl = $('[data-takeaway]'), srv = null;
     function keep() { save('checkout', S); }
     function zone() { var pc = String(S.pc || '').trim(); for (var i = 0; i < ZONES.length; i++) if (ZONES[i].re.test(pc)) return ZONES[i]; return null; }
     function calc() { var sub = bagSub(), d = discountFor(S.code, sub), disc = d.ok ? d.amt : 0, z = zone(), fee = S.mode === 'delivery' ? (z ? (sub - disc >= FREE_DELIVERY ? 0 : z.fee) : 0) : 0; return { sub: sub, d: d, disc: disc, fee: fee, z: z, total: Math.max(0, sub - disc + fee) }; }
@@ -386,7 +419,7 @@
         '<aside class="summary panel"><h2>Your order</h2>' + b.map(function (l, i) { return '<div class="line"><div><h4>' + esc(l.n) + '</h4>' + (l.opts ? '<p>' + esc(l.opts) + '</p>' : '') + (l.note ? '<p>“' + esc(l.note) + '”</p>' : '') + '<div class="qty"><button type="button" data-lq="' + i + ':-1" aria-label="One less">−</button><output>' + l.qty + '</output><button type="button" data-lq="' + i + ':1" aria-label="One more">+</button></div></div><span>' + rm(l.unit * l.qty) + '</span></div>'; }).join('') +
         '<div class="field" style="margin-top:16px"><label for="o-code">Gift card or promo code</label><div style="display:flex;gap:8px"><input class="input" id="o-code" placeholder="' + PROMO.code + ' or GIFT-…" value="' + esc(S.code) + '" autocapitalize="characters"><button class="btn btn--ghost btn--sm" type="button" data-apply>Apply</button></div>' + (S.code && !c.d.ok ? '<small style="color:var(--bad)">' + esc(c.d.msg) + '</small>' : (c.disc ? '<small style="color:var(--ok)">' + esc(c.d.label) + ' applied</small>' : '')) + '</div>' +
         '<div class="totals"><div><span>Subtotal</span><span>' + rm(c.sub) + '</span></div>' + (c.disc ? '<div><span>Discount</span><span>−' + rm(c.disc) + '</span></div>' : '') + (S.mode === 'delivery' ? '<div><span>Delivery</span><span>' + (c.z ? (c.fee ? rm(c.fee) : 'Free') : '—') + '</span></div>' : '') + '<div class="grand"><span>Total</span><span>' + rm(c.total) + '</span></div></div>' +
-        '<button class="btn btn--block' + (S.pay === 'wa' ? ' btn--wa' : '') + '" type="button" data-place style="margin-top:18px">' + (S.pay === 'wa' ? ICON.wa + 'Send on WhatsApp' : 'Pay ' + rm(c.total)) + '</button><p class="small muted center" style="margin-top:10px">Demo website: nothing is charged or sent.</p></aside></div>';
+        '<button class="btn btn--block' + (S.pay === 'wa' ? ' btn--wa' : '') + '" type="button" data-place style="margin-top:18px">' + (S.pay === 'wa' ? ICON.wa + 'Send on WhatsApp' : 'Pay ' + rm(c.total)) + '</button><p class="small muted center" style="margin-top:10px">' + (LIVE ? 'Demo website: nothing is charged. Other visitors can open this demo’s back office, so use a made-up name and number.' : 'Demo website: nothing is charged or sent.') + '</p></aside></div>';
     }
     paintOrderIfThere = paint;
     document.addEventListener('click', function (e) {
@@ -417,7 +450,8 @@
       else if (!S.name) err = 'Add your name.';
       else if (!phoneOk(S.phone)) err = 'Add a mobile number.';
       if (err) { toast(err); return; }
-      var o = { no: 'MC-T' + seq(), mode: S.mode, date: S.date, time: S.time, items: bag(), sub: c.sub, disc: c.disc, fee: c.fee, total: c.total, name: S.name, phone: S.phone, addr: S.addr, pc: S.pc, notes: S.notes, pay: S.pay, st: 'New', at: Date.now() };
+      if (LIVE && !srv) return send('site/order', { lines: liveLines(bag()), mode: S.mode, date: S.date, time: S.time, pc: S.pc, addr: S.addr, name: S.name, phone: S.phone, notes: S.notes, code: c.disc ? S.code : '', pay: S.pay === 'wa' ? 'wa' : 'online', total: c.total }, function (r) { srv = r; place(); srv = null; });
+      var o = { no: srv ? srv.no : 'MC-T' + seq(), mode: S.mode, date: S.date, time: S.time, items: bag(), sub: srv ? srv.sub : c.sub, disc: srv ? srv.disc : c.disc, fee: srv ? srv.fee : c.fee, total: srv ? srv.total : c.total, name: S.name, phone: S.phone, addr: S.addr, pc: S.pc, notes: S.notes, pay: S.pay, st: 'New', at: Date.now() };
       var orders = load('orders', []); orders.unshift(o); save('orders', orders.slice(0, 30));
       if (c.d.voucher) save('vouchers', vouchers().map(function (v) { if (v.code === c.d.voucher) v.used = true; return v; }));
       save('bag', []); S.code = ''; S.notes = ''; keep(); updateBag();
@@ -431,6 +465,7 @@
         '<div class="btns" style="justify-content:center;margin-top:18px"><a class="btn btn--ghost" href="owner.html">See it in the owner view</a></div></div>';
       window.scrollTo(0, root.getBoundingClientRect().top + scrollY - 120);
     }
+    repaint = paint;
     paint();
   }
 
@@ -438,7 +473,7 @@
   function pageFestive() {
     var t = today(), open = SEASONS.filter(function (s) { return s.cutoff >= t; });
     var S = { season: (open[0] || SEASONS[SEASONS.length - 1]).id, qty: {}, date: '', seat: 1080, pick: 720, name: '', phone: '', pay: 'deposit' };
-    var root = $('[data-festive]');
+    var root = $('[data-festive]'), fsrv = null;
     function season() { return SEASONS.filter(function (s) { return s.id === S.season; })[0]; }
     function countdown(s) {
       var ms = Date.parse(s.cutoff + 'T23:59:00+08:00') - Date.now();
@@ -456,7 +491,7 @@
       root.innerHTML = '<div class="mtabs" role="tablist">' + SEASONS.map(function (x) { return '<button type="button" role="tab" data-season="' + x.id + '" class="' + (x.id === S.season ? 'is-on' : '') + '" aria-selected="' + (x.id === S.season) + '">' + esc(x.name) + (x.cutoff < t ? ' (closed)' : '') + '</button>'; }).join('') + '</div>' +
         '<div class="co" style="padding-top:0"><div class="grid" style="gap:16px">' + s.items.map(function (x) {
           var left = leftOf(x), out = left <= 0 || closed, q = S.qty[x.id] || 0;
-          return '<article class="fset' + (out ? ' is-out' : '') + '"><img src="img/' + x.img + '.webp" alt="" loading="lazy"><div class="fset__body"><p class="kicker" style="margin:0">' + (x.kind === 'dine' ? 'In the dining room' : 'To take home') + '</p><h3>' + esc(x.n) + '</h3><span class="price">' + rm(x.p) + ' ' + esc(x.unit) + '</span><ul>' + x.has.map(function (h) { return '<li>' + esc(h) + '</li>'; }).join('') + '</ul>' +
+          return '<article class="fset' + (out ? ' is-out' : '') + '"><img src="' + pic(x) + '" alt="" loading="lazy"><div class="fset__body"><p class="kicker" style="margin:0">' + (x.kind === 'dine' ? 'In the dining room' : 'To take home') + '</p><h3>' + esc(x.n) + '</h3><span class="price">' + rm(x.p) + ' ' + esc(x.unit) + '</span><ul>' + x.has.map(function (h) { return '<li>' + esc(h) + '</li>'; }).join('') + '</ul>' +
             '<div class="fset__left"><span>' + (left <= 0 ? 'Fully booked' : 'Only ' + left + ' left') + '</span><span>' + (x.dep < 1 ? '50% deposit' : 'Paid in full') + '</span></div><div class="bar"><i style="width:' + Math.round(100 * Math.max(0, left) / x.total) + '%"></i></div>' +
             '<div style="display:flex;justify-content:flex-end;margin-top:10px">' + (out ? '<span class="tag tag--out">' + (closed ? 'Closed' : 'Fully booked') + '</span>' : '<div class="qty"><button type="button" data-fq="' + x.id + ':-1" aria-label="One less">−</button><output>' + q + '</output><button type="button" data-fq="' + x.id + ':1" aria-label="One more">+</button></div>') + '</div></div></article>';
         }).join('') + '</div>' +
@@ -483,9 +518,10 @@
         var s = season(), ids = Object.keys(S.qty);
         var err = !ids.length ? 'Choose a menu or a set.' : !S.name.trim() ? 'Add your name.' : !phoneOk(S.phone) ? 'Add a mobile number.' : '';
         if (err) { toast(err); return; }
+        if (LIVE && !fsrv) { var fbtn = e.target.closest('[data-forder]'), fdine = ids.some(function (id) { return fitem(id).it.kind === 'dine'; }); return send('site/order', { kind: 'festive', lines: ids.map(function (id) { return { id: id, qty: S.qty[id] }; }), date: S.date, time: fdine ? S.seat : S.pick, name: S.name.trim(), phone: S.phone.trim(), pay: S.pay, total: ids.reduce(function (a, id) { return a + fitem(id).it.p * S.qty[id]; }, 0) }, function (r) { fsrv = r; fbtn.click(); fsrv = null; }); }
         var o = owner(); ids.forEach(function (id) { o.left[id] = leftOf(fitem(id).it) - S.qty[id]; }); setOwner(o);
         var dine = ids.some(function (id) { return fitem(id).it.kind === 'dine'; });
-        var rec = { ref: 'MC-S' + seq(), season: s.name, date: S.date, time: dine ? S.seat : S.pick, items: ids.map(function (id) { return S.qty[id] + ' × ' + fitem(id).it.n; }), total: ids.reduce(function (a, id) { return a + fitem(id).it.p * S.qty[id]; }, 0), name: S.name.trim(), phone: S.phone.trim(), at: Date.now() };
+        var rec = { ref: fsrv ? fsrv.no : 'MC-S' + seq(), season: s.name, date: S.date, time: dine ? S.seat : S.pick, items: ids.map(function (id) { return S.qty[id] + ' × ' + fitem(id).it.n; }), total: ids.reduce(function (a, id) { return a + fitem(id).it.p * S.qty[id]; }, 0), name: S.name.trim(), phone: S.phone.trim(), at: Date.now() };
         var all = load('seasonal', []); all.unshift(rec); save('seasonal', all.slice(0, 30));
         root.innerHTML = '<div class="panel done"><div class="done__icon">' + ICON.check + '</div><p class="kicker" style="justify-content:center">Confirmed (demo)</p><p class="ref">' + rec.ref + '</p><h2 style="margin-top:12px">' + esc(s.name) + ' · ' + fmtDay(S.date) + ', ' + fmtTime(rec.time) + '</h2><p class="lead" style="margin:0 auto 12px">' + esc(rec.items.join(', ')) + '</p><p class="muted">We will send a reminder on WhatsApp the day before. Demo: nothing was charged.</p><div class="btns" style="justify-content:center;margin-top:18px"><a class="btn btn--ghost" href="owner.html">See it in the owner view</a><a class="btn btn--ghost" href="festive.html">Back to seasonal menus</a></div></div>';
         S.qty = {}; window.scrollTo(0, 0);
@@ -499,13 +535,14 @@
 
   // ------------------------------------------------------------------ private dining enquiry
   function pagePrivate() {
-    var form = $('[data-private]');
+    var form = $('[data-private]'), psrv = null;
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       if (!form.reportValidity()) return;
       var f = {}; new FormData(form).forEach(function (v, k) { f[k] = String(v).trim(); });
       if (!phoneOk(f.phone)) { toast('Add a mobile number we can reach you on.'); return; }
-      var ref = 'MC-E' + seq();
+      if (LIVE && !psrv) return send('site/enquiry', { type: 'Private dining', name: f.name, phone: f.phone, email: f.email || '', fields: f }, function (r) { psrv = r; if (form.requestSubmit) form.requestSubmit(); else form.dispatchEvent(new Event('submit', { cancelable: true })); psrv = null; });
+      var ref = psrv ? psrv.ref : 'MC-E' + seq();
       var text = 'Private dining enquiry (demo website): Maison Cendre\n' + ref + '\n' + f.space + ' · ' + f.guests + ' guests · ' + (f.date ? fmtDay(f.date) : 'date to confirm') + '\nOccasion: ' + (f.occasion || '-') + '\nBudget: ' + (f.budget || '-') + (f.notes ? '\nNotes: ' + f.notes : '') + '\nContact: ' + f.name + ' · ' + f.phone + (f.email ? ' · ' + f.email : '');
       var all = load('enquiries', []); all.unshift({ ref: ref, space: f.space, guests: f.guests, date: f.date, name: f.name, at: Date.now() }); save('enquiries', all.slice(0, 20));
       form.outerHTML = '<div class="panel done"><div class="done__icon">' + ICON.check + '</div><p class="kicker" style="justify-content:center">Enquiry received (demo)</p><p class="ref">' + ref + '</p><h2 style="margin-top:12px">Thank you, ' + esc(f.name) + '</h2><p class="lead" style="margin:0 auto 16px">Our events team will reply within one working day with menus, availability and a written quote.</p><details style="max-width:540px;margin:0 auto;text-align:left"><summary class="linkbtn">What the restaurant receives</summary><div class="waprev" style="margin-top:12px">' + esc(text) + '</div></details></div>';
@@ -516,7 +553,7 @@
   // ------------------------------------------------------------------ gift cards
   var EXPERIENCES = [['Cendre tasting menu for two', 776], ['Tasting menu for two with wine pairing', 1296], ['Chef’s counter for two', 976]];
   function pageGift() {
-    var S = { amt: 500, label: '', to: '', from: '', msg: '', via: 'WhatsApp' }, root = $('[data-gift]');
+    var S = { amt: 500, label: '', to: '', from: '', msg: '', via: 'WhatsApp' }, root = $('[data-gift]'), gsrv = null;
     function card(c) {
       return '<div class="vcard" aria-label="Gift card preview"><div class="vcard__top"><span class="logo"><span class="logo__mark">MC</span><span class="logo__name">Maison <i>Cendre</i></span></span><span class="vcard__code">' + (c || 'GIFT-····') + '</span></div>' +
         '<div><div class="vcard__amt">' + (S.label ? esc(S.label) : rm(S.amt)) + '</div><div class="vcard__msg">' + (S.to ? 'For ' + esc(S.to) + (S.msg ? ': “' + esc(S.msg) + '”' : '') : 'Your message appears here.') + (S.from ? ' — ' + esc(S.from) : '') + '</div></div></div>';
@@ -535,7 +572,8 @@
       if ((x = e.target.closest('[data-via]'))) { S.via = x.getAttribute('data-via'); paint(); return; }
       if (e.target.closest('[data-gbuy]')) {
         if (!S.to.trim()) { toast('Add who the gift card is for.'); $('#g-to').focus(); return; }
-        var c = code('GIFT-', 4), all = load('vouchers', []);
+        if (LIVE && !gsrv) { var gbtn = e.target.closest('[data-gbuy]'); return send('site/voucher', { amt: S.amt, label: S.label, to: S.to.trim(), from: S.from.trim(), msg: S.msg, via: S.via }, function (r) { gsrv = r; gbtn.click(); gsrv = null; }); }
+        var c = gsrv ? gsrv.code : code('GIFT-', 4), all = load('vouchers', []);
         all.unshift({ code: c, amt: S.amt, label: S.label, to: S.to.trim(), used: false, at: Date.now() }); save('vouchers', all.slice(0, 20));
         var text = 'A gift for you' + (S.from ? ' from ' + S.from : '') + ': ' + (S.label || rm(S.amt)) + ' at Maison Cendre (demo website).\nCode: ' + c + (S.msg ? '\n“' + S.msg + '”' : '') + '\nValid for 12 months.';
         root.innerHTML = '<div class="co" style="padding-top:0"><div class="panel done"><div class="done__icon">' + ICON.check + '</div><p class="kicker" style="justify-content:center">Gift card ready (demo)</p><p class="ref">' + c + '</p><p class="lead" style="margin:8px auto 18px">Try it: add something to a takeaway order and enter the code at checkout.</p><div class="btns" style="justify-content:center"><a class="btn btn--wa" href="' + WA + encodeURIComponent(text) + '" target="_blank" rel="noopener">' + ICON.wa + 'Send on WhatsApp</a><a class="btn btn--ghost" href="order.html">Use it for takeaway</a></div></div><aside>' + card(c) + '</aside></div>';
@@ -558,7 +596,18 @@
     { ref: 'MC-3102', seat: 'counter', time: 1245, pax: 3, name: 'Hui Min', notes: 'Waitlist for 8:45pm', st: 'Waitlist', wait: true }
   ];
   var BST = ['New', 'Confirmed', 'Seated'], OST = ['New', 'Preparing', 'Ready', 'Collected'];
+  function liveOwner() {
+    // On WordPress the owner's side is the real one: the shop dashboard (/dian/) and WordPress + WooCommerce admin.
+    var dl = LIVE.demoLogin || {}, root = $('[data-owner]');
+    $$('[data-reset]').forEach(function (b) { b.hidden = true; });
+    $$('.owner .small.muted, .owner p.small').forEach(function (p) { if (/in your browser|this browser/.test(p.textContent)) p.textContent = 'This demo runs on real WordPress + WooCommerce. Your test orders, reservations and gift cards are saved there; the demo is put back every night.'; });
+    if (root) root.innerHTML = '<div class="panel" style="padding:26px"><p class="kicker">The real back office</p><h2 style="margin-top:6px">Open it on your phone</h2>' +
+      '<p class="muted">Tonight’s reservations, the waitlist, takeaway orders, seasonal menus, gift cards, dishes switched off and prices, in the restaurant’s own dashboard. No password needed for this demo.</p>' +
+      '<div class="btns" style="margin-top:16px"><a class="btn" data-live-dian href="' + esc(dl.dian || LIVE.dian) + '">Open the shop dashboard</a><a class="btn btn--ghost" data-live-admin href="' + esc(dl.admin || LIVE.admin) + '">Open WordPress admin</a></div>' +
+      '<p class="small muted" style="margin-top:14px">WordPress admin is the full WooCommerce back office (orders, reservations, products, coupons, reports). The shop dashboard is the simple phone version the restaurant uses every day.</p></div>';
+  }
   function pageOwner() {
+    if (LIVE) return liveOwner();
     var tab = 'tonight', root = $('[data-owner]');
     function paint() {
       var o = owner(), sm = load('ost', {}), t = today();

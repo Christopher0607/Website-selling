@@ -20,14 +20,33 @@ const SPEC = {
     spec: {
       lists: [{ var: 'MENU', cats: 'CATS' }, { var: 'SEASONS', items: 'items', stock: 'left' }],
       order: { hours: 'HOURS', zones: 'ZONES', min: 'DELIVERY_MIN', free: 'FREE_DELIVERY', prep: 30, busy: 20, first: 15, last: 30, step: 15, days: 8 },
-      book: { rules: 'BOOK', hours: 'HOURS', tables: 6, first: 0, last: 90, step: 30, prep: 30, days: 15, deposit: { from: 'depositFrom', amount: 'deposit', per: 'booking', pay: 'later' } },
+      book: { hours: 'HOURS', first: 0, last: 90, step: 30, prep: 30, days: 15,
+        seats: { '*': { cap: 6, count: 'booking', max: 'BOOK.max', deposit: { from: 'BOOK.depositFrom', amount: 'BOOK.deposit', per: 'booking', pay: 'later' } } } },
       voucher: { product: 'gift-voucher', name: 'Gift voucher', min: 30, max: 1000, months: 12, prefix: 'GIFT-' },
       table: { menu: 'MENU', cats: 'CATS', hero: 'interior' },
       redirects: { 'dian.html': '/?agc_demo=dian&hash=/kitchen', 'table.html': '@table' },
       shop: '/menu.html',
       coupons: [{ from: 'PROMO', code: 'code', percent: 'pct' }],
       tables: '1-12',
-      featured: 'SIGNATURE'
+      featured: 'SIGNATURE',
+      ref: 'SS'
+    }
+  },
+  'maison-cendre': {
+    page: 'menu.html',
+    spec: {
+      lists: [{ var: 'MENU', cats: 'CATS' }, { var: 'SEASONS', items: 'items', stock: 'left' }],
+      order: { hours: 'HOURS', zones: 'ZONES', min: 'DELIVERY_MIN', free: 'FREE_DELIVERY', prep: 45, first: 30, last: 60, step: 15, days: 8 },
+      book: { hours: 'HOURS', prep: 45, step: 30, first: 0, last: 90, last_lunch: 60, lunch_before: 900, days: 21, waitlist: true,
+        seats: {
+          room: { cap: 6, count: 'booking', min: 1, max: 8, deposit: { from: 6, amount: 50, per: 'guest', pay: 'now' } },
+          counter: { cap: 8, count: 'guest', min: 1, max: 4, times: [1080, 1245], dows: [2, 3, 4, 5, 6], deposit: { from: 1, amount: 100, per: 'guest', pay: 'now' } }
+        } },
+      voucher: { product: 'gift-card', name: 'Gift card', min: 100, max: 5000, months: 12, prefix: 'GIFT-' },
+      redirects: {},
+      shop: '/menu.html',
+      coupons: [{ from: 'PROMO', code: 'code', percent: 'pct' }],
+      ref: 'MC'
     }
   }
 };
