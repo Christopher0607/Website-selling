@@ -57,7 +57,8 @@
       tb_table: 'Table {0}', tb_free: 'Free', tb_ready: 'All served', tb_making: 'Kitchen making', tb_pay: 'Payment received', tb_pay_q: 'Table {0} paid {1}?', tb_how: 'How did they pay?',
       m_card: 'Card', m_pos: 'Shop cashier', tb_cancel: 'Cancel this order', tb_cancel_p: 'The items go back into stock.', tb_qr: 'Print table QR codes', tb_qr_hint: 'Print, cut and put one on each table. Customers scan it, order on their phone and pay at the counter. If the website address changes, print them again.',
       tb_scan: 'Scan to order', tb_scan2: 'Pay at the counter', tb_off: 'Table QR ordering is off. Turn it on in Settings.', tb_due: 'To pay', tb_none: 'No tables yet. Add them in Settings.', tb_test: 'Open this table\'s menu',
-      tb_open_n: '{0} tables with an open bill', s_table: 'Table QR ordering', s_table_on: 'Customers can order from the QR code on their table', s_table_list: 'Tables (e.g. 1-12, or 1,2,3,Patio)', s_table_note: 'Message on the table menu (optional)', k_open: 'Open the kitchen screen', tb_unpaid: 'table orders not paid yet'
+      tb_open_n: '{0} tables with an open bill', s_table: 'Table QR ordering', s_table_on: 'Customers can order from the QR code on their table', s_table_list: 'Tables (e.g. 1-12, or 1,2,3,Patio)', s_table_note: 'Message on the table menu (optional)', k_open: 'Open the kitchen screen', tb_unpaid: 'table orders not paid yet',
+      close: 'Close the day', cl_total: 'Paid at the tables', cl_sub: '{0} bills · {1} orders', cl_methods: 'By payment method', cl_cash: 'count the cash drawer', cl_bills: 'Bills', cl_none: 'No table bills paid on this day.', cl_open: '{0} tables have not paid yet', cl_items: 'Sold at the tables', cl_cancel: 'Cancelled table orders: {0} ({1})', cl_web: 'Website orders paid this day: {0} ({1})', cl_prev: 'Day before', cl_next: 'Next day', cl_today: 'Today', cl_table: 'Table', cl_time: 'Time', cl_method: 'Payment', cl_orders: 'Orders', cl_qty: 'Qty'
     },
     zh: {
       home: '概况', orders: '订单', production: '生产', products: '产品', more: '更多', customers: '顾客', reports: '报表', settings: '设定',
@@ -108,7 +109,8 @@
       tb_table: '{0} 号桌', tb_free: '空', tb_ready: '都做好了', tb_making: '厨房在做', tb_pay: '收到钱了', tb_pay_q: '{0} 号桌付了 {1}？', tb_how: '怎么付的？',
       m_card: '刷卡', m_pos: '收银机', tb_cancel: '取消这一单', tb_cancel_p: '东西会放回库存。', tb_qr: '打印桌上 QR', tb_qr_hint: '打印出来剪开，每张桌子放一张。客人扫码用手机点单，吃完到柜台付款。网址换了要重新打印。',
       tb_scan: '扫码点单', tb_scan2: '吃完到柜台付款', tb_off: '桌上扫码点单还没打开，在「设定」打开。', tb_due: '要付', tb_none: '还没有桌子，在「设定」加。', tb_test: '打开这张桌子的菜单',
-      tb_open_n: '{0} 张桌子还没付款', s_table: '桌上扫码点单', s_table_on: '客人可以扫桌上的 QR 点单', s_table_list: '桌子（例如 1-12，或 1,2,3,外面）', s_table_note: '桌上菜单的提示（可以不填）', k_open: '打开厨房画面', tb_unpaid: '桌上还没付的单'
+      tb_open_n: '{0} 张桌子还没付款', s_table: '桌上扫码点单', s_table_on: '客人可以扫桌上的 QR 点单', s_table_list: '桌子（例如 1-12，或 1,2,3,外面）', s_table_note: '桌上菜单的提示（可以不填）', k_open: '打开厨房画面', tb_unpaid: '桌上还没付的单',
+      close: '今日结算', cl_total: '桌上收到', cl_sub: '{0} 张账单 · {1} 单', cl_methods: '按付款方式', cl_cash: '点一点钱箱', cl_bills: '账单', cl_none: '这一天没有桌上结帐。', cl_open: '还有 {0} 张桌子没付款', cl_items: '桌上卖出', cl_cancel: '取消的桌上单：{0}（{1}）', cl_web: '这一天网上付款的订单：{0}（{1}）', cl_prev: '前一天', cl_next: '后一天', cl_today: '今天', cl_table: '桌号', cl_time: '时间', cl_method: '付款方式', cl_orders: '单号', cl_qty: '数量'
     }
   };
   function t(k) {
@@ -163,6 +165,7 @@
     check: '<path d="M5 12.5 10 17l9-10"/>',
     pause: '<rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/>',
     kitchen: '<path d="M4 11h16v2a7 7 0 0 1-7 7h-2a7 7 0 0 1-7-7z"/><path d="M8 7.5c0-1.5 1-1.8 1-3.5M12 7.5c0-1.5 1-1.8 1-3.5M16 7.5c0-1.5 1-1.8 1-3.5"/>',
+    cash: '<rect x="2.5" y="6" width="19" height="12" rx="2"/><circle cx="12" cy="12" r="2.6"/><path d="M6 9.5v5M18 9.5v5"/>',
     tables: '<rect x="3" y="3" width="7.5" height="7.5" rx="1.8"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.8"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.8"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.8"/>'
   };
   function icon(n) {
@@ -301,7 +304,9 @@
   var NAV = [['home', 'home'], ['orders', 'orders'], ['production', 'production'], ['products', 'products'], ['more', 'more']];
   var SIDE = [['home', 'home'], ['orders', 'orders'], ['production', 'production'], ['products', 'products'], ['customers', 'customers'], ['coupons', 'tag'], ['reports', 'reports'], ['settings', 'settings'], ['team', 'team']];
   if (!C.can || !C.can.admin) SIDE = SIDE.filter(function (x) { return x[0] !== 'team'; });
-  if (C.table) SIDE.splice(2, 0, ['kitchen', 'kitchen'], ['tables', 'tables']); // table QR ordering (2026-11-15)
+  if (C.table) SIDE.splice(2, 0, ['kitchen', 'kitchen'], ['tables', 'tables'], ['close', 'cash']); // table QR ordering (2026-11-15), close the day (2026-11-16)
+  // a demo website can show only some screens (2026-11-16, the restaurant demo's kitchen and counter)
+  if (C.nav) { NAV = C.nav.map(function (k) { return [k, { close: 'cash' }[k] || k]; }); SIDE = NAV.slice(); }
   if (!C.can || !C.can.products) { NAV = NAV.filter(function (x) { return x[0] !== 'products'; }); SIDE = SIDE.filter(function (x) { return x[0] !== 'products'; }); }
   if (!C.can || !C.can.settings) SIDE = SIDE.filter(function (x) { return x[0] !== 'settings'; });
   var el = {};
@@ -330,7 +335,7 @@
     document.title = title + ' · ' + C.site;
   }
   function setNav(k) {
-    var map = { order: 'orders', 'new-order': 'orders', product: 'products', customers: 'more', reports: 'more', settings: 'more', coupons: 'more', coupon: 'more', team: 'more', print: 'production', kitchen: 'more', tables: 'more', table: 'more', 'table-qr': 'more' };
+    var map = { order: 'orders', 'new-order': 'orders', product: 'products', customers: 'more', reports: 'more', settings: 'more', coupons: 'more', coupon: 'more', team: 'more', print: 'production', kitchen: 'more', tables: 'more', table: 'more', 'table-qr': 'more', close: 'more' };
     var navK = map[k] || k;
     [].forEach.call(el.nav.querySelectorAll('a'), function (a) { a.classList.toggle('is-on', a.getAttribute('data-k') === navK); });
     var sideK = { order: 'orders', 'new-order': 'orders', product: 'products', coupon: 'coupons', print: 'production', table: 'tables', 'table-qr': 'tables' }[k] || k;
@@ -1316,6 +1321,45 @@
     return api('tables').then(function (d) { draw(d); pollWhile(r, function () { if (!document.querySelector('.scrim')) api('tables').then(draw).catch(function () {}); }, 10000); });
   };
 
+  VIEWS.close = function (r) {
+    var date = r.p.get('date') || '';
+    // payment methods and the date in the dashboard's own language (the shop's WordPress may be in another one)
+    var payName = function (k, fb) { return k && W.en['m_' + k] != null ? t('m_' + k) : fb; };
+    var dayName = function (d) { try { return new Date(d.date + 'T12:00:00Z').toLocaleDateString(ZH ? 'zh-CN' : 'en-GB', { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' }); } catch (e) { return d.label; } };
+    var timeName = function (b) { try { return new Date(b.time * 1000).toLocaleTimeString(ZH ? 'zh-CN' : 'en-MY', { hour: 'numeric', minute: '2-digit', timeZone: TZ }).toLowerCase(); } catch (e) { return b.time_f; } };
+    setTop(t('close'), C.site, false);
+    return api('tables/day' + (date ? '?date=' + encodeURIComponent(date) : '')).then(function (d) {
+      var m = live(r); if (!m) return; m.innerHTML = '';
+      var shift = function (n) { var x = new Date(d.date + 'T12:00:00Z'); x.setUTCDate(x.getUTCDate() + n); return x.toISOString().slice(0, 10); };
+      el.act.innerHTML = '';
+      put(el.act, [h('button', { class: 'btn btn--sm btn--plain', type: 'button', onclick: function () {
+        var rows = [[t('cl_time'), t('cl_table'), t('cl_orders'), t('cl_method'), t('total')]].concat(d.bills.map(function (b) { return [timeName(b), b.table, b.numbers.join(' '), payName(b.method_key, b.method), b.total]; }));
+        var meth = [[t('cl_method'), t('cl_bills'), t('total')]].concat(d.methods.map(function (x) { return [payName(x.key, x.label), x.bills, x.total]; })).concat([[t('total'), d.bills_n, d.total]]);
+        var sold = [[t('item'), t('cl_qty')]].concat(d.items.map(function (x) { return [x.name, x.qty]; }));
+        downloadXlsx('close-' + d.date + '.xlsx', [{ name: t('cl_methods'), rows: meth }, { name: t('cl_bills'), rows: rows }, { name: t('cl_items'), rows: sold }]);
+      } }, icon('down'), t('excel')), h('button', { class: 'btn btn--sm', type: 'button', onclick: function () { window.print(); } }, icon('print'), t('print'))]);
+      put(m, h('div', { class: 'daynav noprint' },
+        h('a', { class: 'btn btn--sm btn--plain', href: '#/close?date=' + shift(-1) }, icon('back'), t('cl_prev')),
+        h('b', null, d.today ? t('cl_today') : dayName(d)),
+        d.today ? h('span') : h('a', { class: 'btn btn--sm btn--plain', href: '#/close?date=' + shift(1) }, t('cl_next'))));
+      put(m, h('div', { class: 'card closecard' }, h('p', { class: 'muted small', style: 'margin:0' }, dayName(d)),
+        h('p', { class: 'closecard__lbl' }, t('cl_total')), h('b', { class: 'closecard__sum' }, d.total_f), h('p', { class: 'muted', style: 'margin:0' }, ZH ? t('cl_sub', d.bills_n, d.orders_n) : d.bills_n + (d.bills_n === 1 ? ' bill' : ' bills') + ' · ' + d.orders_n + (d.orders_n === 1 ? ' order' : ' orders'))));
+      if (d.open.length) put(m, h('a', { class: 'card stat--warn', href: '#/tables', style: 'display:block;text-decoration:none;color:inherit' },
+        h('b', null, (d.open.length === 1 && !ZH ? 'One table has not paid yet' : t('cl_open', d.open.length)) + ' · ' + d.open_f), h('p', { class: 'small', style: 'margin:4px 0 0' }, d.open.map(function (x) { return t('tb_table', x.table) + ' ' + x.total_f; }).join(' · '))));
+      put(m, h('div', { class: 'card' }, h('div', { class: 'card__h' }, h('h2', null, t('cl_methods'))),
+        h('table', { class: 'tbl' }, h('tbody', null, d.methods.map(function (x) {
+          return h('tr', null, h('td', null, h('b', null, payName(x.key, x.label)), x.key === 'cash' ? h('div', { class: 'small muted' }, t('cl_cash')) : null), h('td', { class: 'r muted' }, x.bills + (ZH ? ' 张' : (x.bills === 1 ? ' bill' : ' bills'))), h('td', { class: 'r' }, h('b', null, x.total_f)));
+        }).concat([h('tr', { class: 'tbl__total' }, h('td', null, h('b', null, t('total'))), h('td', { class: 'r muted' }, ''), h('td', { class: 'r' }, h('b', null, d.total_f)))])))));
+      put(m, h('div', { class: 'card' }, h('div', { class: 'card__h' }, h('h2', null, t('cl_bills'))),
+        d.bills.length ? h('table', { class: 'tbl' }, h('tbody', null, d.bills.map(function (b) {
+          return h('tr', null, h('td', null, h('b', null, timeName(b)), h('div', { class: 'small muted' }, '#' + b.numbers.join(', #'))), h('td', null, t('tb_table', b.table), h('div', { class: 'small muted' }, payName(b.method_key, b.method))), h('td', { class: 'r' }, h('b', null, b.total_f)));
+        }))) : h('p', { class: 'muted', style: 'margin:0' }, t('cl_none'))));
+      if (d.items.length) put(m, h('div', { class: 'card' }, h('div', { class: 'card__h' }, h('h2', null, t('cl_items'))),
+        h('table', { class: 'tbl' }, h('tbody', null, d.items.map(function (x) { return h('tr', null, h('td', null, x.name), h('td', { class: 'r' }, h('b', null, '× ' + x.qty))); })))));
+      put(m, h('p', { class: 'small muted' }, t('cl_cancel', d.cancelled.n, d.cancelled.total_f), h('br'), t('cl_web', d.web.n, d.web.total_f)));
+    });
+  };
+
   function loadQR() {
     if (window.qrcode) return Promise.resolve();
     return new Promise(function (ok, no) { var sc = document.createElement('script'); sc.src = C.qrjs; sc.onload = ok; sc.onerror = no; document.head.appendChild(sc); });
@@ -1343,7 +1387,7 @@
     setTop(t('more'), C.site);
     var m = live(r); if (!m) return; m.innerHTML = '';
     var links = [['customers', 'customers'], ['coupons', 'tag'], ['reports', 'reports']];
-    if (C.table) links.unshift(['kitchen', 'kitchen'], ['tables', 'tables']);
+    if (C.table) links.unshift(['kitchen', 'kitchen'], ['tables', 'tables'], ['close', 'cash']);
     if (C.can.settings) links.push(['settings', 'settings']);
     if (C.can.admin) links.push(['team', 'team']);
     put(m, h('div', { class: 'card', style: 'padding:6px' }, links.map(function (x) {
@@ -1358,7 +1402,7 @@
   /* ------------------------------------------------------------------ start */
   shell();
   window.addEventListener('hashchange', render);
-  if (!location.hash) history.replaceState(null, '', '#/home');
+  if (!location.hash) history.replaceState(null, '', C.start || '#/home');
   render();
   setInterval(function () { if (!document.hidden) refreshSummary().catch(function () {}); }, 60000);
 })();

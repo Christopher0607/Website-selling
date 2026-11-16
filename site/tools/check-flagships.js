@@ -531,7 +531,7 @@ const ok = (c, m) => { console.log((c ? '  ✅ ' : '  ❌ ') + m); if (!c) fail+
   await p.click('[data-sheet-add]');
   await p.goto(S + 'product.html?p=kopi');
   await p.click('.buyrow [data-add]');
-  for (const u of ['sireh-salt/index', 'sireh-salt/menu', 'sireh-salt/order', 'sireh-salt/book', 'sireh-salt/festive', 'sireh-salt/catering', 'sireh-salt/vouchers', 'sireh-salt/owner', 'sireh-salt/table',
+  for (const u of ['sireh-salt/index', 'sireh-salt/menu', 'sireh-salt/order', 'sireh-salt/book', 'sireh-salt/festive', 'sireh-salt/catering', 'sireh-salt/vouchers', 'sireh-salt/owner', 'sireh-salt/table', 'sireh-salt/dian',
     'dulang-daun/index', 'dulang-daun/shop', 'dulang-daun/product', 'dulang-daun/hamper', 'dulang-daun/checkout', 'dulang-daun/track', 'dulang-daun/corporate', 'dulang-daun/owner',
     'maison-cendre/index', 'maison-cendre/menu', 'maison-cendre/book', 'maison-cendre/private', 'maison-cendre/festive', 'maison-cendre/order', 'maison-cendre/gift', 'maison-cendre/owner', 'butter-lantern/index', 'butter-lantern/checkout', 'butter-lantern/order', 'butter-lantern/owner']) {
     await p.goto(BASE + '/demo/' + u + '.html' + (u.endsWith('product') ? '?p=sambal-bilis' : ''));
@@ -580,6 +580,31 @@ const ok = (c, m) => { console.log((c ? '  ✅ ' : '  ❌ ') + m); if (!c) fail+
     ok(await tp.locator('.tq-state--ready').count() > 0, 'the customer sees Ready after the kitchen marks it done');
     await op.click('[data-tpaid]');
     ok(/No open tables/.test(await op.textContent('[data-owner]')), '"Paid at the counter" frees the table');
+    // the kitchen & counter screens (the real shop dashboard running on the demo's orders): kitchen → done → pay by card → close the day
+    await tp.click('.tq-sheet--sent .tq-btn:not(.tq-btn--ghost)');
+    await tp.waitForTimeout(300);
+    await tp.locator('.tq-item:has-text("Kopi Ais") .tq-add').click();
+    await tp.click('.tq-sheet--item .tq-btn');
+    await tp.click('.tq-bar__btn');
+    await tp.click('.tq-sheet--cart .tq-btn');
+    await tp.waitForSelector('.tq-sheet--sent .tq-sent [data-order]');
+    const no2 = await tp.getAttribute('.tq-sheet--sent .tq-sent [data-order]', 'data-order');
+    const kp = await tc.newPage();
+    kp.on('pageerror', (e) => errors.push(e.message));
+    await kp.goto(R + 'dian.html#/kitchen');
+    await kp.waitForSelector('.kt', { timeout: 15000 });
+    ok((await kp.textContent('.kt')).includes(no2) && /Table 5/.test(await kp.textContent('.kt')), 'kitchen screen: the new order with its table');
+    await kp.click('.kt__done');
+    await kp.goto(R + 'dian.html#/table/5');
+    await kp.waitForSelector('.actbar .btn');
+    await kp.click('.actbar .btn');
+    await kp.getByRole('button', { name: 'Card', exact: true }).click();
+    await kp.waitForFunction(() => location.hash === '#/tables');
+    await kp.goto(R + 'dian.html#/close');
+    await kp.waitForSelector('.closecard');
+    const cl = await kp.textContent('.main');
+    ok(/Card/.test(cl) && cl.includes(no2), 'close the day: the bill paid by card is listed');
+    ok((await kp.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)) <= 1, 'kitchen & counter screens fit the phone');
     await tc.close();
   }
   ok(!errors.length, 'no JavaScript errors' + (errors.length ? ': ' + errors.slice(0, 4).join(' | ') : ''));

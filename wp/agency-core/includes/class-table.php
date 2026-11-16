@@ -28,6 +28,7 @@ class AGC_Table {
 	const DONE_AT = '_agc_kitchen_at';
 	const PAID_BY = '_agc_paid_by';
 	const SECRET  = 'agc_table_secret';
+	const BILL    = '_agc_bill';
 
 	/**
 	 * Hooks.
@@ -407,6 +408,7 @@ class AGC_Table {
 		register_rest_route( self::NS, '/owner/tables', array( 'methods' => 'GET', 'callback' => array( __CLASS__, 'tables_screen' ), 'permission_callback' => $staff ) );
 		register_rest_route( self::NS, '/owner/tables/pay', array( 'methods' => 'POST', 'callback' => array( __CLASS__, 'pay' ), 'permission_callback' => $staff ) );
 		register_rest_route( self::NS, '/owner/tables/cancel/(?P<id>\d+)', array( 'methods' => 'POST', 'callback' => array( __CLASS__, 'cancel' ), 'permission_callback' => $staff ) );
+		register_rest_route( self::NS, '/owner/tables/day', array( 'methods' => 'GET', 'callback' => array( __CLASS__, 'day' ), 'permission_callback' => $staff ) );
 	}
 
 	/**
@@ -771,6 +773,7 @@ class AGC_Table {
 		$m       = isset( $methods[ $m ] ) ? $m : 'other';
 		$ids     = array_map( 'absint', (array) $req->get_param( 'ids' ) );
 		$n       = 0;
+		$bill    = substr( md5( $t . '|' . microtime( true ) . '|' . wp_rand() ), 0, 12 ); // the orders paid together are one bill (close the day).
 		foreach ( self::recent() as $o ) {
 			if ( ! self::is_open( $o ) || (string) $o->get_meta( self::META ) !== $t ) {
 				continue;
@@ -780,6 +783,7 @@ class AGC_Table {
 			}
 			$o->set_payment_method_title( $methods[ $m ] );
 			$o->update_meta_data( self::PAID_BY, $m );
+			$o->update_meta_data( self::BILL, $bill );
 			$o->set_date_paid( time() );
 			if ( 'done' !== $o->get_meta( self::KITCHEN ) ) {
 				$o->update_meta_data( self::KITCHEN, 'done' );
@@ -794,6 +798,128 @@ class AGC_Table {
 			return new WP_Error( 'agc_table_none', __( 'Nothing to pay for this table.', 'agency-core' ), array( 'status' => 404 ) );
 		}
 		return array( 'paid' => $n ) + self::tables_screen();
+	}
+
+	/**
+	 * Close the day: what the tables paid on one day, by payment method, bill by bill; tables still open; cancelled
+	 * orders; and the website orders paid that day. ?date=YYYY-MM-DD (default today, shop time).
+	 *
+	 * @param WP_REST_Request $req Request.
+	 * @return array
+	 */
+	public static function day( $req ) {
+		$tz    = wp_timezone();
+		$today = ( new DateTimeImmutable( 'now', $tz ) )->format( 'Y-m-d' );
+		$date  = sanitize_text_field( (string) $req->get_param( 'date' ) );
+		$date  = preg_match( '/^\d{4}-\d{2}-\d{2}$/', $date ) && $date <= $today ? $date : $today;
+		$start = new DateTimeImmutable( $date . ' 00:00:00', $tz );
+		$from  = $start->getTimestamp();
+		$to    = $start->modify( '+1 day' )->getTimestamp();
+		$names = array(
+			'cash'    => __( 'Cash', 'agency-core' ),
+			'duitnow' => __( 'DuitNow QR', 'agency-core' ),
+			'card'    => __( 'Card', 'agency-core' ),
+			'pos'     => __( 'Shop cashier', 'agency-core' ),
+			'other'   => __( 'Other', 'agency-core' ),
+		);
+		$methods = array();
+		$bills   = array();
+		$items   = array();
+		$open    = array();
+		$cancel  = array( 'n' => 0, 'total' => 0.0 );
+		$web     = array( 'n' => 0, 'total' => 0.0 );
+		$paid_n  = 0;
+		$total   = 0.0;
+		$orders  = wc_get_orders(
+			array(
+				'limit'        => 3000,
+				'type'         => 'shop_order',
+				'status'       => array_values( array_diff( array_map( static fn( $s ) => substr( $s, 3 ), array_keys( wc_get_order_statuses() ) ), array( 'checkout-draft' ) ) ),
+				'date_created' => ( $from - 3 * DAY_IN_SECONDS ) . '...' . $to,
+			)
+		);
+		foreach ( $orders as $o ) {
+			$paid_at = $o->get_date_paid() ? $o->get_date_paid()->getTimestamp() : 0;
+			$created = $o->get_date_created() ? $o->get_date_created()->getTimestamp() : 0;
+			if ( ! self::is_table( $o ) ) {
+				if ( $paid_at >= $from && $paid_at < $to && $o->is_paid() ) {
+					++$web['n'];
+					$web['total'] += (float) $o->get_total();
+				}
+				continue;
+			}
+			$t = (string) $o->get_meta( self::META );
+			if ( 'cancelled' === $o->get_status() ) {
+				if ( $created >= $from && $created < $to ) {
+					++$cancel['n'];
+					$cancel['total'] += (float) $o->get_total();
+				}
+				continue;
+			}
+			if ( self::is_open( $o ) ) {
+				if ( $date === $today ) {
+					$open[ $t ] = ( $open[ $t ] ?? 0.0 ) + (float) $o->get_total();
+				}
+				continue;
+			}
+			if ( $paid_at < $from || $paid_at >= $to ) {
+				continue;
+			}
+			$m = (string) $o->get_meta( self::PAID_BY );
+			$m = isset( $names[ $m ] ) ? $m : 'other';
+			$b = (string) $o->get_meta( self::BILL );
+			$b = '' !== $b ? $b : 'o' . $o->get_id();
+			if ( ! isset( $bills[ $b ] ) ) {
+				$bills[ $b ] = array( 'table' => $t, 'time' => $paid_at, 'numbers' => array(), 'method' => $m, 'total' => 0.0 );
+			}
+			$bills[ $b ]['numbers'][] = $o->get_order_number();
+			$bills[ $b ]['total']    += (float) $o->get_total();
+			$methods[ $m ]            = ( $methods[ $m ] ?? 0.0 ) + (float) $o->get_total();
+			$total                   += (float) $o->get_total();
+			++$paid_n;
+			foreach ( $o->get_items() as $it ) {
+				$items[ $it->get_name() ] = ( $items[ $it->get_name() ] ?? 0 ) + (int) $it->get_quantity();
+			}
+		}
+		usort( $bills, static fn( $a, $b ) => $a['time'] <=> $b['time'] );
+		arsort( $items );
+		$by = array();
+		foreach ( $names as $k => $label ) {
+			$n = count( array_filter( $bills, static fn( $x ) => $x['method'] === $k ) );
+			if ( $n || 'cash' === $k ) {
+				$by[] = array( 'key' => $k, 'label' => $label, 'bills' => $n, 'total' => $methods[ $k ] ?? 0.0, 'total_f' => self::money( $methods[ $k ] ?? 0.0 ) );
+			}
+		}
+		ksort( $open, SORT_NATURAL );
+		nocache_headers();
+		return array(
+			'date'      => $date,
+			'label'     => wp_date( 'l, j M Y', $from ),
+			'today'     => $date === $today,
+			'total'     => $total,
+			'total_f'   => self::money( $total ),
+			'bills_n'   => count( $bills ),
+			'orders_n'  => $paid_n,
+			'methods'   => $by,
+			'bills'     => array_map(
+				static fn( $x ) => array(
+					'table'   => $x['table'],
+					'time'    => $x['time'],
+					'time_f'  => wp_date( 'g:i a', $x['time'] ),
+					'numbers' => $x['numbers'],
+					'method'  => $names[ $x['method'] ],
+					'method_key' => $x['method'],
+					'total'   => $x['total'],
+					'total_f' => self::money( $x['total'] ),
+				),
+				$bills
+			),
+			'items'     => array_slice( array_map( static fn( $k, $v ) => array( 'name' => $k, 'qty' => $v ), array_keys( $items ), $items ), 0, 15 ),
+			'open'      => array_map( static fn( $k, $v ) => array( 'table' => (string) $k, 'total_f' => self::money( $v ) ), array_keys( $open ), $open ),
+			'open_f'    => self::money( array_sum( $open ) ),
+			'cancelled' => array( 'n' => $cancel['n'], 'total_f' => self::money( $cancel['total'] ) ),
+			'web'       => array( 'n' => $web['n'], 'total_f' => self::money( $web['total'] ) ),
+		);
 	}
 
 	/**

@@ -690,11 +690,12 @@
       }
       if ((x = e.target.closest('[data-tdone]'))) {
         var tl = tables(), tid = +x.getAttribute('data-tdone');
-        tl.forEach(function (y) { if (y.id === tid) y.kitchen = y.kitchen === 'done' ? 'new' : 'done'; }); save('tables', tl); paint(); return;
+        tl.forEach(function (y) { if (y.id === tid) { y.kitchen = y.kitchen === 'done' ? 'new' : 'done'; y.doneAt = y.kitchen === 'done' ? Date.now() : 0; } }); save('tables', tl); paint(); return;
       }
       if ((x = e.target.closest('[data-tpaid]'))) {
         var tp = tables(), tname = x.getAttribute('data-tpaid');
-        tp.forEach(function (y) { if (y.table === tname && y.st === 'open') { y.st = 'paid'; y.kitchen = 'done'; } }); save('tables', tp); paint(); toast('Table ' + tname + ' is paid and free again.'); return;
+        var bill = Math.random().toString(36).slice(2, 10);
+        tp.forEach(function (y) { if (y.table === tname && y.st === 'open') { y.st = 'paid'; y.kitchen = 'done'; y.paidAt = Date.now(); y.paidBy = 'cash'; y.bill = bill; } }); save('tables', tp); paint(); toast('Table ' + tname + ' is paid and free again.'); return;
       }
       if ((x = e.target.closest('[data-tcancel]'))) {
         var tc = tables(), cid = +x.getAttribute('data-tcancel');
@@ -736,7 +737,7 @@
     });
     var st = status();
     window.AGC_TABLE = {
-      table: t, key: 'demo', rest: REST, site: BRAND, shop: 'index.html', zh: false, cur: 'RM', demo: true, ownerLink: 'owner.html#tables',
+      table: t, key: 'demo', rest: REST, site: BRAND, shop: 'index.html', zh: false, cur: 'RM', demo: true, ownerLink: 'dian.html#/kitchen',
       menu: { cats: CATS.filter(function (c) { return items.some(function (it) { return it.cat === c[0]; }); }), items: items },
       note: 'Drinks come first; mains in about 15 minutes.',
       stopped: st.cls === 'closed' && o.status === 'closed' ? 'Ordering at the table is paused today. Please order at the counter.' : '',

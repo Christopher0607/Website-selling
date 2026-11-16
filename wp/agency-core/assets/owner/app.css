@@ -38,7 +38,7 @@ h1, h2, h3 { margin: 0; line-height: 1.25; }
 .top__title { font-size: 1.35rem; font-weight: 800; letter-spacing: -.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .top__act { flex: none; }
 .main { padding: 8px 16px calc(var(--nav-h) + 28px + env(safe-area-inset-bottom)); max-width: 1120px; }
-.nav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; background: var(--card); border-top: 1px solid var(--line); display: grid; grid-template-columns: repeat(5, 1fr); padding-bottom: env(safe-area-inset-bottom); }
+.nav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; background: var(--card); border-top: 1px solid var(--line); display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); padding-bottom: env(safe-area-inset-bottom); }
 .nav a { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; height: var(--nav-h); text-decoration: none; color: var(--faint); font-size: .72rem; font-weight: 700; }
 .nav a svg { width: 24px; height: 24px; }
 .nav a.is-on { color: var(--accent); }
@@ -324,3 +324,12 @@ h1, h2, h3 { margin: 0; line-height: 1.25; }
   .qrcard { border: 1px dashed #999; }
   body:has(.qrsheet) .top { display: none; }
 }
+
+/* 2026-11-16 今日结算 close the day */
+.daynav { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 0 0 12px; }
+.daynav b { font-size: 1rem; text-align: center; }
+.closecard { text-align: center; }
+.closecard__lbl { margin: 8px 0 0; font-weight: 800; color: var(--muted); font-size: .9rem; }
+.closecard__sum { display: block; font-size: clamp(2rem, 9vw, 2.8rem); line-height: 1.1; font-variant-numeric: tabular-nums; margin: 2px 0 4px; }
+.tbl__total td { border-top: 2px solid var(--line); }
+@media print { .daynav { display: none; } }
