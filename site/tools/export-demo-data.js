@@ -48,6 +48,19 @@ const SPEC = {
       coupons: [{ from: 'PROMO', code: 'code', percent: 'pct' }],
       ref: 'MC'
     }
+  },
+  'dulang-daun': {
+    page: 'shop.html',
+    spec: {
+      lists: [{ var: 'P', cats: 'CATS', fields: { desc: 'short', long: 'd' } }],
+      ship: { states_east: 'EAST', rates: 'SHIP', deal: 'multi' },
+      hamper: { product: 'custom-hamper', name: 'Your own hamper', boxes: 'BOXES', flag: 'hamper', img: 'hamper-thanks' },
+      seed_order: 'SEED_ORDER',
+      coupons: [{ from: 'VOUCHER', code: 'code', percent: 'pct', min: 'min' }],
+      redirects: {},
+      shop: '/shop.html',
+      ref: 'DD'
+    }
   }
 };
 

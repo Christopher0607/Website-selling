@@ -114,7 +114,8 @@ $term = static function ( $slug, $name, $parent = 0 ) {
 };
 $featured = array_map( 'strval', (array) ( $data[ $spec['featured'] ?? '' ] ?? array() ) );
 $keep     = array();
-$save     = static function ( $it, $cat_ids, $stock_field ) use ( $img, $featured, &$keep ) {
+$save     = static function ( $it, $cat_ids, $stock_field, $fl = array() ) use ( $img, $featured, &$keep ) {
+	$fl  = $fl + array( 'desc' => 'd', 'long' => '' );
 	$sku = (string) ( $it['id'] ?? '' );
 	if ( '' === $sku ) {
 		return;
@@ -126,7 +127,10 @@ $save     = static function ( $it, $cat_ids, $stock_field ) use ( $img, $feature
 	$p->set_status( 'publish' );
 	$p->set_catalog_visibility( 'visible' );
 	$p->set_regular_price( isset( $it['p'] ) && is_numeric( $it['p'] ) ? (string) $it['p'] : '' );
-	$p->set_short_description( (string) ( $it['d'] ?? ( isset( $it['has'] ) ? implode( ', ', (array) $it['has'] ) : '' ) ) );
+	$p->set_short_description( (string) ( $it[ $fl['desc'] ] ?? ( isset( $it['has'] ) ? implode( ', ', (array) $it['has'] ) : '' ) ) );
+	if ( $fl['long'] && isset( $it[ $fl['long'] ] ) ) {
+		$p->set_description( (string) $it[ $fl['long'] ] );
+	}
 	$p->set_category_ids( $cat_ids );
 	$p->set_featured( in_array( $sku, $featured, true ) || in_array( 'pop', (array) ( $it['tags'] ?? array() ), true ) );
 	if ( $stock_field && isset( $it[ $stock_field ] ) && is_numeric( $it[ $stock_field ] ) ) {
@@ -135,9 +139,10 @@ $save     = static function ( $it, $cat_ids, $stock_field ) use ( $img, $feature
 		$p->set_backorders( 'no' );
 	} else {
 		$p->set_manage_stock( false );
-		$p->set_stock_status( 'instock' );
+		$p->set_stock_status( empty( $it['out'] ) ? 'instock' : 'outofstock' );
 	}
-	$a = false === ( $it['img'] ?? null ) ? 0 : $img( ! empty( $it['img'] ) ? $it['img'] : $sku );
+	$pic = $it['img'] ?? null;
+	$a   = false === $pic ? 0 : $img( is_array( $pic ) ? ( $pic[0] ?? $sku ) : ( ! empty( $pic ) ? $pic : $sku ) );
 	if ( $a ) {
 		$p->set_image_id( $a );
 		$p->update_meta_data( AGC_Site::SEEDIMG, $a );
@@ -167,7 +172,7 @@ foreach ( (array) ( $spec['lists'] ?? array() ) as $l ) {
 		}
 		foreach ( $list as $it ) {
 			$cat = (string) ( $it['cat'] ?? '' );
-			$save( $it, $cat ? array( $term( $cat, $names[ $cat ] ?? ucfirst( $cat ) ) ) : array(), (string) ( $l['stock'] ?? '' ) );
+			$save( $it, $cat ? array( $term( $cat, $names[ $cat ] ?? ucfirst( $cat ) ) ) : array(), (string) ( $l['stock'] ?? '' ), (array) ( $l['fields'] ?? array() ) );
 			++$count;
 		}
 	}
@@ -186,6 +191,24 @@ if ( ! empty( $spec['voucher']['product'] ) ) {
 	$p->save();
 	$keep[] = $p->get_id();
 }
+// The build-your-own gift box (priced on the website from the box and what goes in).
+if ( ! empty( $spec['hamper']['product'] ) ) {
+	$sku = (string) $spec['hamper']['product'];
+	$pid = wc_get_product_id_by_sku( $sku );
+	$p   = $pid ? wc_get_product( $pid ) : new WC_Product_Simple();
+	$p->set_sku( $sku );
+	$p->set_name( (string) ( $spec['hamper']['name'] ?? 'Your own hamper' ) );
+	$p->set_status( 'publish' );
+	$p->set_catalog_visibility( 'hidden' );
+	$p->set_regular_price( '' );
+	$p->set_short_description( 'Built on the website: a box, the items chosen, a ribbon and a card. The price is the box plus the items.' );
+	$a = $img( (string) ( $spec['hamper']['img'] ?? '' ) );
+	if ( $a ) {
+		$p->set_image_id( $a );
+	}
+	$p->save();
+	$keep[] = $p->get_id();
+}
 // Products copied from the master site that the demo doesn't have.
 $gone = 0;
 foreach ( wc_get_products( array( 'limit' => -1, 'status' => array( 'publish', 'draft', 'private', 'pending' ), 'return' => 'ids' ) ) as $pid ) {
@@ -198,6 +221,36 @@ foreach ( wc_get_products( array( 'limit' => -1, 'status' => array( 'publish', '
 	}
 }
 WP_CLI::log( "Products: $count from the design" . ( ! empty( $spec['voucher']['product'] ) ? ' + gift voucher' : '' ) . ( $gone ? ", removed $gone from master" : '' ) );
+
+// ------------------------------------------------------------------ the sample order the website mentions (tracking)
+if ( ! empty( $spec['seed_order'] ) && ! empty( $data[ $spec['seed_order'] ] ) ) {
+	$so  = (array) $data[ $spec['seed_order'] ];
+	$ref = strtoupper( (string) ( $so['no'] ?? '' ) );
+	if ( $ref && ! wc_get_orders( array( 'limit' => 1, 'meta_key' => AGC_Site::REF, 'meta_value' => $ref ) ) ) { // phpcs:ignore WordPress.DB.SlowDBQuery
+		$o = wc_create_order( array( 'status' => 'pending', 'created_via' => 'website' ) );
+		foreach ( (array) ( $so['items'] ?? array() ) as $l ) {
+			$pid = 0;
+			foreach ( wc_get_products( array( 'limit' => 1, 'name' => (string) ( $l['n'] ?? '' ) ) ) as $pp ) {
+				$pid = $pp->get_id();
+			}
+			if ( $pid ) {
+				$o->add_product( wc_get_product( $pid ), (int) ( $l['qty'] ?? 1 ), array( 'subtotal' => (float) ( $l['unit'] ?? 0 ) * (int) ( $l['qty'] ?? 1 ), 'total' => (float) ( $l['unit'] ?? 0 ) * (int) ( $l['qty'] ?? 1 ) ) );
+			}
+		}
+		$o->set_billing_first_name( (string) ( $so['name'] ?? 'Demo customer' ) );
+		$o->set_billing_phone( (string) ( $so['phone'] ?? '' ) );
+		$o->set_billing_country( 'MY' );
+		$o->set_shipping_state( (string) ( $so['state'] ?? '' ) );
+		$o->set_date_created( time() - 2 * DAY_IN_SECONDS );
+		$o->update_meta_data( AGC_Site::REF, $ref );
+		$o->update_meta_data( '_agc_tracking', (string) ( $so['trk'] ?? '' ) );
+		$o->update_meta_data( AGC_Demo_Access::DONE, time() ); // a made-up customer: nothing to hide
+		$o->calculate_totals( false );
+		$o->save();
+		$o->update_status( 'completed', 'Sample order for the tracking page.' );
+		WP_CLI::log( "Sample order for tracking: $ref" );
+	}
+}
 
 // ------------------------------------------------------------------ promo codes
 foreach ( (array) ( $spec['coupons'] ?? array() ) as $c ) {
@@ -217,7 +270,7 @@ foreach ( (array) ( $spec['coupons'] ?? array() ) as $c ) {
 		$cp->set_amount( (float) ( $src[ $c['amount'] ?? 'amt' ] ?? 0 ) );
 	}
 	if ( isset( $c['min'] ) ) {
-		$cp->set_minimum_amount( (float) ( $src[ $c['min'] ] ?? $c['min'] ) );
+		$cp->set_minimum_amount( (float) ( is_string( $c['min'] ) ? ( $src[ $c['min'] ] ?? 0 ) : $c['min'] ) );
 	}
 	$cp->set_description( 'Demo promo code (shown on the website).' );
 	$cp->save();

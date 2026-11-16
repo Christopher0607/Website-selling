@@ -1,0 +1,579 @@
+{
+ "slug": "dulang-daun",
+ "spec": {
+  "lists": [
+   {
+    "var": "P",
+    "cats": "CATS",
+    "fields": {
+     "desc": "short",
+     "long": "d"
+    }
+   }
+  ],
+  "ship": {
+   "states_east": "EAST",
+   "rates": "SHIP",
+   "deal": "multi"
+  },
+  "hamper": {
+   "product": "custom-hamper",
+   "name": "Your own hamper",
+   "boxes": "BOXES",
+   "flag": "hamper",
+   "img": "hamper-thanks"
+  },
+  "seed_order": "SEED_ORDER",
+  "coupons": [
+   {
+    "from": "VOUCHER",
+    "code": "code",
+    "percent": "pct",
+    "min": "min"
+   }
+  ],
+  "redirects": {},
+  "shop": "/shop.html",
+  "ref": "DD"
+ },
+ "data": {
+  "P": [
+   {
+    "id": "sambal-bilis",
+    "cat": "sambal",
+    "n": "Sambal Ikan Bilis",
+    "p": 16,
+    "short": "Our bestseller: slow-fried chilli with crispy anchovies.",
+    "badge": "Bestseller",
+    "img": [
+     "sambal-bilis",
+     "sambal-udang"
+    ],
+    "v": [
+     {
+      "n": "Size",
+      "o": [
+       [
+        "200 g",
+        0
+       ],
+       [
+        "380 g",
+        12
+       ]
+      ]
+     },
+     {
+      "n": "Heat",
+      "o": [
+       [
+        "Original",
+        0
+       ],
+       [
+        "Extra pedas",
+        0
+       ]
+      ]
+     }
+    ],
+    "d": "Fried for three hours in small batches until the oil turns deep red. The ikan bilis go in at the end, so they stay crunchy. Great with rice, eggs and bread.",
+    "keep": "Keeps 3 months unopened. Refrigerate after opening and finish within 4 weeks.",
+    "ing": "Chilli, shallots, garlic, anchovies, palm oil, gula melaka, tamarind, salt.",
+    "ship": "all",
+    "hamper": true,
+    "pair": "kerepek"
+   },
+   {
+    "id": "sambal-udang",
+    "cat": "sambal",
+    "n": "Sambal Udang Kering",
+    "p": 19,
+    "short": "Dried shrimp sambal: sweet, savoury and smoky.",
+    "img": [
+     "sambal-udang",
+     "sambal-bilis"
+    ],
+    "v": [
+     {
+      "n": "Size",
+      "o": [
+       [
+        "200 g",
+        0
+       ],
+       [
+        "380 g",
+        15
+       ]
+      ]
+     }
+    ],
+    "d": "Pounded dried shrimp fried slowly with chilli and lemongrass. One spoon turns plain rice or a bowl of noodles into a meal.",
+    "keep": "Keeps 3 months unopened; refrigerate after opening.",
+    "ing": "Dried shrimp, chilli, shallots, lemongrass, palm oil, sugar, salt.",
+    "ship": "all",
+    "hamper": true,
+    "pair": "kaya"
+   },
+   {
+    "id": "kaya",
+    "cat": "sambal",
+    "n": "Pandan Kaya",
+    "p": 14,
+    "short": "Silky coconut jam with fresh pandan. West Malaysia only.",
+    "badge": "Fresh",
+    "img": [
+     "kaya"
+    ],
+    "v": [
+     {
+      "n": "Pack",
+      "o": [
+       [
+        "1 jar (250 g)",
+        0
+       ],
+       [
+        "2 jars",
+        12
+       ]
+      ]
+     }
+    ],
+    "d": "Cooked slowly over a double boiler with eggs, coconut milk and pandan juice. No preservatives, so it ships to West Malaysia only.",
+    "keep": "Keeps 3 days without a fridge, 3 weeks in the fridge.",
+    "ing": "Coconut milk, eggs, sugar, pandan leaves.",
+    "ship": "west",
+    "hamper": false,
+    "pair": "kopi"
+   },
+   {
+    "id": "kuih-bangkit",
+    "cat": "cookies",
+    "n": "Kuih Bangkit",
+    "p": 32,
+    "short": "Melt-in-the-mouth coconut cookies, 300 g jar.",
+    "badge": "CNY",
+    "img": [
+     "kuih-bangkit",
+     "cookie-jars"
+    ],
+    "v": [],
+    "d": "Tapioca and coconut cookies that melt the moment they touch your tongue, pressed by hand in a wooden mould.",
+    "keep": "Keeps 6 weeks in the airtight jar.",
+    "ing": "Tapioca flour, coconut milk, sugar, egg yolk, pandan.",
+    "ship": "all",
+    "hamper": true,
+    "pair": "pineapple-tarts"
+   },
+   {
+    "id": "pineapple-tarts",
+    "cat": "cookies",
+    "n": "Pineapple Tarts",
+    "p": 36,
+    "short": "Buttery pastry, slow-cooked pineapple jam.",
+    "badge": "CNY",
+    "img": [
+     "pineapple-tarts",
+     "cookie-jars"
+    ],
+    "v": [
+     {
+      "n": "Box",
+      "o": [
+       [
+        "20 pcs",
+        0
+       ],
+       [
+        "40 pcs",
+        32
+       ]
+      ],
+      "out": [
+       "40 pcs"
+      ]
+     }
+    ],
+    "d": "Pineapple jam cooked down for five hours and wrapped in a short butter pastry. Baked fresh every week until Chinese New Year.",
+    "keep": "Keeps 3 weeks in the box.",
+    "ing": "Butter, flour, pineapple, sugar, egg, salt.",
+    "ship": "all",
+    "hamper": true,
+    "pair": "kuih-bangkit"
+   },
+   {
+    "id": "butter-cookies",
+    "cat": "cookies",
+    "n": "Butter Cookies",
+    "p": 28,
+    "short": "Classic piped butter cookies, 350 g jar.",
+    "img": [
+     "butter-cookies"
+    ],
+    "v": [],
+    "d": "Piped by hand and baked until just golden at the edges.",
+    "keep": "Keeps 6 weeks in the jar.",
+    "ing": "Butter, flour, sugar, egg, vanilla.",
+    "ship": "all",
+    "hamper": true,
+    "pair": "kopi"
+   },
+   {
+    "id": "pandan-cookies",
+    "cat": "cookies",
+    "n": "Pandan Star Cookies",
+    "p": 26,
+    "short": "Shortbread with fresh pandan, 300 g jar.",
+    "badge": "New",
+    "img": [
+     "pandan-cookies"
+    ],
+    "v": [],
+    "d": "Crisp shortbread flavoured with fresh pandan juice, never essence.",
+    "keep": "Keeps 6 weeks in the jar.",
+    "ing": "Butter, flour, sugar, pandan.",
+    "ship": "all",
+    "hamper": true,
+    "pair": "teh"
+   },
+   {
+    "id": "kerepek",
+    "cat": "snacks",
+    "n": "Kerepek Pisang",
+    "p": 9.9,
+    "short": "Banana chips, sliced thin and fried fresh. Any 3 for RM27.",
+    "img": [
+     "kerepek",
+     "kerepek-2"
+    ],
+    "v": [
+     {
+      "n": "Flavour",
+      "o": [
+       [
+        "Sweet",
+        0
+       ],
+       [
+        "Spicy",
+        0
+       ],
+       [
+        "Salted",
+        0
+       ]
+      ]
+     }
+    ],
+    "d": "Thin-sliced green bananas, fried in small batches and tossed while hot. Mix the flavours: any 3 bags for RM27.",
+    "keep": "Best within 6 weeks; reseal the bag.",
+    "ing": "Banana, palm oil, and sugar, chilli or salt.",
+    "ship": "all",
+    "hamper": true,
+    "multi": {
+     "n": 3,
+     "price": 27
+    },
+    "pair": "sambal-bilis"
+   },
+   {
+    "id": "kopi",
+    "cat": "drinks",
+    "n": "Kopi Pantai Timur",
+    "p": 22,
+    "short": "Local roast with butter and sugar, 250 g.",
+    "img": [
+     "kopi"
+    ],
+    "v": [
+     {
+      "n": "Grind",
+      "o": [
+       [
+        "Beans",
+        0
+       ],
+       [
+        "Medium (filter)",
+        0
+       ],
+       [
+        "Fine (sock / kopitiam)",
+        0
+       ]
+      ]
+     }
+    ],
+    "d": "A traditional local roast with a dark, caramel finish. Brew it strong in a cloth sock and add condensed milk.",
+    "keep": "Best within 8 weeks of roasting.",
+    "ing": "Coffee beans roasted with butter, sugar and a pinch of salt.",
+    "ship": "all",
+    "hamper": true,
+    "pair": "butter-cookies"
+   },
+   {
+    "id": "teh",
+    "cat": "drinks",
+    "n": "Teh Tarik Premix",
+    "p": 18,
+    "short": "15 sachets of strong pulled milk tea.",
+    "img": [
+     "teh"
+    ],
+    "v": [],
+    "out": true,
+    "d": "Strong black tea with milk and just enough sugar. Pour, stir, and pull it between two cups for the foam.",
+    "keep": "Keeps 12 months.",
+    "ing": "Black tea, milk powder, sugar.",
+    "ship": "all",
+    "hamper": true,
+    "pair": "pandan-cookies"
+   },
+   {
+    "id": "hamper-ong",
+    "cat": "hampers",
+    "n": "Ong Ong CNY Hamper",
+    "p": 168,
+    "short": "Pineapple tarts, kuih bangkit, sambal and kopi in a red gift box.",
+    "badge": "CNY",
+    "img": [
+     "hamper-ong",
+     "cookie-jars"
+    ],
+    "v": [],
+    "has": [
+     "Pineapple Tarts (20 pcs)",
+     "Kuih Bangkit (300 g)",
+     "Sambal Ikan Bilis (200 g)",
+     "Kopi Pantai Timur (250 g)",
+     "Gift card with your message"
+    ],
+    "d": "Our Chinese New Year bestseller, packed in a red box with a gold ribbon.",
+    "keep": "Everything keeps at least 3 weeks.",
+    "ship": "all"
+   },
+   {
+    "id": "hamper-thanks",
+    "cat": "hampers",
+    "n": "Terima Kasih Box",
+    "p": 78,
+    "short": "A thank-you box for any time of the year.",
+    "img": [
+     "hamper-thanks",
+     "kerepek"
+    ],
+    "v": [],
+    "has": [
+     "Sambal Ikan Bilis (200 g)",
+     "Butter Cookies (350 g)",
+     "Kerepek Pisang ×2",
+     "Gift card with your message"
+    ],
+    "d": "For clients, teachers, neighbours and the friend who drove you to the airport.",
+    "keep": "Everything keeps at least 4 weeks.",
+    "ship": "all"
+   },
+   {
+    "id": "hamper-raya",
+    "cat": "hampers",
+    "n": "Raya Open House Box",
+    "p": 148,
+    "short": "Kuih raya, sambal and kerepek for the open house.",
+    "badge": "Raya",
+    "img": [
+     "hamper-raya",
+     "kuih-box"
+    ],
+    "v": [],
+    "has": [
+     "Pandan Star Cookies (300 g)",
+     "Butter Cookies (350 g)",
+     "Sambal Udang Kering (200 g)",
+     "Kerepek Pisang ×2",
+     "Gift card with your message"
+    ],
+    "d": "Packed in a green and gold box, ready to bring or to send.",
+    "keep": "Everything keeps at least 4 weeks.",
+    "ship": "all"
+   },
+   {
+    "id": "hamper-basket",
+    "cat": "hampers",
+    "n": "Family Basket",
+    "p": 238,
+    "short": "A rattan basket with a bit of everything.",
+    "img": [
+     "hamper-basket",
+     "hamper-ong"
+    ],
+    "v": [],
+    "has": [
+     "Sambal Ikan Bilis (380 g)",
+     "Sambal Udang Kering (200 g)",
+     "Pineapple Tarts (20 pcs)",
+     "Butter Cookies (350 g)",
+     "Kopi Pantai Timur (250 g)",
+     "Kerepek Pisang ×3",
+     "Reusable rattan basket"
+    ],
+    "d": "The big one, for families and office pantries.",
+    "keep": "Everything keeps at least 3 weeks.",
+    "ship": "all"
+   }
+  ],
+  "CATS": [
+   [
+    "sambal",
+    "Sambal & spreads"
+   ],
+   [
+    "cookies",
+    "Cookies & kuih"
+   ],
+   [
+    "snacks",
+    "Snacks"
+   ],
+   [
+    "drinks",
+    "Kopi & teh"
+   ],
+   [
+    "hampers",
+    "Hampers & gift boxes"
+   ]
+  ],
+  "BOXES": [
+   {
+    "id": "S",
+    "n": "Small",
+    "slots": 4,
+    "p": 18
+   },
+   {
+    "id": "M",
+    "n": "Medium",
+    "slots": 6,
+    "p": 25
+   },
+   {
+    "id": "L",
+    "n": "Large",
+    "slots": 9,
+    "p": 35
+   }
+  ],
+  "RIBBONS": [
+   [
+    "Red",
+    "#b3261e"
+   ],
+   [
+    "Gold",
+    "#c9a24a"
+   ],
+   [
+    "Green",
+    "#1c5653"
+   ],
+   [
+    "Cream",
+    "#efe4cf"
+   ]
+  ],
+  "STATES": [
+   "Johor",
+   "Kedah",
+   "Kelantan",
+   "Melaka",
+   "Negeri Sembilan",
+   "Pahang",
+   "Perak",
+   "Perlis",
+   "Pulau Pinang",
+   "Selangor",
+   "Terengganu",
+   "W.P. Kuala Lumpur",
+   "W.P. Putrajaya",
+   "Sabah",
+   "Sarawak",
+   "W.P. Labuan"
+  ],
+  "EAST": [
+   "Sabah",
+   "Sarawak",
+   "W.P. Labuan"
+  ],
+  "SHIP": {
+   "west": {
+    "std": 8,
+    "express": 18,
+    "free": 150,
+    "days": "2–3 working days"
+   },
+   "east": {
+    "std": 15,
+    "free": 250,
+    "days": "4–6 working days"
+   }
+  },
+  "CUTOFF": [
+   {
+    "n": "Christmas",
+    "west": "2026-12-18",
+    "east": "2026-12-14"
+   },
+   {
+    "n": "Chinese New Year",
+    "west": "2027-01-28",
+    "east": "2027-01-22"
+   },
+   {
+    "n": "Hari Raya",
+    "west": "2027-03-03",
+    "east": "2027-02-27"
+   }
+  ],
+  "VOUCHER": {
+   "code": "WELCOME10",
+   "pct": 10,
+   "min": 60
+  },
+  "TIERS": [
+   [
+    20,
+    5
+   ],
+   [
+    50,
+    10
+   ],
+   [
+    100,
+    15
+   ]
+  ],
+  "SEED_ORDER": {
+   "no": "DD-2041",
+   "phone": "0123456789",
+   "name": "Demo customer",
+   "date": "",
+   "st": "Shipped",
+   "trk": "DEMO-TRK-77314",
+   "region": "west",
+   "state": "Selangor",
+   "items": [
+    {
+     "n": "Terima Kasih Box",
+     "qty": 2,
+     "unit": 78,
+     "opts": ""
+    }
+   ],
+   "total": 156
+  },
+  "BRAND": "Dulang & Daun"
+ }
+}
