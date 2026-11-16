@@ -37,13 +37,13 @@ async function customerOrder(browser, link, note) {
   const simple = p.locator('.tq-item:not(.is-sold) .tq-add').first();
   await simple.click();
   await p.waitForTimeout(250);
-  if (await p.locator('.tq-sheet .tq-btn').count()) await p.locator('.tq-sheet .tq-btn').click(); // the first item had options
-  await p.waitForSelector('.tq-bar__btn');
+  if (await p.locator('.tq-sheet--item .tq-btn').count()) await p.locator('.tq-sheet--item .tq-btn').click(); // the first item had options
+  await p.waitForSelector('.tq-bar.is-on .tq-bar__btn');
   await p.click('.tq-bar__btn');
-  if (note) await p.fill('.tq-sheet textarea', note);
-  await p.click('.tq-sheet .tq-btn');
-  await p.waitForSelector('.tq-sent', { timeout: 15000 });
-  const number = (await p.textContent('.tq-sent span')).replace(/\D/g, '');
+  if (note) await p.fill('.tq-sheet--cart textarea', note);
+  await p.click('.tq-sheet--cart .tq-btn');
+  await p.waitForSelector('.tq-sent [data-order]', { timeout: 15000 });
+  const number = await p.getAttribute('.tq-sent [data-order]', 'data-order');
   return { c, p, number, errs };
 }
 
@@ -62,14 +62,14 @@ async function customerOrder(browser, link, note) {
     const p = await c.newPage();
     const r = await p.goto(T.link.replace(/k=[0-9a-f]+/, 'k=0000000000'));
     await p.waitForSelector('.tq-bad');
-    ok(r.status() === 404 && /not valid|不能用/.test(await p.textContent('.tq-bad')), 'a QR with a wrong key does not open the menu');
+    ok(r.status() === 404 && /not valid|不能用|tidak sah/.test(await p.textContent('.tq-bad')), 'a QR with a wrong key does not open the menu');
     await c.close();
   }
 
   // the customer's page on a phone
   const first = await customerOrder(browser, T.link, 'Test order: please ignore');
   const cp = first.p;
-  ok(/Table|号桌/.test(await cp.textContent('.tq-pill')) && (await cp.textContent('.tq-pill')).includes(T.table), 'the menu shows the table number');
+  ok(/Table|桌号|Meja/.test(await cp.textContent('.tq-ticket')) && (await cp.textContent('.tq-ticket')).includes(T.table), 'the menu shows the table number');
   ok(!!first.number && first.errs.length === 0, `order sent to the kitchen (#${first.number}), no script errors`);
   ok((await overflow(cp)) <= 1, 'customer page fits the phone screen');
 
@@ -95,15 +95,18 @@ async function customerOrder(browser, link, note) {
   ok(await cp.locator('.tq-state--ready').count() > 0, 'customer sees "Ready" on their phone');
 
   // a second round at the same table
-  await cp.click('.tq-sheet .tq-btn'); // Order more
+  await cp.click('.tq-sheet--sent .tq-btn:not(.tq-btn--ghost)'); // Order more
+  await cp.waitForTimeout(300);
   await cp.locator('.tq-item:not(.is-sold) .tq-add').first().click();
   await cp.waitForTimeout(250);
-  if (await cp.locator('.tq-sheet .tq-btn').count()) await cp.locator('.tq-sheet .tq-btn').click();
+  if (await cp.locator('.tq-sheet--item .tq-btn').count()) await cp.locator('.tq-sheet--item .tq-btn').click();
   await cp.click('.tq-bar__btn');
-  await cp.click('.tq-sheet .tq-btn');
-  await cp.waitForSelector('.tq-sent');
-  const second = (await cp.textContent('.tq-sent span')).replace(/\D/g, '');
-  ok(await cp.locator('.tq-orders > li').count() >= 2, 'customer sees both orders of the table and what is left to pay');
+  await cp.click('.tq-sheet--cart .tq-btn');
+  await cp.waitForSelector('.tq-sheet--sent .tq-sent [data-order]');
+  const second = await cp.getAttribute('.tq-sheet--sent .tq-sent [data-order]', 'data-order');
+  await cp.click('.tq-sheet--sent .tq-btn--ghost'); // My bill
+  await cp.waitForSelector('.tq-sheet--bill');
+  ok(await cp.locator('.tq-orders > li').count() >= 2 && /\d/.test(await cp.textContent('.tq-billcard__due')), 'customer sees both orders of the table and what is left to pay');
 
   // a third order from another phone, which the staff cancels
   const third = await customerOrder(browser, T.link, '');
@@ -138,7 +141,8 @@ async function customerOrder(browser, link, note) {
   await cp.waitForSelector('.tq-state--paid', { timeout: 25000 }).catch(() => {});
   ok(await cp.locator('.tq-state--paid').count() >= 2, 'customer sees "Paid"');
   await third.p.click('.tq-sheet .tq-x');
-  await third.p.click('.tq-mine');
+  await third.p.waitForTimeout(300);
+  await third.p.click('.tq-billbtn');
   await third.p.waitForSelector('.tq-state--cancelled', { timeout: 25000 }).catch(() => {});
   ok(await third.p.locator('.tq-state--cancelled').count() === 1, 'the other phone sees its order cancelled');
 
@@ -150,7 +154,7 @@ async function customerOrder(browser, link, note) {
     const p = await c.newPage();
     await p.goto(T.link);
     await p.waitForSelector('.tq-item');
-    ok(await p.locator('.tq-stop').count() === 1 && await p.locator('.tq-add').count() === 0, 'while orders are paused the table menu says so and has no Add buttons');
+    ok(await p.locator('.tq-callout--stop').count() === 1 && await p.locator('.tq-add, .tq-round').count() === 0, 'while orders are paused the table menu says so and has no Add buttons');
     const r = await p.evaluate(async (link) => {
       const u = new URL(link);
       const res = await fetch(window.AGC_TABLE.rest.replace(/\/?$/, '/') + 'order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ t: u.searchParams.get('t'), k: u.searchParams.get('k'), items: [{ id: window.AGC_TABLE.menu.items[0].id, qty: 1 }] }) });
