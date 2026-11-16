@@ -137,7 +137,22 @@ class AGC_Site {
 	 * @return string
 	 */
 	private static function prefix() {
-		return (string) self::val( 'REF', strtoupper( substr( (string) get_bloginfo( 'name' ), 0, 2 ) ) );
+		return (string) self::spec( 'ref', self::val( 'REF', strtoupper( substr( (string) get_bloginfo( 'name' ), 0, 2 ) ) ) );
+	}
+
+	/**
+	 * A number in the spec, or a reference to one of the page's values ("BOOK.depositFrom").
+	 *
+	 * @param mixed $v   Number or "VAR.key".
+	 * @param mixed $def Default.
+	 * @return mixed
+	 */
+	private static function ref( $v, $def = null ) {
+		if ( is_string( $v ) && preg_match( '/^([A-Z_]+)\.([A-Za-z_]+)$/', $v, $m ) ) {
+			$o = (array) self::val( $m[1], array() );
+			return $o[ $m[2] ] ?? $def;
+		}
+		return null === $v ? $def : $v;
 	}
 
 	/* ------------------------------------------------------------------ pages */
@@ -248,7 +263,9 @@ class AGC_Site {
 			'data'   => $data,
 			'owner'  => $owner,
 			'booked' => self::booked(),
-			'tables' => (int) ( self::spec( 'book', array() )['tables'] ?? 6 ),
+			'tables' => (int) ( self::spec( 'book', array() )['seats']['*']['cap'] ?? 6 ),
+			'bookedBy' => self::booked_by(),
+			'seatCap'  => array_map( static fn( $x ) => (int) ( $x['cap'] ?? 6 ), (array) ( self::spec( 'book', array() )['seats'] ?? array() ) ),
 			'dian'   => home_url( '/dian/' ),
 			'admin'  => admin_url( 'edit.php?post_type=shop_order' ),
 			'wa'     => preg_replace( '/\D/', '', (string) agc_get( 'whatsapp_number' ) ),
@@ -549,9 +566,12 @@ class AGC_Site {
 		$prep  = (int) ( $r['prep'] ?? 0 ) + ( agc_get( 'kitchen_busy' ) ? (int) ( $r['busy'] ?? 0 ) : 0 );
 		$min   = $date === $today ? $now + $prep - 10 : 0; // the page and the server can be a few minutes apart.
 		$step  = max( 5, (int) ( $r['step'] ?? 15 ) );
+		if ( ! empty( $r['times'] ) ) { // fixed sittings on some days (e.g. a chef's counter at 6:00pm and 8:45pm).
+			return in_array( self::dow( $date ), array_map( 'intval', (array) ( $r['dows'] ?? range( 0, 6 ) ) ), true ) && in_array( $time, array_map( 'intval', (array) $r['times'] ), true ) && $time >= $min;
+		}
 		foreach ( (array) ( $hours[ self::dow( $date ) ] ?? $hours[ (string) self::dow( $date ) ] ?? array() ) as $h ) {
 			$a = (int) $h[0] + (int) ( $r['first'] ?? 0 );
-			$z = (int) $h[1] - (int) ( $r['last'] ?? 0 );
+			$z = (int) $h[1] - (int) ( isset( $r['last_lunch'] ) && (int) $h[0] < (int) ( $r['lunch_before'] ?? 900 ) ? $r['last_lunch'] : ( $r['last'] ?? 0 ) );
 			if ( $time >= $a && $time <= $z && 0 === ( $time - $a ) % $step && $time >= $min ) {
 				return true;
 			}
@@ -877,7 +897,8 @@ class AGC_Site {
 		$o->add_item( $ship );
 		$o->update_meta_data( AGC_Festive::MODE, 'collect' );
 		$o->update_meta_data( AGC_Festive::DATE, $date );
-		$o->update_meta_data( AGC_Festive::SLOT, (string) ( $season['name'] ?? __( 'Festive pick-up', 'agency-core' ) ) );
+		$ftime = (int) ( $b['time'] ?? 0 );
+		$o->update_meta_data( AGC_Festive::SLOT, (string) ( $season['name'] ?? __( 'Festive pick-up', 'agency-core' ) ) . ( $ftime ? ' · ' . self::hm( $ftime ) : '' ) );
 		$o->update_meta_data( '_agc_skin_season', (string) ( $season['name'] ?? '' ) );
 		$o->calculate_totals( false );
 		$dep = 0.0;
@@ -931,13 +952,62 @@ class AGC_Site {
 			)
 		);
 		foreach ( $q->posts as $id ) {
-			if ( in_array( get_post_meta( $id, '_st', true ), array( 'cancelled', 'no-show' ), true ) ) {
+			if ( in_array( get_post_meta( $id, '_st', true ), array( 'cancelled', 'no-show', 'waitlist' ), true ) ) {
 				continue;
 			}
 			$k         = get_post_meta( $id, '_date', true ) . '|' . (int) get_post_meta( $id, '_time', true );
 			$out[ $k ] = ( $out[ $k ] ?? 0 ) + 1;
 		}
 		return (object) $out;
+	}
+
+	/**
+	 * Booked per seating, day and time: [bookings, guests] ("counter|2026-11-20|1080" => [2, 5]). Waitlist not counted.
+	 *
+	 * @return object
+	 */
+	public static function booked_by() {
+		if ( ! self::spec( 'book', null ) ) {
+			return new stdClass();
+		}
+		list( $today ) = self::now();
+		$out           = array();
+		$q             = new WP_Query(
+			array(
+				'post_type'      => self::BOOKING,
+				'post_status'    => 'publish',
+				'posts_per_page' => 500,
+				'fields'         => 'ids',
+				'no_found_rows'  => true,
+				'meta_query'     => array( array( 'key' => '_date', 'value' => $today, 'compare' => '>=' ) ), // phpcs:ignore WordPress.DB.SlowDBQuery
+			)
+		);
+		foreach ( $q->posts as $id ) {
+			if ( in_array( get_post_meta( $id, '_st', true ), array( 'cancelled', 'no-show', 'waitlist' ), true ) ) {
+				continue;
+			}
+			$k         = get_post_meta( $id, '_seatkey', true ) . '|' . get_post_meta( $id, '_date', true ) . '|' . (int) get_post_meta( $id, '_time', true );
+			$v         = $out[ $k ] ?? array( 0, 0 );
+			$out[ $k ] = array( $v[0] + 1, $v[1] + (int) get_post_meta( $id, '_pax', true ) );
+		}
+		return (object) $out;
+	}
+
+	/**
+	 * Rules for a seating ("room", "counter"), or the one rule for every seating ("*").
+	 *
+	 * @param string $seat Seating.
+	 * @return array [ key, rules ] (rules empty = no such seating)
+	 */
+	private static function seat_rules( $seat ) {
+		$r     = (array) self::spec( 'book', array() );
+		$seats = (array) ( $r['seats'] ?? array() );
+		$key   = isset( $seats[ $seat ] ) ? $seat : ( isset( $seats['*'] ) ? '*' : '' );
+		if ( '' === $key ) {
+			return array( '', array() );
+		}
+		unset( $r['seats'] );
+		return array( $key, array_merge( $r, (array) $seats[ $key ] ) );
 	}
 
 	/**
@@ -964,35 +1034,38 @@ class AGC_Site {
 		if ( is_wp_error( $who ) ) {
 			return $who;
 		}
-		$rules = (array) self::val( (string) ( $r['rules'] ?? 'BOOK' ), array() );
-		$pax   = (int) ( $b['pax'] ?? 0 );
-		$max   = (int) ( $rules['max'] ?? 12 );
-		$seat  = sanitize_text_field( (string) ( $b['seat'] ?? '' ) );
-		$seats = (array) ( $r['seats'] ?? array() ); // { "Counter": { "max": 4, "deposit": 100, "per": "guest" } } overrides.
-		if ( isset( $seats[ $seat ]['max'] ) ) {
-			$max = (int) $seats[ $seat ]['max'];
+		// Spec "book": general rules + "seats": { "*": {…} } (one rule for every seating, Sireh & Salt) or one per seating
+		// (Maison Cendre: "room" by tables, "counter" by seats at two fixed sittings). Values may point at the page's own
+		// ("BOOK.max", "BOOK.depositFrom").
+		$seat              = sanitize_text_field( (string) ( $b['seat'] ?? '' ) );
+		list( $skey, $sr ) = self::seat_rules( $seat );
+		if ( ! $sr ) {
+			return self::err( __( 'Choose where you would like to sit.', 'agency-core' ) );
 		}
-		if ( $pax < 1 || $pax > $max ) {
-			/* translators: %d: guests */
-			return self::err( sprintf( __( 'Online bookings are for up to %d guests.', 'agency-core' ), $max ) );
+		$pax = (int) ( $b['pax'] ?? 0 );
+		$min = (int) self::ref( $sr['min'] ?? 1, 1 );
+		$max = (int) self::ref( $sr['max'] ?? 12, 12 );
+		if ( $pax < $min || $pax > $max ) {
+			/* translators: 1: fewest guests, 2: most guests */
+			return self::err( sprintf( __( 'Online bookings here are for %1$d to %2$d guests.', 'agency-core' ), $min, $max ) );
 		}
 		$date = (string) ( $b['date'] ?? '' );
 		$time = (int) ( $b['time'] ?? 0 );
-		if ( ! self::slot_ok( $date, $time, $r ) ) {
+		if ( ! self::slot_ok( $date, $time, $sr ) ) {
 			return self::err( __( 'That time is no longer available. Please choose another time.', 'agency-core' ), 409 );
 		}
-		$booked = self::booked();
-		$k      = $date . '|' . $time;
-		if ( (int) ( $booked->{$k} ?? 0 ) >= (int) ( $r['tables'] ?? 6 ) ) {
+		$by   = self::booked_by();
+		$have = (array) ( $by->{$skey . '|' . $date . '|' . $time} ?? array( 0, 0 ) );
+		$used = 'guest' === ( $sr['count'] ?? 'booking' ) ? (int) $have[1] + $pax : (int) $have[0] + 1;
+		$wait = $used > (int) ( $sr['cap'] ?? 6 );
+		if ( $wait && empty( $sr['waitlist'] ) ) {
 			return self::err( __( 'Sorry, that time is fully booked. Please choose another time.', 'agency-core' ), 409 );
 		}
-		// Deposit: from a group size (Sireh & Salt) or for a seating (Maison Cendre's counter).
+		// Deposit: per booking or per guest, from a group size, paid now or sent later with the confirmation.
 		$dep = 0.0;
-		$d   = (array) ( $r['deposit'] ?? array() );
-		if ( isset( $seats[ $seat ]['deposit'] ) ) {
-			$dep = (float) $seats[ $seat ]['deposit'] * ( 'guest' === ( $seats[ $seat ]['per'] ?? 'booking' ) ? $pax : 1 );
-		} elseif ( $d && $pax >= (int) ( $rules[ $d['from'] ?? 'depositFrom' ] ?? PHP_INT_MAX ) ) {
-			$dep = (float) ( $rules[ $d['amount'] ?? 'deposit' ] ?? 0 ) * ( 'guest' === ( $d['per'] ?? 'booking' ) ? $pax : 1 );
+		$d   = (array) ( $sr['deposit'] ?? array() );
+		if ( ! $wait && $d && $pax >= (int) self::ref( $d['from'] ?? 1, 1 ) ) {
+			$dep = (float) self::ref( $d['amount'] ?? 0, 0 ) * ( 'guest' === ( $d['per'] ?? 'booking' ) ? $pax : 1 );
 		}
 		$extra = array();
 		foreach ( (array) ( $b['extra'] ?? array() ) as $ek => $ev ) {
@@ -1017,13 +1090,14 @@ class AGC_Site {
 			'_time'  => $time,
 			'_pax'   => $pax,
 			'_seat'  => $seat,
+			'_seatkey' => $skey,
 			'_occ'   => sanitize_text_field( (string) ( $b['occ'] ?? '' ) ),
 			'_notes' => sanitize_textarea_field( (string) ( $b['notes'] ?? '' ) ),
 			'_name'  => $who[0],
 			'_phone' => $who[1],
 			'_email' => $who[2],
 			'_extra' => $extra,
-			'_st'    => $dep > 0 ? 'deposit' : 'new',
+			'_st'    => $wait ? 'waitlist' : ( $dep > 0 ? 'deposit' : 'new' ),
 		);
 		foreach ( $meta as $mk => $mv ) {
 			update_post_meta( $id, $mk, $mv );
@@ -1032,6 +1106,7 @@ class AGC_Site {
 			'ref'     => $ref,
 			'id'      => $id,
 			'deposit' => $dep,
+			'wait'    => $wait,
 		);
 		if ( $dep > 0 ) {
 			$o   = wc_create_order(
@@ -1052,7 +1127,7 @@ class AGC_Site {
 			/* translators: 1: guests, 2: day and time */
 			$o->set_customer_note( sprintf( __( 'Deposit for a table for %1$d on %2$s. Taken off the bill.', 'agency-core' ), $pax, wp_date( 'D j M', strtotime( $date . ' 12:00' ) ) . ' ' . self::hm( $time ) ) );
 			$o->calculate_totals( false );
-			$later = ! isset( $seats[ $seat ]['deposit'] ) && 'later' === ( $d['pay'] ?? 'now' ); // "a deposit link comes with the confirmation"
+			$later = 'later' === ( $d['pay'] ?? 'now' ); // "a deposit link comes with the confirmation"
 			if ( $later ) {
 				$o->save();
 				$o->add_order_note( __( 'Deposit link to send with the booking confirmation.', 'agency-core' ) );
@@ -1125,6 +1200,10 @@ class AGC_Site {
 			$msg = sanitize_textarea_field( (string) ( $b['msg'] ?? '' ) );
 			if ( $msg ) {
 				$item->add_meta_data( __( 'Message', 'agency-core' ), $msg, true );
+			}
+			$label = sanitize_text_field( (string) ( $b['label'] ?? '' ) );
+			if ( $label ) {
+				$item->add_meta_data( __( 'Experience', 'agency-core' ), $label, true );
 			}
 			$item->add_meta_data( '_agc_voucher', $amt, true );
 			$item->save();
@@ -1333,6 +1412,7 @@ class AGC_Site {
 		return self::BOOKING === $type ? array(
 			'new'       => __( 'New', 'agency-core' ),
 			'deposit'   => __( 'Waiting for deposit', 'agency-core' ),
+			'waitlist'  => __( 'Waitlist', 'agency-core' ),
 			'confirmed' => __( 'Confirmed', 'agency-core' ),
 			'seated'    => __( 'Seated', 'agency-core' ),
 			'no-show'   => __( 'No-show', 'agency-core' ),

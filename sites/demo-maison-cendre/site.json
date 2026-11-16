@@ -1,0 +1,681 @@
+{
+ "slug": "maison-cendre",
+ "spec": {
+  "lists": [
+   {
+    "var": "MENU",
+    "cats": "CATS"
+   },
+   {
+    "var": "SEASONS",
+    "items": "items",
+    "stock": "left"
+   }
+  ],
+  "order": {
+   "hours": "HOURS",
+   "zones": "ZONES",
+   "min": "DELIVERY_MIN",
+   "free": "FREE_DELIVERY",
+   "prep": 45,
+   "first": 30,
+   "last": 60,
+   "step": 15,
+   "days": 8
+  },
+  "book": {
+   "hours": "HOURS",
+   "prep": 45,
+   "step": 30,
+   "first": 0,
+   "last": 90,
+   "last_lunch": 60,
+   "lunch_before": 900,
+   "days": 21,
+   "waitlist": true,
+   "seats": {
+    "room": {
+     "cap": 6,
+     "count": "booking",
+     "min": 1,
+     "max": 8,
+     "deposit": {
+      "from": 6,
+      "amount": 50,
+      "per": "guest",
+      "pay": "now"
+     }
+    },
+    "counter": {
+     "cap": 8,
+     "count": "guest",
+     "min": 1,
+     "max": 4,
+     "times": [
+      1080,
+      1245
+     ],
+     "dows": [
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "deposit": {
+      "from": 1,
+      "amount": 100,
+      "per": "guest",
+      "pay": "now"
+     }
+    }
+   }
+  },
+  "voucher": {
+   "product": "gift-card",
+   "name": "Gift card",
+   "min": 100,
+   "max": 5000,
+   "months": 12,
+   "prefix": "GIFT-"
+  },
+  "redirects": {},
+  "shop": "/menu.html",
+  "coupons": [
+   {
+    "from": "PROMO",
+    "code": "code",
+    "percent": "pct"
+   }
+  ],
+  "ref": "MC"
+ },
+ "data": {
+  "MENU": [
+   {
+    "id": "bread",
+    "cat": "start",
+    "n": "Sourdough & cultured butter",
+    "d": "Baked this afternoon; butter churned in-house.",
+    "p": 18,
+    "img": "bread",
+    "tags": [
+     "v"
+    ],
+    "take": true
+   },
+   {
+    "id": "scallop",
+    "cat": "start",
+    "n": "Hokkaido scallop crudo",
+    "d": "Burnt leek, brown butter, finger lime.",
+    "p": 58,
+    "img": "scallop",
+    "tags": [
+     "sig",
+     "gf"
+    ]
+   },
+   {
+    "id": "scallops",
+    "cat": "start",
+    "n": "Seared scallops",
+    "d": "Smoked chilli butter, charred corn.",
+    "p": 62,
+    "img": "scallops",
+    "tags": [
+     "gf"
+    ]
+   },
+   {
+    "id": "beet",
+    "cat": "start",
+    "n": "Embered beetroot",
+    "d": "Smoked labneh, pickled shallot, rye crumb.",
+    "p": 36,
+    "tags": [
+     "v"
+    ]
+   },
+   {
+    "id": "fish",
+    "cat": "main",
+    "n": "Barramundi",
+    "d": "Beurre blanc, charred cabbage, trout roe.",
+    "p": 88,
+    "img": "fish",
+    "tags": [
+     "gf"
+    ],
+    "take": true
+   },
+   {
+    "id": "salmon",
+    "cat": "main",
+    "n": "Salmon & clams",
+    "d": "Spinach, clam velouté, dill oil.",
+    "p": 78,
+    "img": "salmon",
+    "tags": [],
+    "take": true
+   },
+   {
+    "id": "duck",
+    "cat": "main",
+    "n": "Aged duck breast",
+    "d": "Plum, five-spice jus, roasted turnip.",
+    "p": 96,
+    "img": "duck",
+    "tags": [
+     "sig"
+    ],
+    "take": true,
+    "o": [
+     {
+      "n": "Cooked",
+      "one": true,
+      "def": 0,
+      "v": [
+       [
+        "Pink",
+        0
+       ],
+       [
+        "Medium",
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   {
+    "id": "wagyu",
+    "cat": "main",
+    "n": "Wagyu striploin, 200 g",
+    "d": "Over embers, with bone-marrow jus and smoked onion.",
+    "p": 220,
+    "img": "wagyu",
+    "tags": [
+     "sig",
+     "gf"
+    ],
+    "take": true,
+    "o": [
+     {
+      "n": "Cooked",
+      "one": true,
+      "def": 1,
+      "v": [
+       [
+        "Rare",
+        0
+       ],
+       [
+        "Medium rare",
+        0
+       ],
+       [
+        "Medium",
+        0
+       ]
+      ]
+     },
+     {
+      "n": "Sauce",
+      "one": true,
+      "def": 0,
+      "v": [
+       [
+        "Bone-marrow jus",
+        0
+       ],
+       [
+        "Green peppercorn",
+        0
+       ],
+       [
+        "Chimichurri",
+        0
+       ]
+      ]
+     },
+     {
+      "n": "Add",
+      "v": [
+       [
+        "Truffle butter",
+        28
+       ],
+       [
+        "Seared foie gras",
+        58
+       ]
+      ]
+     }
+    ]
+   },
+   {
+    "id": "cabbage",
+    "cat": "side",
+    "n": "Charred cabbage",
+    "d": "Anchovy butter, lemon.",
+    "p": 24,
+    "tags": [
+     "gf"
+    ],
+    "take": true
+   },
+   {
+    "id": "potatoes",
+    "cat": "side",
+    "n": "Ember potatoes",
+    "d": "Crème fraîche, chives.",
+    "p": 22,
+    "tags": [
+     "v",
+     "gf"
+    ],
+    "take": true
+   },
+   {
+    "id": "greens",
+    "cat": "side",
+    "n": "Garden leaves",
+    "d": "Shallot vinaigrette, toasted seeds.",
+    "p": 18,
+    "tags": [
+     "v",
+     "gf"
+    ]
+   },
+   {
+    "id": "chocolate",
+    "cat": "sweet",
+    "n": "Dark chocolate",
+    "d": "Miso caramel, smoked salt.",
+    "p": 38,
+    "img": "chocolate",
+    "tags": [
+     "sig"
+    ],
+    "take": true
+   },
+   {
+    "id": "sorbet",
+    "cat": "sweet",
+    "n": "Sorbet & cream",
+    "d": "Calamansi, buttermilk, almond.",
+    "p": 28,
+    "img": "sorbet",
+    "tags": [
+     "nuts"
+    ]
+   },
+   {
+    "id": "rhubarb",
+    "cat": "sweet",
+    "n": "Rhubarb",
+    "d": "Almond crumble, vanilla ice cream.",
+    "p": 34,
+    "img": "rhubarb",
+    "tags": [
+     "nuts"
+    ],
+    "take": true
+   },
+   {
+    "id": "wine",
+    "cat": "drink",
+    "n": "Wine by the glass",
+    "d": "Ask for tonight’s pours, from RM48.",
+    "p": 48,
+    "img": "wine",
+    "tags": []
+   },
+   {
+    "id": "soda",
+    "cat": "drink",
+    "n": "House sodas",
+    "d": "Lemongrass and ginger, or smoked pineapple.",
+    "p": 16,
+    "tags": [
+     "v"
+    ]
+   },
+   {
+    "id": "tea",
+    "cat": "drink",
+    "n": "Loose-leaf tea",
+    "d": "Oolong, jasmine or Ceylon, by the pot.",
+    "p": 18,
+    "tags": [
+     "v"
+    ]
+   }
+  ],
+  "CATS": [
+   [
+    "start",
+    "To begin"
+   ],
+   [
+    "main",
+    "From the embers"
+   ],
+   [
+    "side",
+    "Alongside"
+   ],
+   [
+    "sweet",
+    "To finish"
+   ],
+   [
+    "drink",
+    "To drink"
+   ]
+  ],
+  "TASTING": [
+   {
+    "id": "cendre",
+    "n": "Cendre",
+    "sub": "Eight courses",
+    "p": 388,
+    "pair": 260,
+    "tea": 120,
+    "note": "Every evening, for the whole table.",
+    "courses": [
+     [
+      "Sourdough, cultured butter",
+      "Baked this afternoon, butter churned in-house"
+     ],
+     [
+      "Hokkaido scallop",
+      "Burnt leek, brown butter, finger lime"
+     ],
+     [
+      "Embered beetroot",
+      "Smoked labneh, pickled shallot, rye crumb"
+     ],
+     [
+      "Barramundi",
+      "Beurre blanc, charred cabbage, trout roe"
+     ],
+     [
+      "Aged duck",
+      "Plum, five-spice jus, roasted turnip"
+     ],
+     [
+      "Wagyu striploin over embers",
+      "Bone-marrow jus, smoked onion"
+     ],
+     [
+      "Sorbet and cream",
+      "Calamansi, buttermilk"
+     ],
+     [
+      "Dark chocolate",
+      "Miso caramel, smoked salt"
+     ]
+    ]
+   },
+   {
+    "id": "petit",
+    "n": "Petit",
+    "sub": "Five courses",
+    "p": 238,
+    "pair": 160,
+    "tea": 90,
+    "note": "Tuesday to Thursday evenings, and at lunch.",
+    "courses": [
+     [
+      "Sourdough, cultured butter",
+      "Baked this afternoon"
+     ],
+     [
+      "Embered beetroot",
+      "Smoked labneh, rye crumb"
+     ],
+     [
+      "Barramundi or aged duck",
+      "Your choice on the night"
+     ],
+     [
+      "Charred cabbage",
+      "Anchovy butter, lemon"
+     ],
+     [
+      "Dark chocolate",
+      "Miso caramel, smoked salt"
+     ]
+    ]
+   }
+  ],
+  "SEATS": {
+   "room": {
+    "n": "Dining room",
+    "min": 1,
+    "max": 8,
+    "desc": "À la carte or a tasting menu. Dinner Tuesday to Sunday, lunch Friday to Sunday."
+   },
+   "counter": {
+    "n": "Chef’s counter",
+    "min": 1,
+    "max": 4,
+    "desc": "Eight seats facing the fire, Cendre menu only. Tuesday to Saturday, 6:00pm and 8:45pm."
+   },
+   "salon": {
+    "n": "Private salon",
+    "min": 8,
+    "max": 14,
+    "desc": "A private room for 8 to 14 guests. Minimum spend RM3,000."
+   }
+  },
+  "DIETS": [
+   "Vegetarian",
+   "Pescatarian",
+   "No beef",
+   "Shellfish allergy",
+   "Nut allergy",
+   "Gluten-free"
+  ],
+  "SEASONS": [
+   {
+    "id": "xmas",
+    "name": "Christmas",
+    "cutoff": "2026-12-20",
+    "from": "2026-12-24",
+    "to": "2026-12-25",
+    "img": "festive",
+    "blurb": "A six-course Christmas menu on the 24th and 25th, and a roast to carve at home.",
+    "items": [
+     {
+      "id": "xmas-dinner",
+      "kind": "dine",
+      "n": "Christmas dinner, six courses",
+      "unit": "per guest",
+      "p": 428,
+      "img": "plating",
+      "total": 60,
+      "left": 18,
+      "dep": 0.5,
+      "has": [
+       "Oysters, shallot mignonette",
+       "Embered beetroot, smoked labneh",
+       "Barramundi, beurre blanc",
+       "Wagyu over embers",
+       "Christmas pudding, brandy butter",
+       "Petits fours"
+      ]
+     },
+     {
+      "id": "xmas-roast",
+      "kind": "take",
+      "n": "A roast to carve at home, serves 6",
+      "unit": "per set",
+      "p": 688,
+      "img": "embers",
+      "total": 20,
+      "left": 7,
+      "dep": 0.5,
+      "has": [
+       "Two aged ducks or a wagyu rump",
+       "Ember potatoes, charred cabbage",
+       "Jus, sourdough, cultured butter"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "cny",
+    "name": "Chinese New Year",
+    "cutoff": "2027-02-01",
+    "from": "2027-02-04",
+    "to": "2027-02-07",
+    "img": "festive-2",
+    "blurb": "A reunion menu from the eve to the first days of the new year (Chinese New Year falls on 6 February 2027), and a reunion feast to take home.",
+    "items": [
+     {
+      "id": "cny-dinner",
+      "kind": "dine",
+      "n": "Reunion dinner, seven courses",
+      "unit": "per guest",
+      "p": 458,
+      "img": "room",
+      "total": 80,
+      "left": 23,
+      "dep": 0.5,
+      "has": [
+       "Lo hei with smoked salmon and pomelo",
+       "Scallop in superior broth",
+       "Barramundi, ginger beurre blanc",
+       "Aged duck, plum",
+       "Wagyu over embers",
+       "Glutinous rice, lap cheong",
+       "Osmanthus jelly, mandarin"
+      ]
+     },
+     {
+      "id": "cny-feast",
+      "kind": "take",
+      "n": "Reunion feast to take home, serves 6",
+      "unit": "per set",
+      "p": 888,
+      "img": "spread",
+      "total": 30,
+      "left": 11,
+      "dep": 0.5,
+      "has": [
+       "Lo hei",
+       "Aged duck",
+       "Barramundi",
+       "Glutinous rice",
+       "Osmanthus jelly"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "vday",
+    "name": "Valentine’s Day",
+    "cutoff": "2027-02-12",
+    "from": "2027-02-14",
+    "to": "2027-02-14",
+    "img": "counter",
+    "blurb": "Eight courses for two at a candlelit table, with a glass of champagne on arrival.",
+    "items": [
+     {
+      "id": "vday-dinner",
+      "kind": "dine",
+      "n": "Valentine’s dinner for two",
+      "unit": "per couple",
+      "p": 888,
+      "img": "chocolate",
+      "total": 24,
+      "left": 6,
+      "dep": 1,
+      "has": [
+       "Champagne on arrival",
+       "Eight courses from the Cendre menu",
+       "Rose and lychee pre-dessert",
+       "Petits fours to take home"
+      ]
+     }
+    ]
+   }
+  ],
+  "ZONES": [
+   {
+    "re": "^5\\d{4}$",
+    "fee": 12,
+    "eta": "40–60 min",
+    "area": "Kuala Lumpur"
+   },
+   {
+    "re": "^4[67]\\d{3}$",
+    "fee": 15,
+    "eta": "45–70 min",
+    "area": "Petaling Jaya and Subang"
+   }
+  ],
+  "HOURS": {
+   "0": [
+    [
+     720,
+     870
+    ],
+    [
+     1080,
+     1380
+    ]
+   ],
+   "1": [],
+   "2": [
+    [
+     1080,
+     1380
+    ]
+   ],
+   "3": [
+    [
+     1080,
+     1380
+    ]
+   ],
+   "4": [
+    [
+     1080,
+     1380
+    ]
+   ],
+   "5": [
+    [
+     720,
+     870
+    ],
+    [
+     1080,
+     1380
+    ]
+   ],
+   "6": [
+    [
+     720,
+     870
+    ],
+    [
+     1080,
+     1380
+    ]
+   ]
+  },
+  "DELIVERY_MIN": 80,
+  "FREE_DELIVERY": 300,
+  "PROMO": {
+   "code": "CENDRE10",
+   "pct": 10
+  },
+  "ADDRESS": "Level 1, 18 Jalan Demo, 50250 Kuala Lumpur (demo address)",
+  "BRAND": "Maison Cendre"
+ }
+}

@@ -98,6 +98,11 @@ if [[ $SHOP == 1 ]]; then
     check_200 "/menu/" "菜单 Menu（店家设计）"
     check_200 "/order/" "下单 Order（店家设计）"
     check_200 "/festive/" "节日预购 Festive（店家设计）"
+  elif [[ "$SHOPLOC" =~ ^302\ (.*\.html)$ ]]; then
+    # 整个网站的设计（agency-core class-site.php，2026-11-16：工作室的示范网站）：商店 / 购物车 → 设计自己的页面
+    T="${BASH_REMATCH[1]}"; T="/${T#*://*/}"
+    check_200 "$T" "商店 Shop（网站设计 $T）"
+    check_200 "/index.html" "首页 Home（网站设计）"
   else
     check_200 "/shop/" "商店 Shop"
     check_200 "/cart/" "购物车 Cart"

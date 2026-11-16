@@ -25,19 +25,24 @@
    "days": 8
   },
   "book": {
-   "rules": "BOOK",
    "hours": "HOURS",
-   "tables": 6,
    "first": 0,
    "last": 90,
    "step": 30,
    "prep": 30,
    "days": 15,
-   "deposit": {
-    "from": "depositFrom",
-    "amount": "deposit",
-    "per": "booking",
-    "pay": "later"
+   "seats": {
+    "*": {
+     "cap": 6,
+     "count": "booking",
+     "max": "BOOK.max",
+     "deposit": {
+      "from": "BOOK.depositFrom",
+      "amount": "BOOK.deposit",
+      "per": "booking",
+      "pay": "later"
+     }
+    }
    }
   },
   "voucher": {
@@ -66,7 +71,8 @@
    }
   ],
   "tables": "1-12",
-  "featured": "SIGNATURE"
+  "featured": "SIGNATURE",
+  "ref": "SS"
  },
  "data": {
   "MENU": [

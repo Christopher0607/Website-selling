@@ -266,9 +266,142 @@ async function sirehSalt(b) {
   await restrictions(b);
 }
 
+async function maisonCendre(b) {
+  await common(b, ['index', 'menu', 'book', 'private', 'festive', 'order', 'gift', 'owner']);
+  const p = await newPage(b);
+
+  console.log('Menus: dishes and prices from WooCommerce');
+  await p.goto(BASE + '/menu.html');
+  await p.click('[data-mtab="carte"]');
+  ok((await p.$$('[data-menu] .mrow')).length === 14 && /RM58/.test(await p.textContent('#m-scallop')), 'à la carte: 14 dishes, scallop crudo RM58 (WooCommerce)');
+
+  console.log('Chef’s counter: RM100 deposit per guest, paid at booking');
+  await p.goto(BASE + '/book.html');
+  await p.click('[data-seat="counter"]');
+  ok((await p.$$('[data-pax]')).length === 4, 'counter: up to 4 guests');
+  await p.click('[data-pax="2"]');
+  await p.click('.slot:not(.is-full) >> nth=0');
+  const cDate = await p.getAttribute('.day.is-on', 'data-day');
+  const cTime = await p.getAttribute('.slot.is-on', 'data-time');
+  await p.fill('#b-name', 'Test Guest');
+  await p.fill('#b-phone', '012-345 6789');
+  await p.check('[data-diet][value="Nut allergy"]');
+  ok(/RM200/.test(await p.textContent('.summary')), 'deposit RM200 for two');
+  await p.click('[data-confirm]');
+  await p.waitForSelector('.done .ref', { timeout: 20000 });
+  const bref = (await p.textContent('.done .ref')).trim();
+  ok(/^MC-B\d+$/.test(bref) && /Chef’s counter for 2/.test(await p.textContent('.done')) && /RM200/.test(await p.textContent('.done')), 'counter reservation saved, deposit paid: ' + bref);
+  await p.goto(BASE + '/book.html');
+  const seen = await p.evaluate((k) => (window.AGC_LIVE.bookedBy || {})[k], `counter|${cDate}|${cTime}`);
+  ok(Array.isArray(seen) && seen[1] === 2, 'the counter now has 2 of its 8 seats taken at that sitting');
+
+  console.log('A full sitting offers the waitlist');
+  for (const n of ['A', 'B']) {
+    await p.goto(BASE + '/book.html');
+    await p.click('[data-seat="counter"]');
+    await p.click(`[data-day="${cDate}"]`);
+    await p.click(`[data-time="${cTime}"]`);
+    await p.click('[data-pax="3"]');
+    await p.fill('#b-name', 'Guest ' + n);
+    await p.fill('#b-phone', '012-345 6789');
+    await p.click('[data-confirm]');
+    await p.waitForSelector('.done .ref', { timeout: 20000 });
+  }
+  await p.goto(BASE + '/book.html');
+  await p.click('[data-seat="counter"]');
+  await p.click(`[data-day="${cDate}"]`);
+  await p.click(`[data-time="${cTime}"]`);
+  await p.click('[data-pax="1"]');
+  ok(/Join the waitlist/.test(await p.textContent('[data-confirm]')), '8 of 8 seats taken: the button says "Join the waitlist"');
+  await p.fill('#b-name', 'Waiting Guest');
+  await p.fill('#b-phone', '012-345 6789');
+  await p.click('[data-confirm]');
+  await p.waitForSelector('.done .ref', { timeout: 20000 });
+  const wref = (await p.textContent('.done .ref')).trim();
+  ok(/on the waitlist/.test(await p.textContent('.done')), 'waitlist request saved: ' + wref);
+
+  console.log('Seasonal menu: 50% deposit, places from WooCommerce stock');
+  await p.goto(BASE + '/festive.html');
+  await p.click('[data-season="cny"]');
+  const fb = await p.textContent('.fset >> nth=0');
+  await p.click('[data-fq="cny-dinner:1"]');
+  await p.click('[data-fq="cny-dinner:1"]');
+  await p.fill('#f-name', 'Test Family');
+  await p.fill('#f-phone', '012-345 6789');
+  ok(/RM916/.test(await p.textContent('.summary')), 'two reunion dinners: RM916');
+  await p.click('[data-forder]');
+  await p.waitForSelector('.done .ref', { timeout: 20000 });
+  ok(/^MC-\d+$/.test((await p.textContent('.done .ref')).trim()), 'seasonal booking saved: ' + (await p.textContent('.done .ref')).trim());
+  await p.goto(BASE + '/festive.html');
+  await p.click('[data-season="cny"]');
+  const nL = (x) => +((x.match(/Only (\d+) left/) || [])[1] || -1);
+  const fa = await p.textContent('.fset >> nth=0');
+  ok(nL(fb) > 0 && nL(fa) === nL(fb) - 2, `places left go down by two (${nL(fb)} → ${nL(fa)})`);
+
+  console.log('Gift card (an experience) → a real code → takeaway with options');
+  await p.goto(BASE + '/gift.html');
+  await p.check('input[name=exp][value="0"]');
+  await p.fill('#g-to', 'Mum and Dad');
+  await p.click('[data-gbuy]');
+  await p.waitForSelector('.done .ref', { timeout: 20000 });
+  const gcode = (await p.textContent('.done .ref')).trim();
+  ok(/^GIFT-[A-Z0-9]{6}$/.test(gcode), 'gift card (Cendre tasting menu for two) bought: ' + gcode);
+  await p.goto(BASE + '/order.html');
+  await p.click('#t-wagyu [data-add]');
+  await p.waitForSelector('[data-sheet]:not([hidden])');
+  await p.click('.sheet__panel label.opt:has-text("Medium rare")');
+  await p.click('.sheet__panel label.opt:has-text("Truffle butter")');
+  ok(/RM248/.test(await p.textContent('[data-sheet-add]')), 'wagyu + truffle butter = RM248');
+  await p.click('[data-sheet-add]');
+  await p.click('#t-bread [data-add]');
+  await p.waitForSelector('.summary');
+  await p.click('.day >> nth=0');
+  await p.click('[data-order] .slot >> nth=0');
+  await p.fill('#o-name', 'Test Diner');
+  await p.fill('#o-phone', '012-345 6789');
+  await p.fill('#o-code', gcode);
+  await p.click('[data-apply]');
+  await p.waitForFunction(() => !/Checking/.test(document.querySelector('.summary').textContent), null, { timeout: 15000 });
+  ok(/Gift|−RM266/.test(await p.textContent('.summary')), 'the gift card covers the takeaway (RM266)');
+  await p.click('[data-place]');
+  await p.waitForSelector('.done .ref', { timeout: 20000 });
+  const tref = (await p.textContent('.done .ref')).trim();
+  ok(/^MC-\d+$/.test(tref), 'takeaway order placed: ' + tref);
+
+  console.log('Private dining enquiry');
+  await p.goto(BASE + '/private.html');
+  await p.click('[data-space="The salon"]');
+  await p.fill('#p-guests', '12');
+  await p.fill('#p-name', 'Test Host');
+  await p.fill('#p-phone', '012-345 6789');
+  await p.click('[data-private] button[type=submit]');
+  await p.waitForSelector('.done .ref', { timeout: 20000 });
+  const eref = (await p.textContent('.done .ref')).trim();
+  ok(/^MC-E\d+$/.test(eref), 'private dining enquiry saved: ' + eref);
+
+  console.log('The back office');
+  await p.goto(BASE + '/owner.html');
+  await p.click('[data-live-dian]');
+  await p.waitForURL(/\/dian\//);
+  await p.waitForFunction(() => /Overview/.test(document.body.textContent), null, { timeout: 20000 });
+  await p.goto(BASE + '/dian/#/orders');
+  await p.waitForTimeout(2500);
+  ok(((await p.textContent('.main')) || '').includes(tref.replace('MC-', '')), 'shop dashboard: the takeaway order');
+  const a = await admin(b);
+  const bk = await adminText(a, '/wp-admin/edit.php?post_type=agc_booking');
+  ok(bk.includes(bref) && bk.includes(wref) && /Waitlist/.test(bk), 'WordPress admin → Bookings: the counter booking and the waitlist request');
+  ok((await adminText(a, '/wp-admin/edit.php?post_type=agc_enquiry')).includes(eref), 'WordPress admin → Enquiries: ' + eref);
+  const ord = (await adminText(a, '/wp-admin/admin.php?page=wc-orders')) + (await adminText(a, '/wp-admin/edit.php?post_type=shop_order'));
+  ok(ord.includes(tref.replace('MC-', '')), 'WordPress admin → Orders: the takeaway order');
+  ok(p.errors.length === 0, 'no JavaScript errors' + (p.errors.length ? ': ' + p.errors.slice(0, 3).join(' | ') : ''));
+  await a.context().close();
+  await p.context().close();
+  await restrictions(b);
+}
+
 (async () => {
   const b = await chromium.launch();
-  const run = { 'sireh-salt': sirehSalt }[DEMO];
+  const run = { 'sireh-salt': sirehSalt, 'maison-cendre': maisonCendre }[DEMO];
   if (!run) { console.log('还没有这个示范的测试：' + DEMO); process.exit(2); }
   try { await run(b); } catch (e) { ok(false, 'stopped: ' + e.message.split('\n')[0] + ' @ ' + ((e.stack || '').match(/check-wp-demo\.js:(\d+)/) || [])[1]); }
   await b.close();
