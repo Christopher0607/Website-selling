@@ -1474,13 +1474,15 @@ HEADERS = """# 自动产生（site/build.py）。Cloudflare Pages 的回应标�
 """
 
 
-def build_flagships():
+def build_flagships(only=None):
     """Hand-made flagship demos (2026-11-12): site/flagships/<slug>/ → dist/demo/<slug>/.
     Each folder: layout.html ({{TITLE}} {{DESC}} {{PAGE}} {{BODY}}), pages/*.html (a <!-- title/description/page --> header
     and the page body), style.css, app.js, img/. Fictional brands, Pexels placeholder photos (image-sources.md)."""
     root = os.path.join(HERE, "flagships")
     n = 0
     for slug in sorted(os.listdir(root)) if os.path.isdir(root) else []:
+        if only and slug != only:
+            continue
         src = os.path.join(root, slug)
         if not os.path.isfile(os.path.join(src, "layout.html")):
             continue
@@ -1604,8 +1606,68 @@ def main():
     print(f"built {n} pages, {files} files → {DIST}")
 
 
+STUDIO_URL = "https://cartsmithstudio.com/"
+WP_LINK_RX = re.compile(r'((?:href|src|action)=")((?:\.\./)+)([^"]*)(")')
+
+
+def build_wp(slug, out):
+    """2026-11-16 (docs/14-wordpress-demos.md): one demo, exactly as on the studio site, as the files of a WordPress site's
+    design (agency-core skin: wp-content/uploads/agc-skin/). Same pages, styles, scripts and photos; links that left the
+    demo folder (the studio site, its shared /assets/) are made absolute or point to /assets/ inside the skin.
+    Runs on the server too (build-demo.sh), so it touches nothing in the repo: it builds into a temporary folder."""
+    import tempfile
+    global DIST
+    keep, tmp = DIST, tempfile.mkdtemp(prefix="agc-wp-")
+    DIST = tmp
+    try:
+        shutil.copytree(os.path.join(HERE, "assets"), os.path.join(tmp, "assets"))
+        if slug in ORDER:
+            Store(slug, load_json(os.path.join(HERE, "studio.json"))).build()
+        elif not build_flagships(only=slug):
+            sys.exit(f"没有这个示范：{slug}")
+        version_assets(tmp)
+        src = os.path.join(tmp, "demo", slug)
+        if os.path.exists(out):
+            shutil.rmtree(out)
+        shutil.copytree(src, out)
+        used = set()
+        for base, _, files in os.walk(out):
+            for fn in files:
+                if not fn.endswith(".html"):
+                    continue
+                page = os.path.join(base, fn)
+                depth = len(os.path.relpath(page, out).split(os.sep)) - 1  # 0 = top-level page, 1 = p/xxx.html
+
+                def sub(m):
+                    ups, rest = len(m.group(2)) // 3, m.group(3)
+                    if ups <= depth:
+                        return m.group(0)  # still inside the demo
+                    up_rest = rest.split("?")[0]
+                    if up_rest.startswith("assets/"):
+                        used.add(up_rest)
+                        return f"{m.group(1)}/{rest}{m.group(4)}"
+                    return f"{m.group(1)}{STUDIO_URL}{'' if rest == 'index.html' else rest}{m.group(4)}"
+
+                html_src = open(page, encoding="utf-8").read()
+                html_out = WP_LINK_RX.sub(sub, html_src)
+                if html_out != html_src:
+                    with open(page, "w", encoding="utf-8") as fh:
+                        fh.write(html_out)
+        for rel in sorted(used):
+            dst = os.path.join(out, rel)
+            os.makedirs(os.path.dirname(dst), exist_ok=True)
+            shutil.copy(os.path.join(tmp, rel), dst)
+        pages = sum(1 for _, _, f in os.walk(out) for x in f if x.endswith(".html"))
+        print(f"WordPress skin: {slug} → {out} ({pages} pages, {len(used)} shared files)")
+    finally:
+        DIST = keep
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
 if __name__ == "__main__":
-    if len(sys.argv) >= 3 and sys.argv[1] == "--preview":
+    if len(sys.argv) >= 4 and sys.argv[1] == "--wp":
+        build_wp(sys.argv[2], os.path.abspath(sys.argv[3]))
+    elif len(sys.argv) >= 3 and sys.argv[1] == "--preview":
         build_preview(sys.argv[2], sys.argv[3] if len(sys.argv) > 3 else None)
     else:
         sys.exit(main())

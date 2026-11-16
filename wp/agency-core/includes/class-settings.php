@@ -42,6 +42,8 @@ class AGC_Settings {
 			'demo_banner'          => 'Demo site – not a real store · 这是展示用网站，不是真的商店',
 			'demo_checkout_notice' => 'This is a demo store. Orders cannot be placed. · 这是展示站，不会真的下单。',
 			'demo_test_orders'     => 0,
+			'demo_public_login'    => 0,
+			'kitchen_busy'         => 0,
 			// Tracking.
 			'ga4_id'               => '',
 			'meta_pixel_id'        => '',
@@ -135,6 +137,7 @@ class AGC_Settings {
 					'demo_banner'          => array( 'text', __( 'Banner text', 'agency-core' ) ),
 					'demo_checkout_notice' => array( 'text', __( 'Checkout notice', 'agency-core' ) ),
 					'demo_test_orders'     => array( 'checkbox', __( 'Allow test orders in demo mode (only DuitNow QR and the demo online payment; nothing is charged)', 'agency-core' ) ),
+					'demo_public_login'    => array( 'checkbox', __( 'Public demo login: anyone can open WordPress admin and the shop dashboard with one tap as a limited demo account (studio demo websites only; reset every night)', 'agency-core' ) ),
 					'concept_label'        => array( 'text', __( 'Footer label (e.g. "Concept Project")', 'agency-core' ) ),
 					'skin'                 => array( 'checkbox', __( 'Use the shop\'s own design (pages in wp-content/uploads/agc-skin, copied by build-demo.sh) instead of the theme', 'agency-core' ) ),
 				),

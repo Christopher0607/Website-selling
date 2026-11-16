@@ -160,7 +160,9 @@ location ~* \.(?:css|js|mjs|jpg|jpeg|gif|png|webp|avif|svg|ico|woff2?|ttf)$ {
   expires 30d;
   add_header Cache-Control "public, max-age=2592000";
   access_log off;
-  try_files $uri =404;
+  # 2026-11-16: a site with its own design (agency-core skin) keeps its styles, scripts and photos in uploads/agc-skin/
+  # under the same addresses as the demo they come from (/style.css, /img/x.webp, /assets/js/store.js)
+  try_files $uri /wp-content/uploads/agc-skin$uri =404;
 }
 EOF
 # 缓存跳过规则（WooCommerce 购物车 / 结账 / 登录用户 不缓存）
