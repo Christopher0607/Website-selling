@@ -20,6 +20,19 @@
 
 **他们「无缝」的原因**：收银机、点单、厨房、外送、会员、报表都是他们自己的同一套系统，所以不用「接」。
 
+## 俊宇补充的收费资料（2026-11-17，俊宇提供，来源是 StoreHub 官网、博客和商家贴文；我没有逐条再查）
+
+- 外送订单：每单 9% 交易手续费（他们拿来比 GrabFood / Foodpanda 的 25–35%）。
+- 顾客用店家专属 Beep 连结**自取**：抽佣低至 2%。
+- 没有开通费；**网上付款另外收约 1.5–2.5% 付款网关费**（FPX、卡、GrabPay、TNG、Boost），每周结算单分开列。
+- 顾客那边：菜单价通常跟堂食一样；外送另加按距离算的运费，适用时加 6% SST。
+- **前提：要先订 StoreHub POS**（Beep 和桌上 QR 点单包在马来西亚所有方案里）：Starter 约 RM122/月起、Advanced 约 RM235/月起、Pro 约 RM471/月起（年付参考价）。
+- 送货：自己的人送，或接他们的物流伙伴（Lalamove、GoGet 等）自动派。
+
+**跟我们比（同一家小餐厅，一年）**：Beep 至少 RM122 × 12 = RM1,464 的 POS 月费，加上每张外送单 9%、自取单 2%、网上付款 1.5–2.5%；我们是一次性 RM800 起 + 每月 RM99 维护费（第一个月免费），**不抽成**，只有付款网关自己的手续费。讲的时候只讲事实，不贬低别人。
+
+来源（俊宇提供）：https://www.storehub.com/online-ordering ；https://www.storehub.com/my/blog/how-much-your-online-food-ordering-system-really-costs-you ；https://www.storehub.com/blog/beep-food-delivery-app-launch ；https://www.storehub.com/my/pricing ；StoreHub 和商家的 Facebook 贴文。
+
 ## 我们现在有什么（agency-core + WooCommerce + 手机店家后台 /dian/）
 
 | | 我们 | StoreHub |

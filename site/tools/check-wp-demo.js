@@ -262,6 +262,42 @@ async function sirehSalt(b) {
   ok((await t.textContent('.main')).includes(tno) && /Table 5/.test(await t.textContent('.main')), 'kitchen screen: table 5’s order ' + tno);
   await t.context().close();
 
+  // 2026-11-17: the counter (轻量收银): takeaway paid in cash, GrabFood with its order number → kitchen → close of day
+  console.log('Counter → kitchen → close of day');
+  const k = await newPage(b, { width: 1180, height: 820 });
+  await k.goto(BASE + '/?agc_demo=dian');
+  await k.waitForURL(/\/dian\//);
+  await k.goto(BASE + '/dian/#/counter');
+  await k.waitForSelector('.cgrid .citem', { timeout: 20000 });
+  ok(/Takeaway/.test(await k.textContent('.counter__menu')) && /GrabFood/.test(await k.textContent('.counter__menu')) && (await k.$$('.cgrid .citem')).length >= 10, 'counter: order types and the menu');
+  const addDish = async (name) => { await k.click(`.citem:has-text("${name}")`); await k.waitForTimeout(200); if (await k.$('.sheet')) await k.click('.sheet .btn:not(.btn--plain)'); };
+  await k.click('.counter__menu .pills .pill:has-text("Takeaway")');
+  await addDish('Kopi Ais');
+  await addDish('Kopi Ais');
+  ok(/RM13\.00/.test(await k.textContent('.counter__cart')), 'counter: 2 × Kopi Ais = RM13.00');
+  await k.click('.counter__acts .btn:has-text("Pay now")');
+  await k.click('.sheet .btn:has-text("Cash")');
+  await k.fill('.sheet input[type=number]', '20');
+  ok(/Change RM7\.00/.test(await k.textContent('.sheet')), 'cash: RM20 received, change RM7.00');
+  await k.click('.sheet .btn:has-text("Done")');
+  await k.waitForFunction(() => /sent · give RM7/.test(document.body.textContent), null, { timeout: 15000 });
+  const tk = (await k.textContent('body')).match(/#(\d+) sent · give/)[1];
+  await k.click('.counter__menu .pills .pill:has-text("GrabFood")');
+  await k.fill('.counter__cart input[maxlength="30"]', 'GF-TEST-1');
+  await addDish('Nasi Lemak');
+  await k.click('.counter__acts .btn:has-text("paid by GrabFood")');
+  await k.waitForFunction(() => /#\d+ sent to the kitchen/.test(document.body.textContent), null, { timeout: 15000 });
+  await k.goto(BASE + '/dian/#/kitchen');
+  await k.waitForSelector('.kt', { timeout: 20000 });
+  const kt = await k.textContent('.kgrid');
+  ok(kt.includes('Takeaway #' + tk) && /GrabFood #\d+ · GF-TEST-1/.test(kt), `kitchen: "Takeaway #${tk}" and the GrabFood order with its number`);
+  await k.goto(BASE + '/dian/#/close');
+  await k.waitForSelector('.closecard', { timeout: 20000 });
+  const cl = await k.textContent('.main');
+  ok(/By order type/.test(cl) && /Takeaway/.test(cl) && /GrabFood/.test(cl), 'close of day: totals by order type (takeaway, GrabFood)');
+  ok(k.errors.length === 0, 'counter: no JavaScript errors' + (k.errors.length ? ': ' + k.errors.slice(0, 2).join(' | ') : ''));
+  await k.context().close();
+
   ok(p.errors.length === 0, 'no JavaScript errors' + (p.errors.length ? ': ' + p.errors.slice(0, 3).join(' | ') : ''));
   await a.context().close();
   await p.context().close();

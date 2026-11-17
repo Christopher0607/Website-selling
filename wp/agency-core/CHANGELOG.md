@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.10.0 — 2026-11-17（俊宇：向 StoreHub / Beep 学习，餐厅一套系统搞定；docs/00-decisions.md 第 42 条）
+- 新：柜台收银（店家后台「收银 / Counter」，设定 `counter_on`，要先开桌上扫码点单）：店员替客人点单：堂食（选桌号，现在付或之后跟桌子一起付）、外带、电话 / WhatsApp、GrabFood、ShopeeFood（平台已付，可以记平台单号）。同一份菜单、价钱、选项和库存检查（跟桌上点单共用）；现金会算找钱；单子进同一个厨房画面（写「外带 #123」「GrabFood #124 · 单号」），之后付的进「桌子」帐单；「今日结算」多了「按单的种类」，付款方式多了 GrabFood、ShopeeFood。手机上有底部「看这一单」，平板左右两栏。
+- 接口：`GET agc/v1/owner/counter`、`POST agc/v1/owner/counter/order`；订单 meta `_agc_channel`、`_agc_platform_ref`；厨房画面也显示已经付了但还没做的单。
+
 ## 1.9.0 — 2026-11-16（俊宇：工作室网站上的示范全部接上真的 WordPress + WooCommerce，一模一样）
 - 新：整个网站的设计（`class-site.php`）：示范网站的页面、样式、程式原样放在 `uploads/agc-skin/`（`site/build.py --wp`），旁边的 `site.json` 是页面自己的清单（菜单、节日套餐、外送区域、营业时间…，`site/tools/export-demo-data.js` 从页面读出来）。每一页都有 `window.AGC_LIVE`：同样的清单，但名称、价钱、简介、库存、照片来自 WooCommerce（后台改了网站马上变；后台新增的产品也会出现）。
 - 真的接口（`agc/v1/site/...`）：点餐 / 外送（服务器算价钱、选项、外送区域和运费、时段、优惠码）、节日预购（订金或全额、扣库存）、订位（人数、时段、剩几张桌子、订金）、礼券（付款后自动产生只能用一次的优惠码，12 个月）、询问（外烩、包场、公司礼品）、查订单。
