@@ -47,6 +47,10 @@ TMPD="$SITE_HOME/tmp/site-setup-$$"; mkdir -p "$TMPD"
 cp "$D/php/site-setup.php" "$TMPD/"
 chown -R "$SITE_USER:$SITE_USER" "$TMPD"
 wpx "$SLUG_ARG" agc set skin 1 >/dev/null || die "打不开设计（agc set skin）"
+# The studio's visitor counter (sales desk → 流量), only on the real server (local test sites use --no-ssl).
+if [[ " ${NEW[*]:-} " != *" --no-ssl "* ]]; then
+  wpx "$SLUG_ARG" agc set studio_hits "https://$STUDIO_DOMAIN/assets/js/hit.js" >/dev/null || warn "访客计数没打开（studio_hits）"
+fi
 wpx "$SLUG_ARG" eval-file "$TMPD/site-setup.php" || die "网店设定失败（site-setup.php）"
 rm -rf "$TMPD"
 clear_cache "$SLUG_ARG"
