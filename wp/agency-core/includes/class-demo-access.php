@@ -202,13 +202,21 @@ class AGC_Demo_Access {
 				'limit'        => 200,
 				'date_created' => '<' . $before,
 				'meta_query'   => array( // phpcs:ignore WordPress.DB.SlowDBQuery
+					'relation' => 'AND',
 					array(
 						'key'     => self::DONE,
+						'compare' => 'NOT EXISTS',
+					),
+					array( // the demo's own made-up sample order (DD-2041): customers track it, nobody's real details
+						'key'     => AGC_Site::REF,
 						'compare' => 'NOT EXISTS',
 					),
 				),
 			)
 		) as $o ) {
+			if ( $o->get_meta( self::DONE ) || $o->get_meta( AGC_Site::REF ) ) {
+				continue; // classic order storage ignores the meta query above: check here too
+			}
 			$o->set_billing_first_name( $hide( $o->get_billing_first_name() ) );
 			$o->set_billing_last_name( '' );
 			$o->set_billing_phone( $phone( $o->get_billing_phone() ) );
