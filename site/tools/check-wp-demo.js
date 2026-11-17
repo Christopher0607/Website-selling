@@ -213,7 +213,7 @@ async function sirehSalt(b) {
   await p.goto(BASE + '/festive.html');
   await p.click('[data-season="cny"]');
   const fa = await p.textContent('.fset >> nth=0');
-  const nL = (x) => +((x.match(/Only (\d+) left/) || [])[1] || -1);
+  const nL = (x) => { const m = x.match(/Only (\d+) left/); return m ? +m[1] : /sold out/i.test(x) ? 0 : -1; }; // the last one shows "Sold out"
   ok(nL(fb) > 0 && nL(fa) === nL(fb) - 1, `"only X left" comes from WooCommerce stock (${nL(fb)} → ${nL(fa)})`);
 
   console.log('Catering enquiry → saved for the restaurant');
@@ -284,8 +284,23 @@ async function sirehSalt(b) {
   // 2026-11-17: the counter (轻量收银): takeaway paid in cash, GrabFood with its order number → kitchen → close of day
   console.log('Counter → kitchen → close of day');
   const k = await newPage(b, { width: 1180, height: 820 });
+  // the kitchen printer (2026-11-17): catch what would be printed (window.print), also across reloads
+  await k.addInitScript(() => {
+    window.__prints = JSON.parse(sessionStorage.getItem('__prints') || '[]');
+    window.print = () => { const x = document.getElementById('kprint'); window.__prints.push(x ? x.innerText : ''); sessionStorage.setItem('__prints', JSON.stringify(window.__prints)); };
+  });
+  const prints = () => k.evaluate(() => window.__prints || []);
   await k.goto(BASE + '/?agc_demo=dian');
   await k.waitForURL(/\/dian\//);
+  await k.goto(BASE + '/dian/#/kitchen');
+  await k.waitForSelector('.top__act .btn:has-text("Printer")', { timeout: 20000 });
+  await k.click('.top__act .btn:has-text("Printer")');
+  await k.click('.ksheet .switch input');
+  await k.click('.ksheet .btn:has-text("Test print")');
+  await k.waitForFunction(() => (window.__prints || []).length >= 1, null, { timeout: 5000 }).catch(() => {});
+  ok((await prints()).some((x) => /TEST #000/.test(x)), 'kitchen printer: test print');
+  await k.click('.ksheet .btn:has-text("Done")');
+  ok(/Auto print on/.test(await k.textContent('.top__act')), 'kitchen printer: new orders print by themselves on this device');
   await k.goto(BASE + '/dian/#/counter');
   await k.waitForSelector('.cgrid .citem', { timeout: 20000 });
   ok(/Takeaway/.test(await k.textContent('.counter__menu')) && /GrabFood/.test(await k.textContent('.counter__menu')) && (await k.$$('.cgrid .citem')).length >= 10, 'counter: order types and the menu');
@@ -310,6 +325,10 @@ async function sirehSalt(b) {
   await k.waitForSelector('.kt', { timeout: 20000 });
   const kt = await k.textContent('.kgrid');
   ok(kt.includes('Takeaway #' + tk) && /GrabFood #\d+ · GF-TEST-1/.test(kt), `kitchen: "Takeaway #${tk}" and the GrabFood order with its number`);
+  await k.waitForFunction((n) => (window.__prints || []).some((x) => x.includes('Takeaway #' + n)), tk, { timeout: 20000 }).catch(() => {});
+  const pr = await prints();
+  ok(pr.some((x) => x.includes('Takeaway #' + tk) && /Kopi Ais/.test(x)) && pr.some((x) => /GrabFood #\d+ · GF-TEST-1/.test(x)), 'kitchen printer: the counter’s two orders were printed (each once)');
+  ok(pr.filter((x) => x.includes('Takeaway #' + tk)).length === 1, 'kitchen printer: not printed twice');
   await k.goto(BASE + '/dian/#/close');
   await k.waitForSelector('.closecard', { timeout: 20000 });
   const cl = await k.textContent('.main');
@@ -392,7 +411,7 @@ async function maisonCendre(b) {
   ok(/^MC-\d+$/.test((await p.textContent('.done .ref')).trim()), 'seasonal booking saved: ' + (await p.textContent('.done .ref')).trim());
   await p.goto(BASE + '/festive.html');
   await p.click('[data-season="cny"]');
-  const nL = (x) => +((x.match(/Only (\d+) left/) || [])[1] || -1);
+  const nL = (x) => { const m = x.match(/Only (\d+) left/); return m ? +m[1] : /sold out/i.test(x) ? 0 : -1; }; // the last one shows "Sold out"
   const fa = await p.textContent('.fset >> nth=0');
   ok(nL(fb) > 0 && nL(fa) === nL(fb) - 2, `places left go down by two (${nL(fb)} → ${nL(fa)})`);
 

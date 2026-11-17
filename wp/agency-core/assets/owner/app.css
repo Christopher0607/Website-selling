@@ -364,3 +364,35 @@ h1, h2, h3 { margin: 0; line-height: 1.25; }
 .cashout.is-ok { color: var(--ok, #2f7d4f); }
 .cashout.is-short { color: #a12626; }
 @media (min-width: 980px) { .counter { grid-template-columns: minmax(0, 1fr) 360px; align-items: start; } .counter__cart { position: sticky; top: 78px; } .counter__bar { display: none; } }
+
+/* 2026-11-17 kitchen printer: tickets for 80 / 58 mm thermal paper (the rest of the page is hidden while printing) */
+.kt__acts { display: flex; gap: 8px; align-items: stretch; }
+.kt__acts .kt__done { flex: 1; }
+.kt__print { flex: none; width: 52px; padding: 0; justify-content: center; }
+.top__act .btn.is-on { background: var(--s-make-bg); color: var(--s-make); border-color: transparent; }
+.ksheet .switch { margin-top: 6px; }
+.ksheet__l { margin: 14px 0 6px; font-weight: 700; }
+.kpaper { margin: 0; padding: 0 0 6px; }
+.kpaper .pill.is-on { background: var(--ink); color: #fff; border-color: var(--ink); }
+.kprint { display: none; }
+@page kt { margin: 0; }
+@media print {
+  body.kprinting > *:not(#kprint) { display: none !important; }
+  body.kprinting { background: #fff; margin: 0; }
+  body.kprinting #kprint { display: block; page: kt; color: #000; font: 13pt/1.25 system-ui, "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif; }
+  .kprint--80 { width: 72mm; padding: 2mm 4mm; }
+  .kprint--58 { width: 48mm; padding: 1mm 5mm; font-size: 11pt !important; }
+  .tk { break-after: page; page-break-after: always; padding-bottom: 6mm; }
+  .tk:last-child { break-after: auto; page-break-after: auto; }
+  .tk__shop { font-size: .8em; }
+  .tk__where { font-size: 1.9em; font-weight: 900; line-height: 1.1; margin: 1mm 0; }
+  .tk__meta { display: flex; gap: 2mm; align-items: center; font-weight: 700; padding-bottom: 2mm; border-bottom: 1.5px dashed #000; }
+  .tk__paid { margin-left: auto; border: 2px solid #000; padding: 0 1.5mm; }
+  .tk__items { padding: 2mm 0; }
+  .tk__it { display: flex; gap: 2mm; padding: 1mm 0; font-size: 1.15em; }
+  .tk__it > b { min-width: 9mm; }
+  .tk__it span { font-weight: 800; }
+  .tk__it small, .tk__it em { display: block; font-size: .8em; font-weight: 600; }
+  .tk__note { border: 2px solid #000; padding: 1.5mm; font-weight: 800; margin: 1mm 0 2mm; }
+  .tk__foot { font-size: .75em; text-align: right; border-top: 1.5px dashed #000; padding-top: 1mm; }
+}

@@ -52,7 +52,7 @@
       cp_used: 'used {0}×', cp_of: 'used {0} of {1}', cp_expired: 'Expired', cp_off: 'Off', cp_none: 'No coupons yet.', cp_delete: 'Delete coupon', cp_delete_q: 'Delete coupon {0}?',
       tm_owner: 'Owner', tm_staff: 'Staff', tm_add: 'Add a staff account', tm_name: 'Name', tm_email: 'Email', tm_hint: 'Staff can handle orders, production, products and customers. They cannot change settings or the team.', tm_link: 'Send this link to {0}. It lets them set their own password (one time, 24 hours):', tm_copy: 'Copy link', tm_wa: 'Send on WhatsApp', tm_remove: 'Remove', tm_remove_q: 'Remove {0}?', tm_remove_p: 'They will not be able to log in any more.', tm_you: 'you',
       c_tap: 'Tap a customer to see their orders.', all_orders: 'All orders',
-      counter: 'Counter', ct_dine: 'Dine-in', ct_takeaway: 'Takeaway', ct_phone: 'Phone / WhatsApp', ct_grab: 'GrabFood', ct_shopee: 'ShopeeFood', ct_table: 'Table', ct_pick_table: 'Choose the table first.', ct_search: 'Search the menu', ct_all: 'All', ct_empty: 'Tap the dishes to add them.', ct_add: 'Add', ct_note: 'Note for the kitchen (optional)', ct_later: 'Send · pay later', ct_pay: 'Pay now', ct_paid_by: 'Send · paid by {0}', ct_how: 'How are they paying {0}?', ct_cash: 'Cash received', ct_change: 'Change {0}', ct_short: 'Not enough: {0} more', ct_exact: 'Exact', ct_ok: 'Done', ct_sent: '#{0} sent to the kitchen', ct_sent_change: '#{0} sent · give {1} change', ct_name: 'Name (optional)', ct_ref: '{0} order no. (optional)', ct_off: 'The counter screen is off. Turn it on in Settings → Table QR ordering.', ct_clear: 'Clear', ct_sold: 'Sold out', ct_review: 'Review order', k_paid: 'Paid', m_grab: 'GrabFood', m_shopee: 'ShopeeFood', m_online: 'Paid online', cl_channels: 'By order type',
+      counter: 'Counter', ct_dine: 'Dine-in', ct_takeaway: 'Takeaway', ct_phone: 'Phone / WhatsApp', ct_grab: 'GrabFood', ct_shopee: 'ShopeeFood', ct_table: 'Table', ct_pick_table: 'Choose the table first.', ct_search: 'Search the menu', ct_all: 'All', ct_empty: 'Tap the dishes to add them.', ct_add: 'Add', ct_note: 'Note for the kitchen (optional)', ct_later: 'Send · pay later', ct_pay: 'Pay now', ct_paid_by: 'Send · paid by {0}', ct_how: 'How are they paying {0}?', ct_cash: 'Cash received', ct_change: 'Change {0}', ct_short: 'Not enough: {0} more', ct_exact: 'Exact', ct_ok: 'Done', ct_sent: '#{0} sent to the kitchen', ct_sent_change: '#{0} sent · give {1} change', ct_name: 'Name (optional)', ct_ref: '{0} order no. (optional)', ct_off: 'The counter screen is off. Turn it on in Settings → Table QR ordering.', ct_clear: 'Clear', ct_sold: 'Sold out', ct_review: 'Review order', k_paid: 'Paid', k_printer: 'Printer', k_print: 'Print', k_auto: 'Print new orders on this device', k_auto_hint: 'Turn this on only on the device next to the kitchen printer. Orders already on the screen are not printed again.', k_paper: 'Paper width', k_test: 'Test print', k_test_note: 'If you can read this, the printer works.', k_print_help: 'It prints on the printer this device already prints to (USB, network, or Bluetooth through the printer’s app). To print without the print window every time, use a Windows computer with Chrome set to kiosk printing — we set it up for you.', k_auto_on: 'Auto print on', k_printed: 'Sent to the printer', k_tk_paid: 'PAID', k_tk_kitchen: 'Kitchen', m_grab: 'GrabFood', m_shopee: 'ShopeeFood', m_online: 'Paid online', cl_channels: 'By order type',
       kitchen: 'Kitchen', tables: 'Tables', k_empty: 'Nothing to make. Orders from the table QR codes appear here by themselves.', k_done: 'Done', k_undo: 'Undo', k_recent: 'Done in the last 30 minutes',
       k_sound: 'Turn on sound', k_sound_on: 'Sound on', k_new: 'New table order', k_min: '{0} min', k_now: 'now', k_hint: 'Leave this screen open in the kitchen (a tablet or an old phone). It updates by itself.',
       tb_table: 'Table {0}', tb_free: 'Free', tb_ready: 'All served', tb_making: 'Kitchen making', tb_pay: 'Payment received', tb_pay_q: 'Table {0} paid {1}?', tb_how: 'How did they pay?',
@@ -105,7 +105,7 @@
       cp_used: '用了 {0} 次', cp_of: '用了 {0} / {1} 次', cp_expired: '已过期', cp_off: '已停用', cp_none: '还没有优惠码。', cp_delete: '删除优惠码', cp_delete_q: '删除优惠码 {0}？',
       tm_owner: '老板', tm_staff: '员工', tm_add: '新增员工帐号', tm_name: '名字', tm_email: '电邮', tm_hint: '员工可以处理订单、生产、产品和顾客，不能改设定和员工帐号。', tm_link: '把这个连结发给 {0}，让他自己设定密码（只能用一次、24 小时内有效）：', tm_copy: '复制连结', tm_wa: '用 WhatsApp 发', tm_remove: '移除', tm_remove_q: '移除 {0}？', tm_remove_p: '移除后这个人就不能再登录。', tm_you: '你',
       c_tap: '点顾客可以看他所有的订单。', all_orders: '全部订单',
-      counter: '收银', ct_dine: '堂食', ct_takeaway: '外带', ct_phone: '电话 / WhatsApp', ct_grab: 'GrabFood', ct_shopee: 'ShopeeFood', ct_table: '桌号', ct_pick_table: '请先选桌号。', ct_search: '搜寻菜单', ct_all: '全部', ct_empty: '按菜单上的菜加进来。', ct_add: '加入', ct_note: '给厨房的备注（可不填）', ct_later: '送出 · 之后付', ct_pay: '现在付', ct_paid_by: '送出 · {0} 已付', ct_how: '{0} 怎么付？', ct_cash: '收到现金', ct_change: '找钱 {0}', ct_short: '还差 {0}', ct_exact: '刚好', ct_ok: '好了', ct_sent: '#{0} 已送到厨房', ct_sent_change: '#{0} 已送出 · 找钱 {1}', ct_name: '名字（可不填）', ct_ref: '{0} 单号（可不填）', ct_off: '收银画面关着。到 设定 → 桌上扫码点单 打开。', ct_clear: '清空', ct_sold: '卖完', ct_review: '看这一单', k_paid: '已付', m_grab: 'GrabFood', m_shopee: 'ShopeeFood', m_online: '网上已付', cl_channels: '按单的种类',
+      counter: '收银', ct_dine: '堂食', ct_takeaway: '外带', ct_phone: '电话 / WhatsApp', ct_grab: 'GrabFood', ct_shopee: 'ShopeeFood', ct_table: '桌号', ct_pick_table: '请先选桌号。', ct_search: '搜寻菜单', ct_all: '全部', ct_empty: '按菜单上的菜加进来。', ct_add: '加入', ct_note: '给厨房的备注（可不填）', ct_later: '送出 · 之后付', ct_pay: '现在付', ct_paid_by: '送出 · {0} 已付', ct_how: '{0} 怎么付？', ct_cash: '收到现金', ct_change: '找钱 {0}', ct_short: '还差 {0}', ct_exact: '刚好', ct_ok: '好了', ct_sent: '#{0} 已送到厨房', ct_sent_change: '#{0} 已送出 · 找钱 {1}', ct_name: '名字（可不填）', ct_ref: '{0} 单号（可不填）', ct_off: '收银画面关着。到 设定 → 桌上扫码点单 打开。', ct_clear: '清空', ct_sold: '卖完', ct_review: '看这一单', k_paid: '已付', k_printer: '打印机', k_print: '打印', k_auto: '这台机器自动打印新单', k_auto_hint: '只在接着厨房打印机的那台机器打开。已经在画面上的单不会再打印。', k_paper: '纸宽', k_test: '试打印', k_test_note: '看得到这一张，打印机就可以用了。', k_print_help: '用这台机器平常打印的打印机（USB、网络线，或蓝牙打印机自己的 app）。不想每次跳出打印视窗：用 Windows 电脑 + Chrome 的 kiosk printing，我们帮你设好。', k_auto_on: '自动打印中', k_printed: '已送去打印', k_tk_paid: '已付', k_tk_kitchen: '厨房', m_grab: 'GrabFood', m_shopee: 'ShopeeFood', m_online: '网上已付', cl_channels: '按单的种类',
       kitchen: '厨房', tables: '桌子', k_empty: '没有要做的单。客人在桌上扫码点的单会自己出现在这里。', k_done: '做好了', k_undo: '退回', k_recent: '30 分钟内做好的',
       k_sound: '打开提示声', k_sound_on: '提示声已打开', k_new: '新的桌上点单', k_min: '{0} 分钟', k_now: '刚刚', k_hint: '把这个画面开着放在厨房（平板或旧手机），会自己更新。',
       tb_table: '{0} 号桌', tb_free: '空', tb_ready: '都做好了', tb_making: '厨房在做', tb_pay: '收到钱了', tb_pay_q: '{0} 号桌付了 {1}？', tb_how: '怎么付的？',
@@ -1389,6 +1389,63 @@
 
   function whereName(x) { return /#/.test(String(x)) ? String(x) : t('tb_table', x); }
   function where(o) { return whereName(o.table) + (o.ref ? ' · ' + o.ref : ''); }
+  /* ------------------------------------------------------------------ kitchen printer (2026-11-17) */
+  // Prints on whatever printer this device prints to (USB / network / Bluetooth via the printer's app). The settings live on
+  // this device only: auto print is meant for the one device next to the kitchen printer.
+  var PRN = {
+    get: function () { try { return JSON.parse(localStorage.getItem('agc_kprint') || '{}') || {}; } catch (e) { return {}; } },
+    set: function (v) { try { localStorage.setItem('agc_kprint', JSON.stringify(v)); } catch (e) { /* private mode */ } },
+    printed: function (id) { return (PRN.get().done || []).indexOf(id) !== -1; },
+    mark: function (ids) { var s = PRN.get(); s.done = (s.done || []).concat(ids).slice(-400); PRN.set(s); }
+  };
+  var fmtHM = fmt({ hour: '2-digit', minute: '2-digit', hour12: false });
+  function hm(ts) { return fmtHM.format(new Date(ts * 1000)); }
+  function ticket(o) {
+    var head = /#/.test(o.table) ? '' : '#' + o.number;
+    return h('div', { class: 'tk' },
+      h('div', { class: 'tk__shop' }, (C.site || '') + ' · ' + t('k_tk_kitchen')),
+      h('div', { class: 'tk__where' }, where(o)),
+      h('div', { class: 'tk__meta' }, [head, o.created ? hm(o.created) : ''].filter(Boolean).join(' · '), o.prepaid ? h('b', { class: 'tk__paid' }, t('k_tk_paid')) : null),
+      h('div', { class: 'tk__items' }, o.items.map(function (it) {
+        return h('div', { class: 'tk__it' }, h('b', null, it.qty + '×'), h('div', null, h('span', null, it.name), it.opts ? h('small', null, it.opts) : null, it.note ? h('em', null, '» ' + it.note) : null));
+      })),
+      o.note ? h('div', { class: 'tk__note' }, o.note) : null,
+      h('div', { class: 'tk__foot' }, hm(Math.floor(Date.now() / 1000))));
+  }
+  function printTickets(list) {
+    var w = PRN.get().w === 58 ? 58 : 80;
+    var old = document.getElementById('kprint'); if (old) old.remove();
+    var area = h('div', { id: 'kprint', class: 'kprint kprint--' + w, 'aria-hidden': 'true' }, list.map(ticket));
+    document.body.appendChild(area);
+    document.body.classList.add('kprinting');
+    var done = function () { document.body.classList.remove('kprinting'); window.removeEventListener('afterprint', done); };
+    window.addEventListener('afterprint', done);
+    setTimeout(function () { try { window.print(); } catch (e) { /* no printer */ } setTimeout(done, 1500); }, 60);
+    toast(t('k_printed'));
+  }
+  function printerSheet(now, onChange) {
+    var s = PRN.get();
+    var auto = sw(t('k_auto'), s.auto);
+    auto.input.onchange = function () { var v = PRN.get(); v.auto = auto.input.checked; v.since = auto.input.checked ? (now || Math.floor(Date.now() / 1000)) : 0; PRN.set(v); onChange(); };
+    var paper = h('div', { class: 'pills kpaper' }, [80, 58].map(function (mm) {
+      var b = h('button', { class: 'pill' + ((s.w === 58 ? 58 : 80) === mm ? ' is-on' : ''), type: 'button', onclick: function () {
+        var v = PRN.get(); v.w = mm; PRN.set(v);
+        Array.prototype.forEach.call(paper.children, function (x) { x.classList.toggle('is-on', x === b); });
+      } }, mm + ' mm');
+      return b;
+    }));
+    var close = function () { scrim.remove(); };
+    var scrim = h('div', { class: 'scrim', onclick: function (e) { if (e.target === scrim) close(); } },
+      h('div', { class: 'sheet ksheet', role: 'dialog', 'aria-modal': 'true' }, h('h3', null, t('k_printer')),
+        auto.el, h('p', { class: 'small muted' }, t('k_auto_hint')),
+        h('p', { class: 'ksheet__l' }, t('k_paper')), paper,
+        h('p', { class: 'small muted' }, t('k_print_help')),
+        h('div', { class: 'btns' },
+          h('button', { class: 'btn btn--plain', type: 'button', style: 'flex:1', onclick: function () { printTickets([{ id: 0, number: '000', table: 'TEST #000', created: Math.floor(Date.now() / 1000), items: [{ qty: 1, name: t('k_test'), opts: '', note: '' }], note: t('k_test_note') }]); } }, icon('print'), t('k_test')),
+          h('button', { class: 'btn', type: 'button', style: 'flex:1', onclick: close }, t('ct_ok')))));
+    document.body.appendChild(scrim);
+  }
+
   VIEWS.kitchen = function (r) {
     setTop(t('kitchen'), C.site);
     var seen = null;
@@ -1396,14 +1453,25 @@
       try { AUDIO = AUDIO || new (window.AudioContext || window.webkitAudioContext)(); AUDIO.resume(); beep(); } catch (e) { /* no sound */ }
       soundBtn.textContent = t('k_sound_on'); soundBtn.className = 'btn btn--sm btn--plain';
     } }, AUDIO ? t('k_sound_on') : t('k_sound'));
-    el.act.innerHTML = ''; put(el.act, soundBtn);
+    var lastNow = 0;
+    var prnBtn = h('button', { class: 'btn btn--sm btn--plain', type: 'button', onclick: function () { printerSheet(lastNow, prnLabel); } }, icon('print'), h('span', null, ''));
+    function prnLabel() { prnBtn.lastChild.textContent = PRN.get().auto ? t('k_auto_on') : t('k_printer'); prnBtn.classList.toggle('is-on', !!PRN.get().auto); }
+    prnLabel();
+    el.act.innerHTML = ''; put(el.act, h('div', { class: 'btns' }, prnBtn, soundBtn));
     keepAwake();
     function draw(d) {
       var m = live(r); if (!m) return;
       if (!d.on) { m.innerHTML = ''; tableOff(m); return; }
+      lastNow = d.now;
       var ids = d.todo.map(function (o) { return o.id; });
       if (seen && ids.some(function (id) { return seen.indexOf(id) === -1; })) { beep(); if (navigator.vibrate) navigator.vibrate([200, 100, 200]); toast(t('k_new')); }
       seen = ids;
+      // the kitchen printer: new orders since auto print was turned on on this device, each once
+      var ps = PRN.get();
+      if (ps.auto) {
+        var fresh = d.todo.filter(function (o) { return o.created >= (ps.since || 0) && !PRN.printed(o.id); });
+        if (fresh.length) { PRN.mark(fresh.map(function (o) { return o.id; })); printTickets(fresh); }
+      }
       m.innerHTML = '';
       if (!d.todo.length) put(m, h('div', { class: 'card empty' }, h('p', null, t('k_empty')), h('p', { class: 'small muted' }, t('k_hint'))));
       put(m, h('div', { class: 'kgrid' }, d.todo.map(function (o) {
@@ -1417,7 +1485,8 @@
           h('ul', { class: 'kt__items' }, o.items.map(function (it) {
             return h('li', null, h('b', null, it.qty + '×'), h('span', null, it.name, it.opts ? h('small', null, it.opts) : null, it.note ? h('em', null, it.note) : null));
           })),
-          o.note ? h('p', { class: 'kt__note' }, o.note) : null, btn);
+          o.note ? h('p', { class: 'kt__note' }, o.note) : null,
+          h('div', { class: 'kt__acts' }, h('button', { class: 'btn btn--plain kt__print', type: 'button', 'aria-label': t('k_print') + ' #' + o.number, onclick: function () { printTickets([o]); } }, icon('print')), btn));
       })));
       if (d.done.length) put(m, h('div', { class: 'card', style: 'margin-top:14px' }, h('div', { class: 'card__h' }, h('h2', null, t('k_recent'))),
         h('table', { class: 'tbl' }, h('tbody', null, d.done.map(function (o) {
