@@ -92,7 +92,7 @@ label.check { display: flex; gap: 8px; align-items: center; font-weight: 500; }
 main { padding: 16px; max-width: 720px; margin: 0 auto; }
 .view > h2 { font-size: 1.15rem; margin: 4px 0 4px; }
 
-.tabs { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; display: grid; grid-template-columns: repeat(5, 1fr); background: #fff; border-top: 1px solid var(--line); padding-bottom: env(safe-area-inset-bottom); }
+.tabs { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; display: grid; grid-template-columns: repeat(6, 1fr); background: #fff; border-top: 1px solid var(--line); padding-bottom: env(safe-area-inset-bottom); }
 .tabs button { position: relative; border: 0; background: none; padding: 9px 0 10px; font: 600 .74rem Inter, "PingFang SC", sans-serif; color: var(--faint); display: grid; justify-items: center; gap: 3px; cursor: pointer; }
 .tabs button span { display: block; height: 22px; }
 .tabs button.is-on { color: var(--ink); }
@@ -347,3 +347,15 @@ input[type=file] { display: block; width: 100%; margin-top: 6px; font: 400 .88re
 .parked > summary::before { content: "▸"; color: var(--muted); }
 .parked[open] > summary::before { content: "▾"; }
 .parked > summary small { color: var(--muted); }
+
+/* 2026-11-17 总助理 */
+.boss__log { max-height: 58vh; }
+.boss__tools { margin-top: 6px; opacity: .8; }
+.boss__mem ol { margin: 8px 0; padding-left: 20px; display: grid; gap: 6px; }
+.boss__mem li small { color: var(--muted); }
+.boss__mem li .btn { margin-left: 4px; }
+.boss__add { display: flex; gap: 8px; margin-top: 8px; }
+.boss__add input { flex: 1; min-width: 0; }
+.ai__log { overflow-x: hidden; }
+.ai__msg { min-width: 0; overflow-wrap: anywhere; word-break: break-word; }
+.ai__drafttext { overflow-wrap: anywhere; }

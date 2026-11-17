@@ -48,7 +48,8 @@
     eye: '<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/>',
     chat: '<path d="M5 4.5h14a1.5 1.5 0 0 1 1.5 1.5v9a1.5 1.5 0 0 1-1.5 1.5h-8l-4.5 3.5V16.5H5A1.5 1.5 0 0 1 3.5 15V6A1.5 1.5 0 0 1 5 4.5z"/>',
     pin: '<path d="M12 21s-6.5-5.6-6.5-11A6.5 6.5 0 0 1 18.5 10c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/>',
-    pulse: '<path d="M3 12h4l2.5-6 5 12 2.5-6h4"/>'
+    pulse: '<path d="M3 12h4l2.5-6 5 12 2.5-6h4"/>',
+    hub: '<circle cx="12" cy="12" r="3"/><circle cx="5" cy="5" r="1.8"/><circle cx="19" cy="5" r="1.8"/><circle cx="5" cy="19" r="1.8"/><circle cx="19" cy="19" r="1.8"/><path d="M6.4 6.4l3.4 3.4M17.6 6.4l-3.4 3.4M6.4 17.6l3.4-3.4M17.6 17.6l-3.4-3.4"/>'
   };
   const svg = (n, size) => `<svg class="ic" viewBox="0 0 24 24" width="${size || 18}" height="${size || 18}" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${I[n] || ''}</svg>`;
 
@@ -673,6 +674,54 @@
   }
   setInterval(() => { if (S.tab === 'traffic' && document.visibilityState === 'visible') loadTraffic(); }, 60e3);
 
+  // ------------------------------------------------------------ 总助理 (2026-11-17): one assistant for the whole desk
+  // Not tied to one shop: it looks things up with tools on the server (every card and conversation, follow-ups, mockup
+  // views, traffic, website forms, the inbox, the studio website). Its conversation and long-term memory are stored on
+  // the server, so it remembers across devices and days. It only reads and drafts; the owner sends everything himself.
+  const BOSS = { loaded: false, chat: [], summary: '', memory: [], drafts: [] };
+  const BOSS_QUICK = [
+    ['今天我应该先做什么？按重要性排好。', '今天先做什么'],
+    ['哪些商家今天要跟进或打电话？每家下一步是什么？', '今天要跟进的'],
+    ['这一周谁打开过样板或示范？哪几家可以趁热跟进？', '谁看过样板'],
+    ['网站这 7 天的流量怎样？哪些页面最多人看？', '网站流量'],
+    ['最近网站上有新的申请吗？', '网站申请'],
+    ['整理一下所有回复过我们的商家：他们说了什么、卡在哪里。', '谁回复过'],
+  ];
+  function bossText(t) {
+    const parts = String(t).split(/【可以直接发的信息】|【结束】/);
+    return parts.map((seg, i) => {
+      if (i % 2 === 1) {
+        const k = BOSS.drafts.push(seg.trim()) - 1;
+        return `<div class="ai__draft"><div class="ai__draftlabel">可以直接发的信息</div><div class="ai__drafttext">${esc(seg.trim())}</div><div class="btnrow"><button class="btn btn--sm" data-act="boss-copy" data-k="${k}">复制</button></div></div>`;
+      }
+      return seg.trim() ? `<p>${esc(seg.trim()).replace(/\n/g, '<br>')}</p>` : '';
+    }).join('');
+  }
+  async function renderBoss(force) {
+    const el = $('[data-boss]');
+    if (!BOSS.loaded || force) {
+      if (!BOSS.loaded) el.innerHTML = '<h2>总助理</h2><p class="hint">读取中…</p>';
+      try { const j = await api('boss-get'); Object.assign(BOSS, j, { loaded: true }); } catch (e) { el.innerHTML = `<h2>总助理</h2><p class="hint">读不到：${esc(e.message)}</p>`; return; }
+    }
+    BOSS.drafts = [];
+    const msgs = BOSS.chat.map((m) => `<div class="ai__msg ai__msg--${m.r === 'u' ? 'me' : 'ai'}"><small>${m.r === 'u' ? '你' : '总助理'} · ${esc(m.d || '')}</small>${m.r === 'u' ? `<p>${esc(m.t).replace(/\n/g, '<br>')}</p>` : bossText(m.t)}${m.tools && m.tools.length ? `<small class="boss__tools">查了：${esc(m.tools.join('、'))}</small>` : ''}</div>`).join('');
+    const keep = el.querySelector('[data-boss-text]');
+    const draft = keep ? keep.value : '';
+    el.innerHTML = `<h2>总助理</h2>
+      <p class="hint">看得到全部商家和每一家的对话、要跟进的、谁看过样板、网站流量、网站申请、新商家收件箱，还有工作室网站的页面。每次回答都会重新去查资料。对话和长期记忆存在工作台，换手机、过几天都还记得；跟它说「记住…」就会一直记住。它只帮你查和起草，信息还是你自己发。</p>
+      <details class="ai__sum boss__mem"><summary>长期记忆（${BOSS.memory.length}）</summary>
+        ${BOSS.memory.length ? `<ol>${BOSS.memory.map((m, i) => `<li><span>${esc(m.t)}</span> <small>${esc(m.d || '')}</small> <button class="btn btn--ghost btn--sm" data-act="boss-forget" data-i="${i}">删除</button></li>`).join('')}</ol>` : '<p class="hint">还没有。跟它说「记住：…」，或在下面直接加。</p>'}
+        <div class="boss__add"><input type="text" maxlength="300" placeholder="例：Bangsar 的店都在下午 3 点后打电话" data-boss-mem><button class="btn btn--ghost btn--sm" data-act="boss-remember">加进记忆</button></div>
+      </details>
+      ${BOSS.summary ? `<details class="ai__sum"><summary>之前对话的重点</summary><p>${esc(BOSS.summary).replace(/\n/g, '<br>')}</p></details>` : ''}
+      <div class="ai__log boss__log" data-boss-log>${msgs || '<div class="empty">还没有对话。可以先按下面的按钮试试看。</div>'}</div>
+      <div class="ai__quick">${BOSS_QUICK.map(([q, l]) => `<button class="chip" data-act="boss-quick" data-q="${esc(q)}">${esc(l)}</button>`).join('')}</div>
+      <textarea rows="3" data-boss-text maxlength="4000" placeholder="例：帮我看 Secawan Tepung 现在卡在哪里，下一步怎么做"></textarea>
+      <div class="btnrow"><button class="btn" data-act="boss-send">${svg('chat', 16)}问总助理</button></div>`;
+    if (draft) el.querySelector('[data-boss-text]').value = draft;
+    const log = $('[data-boss-log]'); if (log) log.scrollTop = log.scrollHeight;
+  }
+
   function render() {
     $('[data-today]').textContent = S.today;
     const n = sentToday();
@@ -689,6 +738,7 @@
     if (S.tab === 'list') renderList();
     if (S.tab === 'stats') renderStats();
     if (S.tab === 'traffic') renderTraffic();
+    if (S.tab === 'boss') renderBoss();
   }
 
   // ------------------------------------------------------------ "sent?" bar after opening a channel
@@ -857,6 +907,32 @@
       TR.sel = TR.sel === Number(t.dataset.i) ? -1 : Number(t.dataset.i);
       $$('[data-act="tr-bar"]').forEach((b) => b.classList.toggle('is-on', Number(b.dataset.i) === TR.sel));
       $('[data-tr-read]').innerHTML = trRead(TR.data);
+      return;
+    }
+    if (t.dataset.act === 'boss-quick') { const ta = $('[data-boss-text]'); ta.value = t.dataset.q; ta.focus(); return; }
+    if (t.dataset.act === 'boss-copy') { copy(BOSS.drafts[+t.dataset.k] || ''); toast('已复制，可以贴到 WhatsApp / IG / Email。'); return; }
+    if (t.dataset.act === 'boss-send' || t.dataset.act === 'boss-remember' || t.dataset.act === 'boss-forget') {
+      try {
+        if (t.dataset.act === 'boss-send') {
+          const ta = $('[data-boss-text]'); const text = ta.value.trim();
+          if (!text) { toast('先输入问题。'); return; }
+          busy(t, true, '总助理在查资料…');
+          const j = await api('boss', { text });
+          Object.assign(BOSS, j, { loaded: true });
+          ta.value = '';
+          if (j.saved) { const l = await api('list'); S.items = l.items || S.items; S.inbox = l.inbox || S.inbox; S.forms = l.forms || S.forms; toast('总助理改了卡片（备注 / 跟进日期 / 那一家的 AI 对话）。'); }
+        } else if (t.dataset.act === 'boss-remember') {
+          const v = ($('[data-boss-mem]').value || '').trim();
+          if (!v) { toast('先写要记住的事。'); return; }
+          Object.assign(BOSS, await api('boss-memory', { add: v }));
+          toast('记住了。');
+        } else {
+          if (!confirm('删除这一条记忆？')) return;
+          Object.assign(BOSS, await api('boss-memory', { remove: Number(t.dataset.i) }));
+        }
+        renderBoss();
+        if (t.dataset.act !== 'boss-send') { const d = $('.boss__mem'); if (d) d.open = true; }
+      } catch (e) { busy(t, false); if (e.message !== 'unauthorised') toast(e.message); }
       return;
     }
     const p = S.items.find((x) => x.id === t.dataset.id);
