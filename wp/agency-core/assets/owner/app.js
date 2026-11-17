@@ -52,6 +52,7 @@
       cp_used: 'used {0}×', cp_of: 'used {0} of {1}', cp_expired: 'Expired', cp_off: 'Off', cp_none: 'No coupons yet.', cp_delete: 'Delete coupon', cp_delete_q: 'Delete coupon {0}?',
       tm_owner: 'Owner', tm_staff: 'Staff', tm_add: 'Add a staff account', tm_name: 'Name', tm_email: 'Email', tm_hint: 'Staff can handle orders, production, products and customers. They cannot change settings or the team.', tm_link: 'Send this link to {0}. It lets them set their own password (one time, 24 hours):', tm_copy: 'Copy link', tm_wa: 'Send on WhatsApp', tm_remove: 'Remove', tm_remove_q: 'Remove {0}?', tm_remove_p: 'They will not be able to log in any more.', tm_you: 'you',
       c_tap: 'Tap a customer to see their orders.', all_orders: 'All orders',
+      counter: 'Counter', ct_dine: 'Dine-in', ct_takeaway: 'Takeaway', ct_phone: 'Phone / WhatsApp', ct_grab: 'GrabFood', ct_shopee: 'ShopeeFood', ct_table: 'Table', ct_pick_table: 'Choose the table first.', ct_search: 'Search the menu', ct_all: 'All', ct_empty: 'Tap the dishes to add them.', ct_add: 'Add', ct_note: 'Note for the kitchen (optional)', ct_later: 'Send · pay later', ct_pay: 'Pay now', ct_paid_by: 'Send · paid by {0}', ct_how: 'How are they paying {0}?', ct_cash: 'Cash received', ct_change: 'Change {0}', ct_short: 'Not enough: {0} more', ct_exact: 'Exact', ct_ok: 'Done', ct_sent: '#{0} sent to the kitchen', ct_sent_change: '#{0} sent · give {1} change', ct_name: 'Name (optional)', ct_ref: '{0} order no. (optional)', ct_off: 'The counter screen is off. Turn it on in Settings → Table QR ordering.', ct_clear: 'Clear', ct_sold: 'Sold out', m_grab: 'GrabFood', m_shopee: 'ShopeeFood', m_online: 'Paid online', cl_channels: 'By order type',
       kitchen: 'Kitchen', tables: 'Tables', k_empty: 'Nothing to make. Orders from the table QR codes appear here by themselves.', k_done: 'Done', k_undo: 'Undo', k_recent: 'Done in the last 30 minutes',
       k_sound: 'Turn on sound', k_sound_on: 'Sound on', k_new: 'New table order', k_min: '{0} min', k_now: 'now', k_hint: 'Leave this screen open in the kitchen (a tablet or an old phone). It updates by itself.',
       tb_table: 'Table {0}', tb_free: 'Free', tb_ready: 'All served', tb_making: 'Kitchen making', tb_pay: 'Payment received', tb_pay_q: 'Table {0} paid {1}?', tb_how: 'How did they pay?',
@@ -104,6 +105,7 @@
       cp_used: '用了 {0} 次', cp_of: '用了 {0} / {1} 次', cp_expired: '已过期', cp_off: '已停用', cp_none: '还没有优惠码。', cp_delete: '删除优惠码', cp_delete_q: '删除优惠码 {0}？',
       tm_owner: '老板', tm_staff: '员工', tm_add: '新增员工帐号', tm_name: '名字', tm_email: '电邮', tm_hint: '员工可以处理订单、生产、产品和顾客，不能改设定和员工帐号。', tm_link: '把这个连结发给 {0}，让他自己设定密码（只能用一次、24 小时内有效）：', tm_copy: '复制连结', tm_wa: '用 WhatsApp 发', tm_remove: '移除', tm_remove_q: '移除 {0}？', tm_remove_p: '移除后这个人就不能再登录。', tm_you: '你',
       c_tap: '点顾客可以看他所有的订单。', all_orders: '全部订单',
+      counter: '收银', ct_dine: '堂食', ct_takeaway: '外带', ct_phone: '电话 / WhatsApp', ct_grab: 'GrabFood', ct_shopee: 'ShopeeFood', ct_table: '桌号', ct_pick_table: '请先选桌号。', ct_search: '搜寻菜单', ct_all: '全部', ct_empty: '按菜单上的菜加进来。', ct_add: '加入', ct_note: '给厨房的备注（可不填）', ct_later: '送出 · 之后付', ct_pay: '现在付', ct_paid_by: '送出 · {0} 已付', ct_how: '{0} 怎么付？', ct_cash: '收到现金', ct_change: '找钱 {0}', ct_short: '还差 {0}', ct_exact: '刚好', ct_ok: '好了', ct_sent: '#{0} 已送到厨房', ct_sent_change: '#{0} 已送出 · 找钱 {1}', ct_name: '名字（可不填）', ct_ref: '{0} 单号（可不填）', ct_off: '收银画面关着。到 设定 → 桌上扫码点单 打开。', ct_clear: '清空', ct_sold: '卖完', m_grab: 'GrabFood', m_shopee: 'ShopeeFood', m_online: '网上已付', cl_channels: '按单的种类',
       kitchen: '厨房', tables: '桌子', k_empty: '没有要做的单。客人在桌上扫码点的单会自己出现在这里。', k_done: '做好了', k_undo: '退回', k_recent: '30 分钟内做好的',
       k_sound: '打开提示声', k_sound_on: '提示声已打开', k_new: '新的桌上点单', k_min: '{0} 分钟', k_now: '刚刚', k_hint: '把这个画面开着放在厨房（平板或旧手机），会自己更新。',
       tb_table: '{0} 号桌', tb_free: '空', tb_ready: '都做好了', tb_making: '厨房在做', tb_pay: '收到钱了', tb_pay_q: '{0} 号桌付了 {1}？', tb_how: '怎么付的？',
@@ -164,6 +166,7 @@
     map: '<path d="M12 21s-7-6.2-7-12a7 7 0 0 1 14 0c0 5.8-7 12-7 12z"/><circle cx="12" cy="9" r="2.5"/>',
     check: '<path d="M5 12.5 10 17l9-10"/>',
     pause: '<rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/>',
+    counter: '<rect x="3" y="10" width="18" height="10" rx="2"/><path d="M7 10V5h10v5"/><path d="M7 14h2M11 14h2M15 14h2M7 17h10"/>',
     kitchen: '<path d="M4 11h16v2a7 7 0 0 1-7 7h-2a7 7 0 0 1-7-7z"/><path d="M8 7.5c0-1.5 1-1.8 1-3.5M12 7.5c0-1.5 1-1.8 1-3.5M16 7.5c0-1.5 1-1.8 1-3.5"/>',
     cash: '<rect x="2.5" y="6" width="19" height="12" rx="2"/><circle cx="12" cy="12" r="2.6"/><path d="M6 9.5v5M18 9.5v5"/>',
     tables: '<rect x="3" y="3" width="7.5" height="7.5" rx="1.8"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.8"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.8"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.8"/>'
@@ -305,6 +308,7 @@
   var SIDE = [['home', 'home'], ['orders', 'orders'], ['production', 'production'], ['products', 'products'], ['customers', 'customers'], ['coupons', 'tag'], ['reports', 'reports'], ['settings', 'settings'], ['team', 'team']];
   if (!C.can || !C.can.admin) SIDE = SIDE.filter(function (x) { return x[0] !== 'team'; });
   if (C.table) SIDE.splice(2, 0, ['kitchen', 'kitchen'], ['tables', 'tables'], ['close', 'cash']); // table QR ordering (2026-11-15), close the day (2026-11-16)
+  if (C.counter) SIDE.splice(2, 0, ['counter', 'counter']); // the counter (2026-11-17)
   // a demo website can show only some screens (2026-11-16, the restaurant demo's kitchen and counter)
   if (C.nav) { NAV = C.nav.map(function (k) { return [k, { close: 'cash' }[k] || k]; }); SIDE = NAV.slice(); }
   if (!C.can || !C.can.products) { NAV = NAV.filter(function (x) { return x[0] !== 'products'; }); SIDE = SIDE.filter(function (x) { return x[0] !== 'products'; }); }
@@ -335,7 +339,7 @@
     document.title = title + ' · ' + C.site;
   }
   function setNav(k) {
-    var map = { order: 'orders', 'new-order': 'orders', product: 'products', customers: 'more', reports: 'more', settings: 'more', coupons: 'more', coupon: 'more', team: 'more', print: 'production', kitchen: 'more', tables: 'more', table: 'more', 'table-qr': 'more', close: 'more' };
+    var map = { order: 'orders', 'new-order': 'orders', product: 'products', customers: 'more', reports: 'more', settings: 'more', coupons: 'more', coupon: 'more', team: 'more', print: 'production', counter: 'more', kitchen: 'more', tables: 'more', table: 'more', 'table-qr': 'more', close: 'more' };
     var navK = map[k] || k;
     [].forEach.call(el.nav.querySelectorAll('a'), function (a) { a.classList.toggle('is-on', a.getAttribute('data-k') === navK); });
     var sideK = { order: 'orders', 'new-order': 'orders', product: 'products', coupon: 'coupons', print: 'production', table: 'tables', 'table-qr': 'tables' }[k] || k;
@@ -1220,6 +1224,167 @@
   }
   function tableOff(m) { put(m, h('div', { class: 'card empty' }, h('p', null, t('tb_off')), C.can.settings ? h('a', { class: 'btn btn--ghost', href: '#/settings' }, t('settings')) : null)); }
 
+  /* ------------------------------------------------------------------ the counter (2026-11-17) */
+  // Staff key in an order: dine-in at a table (pay now or later), takeaway, phone, GrabFood, ShopeeFood. Same menu, prices and
+  // options as the table QR page; the order goes to the kitchen screen and into "close the day".
+  VIEWS.counter = function (r) {
+    setTop(t('counter'), C.site);
+    var S = { ch: 'dine', table: '', cat: '', q: '', cart: [], name: '', ref: '', notes: '' };
+    try { var keep0 = JSON.parse(sessionStorage.getItem('agc_counter') || 'null'); if (keep0) S = Object.assign(S, keep0, { q: '' }); } catch (e) { /* none */ }
+    function keep() { try { sessionStorage.setItem('agc_counter', JSON.stringify(S)); } catch (e) { /* private mode */ } }
+    var D = null;
+    function money(v) { return C.currency + (Math.round(v * 100) / 100).toFixed(2); }
+    function item(id) { return D.menu.items.filter(function (x) { return x.id === id; })[0]; }
+    function unit(l) { var it = item(l.id); if (!it) return 0; var u = it.p; (it.o || []).forEach(function (g, gi) { (l.sel[gi] || []).forEach(function (vi) { var v = g.v[vi]; if (v) u += +v[1] || 0; }); }); return u; }
+    function optText(l) { var it = item(l.id); var out = []; (it && it.o || []).forEach(function (g, gi) { (l.sel[gi] || []).forEach(function (vi) { var v = g.v[vi]; if (v) out.push(v[0]); }); }); return out.join(', '); }
+    function total() { return S.cart.reduce(function (a, l) { return a + unit(l) * l.qty; }, 0); }
+    function chOf(k) { return D.channels.filter(function (x) { return x.key === k; })[0] || D.channels[0]; }
+    function add(it, sel, qty, note) {
+      var key = it.id + '|' + JSON.stringify(sel) + '|' + (note || '');
+      var same = S.cart.filter(function (l) { return l.key === key; })[0];
+      if (same) same.qty += qty; else S.cart.push({ key: key, id: it.id, sel: sel, qty: qty, note: note || '' });
+      keep(); paint();
+    }
+    function pick(it) {
+      if (!(it.o || []).length) { add(it, [], 1, ''); return; }
+      var sel = it.o.map(function (g) { return g.one ? [g.def || 0] : []; });
+      var qty = 1;
+      var note = h('input', { type: 'text', maxlength: '120', placeholder: t('ct_note') });
+      var qn = h('b', { class: 'cline__qn' }, '1');
+      var go = h('button', { class: 'btn', type: 'button', style: 'flex:1' }, '');
+      function price() { go.textContent = t('ct_add') + ' · ' + money(unit({ id: it.id, sel: sel }) * qty); }
+      var groups = it.o.map(function (g, gi) {
+        return h('div', { class: 'optg' }, h('h4', null, g.n || ''), g.v.map(function (v, vi) {
+          var inp = h('input', { type: g.one ? 'radio' : 'checkbox', name: 'g' + gi, checked: sel[gi].indexOf(vi) !== -1 });
+          inp.addEventListener('change', function () {
+            if (g.one) sel[gi] = [vi]; else sel[gi] = inp.checked ? sel[gi].concat([vi]) : sel[gi].filter(function (x) { return x !== vi; });
+            price();
+          });
+          return h('label', { class: 'optv' }, inp, h('span', null, v[0]), +v[1] ? h('small', null, '+' + money(+v[1])) : null);
+        }));
+      });
+      var scrim = h('div', { class: 'scrim', onclick: function (e) { if (e.target === scrim) scrim.parentNode.removeChild(scrim); } },
+        h('div', { class: 'sheet', role: 'dialog', 'aria-modal': 'true' }, h('h3', null, it.n), groups, field(t('ct_note'), note),
+          h('div', { class: 'row', style: 'gap:10px;margin-top:6px' },
+            h('div', { class: 'cline__q' }, h('button', { class: 'qbtn', type: 'button', 'aria-label': '-', onclick: function () { qty = Math.max(1, qty - 1); qn.textContent = qty; price(); } }, '−'), qn,
+              h('button', { class: 'qbtn', type: 'button', 'aria-label': '+', onclick: function () { qty = Math.min(30, qty + 1); qn.textContent = qty; price(); } }, '+')), go)));
+      go.addEventListener('click', function () { scrim.parentNode.removeChild(scrim); add(it, sel, qty, note.value.trim()); });
+      price();
+      document.body.appendChild(scrim);
+    }
+    function send(paid, method, extra) {
+      var c = chOf(S.ch);
+      var body = { channel: S.ch, table: S.table, name: S.name, ref: S.ref, notes: S.notes, paid: !!paid, method: method || '', total: Math.round(total() * 100) / 100,
+        items: S.cart.map(function (l) { return { id: l.id, qty: l.qty, sel: l.sel, note: l.note }; }) };
+      return api('counter/order', { method: 'POST', body: body }).then(function (o) {
+        toast(extra ? t('ct_sent_change', o.number, extra) : t('ct_sent', o.number));
+        S.cart = []; S.name = ''; S.ref = ''; S.notes = ''; keep();
+        return api('counter').then(function (dd) { D = dd; paint(); });
+      }).catch(function (e) { toast(t('error', e.message), true); paint(); });
+    }
+    function cash(sum) {
+      return new Promise(function (resolve) {
+        var inp = h('input', { type: 'number', inputmode: 'decimal', min: '0', step: '0.10', placeholder: sum.toFixed(2) });
+        var out = h('p', { class: 'cashout' }, '');
+        var ok = h('button', { class: 'btn', type: 'button', style: 'flex:1', disabled: true }, t('ct_ok'));
+        function calc() {
+          var v = parseFloat(inp.value);
+          if (isNaN(v)) { out.textContent = ''; ok.disabled = true; return; }
+          var ch = Math.round((v - sum) * 100) / 100;
+          out.textContent = ch >= 0 ? t('ct_change', money(ch)) : t('ct_short', money(-ch));
+          out.className = 'cashout' + (ch >= 0 ? ' is-ok' : ' is-short');
+          ok.disabled = ch < 0;
+        }
+        inp.addEventListener('input', calc);
+        var quick = [sum, 10, 20, 50, 100].filter(function (v, i, a) { return v >= sum && a.indexOf(v) === i; }).slice(0, 4);
+        var close = function (v) { scrim.parentNode.removeChild(scrim); resolve(v); };
+        var scrim = h('div', { class: 'scrim', onclick: function (e) { if (e.target === scrim) close(null); } },
+          h('div', { class: 'sheet', role: 'dialog', 'aria-modal': 'true' }, h('h3', null, t('m_cash') + ' · ' + money(sum)), field(t('ct_cash'), inp),
+            h('div', { class: 'row', style: 'gap:8px;flex-wrap:wrap;margin:-4px 0 10px' }, quick.map(function (v, i) { return h('button', { class: 'btn btn--plain btn--sm', type: 'button', onclick: function () { inp.value = v.toFixed(2); calc(); } }, i === 0 ? t('ct_exact') : money(v)); })),
+            out, h('div', { class: 'btns' }, h('button', { class: 'btn btn--plain', type: 'button', style: 'flex:1', onclick: function () { close(null); } }, t('no')), ok)));
+        ok.addEventListener('click', function () { var v = parseFloat(inp.value); close(money(Math.round((v - sum) * 100) / 100)); });
+        document.body.appendChild(scrim);
+        setTimeout(function () { inp.focus(); }, 50);
+      });
+    }
+    function payNow() {
+      var sum = Math.round(total() * 100) / 100;
+      sheet(t('ct_how', money(sum)), '', [
+        { label: t('m_cash'), v: 'cash' }, { label: t('m_duitnow'), v: 'duitnow' }, { label: t('m_card'), v: 'card' }, { label: t('m_other'), v: 'other', cls: 'btn--plain' }
+      ]).then(function (m) {
+        if (!m) return;
+        if (m !== 'cash') { send(true, m); return; }
+        cash(sum).then(function (change) { if (change) send(true, 'cash', change); });
+      });
+    }
+    function paint() {
+      var m = live(r); if (!m) return;
+      m.innerHTML = '';
+      if (!D.on) { put(m, h('div', { class: 'card empty' }, h('p', null, t('ct_off')))); return; }
+      if (D.stopped) put(m, h('div', { class: 'card stat--warn' }, h('p', { style: 'margin:0' }, D.stopped)));
+      var c = chOf(S.ch);
+      var cats = D.menu.cats;
+      if (S.cat && !cats.some(function (x) { return x[0] === S.cat; })) S.cat = '';
+      var shown = D.menu.items.filter(function (it) { return (!S.cat || it.cat === S.cat) && (!S.q || it.n.toLowerCase().indexOf(S.q.toLowerCase()) !== -1); });
+      var inCart = {}; S.cart.forEach(function (l) { inCart[l.id] = (inCart[l.id] || 0) + l.qty; });
+      var search = h('input', { type: 'search', placeholder: t('ct_search'), value: S.q, 'aria-label': t('ct_search') });
+      search.addEventListener('input', function () { S.q = search.value; var pos = search.selectionStart; paint(); var s2 = document.querySelector('.counter input[type=search]'); if (s2) { s2.focus(); try { s2.setSelectionRange(pos, pos); } catch (e) { /* ignore */ } } });
+      var left = h('div', { class: 'counter__menu' },
+        h('div', { class: 'pills' }, D.channels.map(function (x) {
+          return h('button', { class: 'pill' + (S.ch === x.key ? ' is-on' : ''), type: 'button', onclick: function () { S.ch = x.key; keep(); paint(); } }, t('ct_' + x.key));
+        })),
+        S.ch === 'dine' ? h('div', { class: 'pills' }, D.tables.map(function (tb) {
+          return h('button', { class: 'pill' + (S.table === tb ? ' is-on' : ''), type: 'button', onclick: function () { S.table = tb; keep(); paint(); } }, t('ct_table') + ' ' + tb);
+        })) : null,
+        h('div', { class: 'row', style: 'gap:8px;margin:2px 0 10px' }, search),
+        h('div', { class: 'pills' }, [h('button', { class: 'pill' + (!S.cat ? ' is-on' : ''), type: 'button', onclick: function () { S.cat = ''; keep(); paint(); } }, t('ct_all'))].concat(cats.map(function (x) {
+          return h('button', { class: 'pill' + (S.cat === x[0] ? ' is-on' : ''), type: 'button', onclick: function () { S.cat = x[0]; keep(); paint(); } }, x[1]);
+        }))),
+        h('div', { class: 'cgrid' }, shown.map(function (it) {
+          return h('button', { class: 'citem' + (inCart[it.id] ? ' is-in' : ''), type: 'button', disabled: !!it.sold, onclick: function () { pick(it); } },
+            h('b', null, it.n), h('span', null, it.sold ? t('ct_sold') : money(it.p) + ((it.o || []).some(function (g) { return g.v.some(function (v) { return +v[1]; }); }) ? '+' : '')),
+            inCart[it.id] ? h('i', { class: 'citem__n' }, inCart[it.id]) : null);
+        })));
+      var who = null;
+      if (S.ch === 'grab' || S.ch === 'shopee') {
+        who = h('input', { type: 'text', value: S.ref, maxlength: '30', placeholder: t('ct_ref', c.label) });
+        who.addEventListener('input', function () { S.ref = who.value; keep(); });
+        who = field(t('ct_ref', c.label), who);
+      } else if (S.ch !== 'dine') {
+        who = h('input', { type: 'text', value: S.name, maxlength: '40' });
+        who.addEventListener('input', function () { S.name = who.value; keep(); });
+        who = field(t('ct_name'), who);
+      }
+      var notes = h('input', { type: 'text', value: S.notes, maxlength: '300' });
+      notes.addEventListener('input', function () { S.notes = notes.value; keep(); });
+      var sum = total();
+      var acts;
+      if (c.paid_by) acts = [h('button', { class: 'btn', type: 'button', disabled: !S.cart.length, onclick: function (e) { e.target.disabled = true; send(true, c.paid_by); } }, t('ct_paid_by', c.label))];
+      else acts = [h('button', { class: 'btn btn--plain', type: 'button', disabled: !S.cart.length, onclick: function (e) { if (S.ch === 'dine' && !S.table) { toast(t('ct_pick_table'), true); return; } e.target.disabled = true; send(false); } }, t('ct_later')),
+        h('button', { class: 'btn', type: 'button', disabled: !S.cart.length, onclick: function () { if (S.ch === 'dine' && !S.table) { toast(t('ct_pick_table'), true); return; } payNow(); } }, t('ct_pay'))];
+      var right = h('div', { class: 'card counter__cart' },
+        h('div', { class: 'card__h' }, h('h2', null, (S.ch === 'dine' ? (S.table ? t('ct_table') + ' ' + S.table : t('ct_dine')) : t('ct_' + S.ch))),
+          S.cart.length ? h('button', { class: 'btn btn--plain btn--sm', type: 'button', onclick: function () { S.cart = []; keep(); paint(); } }, t('ct_clear')) : null),
+        S.cart.length ? S.cart.map(function (l) {
+          var it = item(l.id); if (!it) return null;
+          var o = optText(l);
+          return h('div', { class: 'cline' }, h('div', { class: 'cline__n' }, h('b', null, it.n), o ? h('small', null, o) : null, l.note ? h('em', null, l.note) : null),
+            h('div', { class: 'cline__q' },
+              h('button', { class: 'qbtn', type: 'button', 'aria-label': '-', onclick: function () { l.qty -= 1; if (l.qty < 1) S.cart.splice(S.cart.indexOf(l), 1); keep(); paint(); } }, '−'),
+              h('b', { class: 'cline__qn' }, l.qty),
+              h('button', { class: 'qbtn', type: 'button', 'aria-label': '+', onclick: function () { l.qty = Math.min(30, l.qty + 1); keep(); paint(); } }, '+')),
+            h('span', { class: 'cline__p' }, money(unit(l) * l.qty)));
+        }) : h('p', { class: 'muted', style: 'margin:4px 0 10px' }, t('ct_empty')),
+        who, field(t('ct_note'), notes),
+        h('div', { class: 'row', style: 'justify-content:space-between;margin:10px 0 4px' }, h('span', { class: 'muted' }, t('total')), h('b', { style: 'font-size:1.35rem' }, money(sum))),
+        h('div', { class: 'btns counter__acts' }, acts));
+      put(m, h('div', { class: 'counter' }, left, right));
+    }
+    return api('counter').then(function (dd) { D = dd; paint(); });
+  };
+
+  function whereName(x) { return /#/.test(String(x)) ? String(x) : t('tb_table', x); }
+  function where(o) { return whereName(o.table) + (o.ref ? ' · ' + o.ref : ''); }
   VIEWS.kitchen = function (r) {
     setTop(t('kitchen'), C.site);
     var seen = null;
@@ -1244,7 +1409,7 @@
           api('kitchen/' + o.id, { method: 'POST', body: { done: true } }).then(draw).catch(function (e) { btn.disabled = false; toast(t('error', e.message), true); });
         } }, icon('check'), t('k_done'));
         return h('article', { class: 'kt' + (late ? ' kt--late' : '') },
-          h('div', { class: 'kt__hd' }, h('b', { class: 'kt__table' }, t('tb_table', o.table)), h('span', { class: 'kt__no' }, '#' + o.number), h('span', { class: 'kt__age' }, ago(o.created, d.now))),
+          h('div', { class: 'kt__hd' }, h('b', { class: 'kt__table' }, where(o)), h('span', { class: 'kt__no' }, '#' + o.number), h('span', { class: 'kt__age' }, ago(o.created, d.now))),
           h('ul', { class: 'kt__items' }, o.items.map(function (it) {
             return h('li', null, h('b', null, it.qty + '×'), h('span', null, it.name, it.opts ? h('small', null, it.opts) : null, it.note ? h('em', null, it.note) : null));
           })),
@@ -1253,7 +1418,7 @@
       if (d.done.length) put(m, h('div', { class: 'card', style: 'margin-top:14px' }, h('div', { class: 'card__h' }, h('h2', null, t('k_recent'))),
         h('table', { class: 'tbl' }, h('tbody', null, d.done.map(function (o) {
           var undo = h('button', { class: 'btn btn--plain btn--sm', type: 'button', onclick: function () { undo.disabled = true; api('kitchen/' + o.id, { method: 'POST', body: { done: false } }).then(draw).catch(function (e) { undo.disabled = false; toast(t('error', e.message), true); }); } }, t('k_undo'));
-          return h('tr', null, h('td', null, h('b', null, t('tb_table', o.table)), ' #' + o.number), h('td', { class: 'small muted' }, o.items.map(function (it) { return it.qty + '× ' + it.name; }).join(', ')), h('td', { class: 'r' }, o.status === 'completed' ? h('span', { class: 'badge b-done' }, t('paid')) : undo));
+          return h('tr', null, h('td', null, h('b', null, where(o)), /#/.test(o.table) ? '' : ' #' + o.number), h('td', { class: 'small muted' }, o.items.map(function (it) { return it.qty + '× ' + it.name; }).join(', ')), h('td', { class: 'r' }, o.status === 'completed' ? h('span', { class: 'badge b-done' }, t('paid')) : undo));
         })))));
     }
     return api('kitchen').then(function (d) { draw(d); pollWhile(r, function () { api('kitchen').then(draw).catch(function () {}); }, 6000); });
@@ -1282,7 +1447,7 @@
 
   VIEWS.table = function (r) {
     var name = decodeURIComponent(r.id || '');
-    setTop(t('tb_table', name), C.site, true);
+    setTop(whereName(name), C.site, true);
     function draw(d) {
       var m = live(r); if (!m) return;
       var x = d.tables.filter(function (y) { return y.table === name; })[0];
@@ -1350,9 +1515,13 @@
         h('table', { class: 'tbl' }, h('tbody', null, d.methods.map(function (x) {
           return h('tr', null, h('td', null, h('b', null, payName(x.key, x.label)), x.key === 'cash' ? h('div', { class: 'small muted' }, t('cl_cash')) : null), h('td', { class: 'r muted' }, x.bills + (ZH ? ' 张' : (x.bills === 1 ? ' bill' : ' bills'))), h('td', { class: 'r' }, h('b', null, x.total_f)));
         }).concat([h('tr', { class: 'tbl__total' }, h('td', null, h('b', null, t('total'))), h('td', { class: 'r muted' }, ''), h('td', { class: 'r' }, h('b', null, d.total_f)))])))));
+      if (d.channels && d.channels.length > 1) put(m, h('div', { class: 'card' }, h('div', { class: 'card__h' }, h('h2', null, t('cl_channels'))),
+        h('table', { class: 'tbl' }, h('tbody', null, d.channels.map(function (x) {
+          return h('tr', null, h('td', null, h('b', null, W.en['ct_' + x.key] != null ? t('ct_' + x.key) : x.label)), h('td', { class: 'r muted' }, x.orders + (ZH ? ' 张单' : (x.orders === 1 ? ' order' : ' orders'))), h('td', { class: 'r' }, x.total_f));
+        })))));
       put(m, h('div', { class: 'card' }, h('div', { class: 'card__h' }, h('h2', null, t('cl_bills'))),
         d.bills.length ? h('table', { class: 'tbl' }, h('tbody', null, d.bills.map(function (b) {
-          return h('tr', null, h('td', null, h('b', null, timeName(b)), h('div', { class: 'small muted' }, '#' + b.numbers.join(', #'))), h('td', null, t('tb_table', b.table), h('div', { class: 'small muted' }, payName(b.method_key, b.method))), h('td', { class: 'r' }, h('b', null, b.total_f)));
+          return h('tr', null, h('td', null, h('b', null, timeName(b)), h('div', { class: 'small muted' }, '#' + b.numbers.join(', #'))), h('td', null, whereName(b.table), h('div', { class: 'small muted' }, payName(b.method_key, b.method))), h('td', { class: 'r' }, h('b', null, b.total_f)));
         }))) : h('p', { class: 'muted', style: 'margin:0' }, t('cl_none'))));
       if (d.items.length) put(m, h('div', { class: 'card' }, h('div', { class: 'card__h' }, h('h2', null, t('cl_items'))),
         h('table', { class: 'tbl' }, h('tbody', null, d.items.map(function (x) { return h('tr', null, h('td', null, x.name), h('td', { class: 'r' }, h('b', null, '× ' + x.qty))); })))));
@@ -1388,6 +1557,7 @@
     var m = live(r); if (!m) return; m.innerHTML = '';
     var links = [['customers', 'customers'], ['coupons', 'tag'], ['reports', 'reports']];
     if (C.table) links.unshift(['kitchen', 'kitchen'], ['tables', 'tables'], ['close', 'cash']);
+    if (C.counter) links.unshift(['counter', 'counter']);
     if (C.can.settings) links.push(['settings', 'settings']);
     if (C.can.admin) links.push(['team', 'team']);
     put(m, h('div', { class: 'card', style: 'padding:6px' }, links.map(function (x) {

@@ -29,6 +29,49 @@ class AGC_Table {
 	const PAID_BY = '_agc_paid_by';
 	const SECRET  = 'agc_table_secret';
 	const BILL    = '_agc_bill';
+	const CHANNEL = '_agc_channel'; // counter orders (2026-11-17): dine, takeaway, grab, shopee, phone; table QR orders have none
+
+	/**
+	 * Order types at the counter, with the payment the delivery apps take themselves.
+	 *
+	 * @return array key => [ label, paid by the platform ]
+	 */
+	public static function channels() {
+		return array(
+			'dine'     => array( __( 'Dine-in', 'agency-core' ), '' ),
+			'takeaway' => array( __( 'Takeaway', 'agency-core' ), '' ),
+			'phone'    => array( __( 'Phone / WhatsApp', 'agency-core' ), '' ),
+			'grab'     => array( 'GrabFood', 'grab' ),
+			'shopee'   => array( 'ShopeeFood', 'shopee' ),
+		);
+	}
+
+	/**
+	 * Payment methods (counter, tables, close the day).
+	 *
+	 * @return array
+	 */
+	public static function methods() {
+		return array(
+			'cash'    => __( 'Cash', 'agency-core' ),
+			'duitnow' => __( 'DuitNow QR', 'agency-core' ),
+			'card'    => __( 'Card', 'agency-core' ),
+			'pos'     => __( 'Shop cashier', 'agency-core' ),
+			'grab'    => 'GrabFood',
+			'shopee'  => 'ShopeeFood',
+			'online'  => __( 'Paid online', 'agency-core' ),
+			'other'   => __( 'Other', 'agency-core' ),
+		);
+	}
+
+	/**
+	 * The counter screen is switched on (it needs table ordering for the kitchen and the bills).
+	 *
+	 * @return bool
+	 */
+	public static function counter_on() {
+		return self::on() && (bool) agc_get( 'counter_on' );
+	}
 
 	/**
 	 * Hooks.
@@ -440,6 +483,8 @@ class AGC_Table {
 		register_rest_route( self::NS, '/owner/tables/pay', array( 'methods' => 'POST', 'callback' => array( __CLASS__, 'pay' ), 'permission_callback' => $staff ) );
 		register_rest_route( self::NS, '/owner/tables/cancel/(?P<id>\d+)', array( 'methods' => 'POST', 'callback' => array( __CLASS__, 'cancel' ), 'permission_callback' => $staff ) );
 		register_rest_route( self::NS, '/owner/tables/day', array( 'methods' => 'GET', 'callback' => array( __CLASS__, 'day' ), 'permission_callback' => $staff ) );
+		register_rest_route( self::NS, '/owner/counter', array( 'methods' => 'GET', 'callback' => array( __CLASS__, 'counter' ), 'permission_callback' => $staff ) );
+		register_rest_route( self::NS, '/owner/counter/order', array( 'methods' => 'POST', 'callback' => array( __CLASS__, 'counter_order' ), 'permission_callback' => $staff ) );
 	}
 
 	/**
@@ -482,9 +527,42 @@ class AGC_Table {
 		if ( $n >= 20 ) {
 			return $err( __( 'Too many orders from this table. Please ask our staff.', 'agency-core' ), 429 );
 		}
+		$lines = self::lines( (array) ( $b['items'] ?? array() ) );
+		if ( is_wp_error( $lines ) ) {
+			return $lines;
+		}
+		$o = self::create( $lines, $t, 'table', (string) ( $b['notes'] ?? '' ) );
+		$o->set_payment_method( '' );
+		$o->set_payment_method_title( __( 'Pay at the counter', 'agency-core' ) );
+		$o->calculate_totals( false );
+		if ( isset( $b['total'] ) && abs( (float) $b['total'] - (float) $o->get_total() ) > 0.01 ) {
+			$o->delete( true );
+			return $err( __( 'Some prices have just changed. Please check your order again.', 'agency-core' ), 409 );
+		}
+		$o->save();
+		/* translators: %s: table */
+		$o->update_status( 'on-hold', sprintf( __( 'Table order (table %s): pay at the counter.', 'agency-core' ), $t ) );
+		wc_maybe_reduce_stock_levels( $o->get_id() );
+		set_transient( $flood, $n + 1, HOUR_IN_SECONDS );
+		return array(
+			'id'     => $o->get_id(),
+			'number' => $o->get_order_number(),
+			'key'    => $o->get_order_key(),
+			'total'  => (float) $o->get_total(),
+		);
+	}
+
+	/**
+	 * The lines of an order from the menu (same prices, options and stock checks for the table page and the counter).
+	 *
+	 * @param array $rows [{ id, qty, sel, note }].
+	 * @return array|WP_Error [ product, qty, unit, options, note ]
+	 */
+	private static function lines( $rows ) {
+		$err   = static fn( $m, $s = 400 ) => new WP_Error( 'agc_table_order', $m, array( 'status' => $s ) );
 		$menu  = array_column( self::menu()['items'], null, 'id' );
 		$lines = array();
-		foreach ( array_slice( (array) ( $b['items'] ?? array() ), 0, 40 ) as $row ) {
+		foreach ( array_slice( $rows, 0, 40 ) as $row ) {
 			$id  = sanitize_title( (string) ( $row['id'] ?? '' ) );
 			$qty = max( 1, min( 30, (int) ( $row['qty'] ?? 1 ) ) );
 			$it  = $menu[ $id ] ?? null;
@@ -521,14 +599,23 @@ class AGC_Table {
 			}
 			$lines[] = array( $p, $qty, $unit, implode( ', ', $opts ), mb_substr( sanitize_text_field( (string) ( $row['note'] ?? '' ) ), 0, 120 ) );
 		}
-		if ( ! $lines ) {
-			return $err( __( 'Your order is empty.', 'agency-core' ) );
-		}
+		return $lines ? $lines : $err( __( 'Your order is empty.', 'agency-core' ) );
+	}
 
+	/**
+	 * A new kitchen order with these lines (not paid yet).
+	 *
+	 * @param array  $lines From lines().
+	 * @param string $t     Table, or the label of a counter order ("Takeaway").
+	 * @param string $via   created_via: table or counter.
+	 * @param string $notes Note for the kitchen.
+	 * @return WC_Order
+	 */
+	private static function create( $lines, $t, $via, $notes ) {
 		$o = wc_create_order(
 			array(
 				'status'      => 'pending',
-				'created_via' => 'table',
+				'created_via' => $via,
 			)
 		);
 		foreach ( $lines as $x ) {
@@ -552,31 +639,117 @@ class AGC_Table {
 			}
 		}
 		/* translators: %s: table */
-		$o->set_billing_first_name( sprintf( __( 'Table %s', 'agency-core' ), $t ) );
+		$o->set_billing_first_name( 'table' === $via ? sprintf( __( 'Table %s', 'agency-core' ), $t ) : $t );
 		$o->set_billing_country( 'MY' );
 		$o->update_meta_data( self::META, $t );
 		$o->update_meta_data( self::KITCHEN, 'new' );
-		$note = mb_substr( sanitize_textarea_field( (string) ( $b['notes'] ?? '' ) ), 0, 300 );
+		$note = mb_substr( sanitize_textarea_field( $notes ), 0, 300 );
 		if ( $note ) {
 			$o->set_customer_note( $note );
 		}
-		$o->set_payment_method( '' );
-		$o->set_payment_method_title( __( 'Pay at the counter', 'agency-core' ) );
+		return $o;
+	}
+
+	/* ------------------------------------------------------------------ the counter (轻量收银, 2026-11-17) */
+
+	/**
+	 * What the counter screen needs: the menu, the tables, the order types.
+	 *
+	 * @return array
+	 */
+	public static function counter() {
+		nocache_headers();
+		return array(
+			'on'       => self::counter_on(),
+			'menu'     => self::menu(),
+			'tables'   => self::tables(),
+			'channels' => array_map( static fn( $k, $v ) => array( 'key' => $k, 'label' => $v[0], 'paid_by' => $v[1] ), array_keys( self::channels() ), self::channels() ),
+			'stopped'  => self::stopped(),
+		);
+	}
+
+	/**
+	 * An order keyed in at the counter: dine-in (a table's bill, pay now or later), takeaway, phone, GrabFood, ShopeeFood.
+	 * It goes to the same kitchen screen and into "close the day" like the table QR orders.
+	 *
+	 * @param WP_REST_Request $req Request.
+	 * @return array|WP_Error
+	 */
+	public static function counter_order( $req ) {
+		$err = static fn( $m, $s = 400 ) => new WP_Error( 'agc_counter', $m, array( 'status' => $s ) );
+		if ( ! self::counter_on() ) {
+			return $err( __( 'The counter screen is switched off.', 'agency-core' ), 403 );
+		}
+		$b  = (array) $req->get_json_params();
+		$ch = sanitize_key( (string) ( $b['channel'] ?? '' ) );
+		$all = self::channels();
+		if ( ! isset( $all[ $ch ] ) ) {
+			return $err( __( 'Choose the order type.', 'agency-core' ) );
+		}
+		$t = '';
+		if ( 'dine' === $ch ) {
+			$t = self::clean( (string) ( $b['table'] ?? '' ) );
+			if ( '' === $t || ! in_array( $t, self::tables(), true ) ) {
+				return $err( __( 'Choose the table.', 'agency-core' ) );
+			}
+		}
+		$lines = self::lines( (array) ( $b['items'] ?? array() ) );
+		if ( is_wp_error( $lines ) ) {
+			return $lines;
+		}
+		$name   = mb_substr( sanitize_text_field( (string) ( $b['name'] ?? '' ) ), 0, 40 );
+		$label  = 'dine' === $ch ? $t : $all[ $ch ][0];
+		$o      = self::create( $lines, $label, 'counter', (string) ( $b['notes'] ?? '' ) );
+		$o->update_meta_data( self::CHANNEL, $ch );
+		if ( '' !== $name ) {
+			$o->set_billing_first_name( $name );
+		}
+		$phone = preg_replace( '/[^\d+]/', '', (string) ( $b['phone'] ?? '' ) );
+		if ( '' !== $phone ) {
+			$o->set_billing_phone( mb_substr( $phone, 0, 20 ) );
+		}
+		$ref = mb_substr( sanitize_text_field( (string) ( $b['ref'] ?? '' ) ), 0, 30 ); // the GrabFood / ShopeeFood order number
+		if ( '' !== $ref ) {
+			$o->update_meta_data( '_agc_platform_ref', $ref );
+		}
 		$o->calculate_totals( false );
 		if ( isset( $b['total'] ) && abs( (float) $b['total'] - (float) $o->get_total() ) > 0.01 ) {
 			$o->delete( true );
-			return $err( __( 'Some prices have just changed. Please check your order again.', 'agency-core' ), 409 );
+			return $err( __( 'Some prices have just changed. Please check the order again.', 'agency-core' ), 409 );
 		}
 		$o->save();
-		/* translators: %s: table */
-		$o->update_status( 'on-hold', sprintf( __( 'Table order (table %s): pay at the counter.', 'agency-core' ), $t ) );
+		if ( 'dine' !== $ch ) {
+			// one order = one bill: "Takeaway #123" in the kitchen and on the bills
+			/* translators: 1: order type, 2: order number */
+			$o->update_meta_data( self::META, sprintf( '%1$s #%2$s', $all[ $ch ][0], $o->get_order_number() ) );
+			$o->save();
+		}
+		$who     = wp_get_current_user()->display_name;
+		$methods = self::methods();
+		$pay_now = '' !== $all[ $ch ][1] || ! empty( $b['paid'] );
+		if ( $pay_now ) {
+			$m = '' !== $all[ $ch ][1] ? $all[ $ch ][1] : sanitize_key( (string) ( $b['method'] ?? '' ) );
+			$m = isset( $methods[ $m ] ) ? $m : 'other';
+			$o->set_payment_method_title( $methods[ $m ] );
+			$o->update_meta_data( self::PAID_BY, $m );
+			$o->update_meta_data( self::BILL, substr( md5( $o->get_id() . '|' . microtime( true ) . '|' . wp_rand() ), 0, 12 ) );
+			$o->set_date_paid( time() );
+			$o->save();
+			/* translators: 1: order type, 2: method, 3: user */
+			$o->update_status( 'completed', sprintf( __( 'Counter order (%1$s), paid: %2$s. Keyed in by %3$s.', 'agency-core' ), $all[ $ch ][0], $methods[ $m ], $who ) );
+		} else {
+			$o->set_payment_method_title( __( 'Pay at the counter', 'agency-core' ) );
+			$o->save();
+			/* translators: 1: table or order type, 2: user */
+			$o->update_status( 'on-hold', sprintf( __( 'Counter order (%1$s): to pay. Keyed in by %2$s.', 'agency-core' ), $label, $who ) );
+		}
 		wc_maybe_reduce_stock_levels( $o->get_id() );
-		set_transient( $flood, $n + 1, HOUR_IN_SECONDS );
 		return array(
 			'id'     => $o->get_id(),
 			'number' => $o->get_order_number(),
-			'key'    => $o->get_order_key(),
+			'label'  => (string) $o->get_meta( self::META ),
 			'total'  => (float) $o->get_total(),
+			'paid'   => $pay_now,
 		);
 	}
 
@@ -674,6 +847,8 @@ class AGC_Table {
 			'id'      => $o->get_id(),
 			'number'  => $o->get_order_number(),
 			'table'   => (string) $o->get_meta( self::META ),
+			'channel' => (string) $o->get_meta( self::CHANNEL ),
+			'ref'     => (string) $o->get_meta( '_agc_platform_ref' ),
 			'created' => $o->get_date_created() ? $o->get_date_created()->getTimestamp() : 0,
 			'done'    => $done,
 			'done_at' => (int) $o->get_meta( self::DONE_AT ),
@@ -698,7 +873,7 @@ class AGC_Table {
 				continue;
 			}
 			$r = self::row( $o );
-			if ( ! $r['done'] && self::is_open( $o ) ) {
+			if ( ! $r['done'] ) { // open bills, and counter orders already paid (takeaway, GrabFood…)
 				$todo[] = $r;
 			} elseif ( $r['done'] && $r['done_at'] > time() - 30 * MINUTE_IN_SECONDS ) {
 				$done[] = $r;
@@ -792,14 +967,8 @@ class AGC_Table {
 	 * @return array|WP_Error
 	 */
 	public static function pay( $req ) {
-		$t       = self::clean( (string) $req->get_param( 'table' ) );
-		$methods = array(
-			'cash'    => __( 'Cash', 'agency-core' ),
-			'duitnow' => __( 'DuitNow QR', 'agency-core' ),
-			'card'    => __( 'Card', 'agency-core' ),
-			'pos'     => __( 'Shop cashier', 'agency-core' ),
-			'other'   => __( 'Other', 'agency-core' ),
-		);
+		$t       = mb_substr( sanitize_text_field( (string) $req->get_param( 'table' ) ), 0, 60 ); // a table, or "Takeaway #123"
+		$methods = self::methods();
 		$m       = sanitize_key( (string) $req->get_param( 'method' ) );
 		$m       = isset( $methods[ $m ] ) ? $m : 'other';
 		$ids     = array_map( 'absint', (array) $req->get_param( 'ids' ) );
@@ -846,13 +1015,9 @@ class AGC_Table {
 		$start = new DateTimeImmutable( $date . ' 00:00:00', $tz );
 		$from  = $start->getTimestamp();
 		$to    = $start->modify( '+1 day' )->getTimestamp();
-		$names = array(
-			'cash'    => __( 'Cash', 'agency-core' ),
-			'duitnow' => __( 'DuitNow QR', 'agency-core' ),
-			'card'    => __( 'Card', 'agency-core' ),
-			'pos'     => __( 'Shop cashier', 'agency-core' ),
-			'other'   => __( 'Other', 'agency-core' ),
-		);
+		$names = self::methods();
+		$chs   = array( 'table' => __( 'Table QR', 'agency-core' ) ) + array_map( static fn( $x ) => $x[0], self::channels() );
+		$by_ch = array();
 		$methods = array();
 		$bills   = array();
 		$items   = array();
@@ -906,6 +1071,9 @@ class AGC_Table {
 			$bills[ $b ]['numbers'][] = $o->get_order_number();
 			$bills[ $b ]['total']    += (float) $o->get_total();
 			$methods[ $m ]            = ( $methods[ $m ] ?? 0.0 ) + (float) $o->get_total();
+			$c                        = (string) $o->get_meta( self::CHANNEL );
+			$c                        = isset( $chs[ $c ] ) ? $c : 'table';
+			$by_ch[ $c ]              = array( 'n' => ( $by_ch[ $c ]['n'] ?? 0 ) + 1, 'total' => ( $by_ch[ $c ]['total'] ?? 0.0 ) + (float) $o->get_total() );
 			$total                   += (float) $o->get_total();
 			++$paid_n;
 			foreach ( $o->get_items() as $it ) {
@@ -950,6 +1118,12 @@ class AGC_Table {
 			'open_f'    => self::money( array_sum( $open ) ),
 			'cancelled' => array( 'n' => $cancel['n'], 'total_f' => self::money( $cancel['total'] ) ),
 			'web'       => array( 'n' => $web['n'], 'total_f' => self::money( $web['total'] ) ),
+			'channels'  => array_values(
+				array_map(
+					static fn( $k ) => array( 'key' => $k, 'label' => $chs[ $k ], 'orders' => $by_ch[ $k ]['n'], 'total_f' => self::money( $by_ch[ $k ]['total'] ) ),
+					array_keys( array_intersect_key( $chs, $by_ch ) )
+				)
+			),
 		);
 	}
 

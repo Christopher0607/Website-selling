@@ -74,6 +74,7 @@ class AGC_Settings {
 			'table_list'           => '1-10',
 			'table_note'           => '',
 			'table_pay'            => 'counter',
+			'counter_on'           => 0,
 			'table_cats'           => '',
 			// Store UX.
 			'announcement'         => '',
@@ -216,6 +217,7 @@ class AGC_Settings {
 					'table_list' => array( 'text', __( 'Tables (e.g. 1-12, or 1,2,3,Patio)', 'agency-core' ) ),
 					'table_note' => array( 'textarea', __( 'Message on the table menu (e.g. "Drinks are served at the counter")', 'agency-core' ) ),
 					'table_pay'  => array( 'select', __( 'Where guests pay', 'agency-core' ), array( 'counter' => 'At the counter', 'table' => 'The bill comes to the table' ) ),
+					'counter_on' => array( 'checkbox', __( 'Counter screen in the shop dashboard: staff key in dine-in, takeaway, phone, GrabFood and ShopeeFood orders; they go to the same kitchen screen and close of day', 'agency-core' ) ),
 					'table_cats' => array( 'text', __( 'Only these categories on the table menu (slugs, comma separated; empty = all)', 'agency-core' ) ),
 				),
 			),

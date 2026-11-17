@@ -333,3 +333,32 @@ h1, h2, h3 { margin: 0; line-height: 1.25; }
 .closecard__sum { display: block; font-size: clamp(2rem, 9vw, 2.8rem); line-height: 1.1; font-variant-numeric: tabular-nums; margin: 2px 0 4px; }
 .tbl__total td { border-top: 2px solid var(--line); }
 @media print { .daynav { display: none; } }
+
+/* the counter (2026-11-17) */
+.counter { display: grid; gap: 14px; }
+.counter input[type=search] { flex: 1; min-height: 44px; border: 1px solid var(--line); border-radius: 12px; padding: 0 14px; font: inherit; background: var(--card); color: var(--ink); }
+.cgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(138px, 1fr)); gap: 8px; margin-top: 2px; }
+.citem { position: relative; text-align: left; border: 1px solid var(--line); background: var(--card); color: var(--ink); border-radius: 14px; padding: 10px 12px; min-height: 76px; display: flex; flex-direction: column; justify-content: space-between; gap: 6px; font: inherit; cursor: pointer; }
+.citem b { font-size: .95rem; line-height: 1.25; }
+.citem span { color: var(--muted); font-weight: 700; font-size: .9rem; }
+.citem[disabled] { opacity: .45; cursor: not-allowed; }
+.citem.is-in { border-color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
+.citem__n { position: absolute; top: 6px; right: 6px; min-width: 22px; height: 22px; border-radius: 11px; background: var(--ink); color: #fff; font: 700 .75rem/22px system-ui, sans-serif; text-align: center; font-style: normal; padding: 0 6px; }
+.cline { display: flex; gap: 10px; align-items: center; padding: 9px 0; border-bottom: 1px solid var(--line); }
+.cline__n { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.cline__n small, .cline__n em { color: var(--muted); font-size: .82rem; }
+.cline__q { display: flex; align-items: center; gap: 6px; }
+.cline__qn { min-width: 20px; text-align: center; }
+.cline__p { min-width: 72px; text-align: right; font-weight: 700; }
+.qbtn { width: 34px; height: 34px; border-radius: 10px; border: 1px solid var(--line); background: var(--card); color: var(--ink); font: 700 1.1rem/1 system-ui, sans-serif; cursor: pointer; }
+.counter__acts { margin-top: 8px; }
+.counter__acts .btn { flex: 1; }
+.optg { margin: 0 0 12px; }
+.optg h4 { margin: 0 0 4px; font-size: .95rem; }
+.optv { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--line); cursor: pointer; }
+.optv span { flex: 1; }
+.optv small { color: var(--muted); }
+.cashout { font-weight: 800; font-size: 1.15rem; margin: 0 0 12px; }
+.cashout.is-ok { color: var(--ok, #2f7d4f); }
+.cashout.is-short { color: #a12626; }
+@media (min-width: 980px) { .counter { grid-template-columns: minmax(0, 1fr) 360px; align-items: start; } .counter__cart { position: sticky; top: 78px; } }
