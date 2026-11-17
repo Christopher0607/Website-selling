@@ -698,9 +698,132 @@ async function butterLantern(b) {
   await restrictions(b);
 }
 
+// The 6 shop templates (one test, driven by each template's own product list).
+const TEMPLATES = ['voltnest', 'chili-pantry', 'dewlane', 'lowlight', 'plainfold', 'tailmate'];
+function shopTemplate(slug) {
+  return async function (b) {
+    const T = JSON.parse(require('fs').readFileSync(require('path').join(__dirname, '..', 'templates', slug, 'template.json'), 'utf8'));
+    const money = (n) => 'RM' + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    const rx = (s) => new RegExp(s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+    const opts = (p) => (p.options || []).map((o) => o.values.map((v) => (typeof v === 'object' ? v : { v })));
+    // a product whose option costs extra (else any product with a choice, e.g. another size)
+    const withAdd = T.products.find((p) => opts(p).some((g) => g.some((v) => v.add)) && p.price != null) || T.products.find((p) => opts(p).some((g) => g.length > 1) && p.price != null);
+    const noAdds = (p) => !opts(p).some((g) => g.some((v) => v.add)); // options that don't change the price are fine (sizes)
+    const plain = T.products.filter((p) => noAdds(p) && p.price != null && !p.sale && !p.per && p.id !== (withAdd || {}).id);
+    const simple = plain[0], cheap = plain.slice().sort((x, y) => x.price - y.price)[0];
+    const ship = T.shipping || { west: 8, east: 15, free_min: 150 };
+    const prefix = T.order_prefix;
+    const pages = ['index', 'shop', 'cart', 'checkout', 'order', 'about', 'help', 'p/' + simple.id];
+    await common(b, pages);
+    const p = await newPage(b);
+    const txt = async (sel) => ((await p.textContent(sel)) || '').replace(/\s+/g, ' ');
+    const card = (id) => `[data-grid] .card:has(a.card__media[href="p/${id}.html"])`;
+
+    console.log('Products and prices from WooCommerce');
+    await p.goto(BASE + '/shop.html');
+    ok((await p.$$('[data-grid] .card:not([hidden])')).length === T.products.length, `shop: ${T.products.length} products (WooCommerce)`);
+    const a = await admin(b);
+    await editProduct(a, simple.name);
+    await a.fill('#_regular_price', String(simple.price + 5));
+    await saveProduct(a);
+    await p.goto(BASE + '/shop.html');
+    ok(rx(money(simple.price + 5)).test(await txt(card(simple.id))), `price changed in WordPress admin (${money(simple.price)} → ${money(simple.price + 5)}) shows on the shop page`);
+    await a.click('a[href="#general_product_data"]').catch(() => {});
+    await a.fill('#_sale_price', String(simple.price - 2));
+    await saveProduct(a);
+    await p.goto(BASE + '/shop.html');
+    const onSale = await txt(card(simple.id));
+    ok(rx(money(simple.price - 2)).test(onSale) && rx(money(simple.price + 5)).test(onSale) && (simple.badge || /Save RM7/.test(onSale)), `a sale price set in WordPress admin: ${money(simple.price - 2)}, was ${money(simple.price + 5)}` + (simple.badge ? '' : ', "Save RM7"'));
+    await p.goto(BASE + '/p/' + simple.id + '.html');
+    ok(rx(money(simple.price - 2)).test(await txt('[data-pdp-price]')), 'product page: the sale price');
+    await a.fill('#_sale_price', '');
+    await a.fill('#_regular_price', String(simple.price));
+    await stockStatus(a, 'outofstock');
+    await saveProduct(a);
+    await p.goto(BASE + '/shop.html');
+    ok(/Sold out/.test(await txt(card(simple.id))) && rx(money(simple.price)).test(await txt(card(simple.id))), 'out of stock in WordPress admin: "Sold out" on the shop page, price back to ' + money(simple.price));
+    await p.goto(BASE + '/p/' + simple.id + '.html');
+    ok(await p.$eval('[data-atc]', (x) => x.disabled), 'product page: cannot add a sold-out product');
+    await stockStatus(a, 'instock');
+    await saveProduct(a);
+
+    console.log('Order 1: options, the welcome code, East Malaysia');
+    let gi = opts(withAdd).findIndex((g) => g.some((v) => v.add));
+    if (gi < 0) gi = opts(withAdd).findIndex((g) => g.length > 1);
+    const pickV = opts(withAdd)[gi].find((v) => v.add) || opts(withAdd)[gi][1];
+    const unitA = (withAdd.sale || withAdd.price) + (pickV.add || 0);
+    await p.goto(BASE + '/p/' + withAdd.id + '.html');
+    await p.click(`input[name="o${gi}"][value="${pickV.v}"] + span`);
+    ok(rx(money(unitA)).test(await txt('[data-pdp-price]')), `${withAdd.name}, ${pickV.v}: ${money(unitA)} (WooCommerce price + the option)`);
+    await p.click('[data-atc]');
+    await p.goto(BASE + '/p/' + simple.id + '.html');
+    await p.click('[data-atc]');
+    await p.goto(BASE + '/cart.html');
+    await p.fill('[data-coupon] input', 'NOPE');
+    await p.click('[data-coupon] button');
+    await p.waitForFunction(() => /isn.t valid/.test(document.querySelector('[data-toast]').textContent), null, { timeout: 15000 });
+    ok(true, 'a wrong code is refused by the shop');
+    await p.fill('[data-coupon] input', 'welcome10');
+    await p.click('[data-coupon] button');
+    await p.waitForFunction(() => /applied/.test(document.querySelector('[data-toast]').textContent), null, { timeout: 15000 });
+    const sub = unitA + simple.price, disc = Math.round(sub * 10) / 100, fee1 = sub >= ship.free_min ? 0 : ship.east, total1 = sub - disc + fee1;
+    ok(rx('−' + money(disc)).test(await txt('[data-cart-summary]')), `WELCOME10 (a WooCommerce coupon): −${money(disc)}`);
+    await p.goto(BASE + '/checkout.html');
+    ok(/order is real/.test(await txt('.demo-note')), 'checkout says the order is real and nothing is charged');
+    await p.fill('input[name=email]', 'buyer@example.com');
+    await p.fill('input[name=phone]', '012-345 6789');
+    await p.fill('input[name=name]', 'Test Buyer');
+    await p.fill('input[name=addr1]', '8 Jalan Test');
+    await p.fill('input[name=postcode]', '88000');
+    await p.fill('input[name=city]', 'Kota Kinabalu');
+    await p.selectOption('select[name=state]', 'Sabah');
+    ok(rx(money(total1)).test(await txt('[data-co-total]')), `total ${money(total1)} (shipping to Sabah ${fee1 ? money(fee1) : 'free over ' + money(ship.free_min)})`);
+    await p.click('label.pay:has-text("E-wallet")');
+    await Promise.all([p.waitForURL(/order\.html/, { timeout: 20000 }), p.click('[data-checkout] button[type=submit]')]);
+    const no1 = ((await txt('[data-order-no]')).match(new RegExp(prefix + '-\\d+')) || [''])[0];
+    ok(!!no1 && rx(money(total1)).test(await txt('[data-order-box]')) && /E-wallet/.test(await txt('[data-order-box]')), `a real WooCommerce order, the shop agreed on ${money(total1)}: ${no1}`);
+
+    console.log('Order 2: West Malaysia, under the free-shipping amount');
+    await p.goto(BASE + '/p/' + cheap.id + '.html');
+    await p.click('[data-atc]');
+    await p.goto(BASE + '/checkout.html');
+    await p.fill('input[name=email]', 'buyer2@example.com');
+    await p.fill('input[name=phone]', '013-222 3333');
+    await p.fill('input[name=name]', 'Second Buyer');
+    await p.fill('input[name=addr1]', '1 Jalan SS2');
+    await p.fill('input[name=postcode]', '47300');
+    await p.fill('input[name=city]', 'Petaling Jaya');
+    await p.selectOption('select[name=state]', 'Selangor');
+    const fee2 = cheap.price >= ship.free_min ? 0 : ship.west;
+    ok(rx(fee2 ? money(fee2) : 'Free').test(await txt('[data-co-ship]')), `West Malaysia shipping: ${fee2 ? money(fee2) : 'free'}`);
+    await Promise.all([p.waitForURL(/order\.html/, { timeout: 20000 }), p.click('[data-checkout] button[type=submit]')]);
+    const no2 = ((await txt('[data-order-no]')).match(new RegExp(prefix + '-\\d+')) || [''])[0];
+    ok(!!no2 && rx(money(cheap.price + fee2)).test(await txt('[data-order-box]')), `second order ${no2}: ${money(cheap.price + fee2)}`);
+
+    console.log('The shop dashboard and WordPress admin');
+    await p.click('a[data-owner-side]');
+    await p.waitForURL(/\/dian\//);
+    await p.waitForFunction(() => /Overview/.test(document.body.textContent), null, { timeout: 20000 });
+    const all = await p.evaluate(async () => (await fetch(window.AGC_OWNER.rest + 'orders?bucket=all', { headers: { 'X-WP-Nonce': window.AGC_OWNER.nonce }, credentials: 'same-origin' })).json());
+    const d1 = ((all && all.orders) || []).find((o) => prefix + '-' + o.number === no1);
+    const d2 = ((all && all.orders) || []).find((o) => prefix + '-' + o.number === no2);
+    ok(d1 && d1.bucket === 'make' && d2 && d2.bucket === 'make', '"Owner’s side" opens the shop dashboard: both orders paid, to pack');
+    const one = await p.evaluate(async (id) => (await fetch(window.AGC_OWNER.rest + 'orders/' + id, { headers: { 'X-WP-Nonce': window.AGC_OWNER.nonce }, credentials: 'same-origin' })).json(), d1 && d1.id);
+    ok(/Sabah/.test(JSON.stringify(one)) && rx(pickV.v).test(JSON.stringify(one)), `order ${no1} in the dashboard: Sabah address, the option (${pickV.v})`);
+    const ord = (await adminText(a, '/wp-admin/admin.php?page=wc-orders')) + (await adminText(a, '/wp-admin/edit.php?post_type=shop_order'));
+    ok([no1, no2].every((n) => ord.includes('#' + n.replace(prefix + '-', '')) || ord.includes(n.replace(prefix + '-', ''))), 'WordPress admin → Orders: ' + no1 + ', ' + no2);
+    const ed = await adminText(a, String(one.edit_url || '').replace(/^https?:\/\/[^/]+/, ''));
+    ok(rx(pickV.v).test(ed) && /WELCOME10|welcome10/i.test(ed) && /Kota Kinabalu/.test(ed), `order ${no1} in WordPress admin: the option, the code, the address`);
+    ok(p.errors.length === 0, 'no JavaScript errors' + (p.errors.length ? ': ' + p.errors.slice(0, 3).join(' | ') : ''));
+    await a.context().close();
+    await p.context().close();
+    await restrictions(b);
+  };
+}
+
 (async () => {
   const b = await chromium.launch();
-  const run = { 'sireh-salt': sirehSalt, 'maison-cendre': maisonCendre, 'dulang-daun': dulangDaun, 'butter-lantern': butterLantern }[DEMO];
+  const run = { 'sireh-salt': sirehSalt, 'maison-cendre': maisonCendre, 'dulang-daun': dulangDaun, 'butter-lantern': butterLantern }[DEMO] || (TEMPLATES.includes(DEMO) ? shopTemplate(DEMO) : null);
   if (!run) { console.log('还没有这个示范的测试：' + DEMO); process.exit(2); }
   try { await run(b); } catch (e) { ok(false, 'stopped: ' + e.message.split('\n')[0] + ' @ ' + ((e.stack || '').match(/check-wp-demo\.js:(\d+)/) || [])[1]); }
   await b.close();

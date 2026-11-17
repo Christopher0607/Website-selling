@@ -11,7 +11,7 @@ const { chromium } = require('playwright');
 const [STATIC, WP, DEMO, OUT, ONLY] = process.argv.slice(2);
 if (!OUT) { console.log('用法: node site/tools/compare-wp-demo.js <工作室网址> <WordPress 网址> <示范代号> <输出资料夹> [页面,…]'); process.exit(2); }
 const PAGES = (ONLY || 'index,menu,order,book,festive,catering,vouchers').split(',');
-const key = (pg) => pg.replace(/[?=&]/g, '-');
+const key = (pg) => pg.replace(/[?=&/]/g, '-');
 const NOW = Date.parse('2026-11-18T13:05:00+08:00'); // a Wednesday lunchtime: open, festive pre-orders open
 fs.mkdirSync(OUT, { recursive: true });
 

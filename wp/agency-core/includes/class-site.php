@@ -314,6 +314,7 @@ class AGC_Site {
 				'img'   => 'img',
 				'cat'   => 'cat',
 				'stock' => (string) ( $l['stock'] ?? '' ),
+				'sale'  => '',
 			);
 			$tpl = (string) ( $l['sku'] ?? '' ); // "{g}-{id}": the same item code in two festivals (Butter & Lantern)
 			$fix = static function ( $it, $gk = '' ) use ( $f, $tpl, &$owner ) {
@@ -325,7 +326,10 @@ class AGC_Site {
 				if ( $f['name'] ) { // "" = the page keeps its own wording (several languages)
 					$it[ $f['name'] ] = html_entity_decode( $p->get_name(), ENT_QUOTES );
 				}
-				if ( '' !== (string) $p->get_price() && $f['price'] && ( array_key_exists( $f['price'], $it ) || empty( $it['opts'] ) ) ) {
+				if ( $f['sale'] && '' !== (string) $p->get_regular_price() ) { // the shop templates: regular price + sale price (or none)
+					$it[ $f['price'] ] = (float) $p->get_regular_price();
+					$it[ $f['sale'] ]  = $p->is_on_sale() ? (float) $p->get_sale_price() : null;
+				} elseif ( '' !== (string) $p->get_price() && $f['price'] && ( array_key_exists( $f['price'], $it ) || empty( $it['opts'] ) ) ) {
 					$it[ $f['price'] ] = (float) $p->get_price();
 				}
 				$sd = trim( wp_strip_all_tags( $p->get_short_description() ) );
@@ -638,6 +642,24 @@ class AGC_Site {
 					}
 					$unit  += (float) $pick[1];
 					$opts[] = (string) $pick[0];
+				}
+				$out[] = array( $p, $qty, $unit, implode( ' · ', $opts ), sanitize_text_field( (string) ( $row['note'] ?? '' ) ), $it );
+				continue;
+			}
+			if ( isset( $row['pick'] ) ) { // the shop templates: one choice per option, by its label ("Graphite", "M · 800 ml")
+				$want = array_map( 'strval', (array) $row['pick'] );
+				foreach ( array_values( (array) ( $it['o'] ?? array() ) ) as $gi => $g ) {
+					$vals = array_values( (array) ( $g['v'] ?? array() ) );
+					$pick = $vals[0] ?? null;
+					foreach ( $vals as $v ) {
+						if ( (string) $v[0] === ( $want[ $gi ] ?? '' ) ) {
+							$pick = $v;
+						}
+					}
+					if ( is_array( $pick ) ) {
+						$unit  += (float) $pick[1];
+						$opts[] = trim( (string) ( $g['n'] ?? '' ) . ': ' . (string) $pick[0], ': ' );
+					}
 				}
 				$out[] = array( $p, $qty, $unit, implode( ' · ', $opts ), sanitize_text_field( (string) ( $row['note'] ?? '' ) ), $it );
 				continue;
@@ -1080,7 +1102,7 @@ class AGC_Site {
 		$o->calculate_totals( false );
 		$rates  = (array) self::val( (string) ( $r['rates'] ?? 'SHIP' ), array() );
 		$rr     = (array) ( $rates[ $region ] ?? array() );
-		$after  = (float) $o->get_subtotal() - (float) $o->get_discount_total();
+		$after  = (float) $o->get_subtotal() - ( 'sub' === ( $r['free_on'] ?? '' ) ? 0 : (float) $o->get_discount_total() ); // "sub": free shipping counts before the code (the shop templates)
 		$method = 'express' === ( $b['method'] ?? '' ) && ! $east && isset( $rates['west']['express'] ) ? 'express' : 'std';
 		$fee    = 'express' === $method ? (float) $rates['west']['express'] : ( $after >= (float) ( $rr['free'] ?? PHP_INT_MAX ) ? 0.0 : (float) ( $rr['std'] ?? 0 ) );
 		$ship   = new WC_Order_Item_Shipping();
@@ -1098,6 +1120,9 @@ class AGC_Site {
 		}
 		if ( $note ) {
 			$o->set_customer_note( $note );
+		}
+		if ( ! empty( $b['payWith'] ) ) {
+			$o->update_meta_data( '_agc_pay_with', sanitize_text_field( mb_substr( (string) $b['payWith'], 0, 40 ) ) ); // "FPX online banking", "E-wallet"…
 		}
 		$o->update_meta_data( AGC_Festive::MODE, 'delivery' );
 		$o->calculate_totals( false );

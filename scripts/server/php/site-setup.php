@@ -115,7 +115,7 @@ $term = static function ( $slug, $name, $parent = 0 ) {
 $featured = array_map( 'strval', (array) ( $data[ $spec['featured'] ?? '' ] ?? array() ) );
 $keep     = array();
 $save     = static function ( $it, $cat_ids, $stock_field, $fl = array() ) use ( $img, $featured, &$keep ) {
-	$fl  = $fl + array( 'desc' => 'd', 'long' => '' );
+	$fl  = array_filter( $fl, static fn( $v ) => '' !== $v ) + array( 'desc' => 'd', 'long' => '' );
 	$sku = (string) ( $it['id'] ?? '' );
 	if ( '' === $sku ) {
 		return;
@@ -129,9 +129,12 @@ $save     = static function ( $it, $cat_ids, $stock_field, $fl = array() ) use (
 	$p->set_catalog_visibility( 'visible' );
 	$price = isset( $it['p'] ) && is_numeric( $it['p'] ) ? (string) $it['p'] : ( ! empty( $it['opts'] ) ? (string) min( array_map( static fn( $o ) => (float) $o['p'], (array) $it['opts'] ) ) : '' ); // options: the lowest ("from")
 	$p->set_regular_price( $price );
+	$sale = $fl['sale'] ?? '';
+	$p->set_sale_price( $sale && isset( $it[ $sale ] ) && is_numeric( $it[ $sale ] ) ? (string) $it[ $sale ] : '' ); // the shop templates' sale prices
 	$p->set_short_description( $txt( $it[ $fl['desc'] ] ?? ( isset( $it['has'] ) ? implode( ', ', array_map( $txt, (array) $it['has'] ) ) : '' ) ) );
 	if ( $fl['long'] && isset( $it[ $fl['long'] ] ) ) {
-		$p->set_description( (string) $it[ $fl['long'] ] );
+		$long = $it[ $fl['long'] ];
+		$p->set_description( is_array( $long ) ? implode( "\n\n", array_map( 'strval', $long ) ) : (string) $long ); // paragraphs
 	}
 	$p->set_category_ids( $cat_ids );
 	$p->set_featured( in_array( $sku, $featured, true ) || in_array( 'pop', (array) ( $it['tags'] ?? array() ), true ) );

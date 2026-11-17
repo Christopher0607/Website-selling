@@ -1,0 +1,245 @@
+{
+ "slug": "dewlane",
+ "spec": {
+  "lists": [
+   {
+    "var": "PRODUCTS",
+    "cats": "CATS",
+    "fields": {
+     "name": "n",
+     "price": "p",
+     "sale": "s",
+     "desc": "d",
+     "long": "long",
+     "img": "img",
+     "cat": "cat"
+    }
+   }
+  ],
+  "ship": {
+   "states_east": "EAST",
+   "rates": "SHIP",
+   "free_on": "sub"
+  },
+  "coupons": [
+   {
+    "from": "COUPON",
+    "code": "code",
+    "percent": "pct"
+   }
+  ],
+  "redirects": {},
+  "shop": "/shop.html",
+  "ref": "DW"
+ },
+ "data": {
+  "PRODUCTS": [
+   {
+    "id": "calm-gel-cleanser",
+    "n": "Calm Gel Cleanser",
+    "p": 49,
+    "s": null,
+    "img": "cleanser.webp",
+    "o": [
+     {
+      "n": "Size",
+      "v": [
+       [
+        "100 ml",
+        0,
+        ""
+       ],
+       [
+        "200 ml",
+        20,
+        ""
+       ]
+      ]
+     }
+    ],
+    "cat": "cleanse",
+    "d": "A low-foam gel cleanser that removes sunscreen and sweat without that tight feeling.",
+    "long": [
+     "Our everyday cleanser for humid days. The soft gel lifts away sunscreen, oil and city dust, then rinses clean — skin feels fresh, not stripped.",
+     "Use morning and night on damp skin. Massage for 30 seconds, rinse with lukewarm water."
+    ],
+    "tags": [
+     "pop"
+    ]
+   },
+   {
+    "id": "balance-toner",
+    "n": "Balance Toner",
+    "p": 55,
+    "s": null,
+    "img": "toner.webp",
+    "o": [],
+    "cat": "treat",
+    "d": "A watery, alcohol-free toner that preps skin for serum.",
+    "long": [
+     "A light hydrating layer between cleanser and serum. Pat 3–4 drops into skin with your palms — no cotton pad needed."
+    ]
+   },
+   {
+    "id": "dew-serum",
+    "n": "Dew Serum",
+    "p": 79,
+    "s": null,
+    "img": "serum.webp",
+    "o": [],
+    "cat": "treat",
+    "d": "A lightweight niacinamide serum for a smoother, more even look.",
+    "long": [
+     "Our hero serum: 5% niacinamide in a fast-absorbing water serum that layers well under sunscreen and makeup.",
+     "Use 2–3 drops morning and/or night after toner. Patch test first if your skin is sensitive."
+    ],
+    "tags": [
+     "pop"
+    ]
+   },
+   {
+    "id": "barrier-cream",
+    "n": "Barrier Cream",
+    "p": 69,
+    "s": null,
+    "img": "cream.webp",
+    "o": [],
+    "cat": "moisturise",
+    "d": "A rich-but-not-greasy cream for dry patches and air-conditioned offices.",
+    "long": [
+     "For skin that feels tight after a day in air-con. A soft cream with ceramides that sinks in without a heavy film."
+    ],
+    "tags": [
+     "pop"
+    ]
+   },
+   {
+    "id": "water-gel",
+    "n": "Water Gel Moisturiser",
+    "p": 65,
+    "s": null,
+    "img": "gel.webp",
+    "o": [],
+    "cat": "moisturise",
+    "d": "Oil-free hydration that feels like nothing on hot days.",
+    "long": [
+     "A bouncy gel for oily and combination skin. Hydrates without shine and sits well under sunscreen."
+    ]
+   },
+   {
+    "id": "daily-sun-fluid",
+    "n": "Daily Sun Fluid SPF50",
+    "p": 59,
+    "s": null,
+    "img": "sun.webp",
+    "o": [],
+    "cat": "protect",
+    "d": "A thin, no-white-cast sunscreen you'll actually wear every day.",
+    "long": [
+     "The last step of every morning routine. Light fluid texture, no white cast, dries to a soft finish. Reapply every 2–3 hours outdoors."
+    ],
+    "tags": [
+     "pop"
+    ]
+   },
+   {
+    "id": "night-repair-oil",
+    "n": "Night Repair Oil",
+    "p": 89,
+    "s": null,
+    "img": "oil.webp",
+    "o": [],
+    "cat": "treat",
+    "d": "A few drops at night for skin that wakes up softer.",
+    "long": [
+     "A light facial oil blend to seal in your night routine. Press 2–3 drops into skin as the final step."
+    ]
+   },
+   {
+    "id": "clay-reset-mask",
+    "n": "Clay Reset Mask",
+    "p": 58,
+    "s": null,
+    "img": "mask.webp",
+    "o": [],
+    "cat": "cleanse",
+    "d": "A weekly clay mask for oily T-zones.",
+    "long": [
+     "Kaolin clay mask for once or twice a week. Leave on for 8–10 minutes, rinse before it fully dries."
+    ]
+   },
+   {
+    "id": "three-step-set",
+    "n": "The Three-Step Set",
+    "p": 177,
+    "s": 159,
+    "img": "set.webp",
+    "o": [],
+    "cat": "sets",
+    "d": "Calm Gel Cleanser + Dew Serum + Daily Sun Fluid. The routine, sorted.",
+    "long": [
+     "Everything you need for a simple morning routine, at a set price.",
+     "Includes Calm Gel Cleanser 100 ml, Dew Serum 30 ml and Daily Sun Fluid SPF50 50 ml."
+    ],
+    "tags": [
+     "pop"
+    ]
+   },
+   {
+    "id": "travel-minis",
+    "n": "Travel Minis",
+    "p": 69,
+    "s": null,
+    "img": "minis.webp",
+    "o": [],
+    "cat": "sets",
+    "d": "The whole routine in carry-on sizes.",
+    "long": [
+     "Four minis that fit in a toiletry bag: cleanser, toner, serum and sunscreen. Great for trying the range."
+    ]
+   }
+  ],
+  "CATS": [
+   [
+    "cleanse",
+    "Cleanse"
+   ],
+   [
+    "treat",
+    "Treat"
+   ],
+   [
+    "moisturise",
+    "Moisturise"
+   ],
+   [
+    "protect",
+    "Protect"
+   ],
+   [
+    "sets",
+    "Sets"
+   ]
+  ],
+  "EAST": [
+   "Sabah",
+   "Sarawak",
+   "Labuan"
+  ],
+  "SHIP": {
+   "west": {
+    "std": 8,
+    "free": 150
+   },
+   "east": {
+    "std": 15,
+    "free": 150
+   }
+  },
+  "COUPON": {
+   "code": "WELCOME10",
+   "pct": 10
+  },
+  "BRAND": "Dewlane"
+ }
+}

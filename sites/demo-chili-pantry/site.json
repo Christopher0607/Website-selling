@@ -1,0 +1,290 @@
+{
+ "slug": "chili-pantry",
+ "spec": {
+  "lists": [
+   {
+    "var": "PRODUCTS",
+    "cats": "CATS",
+    "fields": {
+     "name": "n",
+     "price": "p",
+     "sale": "s",
+     "desc": "d",
+     "long": "long",
+     "img": "img",
+     "cat": "cat"
+    }
+   }
+  ],
+  "ship": {
+   "states_east": "EAST",
+   "rates": "SHIP",
+   "free_on": "sub"
+  },
+  "coupons": [
+   {
+    "from": "COUPON",
+    "code": "code",
+    "percent": "pct"
+   }
+  ],
+  "redirects": {},
+  "shop": "/shop.html",
+  "ref": "CP"
+ },
+ "data": {
+  "PRODUCTS": [
+   {
+    "id": "crispy-anchovy-sambal",
+    "n": "Crispy Anchovy Sambal",
+    "p": 22,
+    "s": null,
+    "img": "anchovy.webp",
+    "o": [
+     {
+      "n": "Size",
+      "v": [
+       [
+        "200 g jar",
+        0,
+        ""
+       ],
+       [
+        "400 g jar",
+        18,
+        ""
+       ]
+      ]
+     },
+     {
+      "n": "Spice level",
+      "v": [
+       [
+        "Medium",
+        0,
+        ""
+       ],
+       [
+        "Extra hot",
+        0,
+        ""
+       ]
+      ]
+     }
+    ],
+    "cat": "sambal",
+    "d": "Crispy anchovies in slow-fried chili paste. Great with rice, eggs, bread — everything.",
+    "long": [
+     "Our first recipe and still our favourite. Fresh chili and shallots are slow-fried for three hours, then crispy anchovies go in at the end so they stay crunchy.",
+     "Keeps 2 months unopened in a cool, dry place; refrigerate after opening and use within 4 weeks."
+    ],
+    "tags": [
+     "pop"
+    ]
+   },
+   {
+    "id": "sambal-trio",
+    "n": "Sambal Trio Gift Box",
+    "p": 66,
+    "s": 59,
+    "img": "trio.webp",
+    "o": [],
+    "cat": "sambal",
+    "d": "Three 200 g jars: Crispy Anchovy, Prawn and Vegetarian Green Chili.",
+    "long": [
+     "Can't decide? Try all three, packed in a kraft gift box — a popular office gift."
+    ],
+    "tags": [
+     "pop"
+    ]
+   },
+   {
+    "id": "coconut-crunch-cookies",
+    "n": "Coconut Crunch Cookies",
+    "p": 32,
+    "s": null,
+    "img": "coconut.webp",
+    "o": [
+     {
+      "n": "Size",
+      "v": [
+       [
+        "Small tub (300 g)",
+        0,
+        ""
+       ],
+       [
+        "Large tub (600 g)",
+        26,
+        ""
+       ]
+      ]
+     }
+    ],
+    "cat": "cookies",
+    "d": "Golden, crispy and full of toasted coconut.",
+    "long": [
+     "Baked in small trays so every cookie gets the same golden edge."
+    ],
+    "tags": [
+     "pop"
+    ]
+   },
+   {
+    "id": "butter-flower-cookies",
+    "n": "Butter Flower Cookies",
+    "p": 32,
+    "s": null,
+    "img": "butter.webp",
+    "o": [
+     {
+      "n": "Size",
+      "v": [
+       [
+        "Small tub (300 g)",
+        0,
+        ""
+       ],
+       [
+        "Large tub (600 g)",
+        26,
+        ""
+       ]
+      ]
+     }
+    ],
+    "cat": "cookies",
+    "d": "Melt-in-the-mouth butter cookies, piped by hand.",
+    "long": [
+     "Pure butter, piped into flowers one by one. The festive classic."
+    ]
+   },
+   {
+    "id": "pandan-star-cookies",
+    "n": "Pandan Star Cookies",
+    "p": 34,
+    "s": null,
+    "img": "pandan.webp",
+    "o": [],
+    "cat": "cookies",
+    "d": "Soft-crumb cookies with real pandan juice.",
+    "long": [
+     "We blend fresh pandan leaves for the juice — that's where the colour and fragrance come from."
+    ]
+   },
+   {
+    "id": "festive-cookie-platter",
+    "n": "Festive Cookie Platter",
+    "p": 98,
+    "s": null,
+    "img": "platter.webp",
+    "o": [],
+    "cat": "cookies",
+    "d": "Four cookie flavours on one platter — ready to put on the table.",
+    "long": [
+     "Coconut Crunch, Butter Flower, Pandan Star and Chocolate Chip, arranged on a reusable platter. Ships in the week you choose at checkout (demo)."
+    ],
+    "tags": [
+     "pop"
+    ]
+   },
+   {
+    "id": "banana-chips",
+    "n": "Banana Chips",
+    "p": 15,
+    "s": null,
+    "img": "banana.webp",
+    "o": [
+     {
+      "n": "Flavour",
+      "v": [
+       [
+        "Lightly salted",
+        0,
+        ""
+       ],
+       [
+        "Sweet",
+        0,
+        ""
+       ]
+      ]
+     }
+    ],
+    "cat": "snacks",
+    "d": "Thin, crunchy, fried in small batches.",
+    "long": [
+     "Sliced thin and fried until crisp. Dangerously easy to finish in one sitting."
+    ]
+   },
+   {
+    "id": "festive-hamper",
+    "n": "Festive Hamper",
+    "p": 189,
+    "s": null,
+    "img": "hamper.webp",
+    "o": [
+     {
+      "n": "Card message",
+      "v": [
+       [
+        "No card",
+        0,
+        ""
+       ],
+       [
+        "Add greeting card",
+        0,
+        ""
+       ]
+      ]
+     }
+    ],
+    "cat": "hampers",
+    "d": "Two sambals, two cookie tubs and banana chips in a gift basket.",
+    "long": [
+     "Our most-gifted box: Crispy Anchovy Sambal, Prawn Sambal, Butter Flower Cookies, Coconut Crunch Cookies and Banana Chips, wrapped and ready to give.",
+     "Ordering 20 or more for your company? Chat with us for corporate pricing and custom cards."
+    ]
+   }
+  ],
+  "CATS": [
+   [
+    "sambal",
+    "Sambal"
+   ],
+   [
+    "cookies",
+    "Cookies"
+   ],
+   [
+    "snacks",
+    "Snacks"
+   ],
+   [
+    "hampers",
+    "Hampers"
+   ]
+  ],
+  "EAST": [
+   "Sabah",
+   "Sarawak",
+   "Labuan"
+  ],
+  "SHIP": {
+   "west": {
+    "std": 8,
+    "free": 150
+   },
+   "east": {
+    "std": 15,
+    "free": 150
+   }
+  },
+  "COUPON": {
+   "code": "WELCOME10",
+   "pct": 10
+  },
+  "BRAND": "Little Chili Pantry"
+ }
+}

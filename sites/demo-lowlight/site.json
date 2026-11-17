@@ -1,0 +1,330 @@
+{
+ "slug": "lowlight",
+ "spec": {
+  "lists": [
+   {
+    "var": "PRODUCTS",
+    "cats": "CATS",
+    "fields": {
+     "name": "n",
+     "price": "p",
+     "sale": "s",
+     "desc": "d",
+     "long": "long",
+     "img": "img",
+     "cat": "cat"
+    }
+   }
+  ],
+  "ship": {
+   "states_east": "EAST",
+   "rates": "SHIP",
+   "free_on": "sub"
+  },
+  "coupons": [
+   {
+    "from": "COUPON",
+    "code": "code",
+    "percent": "pct"
+   }
+  ],
+  "redirects": {},
+  "shop": "/shop.html",
+  "ref": "LR"
+ },
+ "data": {
+  "PRODUCTS": [
+   {
+    "id": "house-blend",
+    "n": "House Blend",
+    "p": 38,
+    "s": null,
+    "img": "house.webp",
+    "o": [
+     {
+      "n": "Size",
+      "v": [
+       [
+        "250 g",
+        0,
+        ""
+       ],
+       [
+        "1 kg",
+        90,
+        ""
+       ]
+      ]
+     },
+     {
+      "n": "Grind",
+      "v": [
+       [
+        "Whole bean",
+        0,
+        ""
+       ],
+       [
+        "Espresso",
+        0,
+        ""
+       ],
+       [
+        "Filter / pour-over",
+        0,
+        ""
+       ],
+       [
+        "French press",
+        0,
+        ""
+       ]
+      ]
+     }
+    ],
+    "cat": "beans",
+    "d": "Our everyday blend. Smooth, sweet, great with or without milk.",
+    "long": [
+     "A medium roast built for every brewer — espresso, moka pot, pour-over or French press. Balanced and forgiving.",
+     "Roasted every Monday. Best between 7 and 30 days after the roast date printed on the bag."
+    ]
+   },
+   {
+    "id": "midnight-dark-roast",
+    "n": "Midnight Dark Roast",
+    "p": 42,
+    "s": null,
+    "img": "midnight.webp",
+    "o": [
+     {
+      "n": "Size",
+      "v": [
+       [
+        "250 g",
+        0,
+        ""
+       ],
+       [
+        "1 kg",
+        100,
+        ""
+       ]
+      ]
+     },
+     {
+      "n": "Grind",
+      "v": [
+       [
+        "Whole bean",
+        0,
+        ""
+       ],
+       [
+        "Espresso",
+        0,
+        ""
+       ],
+       [
+        "Filter / pour-over",
+        0,
+        ""
+       ],
+       [
+        "French press",
+        0,
+        ""
+       ]
+      ]
+     }
+    ],
+    "cat": "beans",
+    "d": "Bold and heavy-bodied. For kopi lovers and strong lattes.",
+    "long": [
+     "Roasted dark for a deep, syrupy cup that stands up to condensed milk and lots of ice."
+    ]
+   },
+   {
+    "id": "highland-single-origin",
+    "n": "Highland Single Origin",
+    "p": 48,
+    "s": null,
+    "img": "highland.webp",
+    "o": [
+     {
+      "n": "Size",
+      "v": [
+       [
+        "200 g",
+        0,
+        ""
+       ]
+      ]
+     },
+     {
+      "n": "Grind",
+      "v": [
+       [
+        "Whole bean",
+        0,
+        ""
+       ],
+       [
+        "Filter / pour-over",
+        0,
+        ""
+       ]
+      ]
+     }
+    ],
+    "cat": "beans",
+    "d": "A bright, floral single origin. Best as pour-over.",
+    "long": [
+     "A light roast that keeps the fruit and florals. Brew it as pour-over and let it cool a little — it gets sweeter."
+    ]
+   },
+   {
+    "id": "espresso-blend",
+    "n": "Crema Espresso Blend",
+    "p": 40,
+    "s": null,
+    "img": "espresso.webp",
+    "o": [
+     {
+      "n": "Size",
+      "v": [
+       [
+        "250 g",
+        0,
+        ""
+       ],
+       [
+        "1 kg",
+        95,
+        ""
+       ]
+      ]
+     },
+     {
+      "n": "Grind",
+      "v": [
+       [
+        "Whole bean",
+        0,
+        ""
+       ],
+       [
+        "Espresso",
+        0,
+        ""
+       ]
+      ]
+     }
+    ],
+    "cat": "beans",
+    "d": "Built for espresso machines: thick crema, chocolatey shots.",
+    "long": [
+     "Designed to taste good straight and better with milk."
+    ]
+   },
+   {
+    "id": "pour-over-starter-kit",
+    "n": "Pour-over Starter Kit",
+    "p": 215,
+    "s": 189,
+    "img": "kit.webp",
+    "o": [],
+    "cat": "gear",
+    "d": "Dripper, glass server, filters and 200 g of Highland. Everything to start.",
+    "long": [
+     "The easiest way into pour-over. Includes a ceramic dripper, 600 ml glass server, 100 paper filters, a hand grinder and 200 g of Highland Single Origin.",
+     "Comes with our printed brew guide."
+    ]
+   },
+   {
+    "id": "gooseneck-kettle",
+    "n": "Gooseneck Kettle",
+    "p": 159,
+    "s": null,
+    "img": "kettle.webp",
+    "o": [
+     {
+      "n": "Colour",
+      "v": [
+       [
+        "Matte white",
+        0,
+        ""
+       ],
+       [
+        "Matte black",
+        0,
+        ""
+       ]
+      ]
+     }
+    ],
+    "cat": "gear",
+    "d": "A slow, steady pour for even extraction.",
+    "long": [
+     "A thin spout gives you full control of the pour. 800 ml capacity, works on gas and induction."
+    ]
+   },
+   {
+    "id": "ceramic-dripper",
+    "n": "Ceramic Dripper",
+    "p": 69,
+    "s": null,
+    "img": "dripper.webp",
+    "o": [],
+    "cat": "gear",
+    "d": "A classic cone dripper that holds heat well.",
+    "long": [
+     "Thick ceramic keeps the temperature stable while you brew. Fits size 02 filters."
+    ]
+   },
+   {
+    "id": "glass-brewer",
+    "n": "Glass Brewer Set",
+    "p": 129,
+    "s": null,
+    "img": "brewer.webp",
+    "o": [],
+    "cat": "gear",
+    "d": "A glass brewer and stirrer for clean, bright cups.",
+    "long": [
+     "Brew for two in one go. Heat-resistant glass, dishwasher safe."
+    ]
+   }
+  ],
+  "CATS": [
+   [
+    "beans",
+    "Coffee"
+   ],
+   [
+    "gear",
+    "Brew gear"
+   ]
+  ],
+  "EAST": [
+   "Sabah",
+   "Sarawak",
+   "Labuan"
+  ],
+  "SHIP": {
+   "west": {
+    "std": 8,
+    "free": 150
+   },
+   "east": {
+    "std": 15,
+    "free": 150
+   }
+  },
+  "COUPON": {
+   "code": "WELCOME10",
+   "pct": 10
+  },
+  "BRAND": "Lowlight Roasters"
+ }
+}
