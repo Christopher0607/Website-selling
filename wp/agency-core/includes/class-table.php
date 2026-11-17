@@ -231,7 +231,8 @@ class AGC_Table {
 					continue; // no price yet: not on the table menu.
 				}
 				$cats[ $cat ] = $named[ $cat ] ?? ucwords( str_replace( array( '-', '_' ), ' ', $cat ) );
-				$img          = ! empty( $it['imgUrl'] ) ? (string) $it['imgUrl'] : ( array_key_exists( 'img', $it ) && false === $it['img'] ? '' : AGC_Skin::url() . '/img/' . ( ! empty( $it['img'] ) ? $it['img'] : $id ) . '.webp' );
+				$pic          = ! empty( $it['img'] ) ? (string) $it['img'] : $id;
+				$img          = ! empty( $it['imgUrl'] ) ? (string) $it['imgUrl'] : ( ( array_key_exists( 'img', $it ) && false === $it['img'] ) || ! is_file( AGC_Skin::dir() . '/img/' . $pic . '.webp' ) ? '' : AGC_Skin::url() . '/img/' . $pic . '.webp' ); // dishes without a photo (Maison Cendre) show none
 				$items[]      = array(
 					'id'   => $id,
 					'cat'  => $cat,
@@ -382,6 +383,7 @@ class AGC_Table {
 			'cur'     => html_entity_decode( get_woocommerce_currency_symbol(), ENT_QUOTES, 'UTF-8' ),
 			'menu'    => $t ? self::menu() : array( 'cats' => array(), 'items' => array() ),
 			'note'    => (string) agc_get( 'table_note' ),
+			'payAt'   => 'table' === agc_get( 'table_pay' ) ? 'table' : 'counter',
 			'stopped' => $t ? self::stopped() : '',
 			'demo'    => (bool) agc_get( 'demo_mode' ),
 			// studio demo websites: "See the restaurant's side" opens the real kitchen screen with the demo account

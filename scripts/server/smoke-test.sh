@@ -90,7 +90,9 @@ check_200 "/wp-login.php" "登录页 Login"
 SM=$("${CURL[@]}" -o /dev/null -w '%{http_code}' "$URL/sitemap_index.xml" 2>/dev/null || echo 000)
 [[ "$SM" == 200 ]] && pass "Sitemap" "/sitemap_index.xml" || {
   SM=$("${CURL[@]}" -o /dev/null -w '%{http_code}' -L "$URL/wp-sitemap.xml" 2>/dev/null || echo 000)
-  [[ "$SM" == 200 ]] && pass "Sitemap" "/wp-sitemap.xml" || fail "Sitemap" "HTTP $SM"; }
+  if [[ "$SM" == 200 ]]; then pass "Sitemap" "/wp-sitemap.xml"
+  elif [[ $EXPECT_NOINDEX == 1 ]]; then pass "Sitemap" "不需要（noindex 的网站不给 Google 收录）"   # 2026-11-17: demos without the SEO plugin
+  else fail "Sitemap" "HTTP $SM"; fi; }
 if [[ $SHOP == 1 ]]; then
   SHOPLOC=$("${CURL[@]}" -o /dev/null -w '%{http_code} %{redirect_url}' "$URL/shop/" 2>/dev/null || echo 000)
   if [[ "$SHOPLOC" =~ ^302\ .*/menu/$ ]]; then

@@ -23,7 +23,7 @@ const SPEC = {
       book: { hours: 'HOURS', first: 0, last: 90, step: 30, prep: 30, days: 15,
         seats: { '*': { cap: 6, count: 'booking', max: 'BOOK.max', deposit: { from: 'BOOK.depositFrom', amount: 'BOOK.deposit', per: 'booking', pay: 'later' } } } },
       voucher: { product: 'gift-voucher', name: 'Gift voucher', min: 30, max: 1000, months: 12, prefix: 'GIFT-' },
-      table: { menu: 'MENU', cats: 'CATS', hero: 'interior' },
+      table: { menu: 'MENU', cats: 'CATS', hero: 'interior', note: 'Drinks come first; mains in about 15 minutes.' },
       redirects: { 'dian.html': '/?agc_demo=dian&hash=/kitchen', 'table.html': '@table' },
       shop: '/menu.html',
       coupons: [{ from: 'PROMO', code: 'code', percent: 'pct' }],
@@ -43,7 +43,10 @@ const SPEC = {
           counter: { cap: 8, count: 'guest', min: 1, max: 4, times: [1080, 1245], dows: [2, 3, 4, 5, 6], deposit: { from: 1, amount: 100, per: 'guest', pay: 'now' } }
         } },
       voucher: { product: 'gift-card', name: 'Gift card', min: 100, max: 5000, months: 12, prefix: 'GIFT-' },
-      redirects: {},
+      // 2026-11-17: order at the table by QR (Junyu: guests in the restaurant can't order to the back office), like Sireh & Salt
+      table: { menu: 'MENU', cats: 'CATS', hero: 'room-2', pay: 'table', note: 'Order as you go: the kitchen paces your courses. Your bill comes to the table at the end.' },
+      redirects: { 'dian.html': '/?agc_demo=dian&hash=/kitchen', 'table.html': '@table' },
+      tables: '1-10',
       shop: '/menu.html',
       coupons: [{ from: 'PROMO', code: 'code', percent: 'pct' }],
       ref: 'MC'

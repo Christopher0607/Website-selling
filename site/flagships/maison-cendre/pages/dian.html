@@ -1,0 +1,29 @@
+<!--
+title: Kitchen & counter — Maison Cendre (demo website)
+description: The restaurant's side of table ordering: the kitchen screen, every table's bill, and closing the day. Demo by Cartsmith Studio.
+page: dian
+layout: none
+-->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#11100e">
+<title>{{TITLE}}</title>
+<meta name="description" content="{{DESC}}">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2311100e'/%3E%3Ctext x='32' y='43' font-family='Georgia,serif' font-size='30' text-anchor='middle' fill='%23c5a46d'%3EMC%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="owner-app/app.css">
+<style>:root{--accent:#11100e}
+.demobar{background:#11100e;color:#f6f1e9;font:600 .82rem/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;text-align:center;padding:8px 14px}
+.demobar a{color:#d9c194;font-weight:800;white-space:nowrap}
+@media print{.demobar{display:none}}</style>
+</head>
+<body class="ow">
+<div class="demobar">Demo: a restaurant’s kitchen and counter screens. Orders come from <a href="table.html?t=3" target="_blank" rel="noopener">table 3’s menu</a> on this phone. <a href="owner.html">Back to the demo</a></div>
+<div id="app" class="ow-app" aria-live="polite"><p class="ow-boot">Loading…</p></div>
+<script src="dian-demo.js"></script>
+<script src="owner-app/app.js"></script>
+</body>
+</html>

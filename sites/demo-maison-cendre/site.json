@@ -79,7 +79,18 @@
    "months": 12,
    "prefix": "GIFT-"
   },
-  "redirects": {},
+  "table": {
+   "menu": "MENU",
+   "cats": "CATS",
+   "hero": "room-2",
+   "pay": "table",
+   "note": "Order as you go: the kitchen paces your courses. Your bill comes to the table at the end."
+  },
+  "redirects": {
+   "dian.html": "/?agc_demo=dian&hash=/kitchen",
+   "table.html": "@table"
+  },
+  "tables": "1-10",
   "shop": "/menu.html",
   "coupons": [
    {

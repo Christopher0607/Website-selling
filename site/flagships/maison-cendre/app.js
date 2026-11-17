@@ -603,8 +603,69 @@
     $$('.owner .small.muted, .owner p.small').forEach(function (p) { if (/in your browser|this browser/.test(p.textContent)) p.textContent = 'This demo runs on real WordPress + WooCommerce. Your test orders, reservations and gift cards are saved there; the demo is put back every night.'; });
     if (root) root.innerHTML = '<div class="panel" style="padding:26px"><p class="kicker">The real back office</p><h2 style="margin-top:6px">Open it on your phone</h2>' +
       '<p class="muted">Tonight’s reservations, the waitlist, takeaway orders, seasonal menus, gift cards, dishes switched off and prices, in the restaurant’s own dashboard. No password needed for this demo.</p>' +
-      '<div class="btns" style="margin-top:16px"><a class="btn" data-live-dian href="' + esc(dl.dian || LIVE.dian) + '">Open the shop dashboard</a><a class="btn btn--ghost" data-live-admin href="' + esc(dl.admin || LIVE.admin) + '">Open WordPress admin</a></div>' +
+      '<div class="btns" style="margin-top:16px"><a class="btn" data-live-dian href="' + esc(dl.dian || LIVE.dian) + '">Open the shop dashboard</a><a class="btn btn--ghost" data-live-admin href="' + esc(dl.admin || LIVE.admin) + '">Open WordPress admin</a><a class="btn btn--ghost" data-live-kitchen href="' + esc((dl.dian || LIVE.dian) + ((dl.dian || LIVE.dian).indexOf('?') === -1 ? '?' : '&') + 'hash=/kitchen') + '">Kitchen screen (table orders)</a></div>' +
       '<p class="small muted" style="margin-top:14px">WordPress admin is the full WooCommerce back office (orders, reservations, products, coupons, reports). The shop dashboard is the simple phone version the restaurant uses every day.</p></div>';
+  }
+  // ------------------------------------------------------------------ table QR ordering (2026-11-17, like Sireh & Salt)
+  // The same customer page a real restaurant gets (agency-core assets/table/table.js, copied here by build.py). In this
+  // demo the browser stands in for the restaurant: orders are kept here (localStorage mc_tables) and show up on the
+  // kitchen & counter screens (dian.html, dian-demo.js). On WordPress table.html opens the real page.
+  function tables() { return load('tables', []); }
+  function tableState(x) { return x.st === 'cancelled' ? 'cancelled' : (x.st === 'paid' ? 'paid' : (x.kitchen === 'done' ? 'ready' : 'kitchen')); }
+  function pageTable() {
+    var q = new URLSearchParams(location.search);
+    var t = String(q.get('t') || '3').replace(/[^A-Za-z0-9 -]/g, '').slice(0, 12) || '3';
+    var o = owner();
+    var REST = 'demo-table/';
+    var items = MENU.filter(function (it) { return typeof it.p === 'number'; }).map(function (it) {
+      return { id: it.id, cat: it.cat, n: it.n, d: it.d, p: priceOf(it), img: it.img || it.imgUrl ? pic(it) : '', o: it.o || [], tags: (it.tags || []).indexOf('sig') !== -1 ? ['chef'] : [], sold: !!o.out[it.id], left: null };
+    });
+    window.AGC_TABLE = {
+      table: t, key: 'demo', rest: REST, site: 'Maison Cendre', shop: 'index.html', zh: false, cur: 'RM', demo: true, ownerLink: 'dian.html#/kitchen',
+      menu: { cats: CATS.filter(function (c) { return items.some(function (it) { return it.cat === c[0]; }); }), items: items },
+      note: 'Order as you go: the kitchen paces your courses. Your bill comes to the table at the end.', payAt: 'table',
+      stopped: o.status === 'closed' ? 'Ordering at the table is paused tonight. Please ask your server.' : '',
+      hero: 'img/room-2.webp',
+      logo: '<svg viewBox="0 0 40 40" aria-hidden="true"><text x="20" y="26" text-anchor="middle" font-family="Georgia,serif" font-size="15" fill="currentColor">MC</text></svg>',
+      address: ADDRESS, hours: ''
+    };
+    var realFetch = window.fetch ? window.fetch.bind(window) : null;
+    function reply(code, body) { return Promise.resolve(new Response(JSON.stringify(body), { status: code, headers: { 'Content-Type': 'application/json' } })); }
+    window.fetch = function (url, init) {
+      url = String(url);
+      if (url.indexOf(REST) !== 0) return realFetch(url, init);
+      var path = url.slice(REST.length);
+      if (path.indexOf('order') === 0) {
+        var b = {}; try { b = JSON.parse((init && init.body) || '{}'); } catch (e) { /* empty */ }
+        var ow = owner(), lines = [], total = 0;
+        if (ow.status === 'closed') return reply(409, { message: 'Ordering at the table is paused tonight. Please ask your server.' });
+        for (var i = 0; i < (b.items || []).length && i < 40; i++) {
+          var row = b.items[i], it = item(row.id), qty = Math.max(1, Math.min(30, +row.qty || 1));
+          if (!it || typeof it.p !== 'number') return reply(409, { message: 'Something in your order is no longer on the menu. Please check your order again.' });
+          if (ow.out[it.id]) return reply(409, { message: it.n + ' has just sold out. Please check your order again.' });
+          var unit = priceOf(it), opts = [];
+          (it.o || []).forEach(function (g, gi) {
+            var picked = (row.sel && row.sel[gi]) || [];
+            if (!picked.length && g.one) picked = [g.def || 0];
+            (g.one ? picked.slice(0, 1) : picked).forEach(function (vi) { var v = g.v[vi]; if (v) { unit += +v[1] || 0; opts.push(v[0]); } });
+          });
+          total += unit * qty;
+          lines.push({ qty: qty, n: it.n, o: opts.join(', '), note: String(row.note || '').slice(0, 120), p: Math.round(unit * qty * 100) / 100 });
+        }
+        total = Math.round(total * 100) / 100;
+        if (!lines.length) return reply(400, { message: 'Your order is empty.' });
+        if (typeof b.total === 'number' && Math.abs(b.total - total) > 0.01) return reply(409, { message: 'Some prices have just changed. Please check your order again.' });
+        var list = tables();
+        var ord = { id: Date.now(), key: Math.random().toString(36).slice(2, 10), number: 'MC-Q' + (101 + list.length), table: t, at: Date.now(), lines: lines, note: String(b.notes || '').slice(0, 300), total: total, kitchen: 'new', st: 'open' };
+        list.unshift(ord); save('tables', list.slice(0, 60));
+        return reply(200, { id: ord.id, number: ord.number, key: ord.key, total: total });
+      }
+      if (path.indexOf('status') === 0) {
+        var qs = new URLSearchParams(path.split('?')[1] || ''), ids = String(qs.get('o') || '').split(',');
+        return reply(200, { orders: tables().filter(function (x) { return ids.indexOf(String(x.id)) !== -1; }).map(function (x) { return { id: x.id, number: x.number, state: tableState(x), total: x.total }; }) });
+      }
+      return reply(404, { message: 'Not found' });
+    };
   }
   function pageOwner() {
     if (LIVE) return liveOwner();
@@ -657,8 +718,11 @@
   }
 
   // ------------------------------------------------------------------ start
+  var onTable = document.body && document.body.getAttribute('data-page') === 'table';
+  if (onTable) pageTable(); // before table.js reads window.AGC_TABLE
   var PAGES = { home: pageHome, menu: pageMenu, book: pageBook, order: pageOrder, festive: pageFestive, private: pagePrivate, gift: pageGift, owner: pageOwner };
   document.addEventListener('DOMContentLoaded', function () {
+    if (onTable) return; // the table page is the table app only (no header, bag or footer)
     shared();
     var fn = PAGES[document.body.getAttribute('data-page')];
     if (fn) fn();

@@ -79,8 +79,17 @@
   }
   var lang = store('agc_tq_lang') || (C.zh ? 'zh' : 'en');
   if (!(lang in LI)) lang = 'en';
+  // payAt "table" (2026-11-17, full-service restaurants such as Maison Cendre): the bill comes to the table, not the counter
+  var BILL_AT_TABLE = C.payAt === 'table';
+  var AT_TABLE = {
+    hero_sub: ['Choose what you like and send it to the kitchen. Your bill comes to the table at the end.', '选好想吃的，送到厨房。吃完账单会送到桌上。', 'Pilih apa yang anda suka dan hantar ke dapur. Bil dibawa ke meja di akhir.'],
+    step3: ['Bill at your table', '在桌上结账', 'Bil di meja'],
+    pay_info: ['When you are done, ask for the bill; it comes to Table {0}.', '吃完跟店员要账单，会送到 {0} 号桌。', 'Bila selesai, minta bil; ia dibawa ke Meja {0}.'],
+    to_pay: ['Your bill so far', '目前的账单', 'Bil anda setakat ini'],
+    show_cashier: ['Show this screen when you ask for the bill', '要账单时给店员看这个画面', 'Tunjuk skrin ini bila minta bil']
+  };
   function t(k) {
-    var s = (W[k] || [k, k, k])[LI[lang]];
+    var s = ((BILL_AT_TABLE && AT_TABLE[k]) || W[k] || [k, k, k])[LI[lang]];
     for (var i = 1; i < arguments.length; i++) s = s.split('{' + (i - 1) + '}').join(String(arguments[i]));
     return s;
   }

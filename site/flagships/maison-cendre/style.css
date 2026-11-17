@@ -118,6 +118,10 @@ p { margin: 0 0 1em; }
 .split img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
 .split--wide img { aspect-ratio: 16 / 11; }
 .exp { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(16px, 2.4vw, 28px); }
+.exp--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+@media (max-width: 1180px) { .exp--4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+/* table QR ordering page (agency-core assets/table/table.css takes its colours from these) */
+body.tq { --paper: var(--ivory); --cream: var(--stone); --leaf: var(--night-2); --leaf-2: var(--night); --chili: var(--wine); --turmeric: var(--gold); --turmeric-2: #f3ead9; }
 .expcard { text-decoration: none; display: flex; flex-direction: column; gap: 14px; }
 .expcard img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; transition: transform .8s, opacity .3s; }
 .expcard__img { overflow: hidden; }

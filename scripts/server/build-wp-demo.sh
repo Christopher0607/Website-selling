@@ -42,6 +42,12 @@ mv "$SK.new" "$SK"
 rm -rf -- "${SK:?}.old"
 info "页面：$(find "$SK" -name '*.html' | wc -l) 页、$(find "$SK/img" -type f 2>/dev/null | wc -l) 张照片"
 
+# Rebuilding a demo that is already live: start from its clean copy, so the visitors' test orders and bookings of today
+# don't end up in the new clean copy (which the nightly reset puts back).
+if [[ -s "$AGENCY_BACKUP_DIR/$SLUG_ARG/clean/db.sql" ]]; then
+  "$D/demo-reset.sh" "$SLUG_ARG"
+fi
+
 # Products, settings, demo account.
 TMPD="$SITE_HOME/tmp/site-setup-$$"; mkdir -p "$TMPD"
 cp "$D/php/site-setup.php" "$TMPD/"

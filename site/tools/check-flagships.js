@@ -615,6 +615,33 @@ const ok = (c, m) => { console.log((c ? '  ✅ ' : '  ❌ ') + m); if (!c) fail+
     ok((await kp.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)) <= 1, 'kitchen & counter screens fit the phone');
     await tc.close();
   }
+  // 2026-11-17: Maison Cendre has table ordering too (Junyu: guests in the restaurant could not order to the back office);
+  // the bill comes to the table there
+  {
+    const M = BASE + '/demo/maison-cendre/';
+    const tc = await b.newContext({ ...devices['iPhone 13'], reducedMotion: 'reduce' });
+    const tp = await tc.newPage();
+    tp.on('pageerror', (e) => errors.push(e.message));
+    await tp.goto(M + 'index.html');
+    ok(/Order at your table/.test(await tp.textContent('.exp')), 'Maison Cendre home: "Order at your table" is one of the ways to dine');
+    await tp.click('.expcard[href^="table.html"]');
+    await tp.waitForSelector('.tq-item');
+    ok((await tp.textContent('.tq-ticket')).includes('3') && /Bill at your table/.test(await tp.textContent('body')) && await tp.locator('.tq-item').count() >= 10, 'Maison Cendre table page: table 3, its menu, the bill comes to the table');
+    await tp.locator('.tq-item:has-text("Sourdough") .tq-add').click();
+    await tp.waitForTimeout(300);
+    if (await tp.$('.tq-sheet--item.is-on .tq-btn, .tq-sheet--item[aria-hidden="false"] .tq-btn')) await tp.click('.tq-sheet--item .tq-btn');
+    await tp.click('.tq-bar__btn');
+    await tp.click('.tq-sheet--cart .tq-btn');
+    await tp.waitForSelector('.tq-sheet--sent .tq-sent [data-order]');
+    const mno = await tp.getAttribute('.tq-sheet--sent .tq-sent [data-order]', 'data-order');
+    ok(/^MC-Q\d+$/.test(mno), `Maison Cendre table order sent (${mno})`);
+    const kp = await tc.newPage();
+    kp.on('pageerror', (e) => errors.push(e.message));
+    await kp.goto(M + 'dian.html#/kitchen');
+    await kp.waitForSelector('.kt', { timeout: 15000 });
+    ok((await kp.textContent('.kt')).includes(mno) && /Table 3/.test(await kp.textContent('.kt')), 'Maison Cendre kitchen screen: the order with table 3');
+    await tc.close();
+  }
   ok(!errors.length, 'no JavaScript errors' + (errors.length ? ': ' + errors.slice(0, 4).join(' | ') : ''));
   await b.close();
   console.log(fail ? `\n${fail} check(s) failed` : '\nall checks passed');

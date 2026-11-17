@@ -56,7 +56,8 @@
   "table": {
    "menu": "MENU",
    "cats": "CATS",
-   "hero": "interior"
+   "hero": "interior",
+   "note": "Drinks come first; mains in about 15 minutes."
   },
   "redirects": {
    "dian.html": "/?agc_demo=dian&hash=/kitchen",

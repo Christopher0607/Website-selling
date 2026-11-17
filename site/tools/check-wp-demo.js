@@ -230,7 +230,7 @@ async function sirehSalt(b) {
 
   console.log('Owner page → the real back office');
   await p.goto(BASE + '/owner.html');
-  ok(await p.isVisible('[data-live-dian]') && await p.isVisible('[data-live-admin]'), 'owner page: buttons to the shop dashboard and WordPress admin');
+  ok(await p.isVisible('[data-live-dian]') && await p.isVisible('[data-live-admin]') && await p.isVisible('[data-live-kitchen]'), 'owner page: buttons to the shop dashboard, WordPress admin and the kitchen screen');
   await p.click('[data-live-dian]');
   await p.waitForURL(/\/dian\//);
   await p.waitForFunction(() => /Overview/.test(document.body.textContent), null, { timeout: 20000 });
@@ -282,7 +282,7 @@ async function maisonCendre(b) {
   await p.click('[data-seat="counter"]');
   ok((await p.$$('[data-pax]')).length === 4, 'counter: up to 4 guests');
   await p.click('[data-pax="2"]');
-  await p.click('.slot:not(.is-full) >> nth=0');
+  await p.click('.slot:not(.is-full):not([disabled]) >> nth=0');
   const cDate = await p.getAttribute('.day.is-on', 'data-day');
   const cTime = await p.getAttribute('.slot.is-on', 'data-time');
   await p.fill('#b-name', 'Test Guest');
@@ -395,6 +395,30 @@ async function maisonCendre(b) {
   ok((await adminText(a, '/wp-admin/edit.php?post_type=agc_enquiry')).includes(eref), 'WordPress admin → Enquiries: ' + eref);
   const ord = (await adminText(a, '/wp-admin/admin.php?page=wc-orders')) + (await adminText(a, '/wp-admin/edit.php?post_type=shop_order'));
   ok(ord.includes(tref.replace('MC-', '')), 'WordPress admin → Orders: the takeaway order');
+
+  // 2026-11-17: order at the table (Junyu: guests in the restaurant couldn't order to the back office)
+  console.log('Table QR → the real table page → the kitchen');
+  await p.goto(BASE + '/owner.html');
+  ok(await p.isVisible('[data-live-kitchen]'), 'owner page: a button straight to the kitchen screen');
+  const t = await newPage(b);
+  await t.goto(BASE + '/index.html');
+  await t.click('.expcard[href^="table.html"]');
+  await t.waitForURL(/\/table\/\?t=3&k=/, { timeout: 20000 });
+  ok(true, '"Order at your table" on the home page opens the real table page for table 3');
+  await t.waitForSelector('.tq-item', { timeout: 20000 });
+  ok(/Bill at your table/.test(await t.textContent('body')) && /kitchen paces your courses/.test(await t.textContent('body')), 'the bill comes to the table; the restaurant’s note is shown');
+  await t.locator('.tq-item:has-text("Aged duck breast") .tq-add').click();
+  await t.click('.tq-sheet--item .tq-btn');
+  await t.click('.tq-bar__btn');
+  await t.click('.tq-sheet--cart .tq-btn');
+  await t.waitForSelector('.tq-sheet--sent .tq-sent [data-order]', { timeout: 20000 });
+  const tno = await t.getAttribute('.tq-sheet--sent .tq-sent [data-order]', 'data-order');
+  const link = await t.getAttribute('.tq-demo a', 'href');
+  await t.goto(link);
+  await t.waitForSelector('.kt', { timeout: 20000 });
+  ok((await t.textContent('.main')).includes(tno) && /Table 3/.test(await t.textContent('.main')) && /Aged duck breast/.test(await t.textContent('.main')), 'kitchen screen: table 3’s order ' + tno + ' (duck, as cooked)');
+  ok(t.errors.length === 0, 'table page and kitchen: no JavaScript errors' + (t.errors.length ? ': ' + t.errors.slice(0, 2).join(' | ') : ''));
+  await t.context().close();
   ok(p.errors.length === 0, 'no JavaScript errors' + (p.errors.length ? ': ' + p.errors.slice(0, 3).join(' | ') : ''));
   await a.context().close();
   await p.context().close();

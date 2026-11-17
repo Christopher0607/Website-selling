@@ -39,6 +39,8 @@ $s = array_merge(
 if ( ! empty( $spec['tables'] ) ) {
 	$s['table_on']   = 1;
 	$s['table_list'] = (string) $spec['tables'];
+	$s['table_note'] = (string) ( $spec['table']['note'] ?? '' );
+	$s['table_pay']  = 'table' === ( $spec['table']['pay'] ?? '' ) ? 'table' : 'counter';
 }
 update_option( AGC_Settings::OPTION, $s );
 if ( ! empty( $data['BRAND'] ) ) {
@@ -64,8 +66,8 @@ if ( ! get_option( 'agc_site_clean' ) ) {
 		require_once ABSPATH . 'wp-admin/includes/user.php';
 		wp_delete_user( (int) $uid );
 	}
-	foreach ( get_posts( array( 'post_type' => 'shop_coupon', 'numberposts' => -1, 'post_status' => 'any', 'fields' => 'ids' ) ) as $cid ) {
-		wp_delete_post( $cid, true );
+	foreach ( get_posts( array( 'post_type' => array( 'shop_coupon', AGC_Site::BOOKING, AGC_Site::ENQUIRY ), 'numberposts' => -1, 'post_status' => 'any', 'fields' => 'ids' ) ) as $cid ) {
+		wp_delete_post( $cid, true ); // coupons copied from master; bookings and enquiries of earlier tests
 	}
 	update_option( 'agc_site_clean', time() );
 	WP_CLI::log( "Clean start: removed $n orders, the customers and coupons copied from master" );

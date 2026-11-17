@@ -683,7 +683,7 @@
     $$('.owner .small.muted').forEach(function (p) { if (/keeps everything in your browser/.test(p.textContent)) p.textContent = 'This demo runs on real WordPress + WooCommerce. Your test orders, bookings and vouchers are saved there; the demo is put back every night.'; });
     if (root) root.innerHTML = '<div class="panel" style="padding:26px"><p class="kicker">The real back office</p><h2 style="margin-top:6px">Open it on your phone</h2>' +
       '<p class="muted">Orders, bookings, enquiries, sold-out switches, prices, festive stock and opening status, in the restaurant’s own dashboard. No password needed for this demo.</p>' +
-      '<div class="btns" style="margin-top:16px"><a class="btn" data-live-dian href="' + esc(dl.dian || LIVE.dian) + '">Open the shop dashboard</a><a class="btn btn--ghost" data-live-admin href="' + esc(dl.admin || LIVE.admin) + '">Open WordPress admin</a></div>' +
+      '<div class="btns" style="margin-top:16px"><a class="btn" data-live-dian href="' + esc(dl.dian || LIVE.dian) + '">Open the shop dashboard</a><a class="btn btn--ghost" data-live-admin href="' + esc(dl.admin || LIVE.admin) + '">Open WordPress admin</a><a class="btn btn--ghost" data-live-kitchen href="' + esc((dl.dian || LIVE.dian) + ((dl.dian || LIVE.dian).indexOf('?') === -1 ? '?' : '&') + 'hash=/kitchen') + '">Kitchen screen (table orders)</a></div>' +
       '<p class="small muted" style="margin-top:14px">WordPress admin is the full WooCommerce back office (orders, products, stock, coupons, reports). The shop dashboard is the simple phone version the restaurant uses every day.</p></div>';
   }
   function pageOwner() {
