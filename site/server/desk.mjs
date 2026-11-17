@@ -15,6 +15,7 @@ import { SCRIPTS } from './scripts.mjs';
 import { BRIEF } from './brief.mjs';
 import { INBOX, PREVIEWS as BUNDLED_PREVIEWS } from './inbox.mjs';
 import { BOT_UA, deviceKind, trafficSummary } from './traffic.mjs';
+import { wpDemoUrl } from './demos.mjs';
 
 const DOC = 'prospects-v1';
 const MAX_INPUT = 3000;
@@ -572,8 +573,9 @@ const PVFOLLOW_V = 7; // v7 (2026-11-14): RM99 maintenance, RM169 a month, RM800
 const FOUNDING_OPEN = true;
 const FROM_PRICE = 'RM800';
 const FESTIVE_PRICE = 'RM399';
-// the RM399 product as a demo (site/flagships/butter-lantern); ?fest= picks the festival it opens on
-const FESTIVE_DEMO = STUDIO_URL + 'demo/butter-lantern/';
+// the RM399 product as a demo (site/flagships/butter-lantern); ?fest= picks the festival it opens on.
+// 2026-11-17: all demos run on real WordPress + WooCommerce (<demo>.demo.cartsmithstudio.com, site/server/demos.mjs)
+const FESTIVE_DEMO = wpDemoUrl('butter-lantern');
 // the next festive season(s) worth naming, by today's date in Malaysia (CNY 2027-02-06; Hari Raya expected 2027-03-10)
 function festiveName(lang) {
   const t = myDate();
@@ -622,12 +624,13 @@ function demoFor(p) {
   const slug = goods || (!online && /restaurant|restoran|dining/.test(t) ? (fine ? 'maison-cendre' : 'sireh-salt')
     : beans ? 'lowlight' : RX_BAKERY.test(t) ? 'dulang-daun' : (online || !cafe) && RX_DRINKS.test(t) ? 'lowlight' : (online || !cafe) && RX_PANTRY.test(t) ? 'chili-pantry'
     : RX_GOODS.test(t) || online ? 'dulang-daun' : fine ? 'maison-cendre' : RX_FOOD.test(t) ? 'sireh-salt' : '');
-  return slug ? { slug, url: `${STUDIO_URL}demo/${slug}/`, ...DEMOS[slug] } : null;
+  return slug ? { slug, url: wpDemoUrl(slug), ...DEMOS[slug] } : null;
 }
-// 2026-11-13: the real festive shop on WordPress (sites/demo-festive: Chinese New Year, in Chinese, with the owner's phone
-// dashboard /dian/) — exactly what a client gets. People can place a demo order; nothing is charged.
-const FESTIVE_SHOP = 'https://demo-festive.cartsmithstudio.com/';
-const isRealShop = (u) => String(u || '').startsWith(FESTIVE_SHOP);
+// The festive shop on Chinese New Year (in Chinese first) — 2026-11-17: Butter & Lantern itself is now the real WordPress
+// shop with the owner's phone dashboard /dian/ (before: the separate demo-festive site). People can place a demo order;
+// nothing is charged.
+const FESTIVE_SHOP = FESTIVE_DEMO + '?fest=cny';
+const isRealShop = (u) => String(u || '').startsWith(FESTIVE_DEMO);
 // which festive demo to send: Chinese-speaking or Chinese / Peranakan / Taiwanese shops → the real Chinese New Year shop,
 // Malay-speaking or Malay shops → the Hari Raya demo (Malay first), everyone else → the demo on the nearest festival
 function festDemo(p) {

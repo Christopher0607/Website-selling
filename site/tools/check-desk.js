@@ -70,7 +70,7 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
   ok(true, 'p001 appears under follow-ups when due');
   // contacted, no mockup yet: the 2nd message is a ready-made template (2026-11-13), short enough for an Instagram DM
   const tplFu = await p.inputValue('#c-p001 textarea[data-field="followup"]');
-  ok(/完整示范网站/.test(tplFu) && /\/demo\/dewlane\//.test(tplFu) && /Glow Lab 的书面报价/.test(tplFu) && !/样板/.test(tplFu) && /每个月 RM169/.test(tplFu) && /RM399/.test(tplFu) && tplFu.includes('https://demo-festive.cartsmithstudio.com/') && /店家后台/.test(tplFu) && /每月维护费 RM99/.test(tplFu)
+  ok(/完整示范网站/.test(tplFu) && /dewlane\.demo\.cartsmithstudio\.com/.test(tplFu) && /Glow Lab 的书面报价/.test(tplFu) && !/样板/.test(tplFu) && /每个月 RM169/.test(tplFu) && /RM399/.test(tplFu) && tplFu.includes('https://butter-lantern.demo.cartsmithstudio.com/?fest=cny') && /店家后台/.test(tplFu) && /每月维护费 RM99/.test(tplFu)
     && tplFu.length <= 1000 && !/[?？]/.test(tplFu.replace(/https?:\/\/\S+/g, '')) && !(await p.$('#c-p001 [data-ig-long]')),
     'contacted, no mockup: the 2nd message is ready (matching demo, written quote, no mockup offer, RM169, RM399 festive shop, dashboard, under 1,000 characters, no questions)');
   ok(/示范网站、每月 RM169、节日预购网店 RM399/.test(await p.textContent('#c-p001')), 'the card says what the ready-made message covers');
@@ -447,7 +447,7 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
     await p.click('#l-p906 [data-act="call-out"][data-out="ok"]');
     await p.waitForSelector('#l-p906 textarea[data-field="draft_reply"]');
     const r7 = JSON.parse(fs.readFileSync(STORE, 'utf8')).items.find((x) => x.id === 'p906');
-    ok(r7.draft_reply.includes('/demo/dewlane/') && !/样板|mockup|sample website/i.test(r7.draft_reply) && /现在发示范网站和价钱/.test(await p.textContent('#l-p906')) && !(await p.$('#l-p906 [data-act="pv-sent"]')),
+    ok(r7.draft_reply.includes('dewlane.demo.cartsmithstudio.com') && !/样板|mockup|sample website/i.test(r7.draft_reply) && /现在发示范网站和价钱/.test(await p.textContent('#l-p906')) && !(await p.$('#l-p906 [data-act="pv-sent"]')),
       'no mockup: after a yes the message has the matching demo (skincare → Dewlane), no mockup offer, no 已发样板 button');
     await p.click('#l-p906 .btnrow--end [data-act="sent"]');
     await p.waitForFunction(() => !document.querySelector('#l-p906 textarea[data-field="draft_reply"]'));
@@ -559,7 +559,7 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
     const s6 = JSON.parse(fs.readFileSync(STORE, 'utf8')).items;
     const g = s6.find((x) => x.id === 'p907'), ny = s6.find((x) => x.id === 'p908');
     ok(/We got in touch a few days ago/.test(g.preview_msg) && !/Instagram/.test(g.preview_msg) && g.preview_msg.includes('gelato5523'), 'shop we wrote to before: the mockup message says so (no "on Instagram")');
-    ok(ny.followup.includes('https://demo-festive.cartsmithstudio.com/') && /place a test order/.test(ny.followup), 'Chinese / Nyonya shop: the festive part links the real WordPress shop');
+    ok(ny.followup.includes('https://butter-lantern.demo.cartsmithstudio.com/?fest=cny') && /place a test order/.test(ny.followup), 'Chinese / Nyonya shop: the festive part links the real WordPress shop');
     ok(ny.followup.includes('m-nyonya-test-1234abcd') && ny.followup.includes('beng6840') && /easy to find/.test(ny.followup) && !/[?？]/.test(ny.followup.replace(/https?:\/\/\S+/g, '')), 'mockup sent: the follow-up nudge is ready with the link (no AI needed)');
     await p.click('[data-act="cs-start"]');
     await p.waitForSelector('[data-cs="p907"]');
@@ -718,7 +718,7 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
     }), 'message first (2026-11-13): the WhatsApp follow-up is above the call, WhatsApp is its first button');
     ok(!!(await p.$('#c-p962 [data-act="call"]')), 'mockup sent and only the call date is due: the card is on today\'s list too');
     const fu = JSON.parse(fs.readFileSync(STORE, 'utf8')).items.find((x) => x.id === 'p961').followup || '';
-    ok(fu.includes('second1234') && /from RM800 one-off/.test(fu) && /RM399/.test(fu) && /\/demo\/butter-lantern\//.test(fu) && /RM169 a month/.test(fu) && /\/demo\/dulang-daun\//.test(fu) && /second half only when you're happy/.test(fu) && /RM99 a month/.test(fu) && /shop dashboard on your phone/.test(fu) && /All our demos and prices: https:\/\/cartsmithstudio\.com\//.test(fu) && !/[?？]/.test(fu.replace(/https?:\/\/\S+/g, '')),
+    ok(fu.includes('second1234') && /from RM800 one-off/.test(fu) && /RM399/.test(fu) && /butter-lantern\.demo\.cartsmithstudio\.com/.test(fu) && /RM169 a month/.test(fu) && /dulang-daun\.demo\.cartsmithstudio\.com/.test(fu) && /second half only when you're happy/.test(fu) && /RM99 a month/.test(fu) && /shop dashboard on your phone/.test(fu) && /All our demos and prices: https:\/\/cartsmithstudio\.com\//.test(fu) && !/[?？]/.test(fu.replace(/https?:\/\/\S+/g, '')),
       'first follow-up after the mockup: link, password, the price + maintenance, the monthly plan, the fitting demo (bakery → Dulang & Daun), the festive page, the phone dashboard, our site, no questions');
     ok(/Dulang &(amp;)? Daun/.test(c1) && /2b 完整示范/.test(c1), 'the card and the second-call script name the demo that fits (bakery → Dulang & Daun)');
     await p.click('#c-p961 [data-act="call"]');

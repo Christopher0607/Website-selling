@@ -137,6 +137,15 @@ const DESKTOP_UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36
   ok(wp.demos.some((d) => /demo-festive/.test(d.name) && d.views === 2) && wp.pages.some((r) => r.name === '真网店示范 demo-festive：首页'), 'listed as the real demo shop');
   ok(wp.recent[0].src === '站内点进来' && wp.recent[1].src === 'Instagram', 'a click inside the shop shows as 站内, the first view keeps where they came from');
 
+  console.log('The demo websites on WordPress (2026-11-17: <demo>.demo.cartsmithstudio.com)');
+  const dmHit = (q) => fetch(BASE + '/api/hit?' + q, { method: 'POST', headers: { 'User-Agent': PHONE_UA, Origin: 'https://sireh-salt.demo.cartsmithstudio.com', 'Sec-Fetch-Site': 'same-site' } });
+  await dmHit('e=pv&p=%2Fmenu.html&v=wpvisitor02&n=1&r=wa.me');
+  await dmHit('e=pv&p=%2Fowner.html&v=wpvisitor02');
+  await dmHit('e=act&a=whatsapp&p=%2Fmenu.html&v=wpvisitor02');
+  const dm = (await desk('traffic', { days: 1 })).traffic;
+  ok(dm.demos.some((d) => /Sireh & Salt/.test(d.name) && d.views >= 1) && dm.pages.some((r) => r.name === '示范：Sireh & Salt（一般餐厅） · menu'), 'a WordPress demo page is listed under its demo ("示范：Sireh & Salt · menu"); the owner page is not counted');
+  ok(dm.acts.some(([a]) => a === 'demo whatsapp'), 'a WhatsApp tap on a WordPress demo counts as a demo tap');
+
   await b.close();
   await bh.close();
   console.log(fail ? `\n${fail} check(s) failed` : '\nall checks passed');

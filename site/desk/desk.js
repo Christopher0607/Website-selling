@@ -668,7 +668,7 @@
         <div class="tr-card"><h3>地区</h3>${barList(d.places, d.visitors)}<p class="hint">Cloudflare 从网络位置估计的，不一定准。</p></div>
       </div>
       <div class="tr-card"><h3>刚刚的浏览</h3>${live}</div>
-      <p class="hint">算的是 cartsmithstudio.com、所有示范网站和真网店示范（demo-festive）；不算工作台和客户样板（样板在每张卡片看）。你自己打开过工作台的手机 / 电脑不算，机器人和自动测试不算。不记录 IP、名字或打的字，资料保留 120 天。</p>`;
+      <p class="hint">算的是 cartsmithstudio.com、所有示范网站（2026-11-17 起是真的 WordPress，网址 &lt;示范&gt;.demo.cartsmithstudio.com）和旧的真网店示范（demo-festive）；不算工作台和客户样板（样板在每张卡片看）。你自己打开过工作台的手机 / 电脑不算，机器人和自动测试不算。不记录 IP、名字或打的字，资料保留 120 天。</p>`;
   }
   setInterval(() => { if (S.tab === 'traffic' && document.visibilityState === 'visible') loadTraffic(); }, 60e3);
 

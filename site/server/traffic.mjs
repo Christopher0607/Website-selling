@@ -79,10 +79,14 @@ export async function handleHit(req, plat) {
 const MY = 8 * 3600e3; // Malaysia time
 const myDay = (t) => new Date(t + MY).toISOString().slice(0, 10);
 const myHour = (t) => new Date(t + MY).getUTCHours();
-const DEMOS = { 'maison-cendre': 'Maison Cendre（精品餐厅）', 'sireh-salt': 'Sireh & Salt（一般餐厅）', 'dulang-daun': 'Dulang & Daun（食品礼盒网店）', 'butter-lantern': 'Butter & Lantern（节日预购 RM399）' };
+const DEMOS = { 'maison-cendre': 'Maison Cendre（精品餐厅）', 'sireh-salt': 'Sireh & Salt（一般餐厅）', 'dulang-daun': 'Dulang & Daun（食品礼盒网店）', 'butter-lantern': 'Butter & Lantern（节日预购 RM399）',
+  voltnest: 'Voltnest（模板：3C 配件）', 'chili-pantry': 'Little Chili Pantry（模板：自家食品）', dewlane: 'Dewlane（模板：护肤美妆）', lowlight: 'Lowlight Roasters（模板：咖啡茶叶）', plainfold: 'Plainfold（模板：服装）', tailmate: 'Tailmate（模板：宠物用品）' };
+// 2026-11-17: the demos run on WordPress at <demo>.demo.cartsmithstudio.com → h = "<demo>.demo" (site/server/demos.mjs)
+const wpDemo = (h) => (/^[a-z0-9-]+\.demo$/.test(h || '') ? h.slice(0, -5) : '');
 const PAGES = { '/': '首页', '/pricing': '价钱', '/templates': '6 个商店模板', '/start': '免费样板申请', '/faq': '常见问题', '/process': '合作流程', '/why-us': '为什么选我们', '/privacy': '隐私通知', '/thanks': '申请送出（谢谢页）', '/shopee-fee-calculator': 'Shopee 费用计算器', '/404': '找不到页面' };
 export function pageName(h, p) {
   if (h === 'demo-festive') return '真网店示范 demo-festive' + (p === '/' ? '：首页' : '：' + decodeURIComponentSafe(p));
+  if (wpDemo(h)) return '示范：' + (DEMOS[wpDemo(h)] || wpDemo(h)) + (p === '/' ? '' : ' · ' + decodeURIComponentSafe(p.slice(1)));
   if (h) return h + p;
   const m = p.match(/^\/demo\/([\w-]+)\/?(.*)$/);
   if (m) {
@@ -92,7 +96,7 @@ export function pageName(h, p) {
   return PAGES[p.replace(/\/$/, '') || '/'] || p;
 }
 function decodeURIComponentSafe(s) { try { return decodeURIComponent(s); } catch (e) { return s; } }
-const demoOf = (h, p) => (h === 'demo-festive' ? 'demo-festive' : ((p.match(/^\/demo\/([\w-]+)/) || [])[1] || ''));
+const demoOf = (h, p) => (h === 'demo-festive' ? 'demo-festive' : wpDemo(h) || ((p.match(/^\/demo\/([\w-]+)/) || [])[1] || ''));
 export function sourceOf(row) {
   const s = row.s;
   if (s) return /^(flyer|print)/.test(s) ? '价钱单（地推）' : /^(ig|insta)/.test(s) ? 'Instagram' : /^(wa|whatsapp)/.test(s) ? 'WhatsApp' : /^(fb|facebook)/.test(s) ? 'Facebook' : /^(tt|tiktok)/.test(s) ? 'TikTok' : s;
@@ -151,7 +155,7 @@ export async function trafficSummary(store, days, nowMs = Date.now()) {
     inc(places, r.c ? (r.c === 'MY' && r.g ? 'MY · ' + r.g : r.c) : '不明');
   }
   for (const r of inRange) {
-    if (r.e === 'act') inc(acts, (r.h ? 'demo-festive ' : /^\/demo\//.test(r.p) ? 'demo ' : '') + r.a);
+    if (r.e === 'act') inc(acts, (r.h === 'demo-festive' ? 'demo-festive ' : wpDemo(r.h) || /^\/demo\//.test(r.p) ? 'demo ' : '') + r.a);
     if (r.e === 't') inc(pageSecs, pageName(r.h, r.p), r.sec || 0);
   }
   const online = new Set(rows.filter((r) => r.t >= nowMs - 5 * 60e3).map(vid));

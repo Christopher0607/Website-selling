@@ -1236,7 +1236,7 @@ class Studio:
                        f'<img class="flag__phone" src="{root}assets/shots/{slug}-mobile.webp" alt="" loading="lazy" width="600" height="1298"></a>'
                        f'<div class="flag__body"><p class="kicker">{kind}</p><h3>{name}</h3><p class="flag__line">{line}</p><ul class="s-ticks">{li}</ul>'
                        f'<div class="s-btns"><a class="s-btn" href="{root}{href}">Open the demo</a><a class="s-btn s-btn--ghost" href="{root}{second[1]}">{second[0]}</a></div></div></article>')
-        return '<div class="flags">' + "".join(out) + '</div><p class="s-hero__note" style="text-align:center;margin-top:16px">All four brands are fictional and nothing is charged; every button works. Open them on your phone.</p>'
+        return '<div class="flags">' + "".join(out) + '</div><p class="s-hero__note" style="text-align:center;margin-top:16px">All four brands are fictional and nothing is charged. They run on real WordPress + WooCommerce: place an order, then open the owner side to see it. Open them on your phone.</p>'
 
 
     def frag_calculator(self, root):
@@ -1607,6 +1607,8 @@ def main():
     write("robots.txt", "User-agent: *\nDisallow: /demo/\nDisallow: /desk/\n")
     # response headers (Cloudflare Pages reads dist/_headers; same rules the site had on Netlify)
     write("_headers", HEADERS)
+    if WP_DEMOS:
+        print(f"links to the WordPress demos: {link_wp_demos(DIST)}")
     add_hit_beacon(DIST)
     version_assets(DIST)
     files = sum(len(f) for _, _, f in os.walk(DIST))
@@ -1614,6 +1616,42 @@ def main():
 
 
 STUDIO_URL = "https://cartsmithstudio.com/"
+# 2026-11-17 (docs/14-wordpress-demos.md): the 10 demo websites run on real WordPress + WooCommerce at
+# https://<demo>.demo.cartsmithstudio.com/ (same pages; orders, stock and the back office are real). The studio pages link
+# there, and old /demo/<demo>/ page links are sent on by the Worker (site/worker.mjs). The copies in dist/demo/ stay: the
+# WordPress versions are built from them and checked against them (build.py --wp, check-flagships.js, compare-wp-demo.js),
+# and their photos are still served from here. WP_DEMOS = False links the studio pages to the copies here again.
+WP_DEMOS = True
+WP_DEMO_HOST = "demo.cartsmithstudio.com"
+WP_DEMO_SLUGS = ("sireh-salt", "maison-cendre", "dulang-daun", "butter-lantern", "voltnest", "chili-pantry", "dewlane", "lowlight", "plainfold", "tailmate")
+
+
+def wp_demo_url(slug, page=""):
+    """https://<demo>.demo.cartsmithstudio.com/<page> ("index.html?fest=cny" → "/?fest=cny")."""
+    path, _, q = page.partition("?")
+    path = "" if path in ("", "index.html") else path
+    return f"https://{slug}.{WP_DEMO_HOST}/{path}" + (f"?{q}" if q else "")
+
+
+def link_wp_demos(dist):
+    """Studio pages (not the demos themselves, not the desk): links to demo/<demo>/… → the WordPress demo website."""
+    rx = re.compile(r'href="((?:\.\./)*)demo/(' + "|".join(map(re.escape, WP_DEMO_SLUGS)) + r')/([^"]*)"')
+    n = 0
+    for base, dirs, files in os.walk(dist):
+        rel = os.path.relpath(base, dist).split(os.sep)[0]
+        if rel in ("demo", "desk"):
+            continue
+        for fn in files:
+            if not fn.endswith(".html"):
+                continue
+            p = os.path.join(base, fn)
+            src = open(p, encoding="utf-8").read()
+            out, k = rx.subn(lambda m: 'href="' + wp_demo_url(m.group(2), m.group(3).replace("&amp;", "&")).replace("&", "&amp;") + '"', src)
+            if k:
+                n += k
+                with open(p, "w", encoding="utf-8") as fh:
+                    fh.write(out)
+    return n
 WP_LINK_RX = re.compile(r'((?:href|src|action)=")((?:\.\./)+)([^"]*)(")')
 
 

@@ -59,7 +59,7 @@ to end the call politely — and then nothing happens. Seven mockups went out; o
   2. **Timing**: Christmas (25 Dec), Chinese New Year (6 Feb 2027), Hari Raya (expected 10 Mar 2027). Customers ask about
      festive orders weeks before; pick the one that fits THEIR shop (Malay kuih → Raya; Chinese bakery → CNY).
   3. **A small first step**: a festive pre-order shop for RM399, live in 3 working days; the RM399 comes off a full
-     website within 60 days. Sample: https://cartsmithstudio.com/demo/butter-lantern/ (?fest=cny / raya / xmas).
+     website within 60 days. Sample: https://butter-lantern.demo.cartsmithstudio.com/ (?fest=cny / raya / xmas).
   Then ONE concrete next step: a written quotation today (WhatsApp), or a 15-minute visit / call at a set day and time.
 - **They have not opened it** (desk shows no visits, or the link opened but no password entered): resend the link and
   password, call again in 2 days. Never say we can see this.
@@ -97,20 +97,22 @@ to end the call politely — and then nothing happens. Seven mockups went out; o
 When an owner wants to see what a finished website does (beyond their own sample), point them to one of the four
 complete demos — fictional brands, everything clickable, nothing charged. The customer file says which one fits this
 business ("Full demo website that fits them"); use that one:
-- Fine dining, chef-led or upmarket restaurants: https://cartsmithstudio.com/demo/maison-cendre/ (tasting menus,
-  reservations with deposits and a waitlist, private dining, seasonal dinners; owner side at /demo/maison-cendre/owner.html).
-- Everyday restaurants, cafés, caterers: https://cartsmithstudio.com/demo/sireh-salt/ (ordering, bookings, festive pre-orders,
-  catering, vouchers, ordering from the table by QR at table.html?t=5; the owner side at /demo/sireh-salt/owner.html shows how they would run it from their phone).
-- The small first step (RM399 festive pre-order shop), two versions:
-  - **The real one** (2026-11-13): https://demo-festive.cartsmithstudio.com/ — the actual WordPress shop a client gets
-    (Chinese New Year, in Chinese; fictional bakery, nothing is charged). People can place a test order and see the order
-    email and tracking. Behind it is the owner's phone dashboard (new-order alerts, payments to check, what to make each
-    day, stock, customers, reports with an Excel export, coupons, pause orders, staff logins). Best link for Chinese
-    shops and Chinese-speaking owners; the card file picks it for them.
-  - The demo page: https://cartsmithstudio.com/demo/butter-lantern/ (?fest=raya for Malay bakeries, ?fest=xmas for
-    Christmas bakes, ?fest=val for Valentine's) — in English or Malay, shows every festival, with an owner page.
-- Bakeries, kuih and cookie makers, sambal and gift brands: https://cartsmithstudio.com/demo/dulang-daun/ (shop, gift
-  boxes, build-your-own hamper, West/East shipping, WhatsApp orders, tracking; owner side at /demo/dulang-daun/owner.html).
+Since 2026-11-17 every demo runs on real WordPress + WooCommerce, exactly what a client gets: a test order really
+arrives in the shop's phone dashboard and WordPress admin (owner.html → one tap, demo login with limited rights, nothing
+is charged, put back every night). So "place a test order, then open the owner side" is a fair invitation.
+- Fine dining, chef-led or upmarket restaurants: https://maison-cendre.demo.cartsmithstudio.com/ (tasting menus,
+  reservations with deposits and a waitlist, private dining, seasonal dinners; owner side at owner.html).
+- Everyday restaurants, cafés, caterers: https://sireh-salt.demo.cartsmithstudio.com/ (ordering, bookings, festive pre-orders,
+  catering, vouchers, ordering from the table by QR at table.html?t=5; the owner side at owner.html shows how they would run it from their phone).
+- The small first step (RM399 festive pre-order shop): https://butter-lantern.demo.cartsmithstudio.com/ — the real
+  WordPress shop a client gets (fictional bakery, nothing is charged). ?fest=cny opens Chinese New Year in Chinese first
+  (best for Chinese shops and Chinese-speaking owners; the card file picks it for them), ?fest=raya for Malay bakeries
+  (Malay first), ?fest=xmas for Christmas bakes, ?fest=val for Valentine's. People can place a test order, upload a
+  DuitNow receipt and track the order; the owner side opens the phone dashboard (new-order alerts, payments to check,
+  what to make each day, stock, customers, reports with an Excel export, coupons, pause orders, staff logins).
+  (The old link https://demo-festive.cartsmithstudio.com/ was the first version of this shop.)
+- Bakeries, kuih and cookie makers, sambal and gift brands: https://dulang-daun.demo.cartsmithstudio.com/ (shop, gift
+  boxes, build-your-own hamper, West/East shipping, WhatsApp orders, tracking; owner side at owner.html).
 Use at most one demo link per message, as a statement ("Here is a full example of what the finished website does: …").
 
 ## 3. Statuses on a card
@@ -142,7 +144,7 @@ lost · no_response · do_not_contact. "Next follow-up" and "next call" dates ar
 - Never promise sales, rankings or delivery dates; never invent clients, reviews, numbers, prices or offers.
 - Table QR ordering exists since 2026-11-15 (agency-core 1.8.0): scan the QR on the table → order on the phone → kitchen
   screen with the table number → pay at the counter → "close the day" record (since 2026-11-16: total per payment method,
-  every bill, what sold, unpaid tables, Excel). Demo to send: https://cartsmithstudio.com/demo/sireh-salt/table.html?t=5
+  every bill, what sold, unpaid tables, Excel). Demo to send: https://sireh-salt.demo.cartsmithstudio.com/table.html?t=5
   (its "See the restaurant's side" link opens the kitchen and counter screens). Not available yet: connecting to the shop's cashier / POS system,
   kitchen printers, paying at the table. Never promise those; ask which cashier system they use and say we will confirm.
   In person, never say they are the first shop we visited.
