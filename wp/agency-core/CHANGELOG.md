@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.13.0 — 2026-11-17（俊宇选的「向 StoreHub / Beep 学习」：接 Loyverse 收银机）
+- 新：店家后台「Loyverse 收银机」（`#/loyverse`，要有「设定」权限；示范帐号看不到）。店家在 Loyverse 后台 Settings → Access tokens 做一个 token，贴进来按「连接」：先试连，错的 token 会被拒绝；token 只存在网站（`agc_loyverse_token`，不自动载入），浏览器只看得到最后 4 个字。
+- 打开「已付的订单送去 Loyverse」之后，网站、桌上点单、柜台收银的**已付**订单会在背景变成 Loyverse 的收据（`POST /v1.0/receipts`）：每样菜、数量、实际价钱（扣了优惠之后）、选项写在 line note；付款方式照店家选的对应（现金 / DuitNow / 卡 / GrabFood / ShopeeFood / 网上已付…）；收据日期 = 付款时间；备注写「Table 5」「Takeaway」「GrabFood · 单号」。打开之前的订单不送。
+- 产品对应：先看 SKU（两边一样最好），再看名字（不分大小写、多余空格）；运费和 Loyverse 没有的东西可以指定一样「其他」。「产品」卡片列出 Loyverse 找不到的产品。
+- 送不到（Loyverse 当机、网络）会在 5 / 10 / 20 / 40 分钟后自动再送；产品或付款方式没设好就等店家改好按「把没送到的再送一次」。每张单只送一次（`_agc_loyverse` 记收据号码）。
+- 测试：`site/tools/mock-loyverse.mjs`（照 Loyverse 公开接口做的假服务器）+ `site/tools/check-loyverse.js`（只在本机跑）。**还没用真的 Loyverse 帐号测过**：第一个用 Loyverse 的客户开通时要实测一次。
+
 ## 1.12.0 — 2026-11-17（俊宇选的「向 StoreHub / Beep 学习」：厨房打印机）
 - 新：厨房画面可以打印单子。右上角「打印机」：这台机器自动打印新单（只在接着打印机的那台开）、纸宽 80 / 58 mm、试打印；每张单子旁边也有打印按钮（补印）。
 - 用这台机器平常打印的打印机（USB、网络线，或蓝牙打印机自己的 app），不用买特别的牌子。Windows + Chrome 用 `--kiosk-printing` 打开就不会每次跳出打印视窗（设定方法：`docs/15-storehub-beep-study.md`「厨房打印机怎么设」）。

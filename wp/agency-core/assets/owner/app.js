@@ -52,7 +52,7 @@
       cp_used: 'used {0}×', cp_of: 'used {0} of {1}', cp_expired: 'Expired', cp_off: 'Off', cp_none: 'No coupons yet.', cp_delete: 'Delete coupon', cp_delete_q: 'Delete coupon {0}?',
       tm_owner: 'Owner', tm_staff: 'Staff', tm_add: 'Add a staff account', tm_name: 'Name', tm_email: 'Email', tm_hint: 'Staff can handle orders, production, products and customers. They cannot change settings or the team.', tm_link: 'Send this link to {0}. It lets them set their own password (one time, 24 hours):', tm_copy: 'Copy link', tm_wa: 'Send on WhatsApp', tm_remove: 'Remove', tm_remove_q: 'Remove {0}?', tm_remove_p: 'They will not be able to log in any more.', tm_you: 'you',
       c_tap: 'Tap a customer to see their orders.', all_orders: 'All orders',
-      counter: 'Counter', ct_dine: 'Dine-in', ct_takeaway: 'Takeaway', ct_phone: 'Phone / WhatsApp', ct_grab: 'GrabFood', ct_shopee: 'ShopeeFood', ct_table: 'Table', ct_pick_table: 'Choose the table first.', ct_search: 'Search the menu', ct_all: 'All', ct_empty: 'Tap the dishes to add them.', ct_add: 'Add', ct_note: 'Note for the kitchen (optional)', ct_later: 'Send · pay later', ct_pay: 'Pay now', ct_paid_by: 'Send · paid by {0}', ct_how: 'How are they paying {0}?', ct_cash: 'Cash received', ct_change: 'Change {0}', ct_short: 'Not enough: {0} more', ct_exact: 'Exact', ct_ok: 'Done', ct_sent: '#{0} sent to the kitchen', ct_sent_change: '#{0} sent · give {1} change', ct_name: 'Name (optional)', ct_ref: '{0} order no. (optional)', ct_off: 'The counter screen is off. Turn it on in Settings → Table QR ordering.', ct_clear: 'Clear', ct_sold: 'Sold out', ct_review: 'Review order', k_paid: 'Paid', k_printer: 'Printer', k_print: 'Print', k_auto: 'Print new orders on this device', k_auto_hint: 'Turn this on only on the device next to the kitchen printer. Orders already on the screen are not printed again.', k_paper: 'Paper width', k_test: 'Test print', k_test_note: 'If you can read this, the printer works.', k_print_help: 'It prints on the printer this device already prints to (USB, network, or Bluetooth through the printer’s app). To print without the print window every time, use a Windows computer with Chrome set to kiosk printing — we set it up for you.', k_auto_on: 'Auto print on', k_printed: 'Sent to the printer', k_tk_paid: 'PAID', k_tk_kitchen: 'Kitchen', m_grab: 'GrabFood', m_shopee: 'ShopeeFood', m_online: 'Paid online', cl_channels: 'By order type',
+      counter: 'Counter', ct_dine: 'Dine-in', ct_takeaway: 'Takeaway', ct_phone: 'Phone / WhatsApp', ct_grab: 'GrabFood', ct_shopee: 'ShopeeFood', ct_table: 'Table', ct_pick_table: 'Choose the table first.', ct_search: 'Search the menu', ct_all: 'All', ct_empty: 'Tap the dishes to add them.', ct_add: 'Add', ct_note: 'Note for the kitchen (optional)', ct_later: 'Send · pay later', ct_pay: 'Pay now', ct_paid_by: 'Send · paid by {0}', ct_how: 'How are they paying {0}?', ct_cash: 'Cash received', ct_change: 'Change {0}', ct_short: 'Not enough: {0} more', ct_exact: 'Exact', ct_ok: 'Done', ct_sent: '#{0} sent to the kitchen', ct_sent_change: '#{0} sent · give {1} change', ct_name: 'Name (optional)', ct_ref: '{0} order no. (optional)', ct_off: 'The counter screen is off. Turn it on in Settings → Table QR ordering.', ct_clear: 'Clear', ct_sold: 'Sold out', ct_review: 'Review order', k_paid: 'Paid', k_printer: 'Printer', k_print: 'Print', k_auto: 'Print new orders on this device', k_auto_hint: 'Turn this on only on the device next to the kitchen printer. Orders already on the screen are not printed again.', k_paper: 'Paper width', k_test: 'Test print', k_test_note: 'If you can read this, the printer works.', k_print_help: 'It prints on the printer this device already prints to (USB, network, or Bluetooth through the printer’s app). To print without the print window every time, use a Windows computer with Chrome set to kiosk printing — we set it up for you.', k_auto_on: 'Auto print on', k_printed: 'Sent to the printer', k_tk_paid: 'PAID', k_tk_kitchen: 'Kitchen', loyverse: 'Loyverse POS', lv_intro: 'Paid orders from your website, table QR and counter become receipts in your Loyverse, so its reports and stock include them. Orders from before you turn it on are not sent.', lv_not: 'Not connected', lv_on: 'Sending', lv_paused: 'Paused', lv_token: 'Loyverse access token', lv_token_ph: 'Paste the token here', lv_token_help: 'In Loyverse Back Office: Settings → Access tokens → + Add access token. Copy it and paste it here. It is kept on your website only.', lv_connect: 'Connect', lv_connected: 'Connected to Loyverse', lv_demo: 'Demo website: connecting a real Loyverse account is turned off here.', lv_token_saved: 'Connected with token {0}', lv_remove: 'Disconnect', lv_remove_q: 'Disconnect Loyverse?', lv_remove_p: 'Orders stop going to Loyverse. Receipts already there stay.', lv_settings: 'Sending', lv_store: 'Loyverse store', lv_send: 'Send paid orders to Loyverse', lv_pay_h: 'Payment types', lv_pay_hint: 'How each payment shows in Loyverse.', lv_other: 'Item for delivery fees and anything not in Loyverse (optional)', lv_other_none: 'None: stop and show me', lv_match: 'Products', lv_match_n: '{0} of {1} products found in Loyverse', lv_match_hint: 'Not found: give them the same SKU (best) or the same name in Loyverse, then check again.', lv_match_all: 'Every product is in Loyverse.', lv_check: 'Check again', lv_recent: 'Recent orders', lv_none: 'No paid orders since you turned it on.', lv_sent: 'Receipt {0}', lv_failed: 'Not sent', lv_waiting: 'Sending…', lv_retry: 'Send the ones not sent', lv_retry_done: '{0} of {1} sent', lv_keep: 'Stay connected', m_grab: 'GrabFood', m_shopee: 'ShopeeFood', m_online: 'Paid online', cl_channels: 'By order type',
       kitchen: 'Kitchen', tables: 'Tables', k_empty: 'Nothing to make. Orders from the table QR codes appear here by themselves.', k_done: 'Done', k_undo: 'Undo', k_recent: 'Done in the last 30 minutes',
       k_sound: 'Turn on sound', k_sound_on: 'Sound on', k_new: 'New table order', k_min: '{0} min', k_now: 'now', k_hint: 'Leave this screen open in the kitchen (a tablet or an old phone). It updates by itself.',
       tb_table: 'Table {0}', tb_free: 'Free', tb_ready: 'All served', tb_making: 'Kitchen making', tb_pay: 'Payment received', tb_pay_q: 'Table {0} paid {1}?', tb_how: 'How did they pay?',
@@ -105,7 +105,7 @@
       cp_used: '用了 {0} 次', cp_of: '用了 {0} / {1} 次', cp_expired: '已过期', cp_off: '已停用', cp_none: '还没有优惠码。', cp_delete: '删除优惠码', cp_delete_q: '删除优惠码 {0}？',
       tm_owner: '老板', tm_staff: '员工', tm_add: '新增员工帐号', tm_name: '名字', tm_email: '电邮', tm_hint: '员工可以处理订单、生产、产品和顾客，不能改设定和员工帐号。', tm_link: '把这个连结发给 {0}，让他自己设定密码（只能用一次、24 小时内有效）：', tm_copy: '复制连结', tm_wa: '用 WhatsApp 发', tm_remove: '移除', tm_remove_q: '移除 {0}？', tm_remove_p: '移除后这个人就不能再登录。', tm_you: '你',
       c_tap: '点顾客可以看他所有的订单。', all_orders: '全部订单',
-      counter: '收银', ct_dine: '堂食', ct_takeaway: '外带', ct_phone: '电话 / WhatsApp', ct_grab: 'GrabFood', ct_shopee: 'ShopeeFood', ct_table: '桌号', ct_pick_table: '请先选桌号。', ct_search: '搜寻菜单', ct_all: '全部', ct_empty: '按菜单上的菜加进来。', ct_add: '加入', ct_note: '给厨房的备注（可不填）', ct_later: '送出 · 之后付', ct_pay: '现在付', ct_paid_by: '送出 · {0} 已付', ct_how: '{0} 怎么付？', ct_cash: '收到现金', ct_change: '找钱 {0}', ct_short: '还差 {0}', ct_exact: '刚好', ct_ok: '好了', ct_sent: '#{0} 已送到厨房', ct_sent_change: '#{0} 已送出 · 找钱 {1}', ct_name: '名字（可不填）', ct_ref: '{0} 单号（可不填）', ct_off: '收银画面关着。到 设定 → 桌上扫码点单 打开。', ct_clear: '清空', ct_sold: '卖完', ct_review: '看这一单', k_paid: '已付', k_printer: '打印机', k_print: '打印', k_auto: '这台机器自动打印新单', k_auto_hint: '只在接着厨房打印机的那台机器打开。已经在画面上的单不会再打印。', k_paper: '纸宽', k_test: '试打印', k_test_note: '看得到这一张，打印机就可以用了。', k_print_help: '用这台机器平常打印的打印机（USB、网络线，或蓝牙打印机自己的 app）。不想每次跳出打印视窗：用 Windows 电脑 + Chrome 的 kiosk printing，我们帮你设好。', k_auto_on: '自动打印中', k_printed: '已送去打印', k_tk_paid: '已付', k_tk_kitchen: '厨房', m_grab: 'GrabFood', m_shopee: 'ShopeeFood', m_online: '网上已付', cl_channels: '按单的种类',
+      counter: '收银', ct_dine: '堂食', ct_takeaway: '外带', ct_phone: '电话 / WhatsApp', ct_grab: 'GrabFood', ct_shopee: 'ShopeeFood', ct_table: '桌号', ct_pick_table: '请先选桌号。', ct_search: '搜寻菜单', ct_all: '全部', ct_empty: '按菜单上的菜加进来。', ct_add: '加入', ct_note: '给厨房的备注（可不填）', ct_later: '送出 · 之后付', ct_pay: '现在付', ct_paid_by: '送出 · {0} 已付', ct_how: '{0} 怎么付？', ct_cash: '收到现金', ct_change: '找钱 {0}', ct_short: '还差 {0}', ct_exact: '刚好', ct_ok: '好了', ct_sent: '#{0} 已送到厨房', ct_sent_change: '#{0} 已送出 · 找钱 {1}', ct_name: '名字（可不填）', ct_ref: '{0} 单号（可不填）', ct_off: '收银画面关着。到 设定 → 桌上扫码点单 打开。', ct_clear: '清空', ct_sold: '卖完', ct_review: '看这一单', k_paid: '已付', k_printer: '打印机', k_print: '打印', k_auto: '这台机器自动打印新单', k_auto_hint: '只在接着厨房打印机的那台机器打开。已经在画面上的单不会再打印。', k_paper: '纸宽', k_test: '试打印', k_test_note: '看得到这一张，打印机就可以用了。', k_print_help: '用这台机器平常打印的打印机（USB、网络线，或蓝牙打印机自己的 app）。不想每次跳出打印视窗：用 Windows 电脑 + Chrome 的 kiosk printing，我们帮你设好。', k_auto_on: '自动打印中', k_printed: '已送去打印', k_tk_paid: '已付', k_tk_kitchen: '厨房', loyverse: 'Loyverse 收银机', lv_intro: '网站、桌上点单和柜台收银的已付订单，会变成你 Loyverse 里的收据，Loyverse 的报表和库存就包括这些单。打开之前的订单不会送过去。', lv_not: '还没连接', lv_on: '正在送', lv_paused: '暂停', lv_token: 'Loyverse 的 access token', lv_token_ph: '把 token 贴在这里', lv_token_help: '在 Loyverse 后台（Back Office）：Settings → Access tokens → + Add access token，复制，贴在这里。只存在你的网站里。', lv_connect: '连接', lv_connected: '已连接 Loyverse', lv_demo: '这是示范网站：这里不能连接真的 Loyverse 帐号。', lv_token_saved: '已连接（token {0}）', lv_remove: '中断连接', lv_remove_q: '中断 Loyverse？', lv_remove_p: '订单不会再送去 Loyverse。已经在 Loyverse 的收据不会删除。', lv_settings: '送单设定', lv_store: 'Loyverse 的店', lv_send: '已付的订单送去 Loyverse', lv_pay_h: '付款方式', lv_pay_hint: '每种付款方式在 Loyverse 里算哪一种。', lv_other: '运费和 Loyverse 里没有的东西用哪一样（可不选）', lv_other_none: '不用：停下来告诉我', lv_match: '产品', lv_match_n: '{1} 样产品里，Loyverse 找到 {0} 样', lv_match_hint: '找不到的：在 Loyverse 给它们一样的 SKU（最好）或一样的名字，再按「再检查」。', lv_match_all: '每样产品 Loyverse 都有。', lv_check: '再检查', lv_recent: '最近的订单', lv_none: '打开之后还没有已付的订单。', lv_sent: '收据 {0}', lv_failed: '没送到', lv_waiting: '送出中…', lv_retry: '把没送到的再送一次', lv_retry_done: '送到 {0} / {1} 张', lv_keep: '保持连接', m_grab: 'GrabFood', m_shopee: 'ShopeeFood', m_online: '网上已付', cl_channels: '按单的种类',
       kitchen: '厨房', tables: '桌子', k_empty: '没有要做的单。客人在桌上扫码点的单会自己出现在这里。', k_done: '做好了', k_undo: '退回', k_recent: '30 分钟内做好的',
       k_sound: '打开提示声', k_sound_on: '提示声已打开', k_new: '新的桌上点单', k_min: '{0} 分钟', k_now: '刚刚', k_hint: '把这个画面开着放在厨房（平板或旧手机），会自己更新。',
       tb_table: '{0} 号桌', tb_free: '空', tb_ready: '都做好了', tb_making: '厨房在做', tb_pay: '收到钱了', tb_pay_q: '{0} 号桌付了 {1}？', tb_how: '怎么付的？',
@@ -166,6 +166,7 @@
     map: '<path d="M12 21s-7-6.2-7-12a7 7 0 0 1 14 0c0 5.8-7 12-7 12z"/><circle cx="12" cy="9" r="2.5"/>',
     check: '<path d="M5 12.5 10 17l9-10"/>',
     pause: '<rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/>',
+    pos: '<path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/>',
     counter: '<rect x="3" y="10" width="18" height="10" rx="2"/><path d="M7 10V5h10v5"/><path d="M7 14h2M11 14h2M15 14h2M7 17h10"/>',
     kitchen: '<path d="M4 11h16v2a7 7 0 0 1-7 7h-2a7 7 0 0 1-7-7z"/><path d="M8 7.5c0-1.5 1-1.8 1-3.5M12 7.5c0-1.5 1-1.8 1-3.5M16 7.5c0-1.5 1-1.8 1-3.5"/>',
     cash: '<rect x="2.5" y="6" width="19" height="12" rx="2"/><circle cx="12" cy="12" r="2.6"/><path d="M6 9.5v5M18 9.5v5"/>',
@@ -312,6 +313,7 @@
   // a demo website can show only some screens (2026-11-16, the restaurant demo's kitchen and counter)
   if (C.nav) { NAV = C.nav.map(function (k) { return [k, { close: 'cash' }[k] || k]; }); SIDE = NAV.slice(); }
   if (!C.can || !C.can.products) { NAV = NAV.filter(function (x) { return x[0] !== 'products'; }); SIDE = SIDE.filter(function (x) { return x[0] !== 'products'; }); }
+  if (C.can && C.can.settings && !C.nav) SIDE.splice(SIDE.map(function (x) { return x[0]; }).indexOf('settings') + 1, 0, ['loyverse', 'pos']); // Loyverse POS (2026-11-17)
   if (!C.can || !C.can.settings) SIDE = SIDE.filter(function (x) { return x[0] !== 'settings'; });
   var el = {};
   function shell() {
@@ -339,7 +341,7 @@
     document.title = title + ' · ' + C.site;
   }
   function setNav(k) {
-    var map = { order: 'orders', 'new-order': 'orders', product: 'products', customers: 'more', reports: 'more', settings: 'more', coupons: 'more', coupon: 'more', team: 'more', print: 'production', counter: 'more', kitchen: 'more', tables: 'more', table: 'more', 'table-qr': 'more', close: 'more' };
+    var map = { order: 'orders', 'new-order': 'orders', product: 'products', customers: 'more', reports: 'more', settings: 'more', coupons: 'more', coupon: 'more', team: 'more', print: 'production', counter: 'more', kitchen: 'more', tables: 'more', table: 'more', 'table-qr': 'more', close: 'more', loyverse: 'more' };
     var navK = map[k] || k;
     [].forEach.call(el.nav.querySelectorAll('a'), function (a) { a.classList.toggle('is-on', a.getAttribute('data-k') === navK); });
     var sideK = { order: 'orders', 'new-order': 'orders', product: 'products', coupon: 'coupons', print: 'production', table: 'tables', 'table-qr': 'tables' }[k] || k;
@@ -1624,6 +1626,77 @@
     });
   };
 
+  /* ------------------------------------------------------------------ Loyverse POS (2026-11-17) */
+  function pick(list, cur) {
+    var s = h('select', null, list.map(function (x) { var o = h('option', { value: x[0] }, x[1]); if (String(x[0]) === String(cur || '')) o.selected = true; return o; }));
+    return s;
+  }
+  VIEWS.loyverse = function (r) {
+    setTop(t('loyverse'), C.site, true);
+    el.act.innerHTML = '';
+    function fail(b) { return function (e) { if (b) b.disabled = false; toast(t('error', e.message), true); }; }
+    function draw(d) {
+      var m = live(r); if (!m) return; m.innerHTML = '';
+      var st = !d.connected ? ['b-grey', t('lv_not')] : d.on && !d.error ? ['b-make', t('lv_on')] : ['b-grey', t('lv_paused')];
+      var top = h('div', { class: 'card lvcard' }, h('div', { class: 'card__h' }, h('h2', null, 'Loyverse POS'), h('span', { class: 'badge ' + st[0] }, st[1])), h('p', { class: 'small muted lv__intro' }, t('lv_intro')));
+      put(m, top);
+      if (!d.connected) {
+        var tok = h('input', { type: 'password', autocomplete: 'off', placeholder: t('lv_token_ph'), 'aria-label': t('lv_token') });
+        var go = h('button', { class: 'btn', type: 'button', onclick: function () {
+          if (!tok.value.trim()) { tok.focus(); return; }
+          go.disabled = true;
+          api('loyverse', { method: 'POST', body: { token: tok.value.trim() } }).then(function (x) { toast(t('lv_connected')); draw(x); }).catch(fail(go));
+        } }, t('lv_connect'));
+        put(top, h('div', { class: 'form' }, field(t('lv_token'), tok, t('lv_token_help')), go, d.demo ? h('p', { class: 'small muted', style: 'margin:0' }, t('lv_demo')) : null));
+        return;
+      }
+      var off = h('button', { class: 'btn btn--plain btn--sm', type: 'button', onclick: function () {
+        confirmBox(t('lv_remove_q'), t('lv_remove_p'), t('lv_remove'), t('lv_keep'), true).then(function (ok) { if (ok) api('loyverse', { method: 'POST', body: { token: '' } }).then(draw).catch(fail()); });
+      } }, t('lv_remove'));
+      put(top, h('div', { class: 'row lv__tok' }, h('span', { class: 'small muted' }, t('lv_token_saved', d.hint)), off));
+      var check = h('button', { class: 'btn btn--plain', type: 'button', onclick: function () { check.disabled = true; api('loyverse?fresh=1').then(draw).catch(fail(check)); } }, t('lv_check'));
+      if (d.error) { put(m, h('div', { class: 'card' }, h('p', { class: 'lv__err' }, d.error), check)); return; }
+
+      // sending: store, on/off, payment types, the item for everything else
+      var store = pick(d.stores.map(function (s) { return [s.id, s.name]; }), d.store);
+      var on = sw(t('lv_send'), d.on);
+      var other = pick([['', t('lv_other_none')]].concat(d.variants.map(function (v) { return [v.id, v.name]; })), d.other);
+      var types = [['', '—']].concat(d.types.map(function (p) { return [p.id, p.name]; }));
+      var pays = {};
+      var payRows = Object.keys(d.methods).map(function (k) { pays[k] = pick(types, (d.pay || {})[k]); return h('tr', null, h('td', null, d.methods[k]), h('td', null, h('label', { class: 'field' }, pays[k]))); });
+      var save = h('button', { class: 'btn', type: 'button', onclick: function () {
+        var pay = {}; Object.keys(pays).forEach(function (k) { if (pays[k].value) pay[k] = pays[k].value; });
+        save.disabled = true;
+        api('loyverse', { method: 'POST', body: { store: store.value, on: on.input.checked, other: other.value, pay: pay } }).then(function (x) { toast(t('saved')); draw(x); }).catch(fail(save));
+      } }, t('s_save'));
+      put(m, h('div', { class: 'card' }, h('div', { class: 'card__h' }, h('h2', null, t('lv_settings'))),
+        h('div', { class: 'form' }, field(t('lv_store'), store), on.el,
+          h('div', null, h('p', { class: 'lv__l' }, t('lv_pay_h')), h('p', { class: 'small muted', style: 'margin:0 0 6px' }, t('lv_pay_hint')), h('table', { class: 'tbl lv__pay' }, h('tbody', null, payRows))),
+          field(t('lv_other'), other), save)));
+
+      // which products Loyverse knows
+      var mt = d.match || { total: 0, found: 0, missing: [] };
+      put(m, h('div', { class: 'card' }, h('div', { class: 'card__h' }, h('h2', null, t('lv_match')), h('span', { class: 'badge ' + (mt.missing.length ? 'b-check' : 'b-make') }, mt.found + ' / ' + mt.total)),
+        h('p', { class: 'lv__match' }, mt.missing.length ? t('lv_match_n', mt.found, mt.total) : t('lv_match_all')),
+        mt.missing.length ? [h('ul', { class: 'lv__miss' }, mt.missing.map(function (n) { return h('li', null, n); })), h('p', { class: 'small muted' }, t('lv_match_hint'))] : null,
+        check));
+
+      // recent paid orders: receipt number, or why it was not sent
+      var notSent = d.recent.filter(function (x) { return !x.receipt; }).length;
+      var retry = h('button', { class: 'btn btn--plain', type: 'button', onclick: function () {
+        retry.disabled = true;
+        api('loyverse/send', { method: 'POST', body: {} }).then(function (x) { toast(t('lv_retry_done', x.sent, x.of)); draw(x); }).catch(fail(retry));
+      } }, t('lv_retry'));
+      put(m, h('div', { class: 'card' }, h('div', { class: 'card__h' }, h('h2', null, t('lv_recent'))),
+        d.recent.length ? h('table', { class: 'tbl lv__recent' }, h('tbody', null, d.recent.map(function (x) {
+          var b = x.receipt ? h('span', { class: 'badge b-make' }, t('lv_sent', x.receipt)) : x.error ? h('span', { class: 'badge b-cancelled' }, t('lv_failed')) : h('span', { class: 'badge b-grey' }, t('lv_waiting'));
+          return h('tr', null, h('td', null, h('b', null, '#' + x.number), h('div', { class: 'small muted' }, x.label + ' · ' + dt(x.at)), x.error && !x.receipt ? h('div', { class: 'small lv__err' }, x.error) : null), h('td', { class: 'r' }, x.total, h('div', null, b)));
+        }))) : h('p', { class: 'muted' }, t('lv_none')),
+        notSent ? retry : null));
+    }
+    return api('loyverse').then(draw);
+  };
+
   /* ------------------------------------------------------------------ more (phone) */
   VIEWS.more = function (r) {
     setTop(t('more'), C.site);
@@ -1631,7 +1704,7 @@
     var links = [['customers', 'customers'], ['coupons', 'tag'], ['reports', 'reports']];
     if (C.table) links.unshift(['kitchen', 'kitchen'], ['tables', 'tables'], ['close', 'cash']);
     if (C.counter) links.unshift(['counter', 'counter']);
-    if (C.can.settings) links.push(['settings', 'settings']);
+    if (C.can.settings) links.push(['settings', 'settings'], ['loyverse', 'pos']);
     if (C.can.admin) links.push(['team', 'team']);
     put(m, h('div', { class: 'card', style: 'padding:6px' }, links.map(function (x) {
       return h('a', { href: '#/' + x[0], class: 'row', style: 'padding:14px 10px;text-decoration:none;color:var(--ink);font-weight:700;border-bottom:1px solid var(--line)' }, icon(x[1]), h('span', null, t(x[0])));

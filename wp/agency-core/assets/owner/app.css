@@ -396,3 +396,17 @@ h1, h2, h3 { margin: 0; line-height: 1.25; }
   .tk__note { border: 2px solid #000; padding: 1.5mm; font-weight: 800; margin: 1mm 0 2mm; }
   .tk__foot { font-size: .75em; text-align: right; border-top: 1.5px dashed #000; padding-top: 1mm; }
 }
+
+/* 2026-11-17 Loyverse POS */
+.field input[type=password] { width: 100%; min-height: 46px; border: 1px solid var(--line); border-radius: 12px; background: #fff; padding: 10px 12px; }
+.lv__intro { margin: 0 0 12px; }
+.lv__tok { justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.lv__l { margin: 0 0 2px; font-weight: 700; font-size: .86rem; }
+.lv__pay td { vertical-align: middle; }
+.lv__pay td:first-child { font-weight: 650; width: 42%; }
+.lv__pay .field { display: block; }
+.lv__match { margin: 0 0 8px; font-weight: 650; }
+.lv__miss { margin: 0 0 8px; padding-left: 18px; columns: 2; column-gap: 24px; font-size: .9rem; }
+.lv__err { color: var(--s-cancel); }
+.lv__recent td.r .badge { margin-top: 4px; }
+@media (max-width: 560px) { .lv__miss { columns: 1; } }

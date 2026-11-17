@@ -45,6 +45,7 @@
 | 外送自动叫骑士 + 即时追踪 | ❌（现在是店家自己安排） | ✅ |
 | 会员 / 回馈金 | ❌（有顾客名单、优惠码） | ✅ |
 | 厨房打印机 | ✅ 厨房画面自动打印新单（2026-11-17，agency-core 1.12.0；用这台机器平常用的打印机）；云打印机还没做 | ✅（KDS；打印机没写） |
+| 接现有的收银机 | ✅ Loyverse（2026-11-17，agency-core 1.13.0）：已付订单自动变成 Loyverse 收据；还没用真帐号测 | 只接自己的收银机 |
 | LHDN 电子发票 | ❌ | ✅ |
 | 抽成 | 0%（只有付款网关的手续费） | 外送 9%；软件 + 硬件月费 |
 | 价钱 | 一次性 RM800 起 + 每月 RM99 维护费 | 软件约 RM102+/月 + 硬件 RM1,690+ + 附加功能 |
@@ -53,7 +54,7 @@
 
 1. ✅（2026-11-17 做好，1.11.0）**桌上「点单就付款」（选择性）**：客人在手机付款（FPX / 电子钱包 / 卡，用店家自己名义开的付款网关），厨房收到的是已付款的单，晚上不用对数。保留「到柜台付」给不想用的店。
 2. ✅（2026-11-17 做好，1.10.0）**柜台收银（轻量版收银机）**：把店家后台的「代客下单」做成柜台收银画面：店员在平板替走进来的客人点单、选付款方式（现金 / DuitNow / 卡），单子进同一个厨房画面和「今日结算」。没有收银机的小店就不用另外买 StoreHub。
-3. **接店家现有的收银机**：StoreHub 没有公开 API，接不了（除非 StoreHub 给合作伙伴权限）。**Loyverse**（免费收银机，小咖啡馆常用）有公开 API，可以把我们网站和桌上的单自动变成 Loyverse 的收据（POST `/v1.0/receipts`）。其他牌子（Qashier、Eats365…）有客户用到再查。
+3. ✅（2026-11-17 做好 Loyverse，1.13.0，还没用真帐号测）**接店家现有的收银机**：StoreHub 没有公开 API，接不了（除非 StoreHub 给合作伙伴权限）。**Loyverse**（免费收银机，小咖啡馆常用）有公开 API：店家后台「Loyverse 收银机」贴上 token，网站、桌上点单、柜台的已付订单自动变成 Loyverse 的收据（做法见下面「接 Loyverse 怎么设」）。其他牌子（Qashier、Eats365…）有客户用到再查。
 4. **会员回馈金**：付款后输入手机号码，下次消费可以折抵；店家后台看到常客名单。
 5. **外送自动叫 Lalamove**：Lalamove 有公开 API（v3，马来西亚可用：报价、下单、司机即时位置、状态通知）。外送单一确认就自动叫车、把追踪连结给客人。需要店家自己的 Lalamove 商业帐号，运费照 Lalamove 收。
 6. **店家自己开通**：店家后台的开店引导：用 Excel 贴菜单（或我们帮忙从照片打）、设营业时间和外送区域、一键印每张桌子的 QR 立牌，当天上线。
@@ -76,6 +77,23 @@
 **做法 2（还没做）：云打印机（打印机自己上网拿单，不用开电脑）。** Star 的 CloudPRNT 和 Epson 的 Server Direct Print 都是公开的协议：打印机每几秒问我们的网站「有没有新单」。要等有客户要用、买了哪一台、有实机测试再做（价钱用到时再查，Star / Epson 比一般 Xprinter 贵）。
 
 来源（2026-11-17 查）：Star CloudPRNT 协议 https://star-m.jp/products/s_print/sdk/StarCloudPRNT/manual/en/protocol-reference/http-method-reference/index.html ；Epson TM-m30III（Server Direct Print）https://epson.com.jm/For-Work/Printers/POS/Thermal-Receipt-Printer-TM-m30III/p/C31CK50012 。
+
+## 接 Loyverse 怎么设（2026-11-17）
+
+给已经在用 Loyverse 收银机的店：网站、桌上点单和柜台收银的已付订单，自动变成 Loyverse 里的收据，Loyverse 的报表和库存就是全部的生意。
+
+1. 店家在 Loyverse 后台（Back Office，用老板帐号）→ Settings → Access tokens →「+ Add access token」，名字写 Website，复制 token。
+2. 店家后台（`/dian/`）→「Loyverse 收银机」→ 贴上 token →「连接」。只有一间店会自己选好；付款方式会先按名字猜（Cash → 现金、Card → 卡），其他的自己选（DuitNow、GrabFood、网上已付…）。
+3. 看「产品」卡片：Loyverse 找不到的产品要在 Loyverse 给它们**一样的 SKU**（最好）或一样的名字，再按「再检查」。运费和 Loyverse 没有的东西，可以选一样「其他」来记。
+4. 打开「已付的订单送去 Loyverse」→ 保存。之后的已付订单在背景送过去（通常 1 分钟内）；「最近的订单」看得到每张的 Loyverse 收据号码，送不到的会写原因，可以按「把没送到的再送一次」。
+
+注意：
+- token 等于店家 Loyverse 帐号的钥匙：只贴在店家后台，不要传 WhatsApp、不要写进文件。只存在店家网站，后台只显示最后 4 个字。不用了就按「中断连接」，也可以在 Loyverse 删掉这个 token。
+- 只送「已付」的单；打开之前的旧单不送；每张只送一次。同一张单不要再在 Loyverse 收银机打一次（会重复算）。
+- Loyverse 2026-11-17 的价钱页写 Integrations 免费、收银机本身免费；有第三方说有些方案要另外付费才能用 token（Loyverse 会回 402）。第一个客户开通时确认。
+- **还没用真的 Loyverse 帐号测过**（只用照公开接口做的假服务器 `site/tools/mock-loyverse.mjs` 测，`site/tools/check-loyverse.js` 16 项全过）。第一个用 Loyverse 的客户开通时，先送一张测试单，在 Loyverse 看收据对不对，再打开。
+
+来源（2026-11-17 查）：Loyverse 价钱 https://loyverse.com/pricing ；建立 token https://help.loyverse.com/help/loyverse-api ；收据接口栏位（第三方整理的 Loyverse 文件）https://www.withone.ai/knowledge/loyverse/conn_mod_def%3A%3AGK1E4SC_tTg%3A%3AmRKwLP38Tiu5tjS_z6u-cg/md 。
 
 ## 卖的时候怎么说（不贬低别人，只讲事实）
 
