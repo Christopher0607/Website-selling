@@ -1,0 +1,348 @@
+{
+ "slug": "tailmate",
+ "spec": {
+  "lists": [
+   {
+    "var": "PRODUCTS",
+    "cats": "CATS",
+    "fields": {
+     "name": "n",
+     "price": "p",
+     "sale": "s",
+     "desc": "d",
+     "long": "long",
+     "img": "img",
+     "cat": "cat"
+    }
+   }
+  ],
+  "ship": {
+   "states_east": "EAST",
+   "rates": "SHIP",
+   "free_on": "sub"
+  },
+  "coupons": [
+   {
+    "from": "COUPON",
+    "code": "code",
+    "percent": "pct"
+   }
+  ],
+  "redirects": {},
+  "shop": "/shop.html",
+  "ref": "TM"
+ },
+ "data": {
+  "PRODUCTS": [
+   {
+    "id": "rope-tug-toy",
+    "n": "Rope Tug Toy",
+    "p": 25,
+    "s": null,
+    "img": "rope.webp",
+    "o": [
+     {
+      "n": "Size",
+      "v": [
+       [
+        "S (small dogs)",
+        0,
+        ""
+       ],
+       [
+        "M",
+        4,
+        ""
+       ],
+       [
+        "L (big chewers)",
+        9,
+        ""
+       ]
+      ]
+     }
+    ],
+    "cat": "toys",
+    "d": "Thick cotton rope for tug-of-war and gentle chewing.",
+    "long": [
+     "Tightly braided cotton that holds up to daily tug sessions. Supervise play and replace when it starts to fray."
+    ],
+    "tags": [
+     "pop"
+    ]
+   },
+   {
+    "id": "squeaky-plush-bone",
+    "n": "Squeaky Plush Bone",
+    "p": 29,
+    "s": null,
+    "img": "bone.webp",
+    "o": [],
+    "cat": "toys",
+    "d": "A soft bone with a squeaker inside. Built for cuddles and fetch.",
+    "long": [
+     "Double-stitched seams and a squeaker that keeps squeaking. Best for gentle players."
+    ],
+    "tags": [
+     "pop"
+    ]
+   },
+   {
+    "id": "training-treats",
+    "n": "Training Treats Jar",
+    "p": 32,
+    "s": null,
+    "img": "treats.webp",
+    "o": [
+     {
+      "n": "Flavour",
+      "v": [
+       [
+        "Chicken",
+        0,
+        ""
+       ],
+       [
+        "Salmon",
+        0,
+        ""
+       ]
+      ]
+     }
+    ],
+    "cat": "feeding",
+    "d": "Small bone-shaped bites, easy to carry on walks.",
+    "long": [
+     "Bite-sized so you can reward often without overfeeding. Resealable jar keeps them crunchy."
+    ],
+    "tags": [
+     "pop"
+    ]
+   },
+   {
+    "id": "steel-bowl",
+    "n": "Non-slip Steel Bowl",
+    "p": 35,
+    "s": null,
+    "img": "bowl.webp",
+    "o": [
+     {
+      "n": "Size",
+      "v": [
+       [
+        "S · 400 ml",
+        0,
+        ""
+       ],
+       [
+        "M · 800 ml",
+        6,
+        ""
+       ],
+       [
+        "L · 1.6 L",
+        12,
+        ""
+       ]
+      ]
+     }
+    ],
+    "cat": "feeding",
+    "d": "Stainless steel with a rubber base that doesn't slide around.",
+    "long": [
+     "Easy to clean, dishwasher safe, and the removable rubber ring stops the bowl travelling across the kitchen."
+    ]
+   },
+   {
+    "id": "everyday-harness",
+    "n": "Everyday Harness",
+    "p": 69,
+    "s": null,
+    "img": "harness.webp",
+    "o": [
+     {
+      "n": "Colour",
+      "v": [
+       [
+        "Coral",
+        0,
+        ""
+       ],
+       [
+        "Teal",
+        0,
+        ""
+       ],
+       [
+        "Black",
+        0,
+        ""
+       ]
+      ]
+     },
+     {
+      "n": "Size",
+      "v": [
+       [
+        "XS",
+        0,
+        ""
+       ],
+       [
+        "S",
+        0,
+        ""
+       ],
+       [
+        "M",
+        0,
+        ""
+       ],
+       [
+        "L",
+        0,
+        ""
+       ]
+      ]
+     }
+    ],
+    "cat": "walk",
+    "d": "A padded no-pull harness that's easy to put on.",
+    "long": [
+     "Front and back leash rings, soft padding and two buckles — no wrestling over the head.",
+     "Reflective stitching for evening walks."
+    ],
+    "tags": [
+     "pop"
+    ]
+   },
+   {
+    "id": "rain-or-shine-leash",
+    "n": "Rain-or-shine Leash",
+    "p": 45,
+    "s": null,
+    "img": "leash.webp",
+    "o": [
+     {
+      "n": "Length",
+      "v": [
+       [
+        "1.2 m",
+        0,
+        ""
+       ],
+       [
+        "1.8 m",
+        6,
+        ""
+       ]
+      ]
+     }
+    ],
+    "cat": "walk",
+    "d": "A waterproof coated leash that wipes clean after muddy walks.",
+    "long": [
+     "Coated webbing doesn't soak up water or smells. Padded handle and a strong swivel clip."
+    ]
+   },
+   {
+    "id": "name-tag-collar",
+    "n": "Name Tag Collar",
+    "p": 39,
+    "s": null,
+    "img": "collar.webp",
+    "o": [
+     {
+      "n": "Size",
+      "v": [
+       [
+        "S",
+        0,
+        ""
+       ],
+       [
+        "M",
+        0,
+        ""
+       ],
+       [
+        "L",
+        0,
+        ""
+       ]
+      ]
+     }
+    ],
+    "cat": "walk",
+    "d": "A soft collar with a matching ID tag.",
+    "long": [
+     "Adjustable collar with a quick-release buckle. Add your pet's name and your number to the tag at checkout (demo)."
+    ]
+   },
+   {
+    "id": "feather-wand",
+    "n": "Feather Wand Toy",
+    "p": 19,
+    "s": null,
+    "img": "wand.webp",
+    "o": [],
+    "cat": "cats",
+    "d": "The toy your cat will actually play with.",
+    "long": [
+     "A flexible wand with a feather-and-bell lure. Comes with one refill."
+    ]
+   },
+   {
+    "id": "cat-condo",
+    "n": "Cosy Cat Condo",
+    "p": 229,
+    "s": null,
+    "img": "condo.webp",
+    "o": [],
+    "cat": "cats",
+    "d": "A plush hideaway with a scratching post and lookout platform.",
+    "long": [
+     "A cave to nap in, a platform to watch the world from and sisal posts for scratching. Easy to assemble."
+    ]
+   }
+  ],
+  "CATS": [
+   [
+    "toys",
+    "Dog toys"
+   ],
+   [
+    "walk",
+    "Walk"
+   ],
+   [
+    "feeding",
+    "Feeding"
+   ],
+   [
+    "cats",
+    "Cats"
+   ]
+  ],
+  "EAST": [
+   "Sabah",
+   "Sarawak",
+   "Labuan"
+  ],
+  "SHIP": {
+   "west": {
+    "std": 8,
+    "free": 150
+   },
+   "east": {
+    "std": 15,
+    "free": 150
+   }
+  },
+  "COUPON": {
+   "code": "WELCOME10",
+   "pct": 10
+  },
+  "BRAND": "Tailmate"
+ }
+}

@@ -23,6 +23,7 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DIST = os.path.join(HERE, "dist")
+WP = False  # build_wp(): the same shop template as a real WordPress + WooCommerce site (orders really are created there)
 YEAR = "2026"
 ORDER = ["dewlane", "plainfold", "chili-pantry", "lowlight", "tailmate", "voltnest"]
 
@@ -254,6 +255,9 @@ class Store:
             return (f'{gate}<div class="demo-bar demo-bar--pv"><div class="wrap demo-bar__in"><span class="demo-bar__txt"><b>Private mockup</b> for {e(pv["brand"]["name"])} · made by Cartsmith Studio · '
                     f'not a live store{" · photos are placeholders" if pv.get("photos") == "placeholder" else ""} · will be deleted by {e(pv["delete_by"])}</span>'
                     f'<span class="demo-bar__short">Private mockup{" · photos &amp; details are examples" if pv.get("photos") == "placeholder" else ""}</span><span class="demo-bar__links"><a class="demo-bar__cta" href="{e(self.studio_link(root, "index.html"))}">Cartsmith Studio {icon("arrow")}</a></span></div></div>')
+        if WP:  # real WordPress shop: test orders go into its back office (demo account, one tap)
+            return (f'<div class="demo-bar"><div class="wrap demo-bar__in"><span class="demo-bar__txt"><b>Concept demo</b> · fictional brand by Cartsmith Studio · real WordPress shop, nothing is charged</span>'
+                    f'<span class="demo-bar__links"><a href="/?agc_demo=dian" data-owner-side>Owner&#8217;s side</a><a href="{root}templates.html">All templates</a><a class="demo-bar__cta" href="{root}start.html?template={self.slug}">Use this template {icon("arrow")}</a></span></div></div>')
         return (f'<div class="demo-bar"><div class="wrap demo-bar__in"><span class="demo-bar__txt"><b>Concept demo</b> · fictional brand by Cartsmith Studio · no real orders or payments</span>'
                 f'<span class="demo-bar__links"><a href="{root}templates.html">All templates</a><a class="demo-bar__cta" href="{root}start.html?template={self.slug}">Use this template {icon("arrow")}</a></span></div></div>')
 
@@ -694,7 +698,7 @@ if(h===window.__pvHash){try{localStorage.setItem('pv_'+h,'1');}catch(e){}documen
             ship_row = "Shipping"
         return f"""<div class="wrap checkout">
   <header class="page-head"><p class="crumbs"><a href="cart.html">Cart</a> / Checkout</p><h1>Checkout</h1></header>
-  <div class="demo-note">{icon('shield')}<p><b>This is a demo checkout.</b> Nothing is charged and nothing is sent — fill it in to see how the order flow works. In your real store, payment goes through a Malaysian payment gateway opened in your own company's name.</p></div>
+  <div class="demo-note">{icon('shield')}<p><b>This is a demo checkout.</b> {"Nothing is charged, but the order is real: it goes into this shop’s WordPress back office (“Owner’s side” at the top), so please use made-up details." if WP else "Nothing is charged and nothing is sent — fill it in to see how the order flow works."} In your real store, payment goes through a Malaysian payment gateway opened in your own company's name.</p></div>
   <div class="checkout__grid">
     <form class="co-form" data-checkout novalidate>
       <fieldset><legend>Contact</legend>
@@ -707,7 +711,7 @@ if(h===window.__pvHash){try{localStorage.setItem('pv_'+h,'1');}catch(e){}documen
         <label class="pay"><input type="radio" name="pay" value="E-wallet"><span><b>E-wallet</b><small>Popular Malaysian e-wallets</small></span></label></fieldset>
       <p class="form-error" data-form-error hidden></p>
       <button class="btn btn--lg btn--block" type="submit">Place order (demo)</button>
-      <p class="small muted center">By placing an order you agree to the store's terms. (Demo — no order is created.)</p>
+      <p class="small muted center">By placing an order you agree to the store's terms. {"(Demo — nothing is charged.)" if WP else "(Demo — no order is created.)"}</p>
     </form>
     <aside class="summary summary--co"><h2>Your order</h2><div data-co-lines></div>
       <p class="row"><span>Subtotal</span><span data-co-subtotal></span></p>
@@ -724,6 +728,9 @@ if(h===window.__pvHash){try{localStorage.setItem('pv_'+h,'1');}catch(e){}documen
         elif self.pickup:
             ticks = (f"<li>{icon('check')}An order confirmation email with the receipt</li><li>{icon('check')}A WhatsApp message confirming the pick-up time and place (or the rider details for delivery)</li>"
                      f"<li>{icon('check')}The order in the seller's dashboard with its pick-up date, ready to prepare</li>")
+        elif WP:  # the order really is in the shop's back office
+            ticks = (f"<li>{icon('check')}The order is in the shop’s back office now, ready to pack: <a href=\"/?agc_demo=dian\">shop dashboard</a> · <a href=\"/?agc_demo=admin\">WordPress admin</a></li>"
+                     f"<li>{icon('check')}An order confirmation email with the receipt (switched off in this demo)</li><li>{icon('check')}A WhatsApp or Instagram update when it ships, with the tracking number</li>")
         else:
             ticks = (f"<li>{icon('check')}An order confirmation email with the receipt</li><li>{icon('check')}A WhatsApp or Instagram update when it ships, with the tracking number</li>"
                      f"<li>{icon('check')}The order in the seller's dashboard, ready to pack</li>")
@@ -732,7 +739,7 @@ if(h===window.__pvHash){try{localStorage.setItem('pv_'+h,'1');}catch(e){}documen
   <h1>Thank you<span data-order-name></span>!</h1>
   <p class="lead">Order <b data-order-no>—</b> received <span class="tag">demo</span></p>
   <div class="order-box" data-order-box><p class="muted">No recent demo order found. <a href="shop.html">Go shopping</a>.</p></div>
-  <div class="next"><h2>In a real store, the customer would now get:</h2>
+  <div class="next"><h2>{"What happens next:" if WP and not self.pickup else "In a real store, the customer would now get:"}</h2>
     <ul class="ticks">{ticks}</ul></div>
   <div class="btns center"><a class="btn btn--lg" href="index.html">Back to the store</a><a class="btn btn--lg btn--ghost" href="{e(self.studio_link(root, "start.html?template=" + self.slug))}">I want a store like this</a></div>
 </div>"""
@@ -1616,9 +1623,9 @@ def build_wp(slug, out):
     demo folder (the studio site, its shared /assets/) are made absolute or point to /assets/ inside the skin.
     Runs on the server too (build-demo.sh), so it touches nothing in the repo: it builds into a temporary folder."""
     import tempfile
-    global DIST
+    global DIST, WP
     keep, tmp = DIST, tempfile.mkdtemp(prefix="agc-wp-")
-    DIST = tmp
+    DIST, WP = tmp, True
     try:
         shutil.copytree(os.path.join(HERE, "assets"), os.path.join(tmp, "assets"))
         if slug in ORDER:
@@ -1660,7 +1667,7 @@ def build_wp(slug, out):
         pages = sum(1 for _, _, f in os.walk(out) for x in f if x.endswith(".html"))
         print(f"WordPress skin: {slug} → {out} ({pages} pages, {len(used)} shared files)")
     finally:
-        DIST = keep
+        DIST, WP = keep, False
         shutil.rmtree(tmp, ignore_errors=True)
 
 

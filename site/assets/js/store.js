@@ -1,5 +1,7 @@
 /* Cartsmith store templates — cart, variants, shipping and demo checkout.
-   Everything runs in the visitor's browser. Nothing is sent anywhere (demo stores). */
+   On the studio site everything runs in the visitor's browser and nothing is sent anywhere (demo stores).
+   On WordPress (docs/14-wordpress-demos.md) the same pages get window.AGC_LIVE: names, prices, sale prices, photos and
+   stock come from WooCommerce, the code is checked by the shop and the order is a real WooCommerce order (nothing charged). */
 (function () {
   'use strict';
   const S = window.STORE;
@@ -12,6 +14,31 @@
   const PK = S.order && (S.order.mode === 'pickup' || S.order.mode === 'booking') ? S.order : null; // mockups for food shops: pick-up / local delivery on a date
   const BK = !!(PK && PK.mode === 'booking'); // restaurants: dine-in on a date
   const mem = {};
+
+  // ---------- the WordPress version ----------
+  // The pages were built with the template's own prices, so cards and product pages are brought up to date from
+  // WooCommerce below (liveDom); a product deleted or hidden in WooCommerce disappears from the shop.
+  const LIVE = window.AGC_LIVE && window.AGC_LIVE.rest && window.AGC_LIVE.data && window.AGC_LIVE.data.PRODUCTS ? window.AGC_LIVE : null;
+  if (LIVE) {
+    const got = {};
+    LIVE.data.PRODUCTS.forEach((x) => { got[x.id] = x; });
+    Object.keys(S.products).forEach((id) => {
+      const x = got[id];
+      if (!x) { delete S.products[id]; return; }
+      const p = S.products[id];
+      if (typeof x.p === 'number') { p.p = x.p; p.s = typeof x.s === 'number' ? x.s : null; }
+      p.n = x.n || p.n;
+      p.out = !!x.soldOut;
+      if (x.d) p.d = x.d;
+      if (x.imgUrl) p.imgUrl = x.imgUrl;
+    });
+  }
+  function send(path, body, ok, fail) {
+    fetch(LIVE.rest + path, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+      .then((r) => r.json().then((j) => { if (!r.ok) throw new Error((j && j.message) || 'Something went wrong. Please try again.'); return j; }))
+      .then(ok)
+      .catch((e) => (fail ? fail(e) : toast(e.message || 'Something went wrong. Please try again.')));
+  }
 
   // ---------- storage (falls back to memory when storage is blocked) ----------
   function load(store, k, fb) {
@@ -37,9 +64,9 @@
   }
   function lineImg(l) {
     const p = S.products[l.id];
-    let img = p.img;
-    (p.o || []).forEach((o, i) => { const v = o.v.find((x) => x[0] === l.sel[i]); if (v && v[2]) img = v[2]; });
-    return SP + 'img/' + img;
+    let img = p.imgUrl || SP + 'img/' + p.img; // imgUrl: the owner changed the photo in WooCommerce
+    (p.o || []).forEach((o, i) => { const v = o.v.find((x) => x[0] === l.sel[i]); if (v && v[2]) img = SP + 'img/' + v[2]; });
+    return img;
   }
   const lineVar = (l) => (S.products[l.id].o || []).map((o, i) => o.n + ': ' + l.sel[i]).join(' · ') || (S.products[l.id].u ? 'Per ' + S.products[l.id].u : '');
 
@@ -52,7 +79,7 @@
   function totals(c, zone) {
     const sub = subtotal(c);
     const cp = coupon();
-    const disc = cp ? Math.round(sub * cp.pct) / 100 : 0;
+    const disc = cp ? (cp.pct ? Math.round(sub * cp.pct) / 100 : Math.min(sub, cp.amt || 0)) : 0; // amt: a fixed-amount code made in WooCommerce
     let ship = null;
     if (PK) ship = zone === 'delivery' ? null : 0; // delivery by Grab / Lalamove etc.: fee confirmed with the customer
     else if (zone) ship = sub >= S.ship.free_min ? 0 : (zone === 'east' ? S.ship.east : S.ship.west);
@@ -177,6 +204,60 @@
     }
   }
 
+  // ---------- WordPress: cards and product page from WooCommerce ----------
+  const rm0 = (n) => (n % 1 ? rm(n) : 'RM' + n.toLocaleString('en-MY'));
+  function priceHTML(p) {
+    const from = (p.o || []).some((o) => o.v.some((v) => v[1])) ? '<span class="from">from </span>' : '';
+    const per = p.u ? ' <span class="per">/ ' + esc(p.u) + '</span>' : '';
+    return p.s ? from + '<span class="now">' + rm(p.s) + '</span>' + per + ' <s class="was">' + rm(p.p) + '</s>' : from + '<span class="now">' + rm(p.p) + '</span>' + per;
+  }
+  function saveBadge(media, p) {
+    const b = $('.badge', media), save = p.s && p.p ? 'Save ' + rm0(p.p - p.s) : '';
+    if (b && /^Save /.test(b.textContent)) { if (save) b.textContent = save; else b.parentNode.removeChild(b); } else if (!b && save) media.insertAdjacentHTML('beforeend', '<span class="badge">' + esc(save) + '</span>');
+  }
+  function soldOut(b) {
+    if (!b) return;
+    if (b.tagName === 'BUTTON') { b.disabled = true; b.removeAttribute('data-add'); }
+    b.textContent = 'Sold out';
+    b.classList.add('is-out');
+  }
+  function liveDom() {
+    $$('.card').forEach((card) => {
+      const media = $('a.card__media', card);
+      const m = media && (media.getAttribute('href') || '').match(/p\/([^/?#]+)\.html/);
+      if (!m) return;
+      const p = S.products[m[1]];
+      if (!p) { card.setAttribute('data-gone', ''); card.hidden = true; return; }
+      const t = $('.card__title a', card);
+      if (t) t.textContent = p.n;
+      const img = $('img', media);
+      if (img) { img.alt = p.n; if (p.imgUrl) { img.src = p.imgUrl; const alt = $('.card__alt', media); if (alt) alt.parentNode.removeChild(alt); } }
+      const pr = $('.price', card);
+      if (pr && p.p != null) pr.innerHTML = priceHTML(p);
+      card.setAttribute('data-price', p.s || p.p || 0);
+      saveBadge(media, p);
+      if (p.out) soldOut($('.card__add', card));
+    });
+    const pd = $('[data-product]');
+    if (!pd) return;
+    const p = S.products[pd.getAttribute('data-product')];
+    if (!p) {
+      const info = $('.pdp__info');
+      if (info) info.innerHTML = '<h1>No longer available</h1><p class="lead">This product isn’t in the shop any more.</p><p><a class="btn" href="' + SP + 'shop.html">See what’s in the shop</a></p>';
+      return;
+    }
+    const h1 = $('.pdp__info h1');
+    if (h1) h1.textContent = p.n;
+    const crumb = $('.crumbs span');
+    if (crumb) crumb.textContent = p.n;
+    const main = $('[data-main-img]');
+    if (main) { main.alt = p.n; if (p.imgUrl) { main.src = p.imgUrl; const th = $('.thumb'); if (th) th.setAttribute('data-img', p.imgUrl); } }
+    const short = $('.pdp__short');
+    if (short && p.d) short.textContent = p.d;
+    if (p.out) { soldOut($('[data-atc]')); soldOut($('[data-buy-now]')); soldOut($('[data-sticky-add]')); }
+  }
+  if (LIVE) liveDom();
+
   // ---------- shop filters ----------
   const grid = $('[data-grid]');
   if (grid) {
@@ -186,7 +267,7 @@
     const cnt = $('[data-shop-count]');
     const filter = (cat) => {
       let n = 0;
-      cards.forEach((c) => { const show = cat === 'all' || c.getAttribute('data-cat') === cat; c.hidden = !show; if (show) n++; });
+      cards.forEach((c) => { const show = !c.hasAttribute('data-gone') && (cat === 'all' || c.getAttribute('data-cat') === cat); c.hidden = !show; if (show) n++; });
       $$('[data-filter]').forEach((b) => b.classList.toggle('is-on', b.getAttribute('data-filter') === cat));
       const chip = $('[data-filter="' + cat + '"]');
       if (title) title.textContent = cat === 'all' || !chip ? 'Shop all' : chip.textContent;
@@ -210,7 +291,7 @@
   // ---------- product page ----------
   const pdp = $('[data-product]');
   const form = $('[data-buy]');
-  if (pdp && form) {
+  if (pdp && form && S.products[pdp.getAttribute('data-product')]) {
     const id = pdp.getAttribute('data-product');
     const p = S.products[id];
     const mainImg = $('[data-main-img]');
@@ -238,9 +319,9 @@
       if (!b) return;
       qty.value = Math.max(1, Math.min(99, (parseInt(qty.value, 10) || 1) + parseInt(b.getAttribute('data-step'), 10)));
     });
-    form.addEventListener('submit', (ev) => { ev.preventDefault(); add(id, sel(), parseInt(qty.value, 10) || 1); });
+    form.addEventListener('submit', (ev) => { ev.preventDefault(); if (p.out) return; add(id, sel(), parseInt(qty.value, 10) || 1); });
     const now = $('[data-buy-now]');
-    if (now) now.addEventListener('click', () => { add(id, sel(), parseInt(qty.value, 10) || 1, true); location.href = SP + 'checkout.html'; });
+    if (now) now.addEventListener('click', () => { if (p.out) return; add(id, sel(), parseInt(qty.value, 10) || 1, true); location.href = SP + 'checkout.html'; });
     const thumbs = $$('.thumb');
     const dots = $$('.gallery__dots i');
     let cur = 0;
@@ -278,7 +359,7 @@
         document.body.classList.toggle('has-sticky', on);
         document.body.classList.toggle('atc-in-view', mq.matches && e.isIntersecting); // phones: chat button stays off the buy buttons
       }).observe(atc);
-      $('[data-sticky-add]', sticky).addEventListener('click', () => add(id, sel(), parseInt(qty.value, 10) || 1));
+      $('[data-sticky-add]', sticky).addEventListener('click', () => { if (!p.out) add(id, sel(), parseInt(qty.value, 10) || 1); });
     }
     // "Ask for price" products have no cart button: keep the chat button off the WhatsApp button the same way
     const ask = $('[data-ask]');
@@ -320,6 +401,15 @@
     ev.preventDefault();
     const inp = cform.querySelector('input');
     const code = inp.value.trim().toUpperCase();
+    if (LIVE) {
+      send('site/coupon', { code, sub: subtotal(cart()) }, (r) => {
+        if (r.ok) { save('localStorage', CKEY, r.type === 'percent' ? { code: r.code, pct: r.amount } : { code: r.code, amt: r.amount }); toast('Code ' + r.code + ' applied: ' + String(r.label).replace(/ \(.*\)$/, '') + '.'); }
+        else toast(/doesn.t work/.test(r.msg || '') ? 'That code isn’t valid. (Demo code: ' + S.coupon.code + ')' : r.msg);
+        render();
+      });
+      inp.value = '';
+      return;
+    }
     if (code === S.coupon.code) { save('localStorage', CKEY, S.coupon); toast('Code ' + code + ' applied: ' + S.coupon.pct + '% off.'); }
     else { toast('That code isn’t valid. (Demo code: ' + S.coupon.code + ')'); }
     inp.value = '';
@@ -397,6 +487,23 @@
         to: BK ? 'Dine-in at ' + PK.pickup : PK ? (coMethod() === 'delivery' ? 'Delivery to ' + f.city.value.trim() + ', ' + f.state.value : 'Pick-up in ' + PK.pickup) : f.city.value.trim() + ', ' + f.state.value,
         method: PK ? coMethod() : '', date: PK ? f.date.value : '', bk: BK, time: f.time ? f.time.value.trim().slice(0, 40) : ''
       };
+      if (LIVE) {
+        const go = co.querySelector('button[type="submit"]'), cp = coupon();
+        go.disabled = true;
+        send('site/order', {
+          kind: 'ship', lines: c.map((l) => ({ id: l.id, qty: l.q, pick: l.sel })),
+          name: f.name.value.trim(), phone: f.phone.value.trim(), email: f.email.value.trim(),
+          addr: [f.addr1.value.trim(), f.addr2 ? f.addr2.value.trim() : ''].filter(Boolean).join(', '), pc: f.postcode.value.trim(), city: f.city.value.trim(), state: f.state.value,
+          notes: f.note ? f.note.value.trim() : '', code: cp ? cp.code : '', pay: 'online', payWith: order.pay || '', total: t.total
+        }, (r) => {
+          Object.assign(order, { no: r.no, sub: r.sub, disc: r.disc, ship: r.fee, total: r.total });
+          save('sessionStorage', OKEY, order);
+          drop('localStorage', KEY);
+          drop('localStorage', CKEY);
+          location.href = 'order.html';
+        }, (e2) => { go.disabled = false; err.textContent = e2.message; err.hidden = false; });
+        return;
+      }
       save('sessionStorage', OKEY, order);
       drop('localStorage', KEY);
       drop('localStorage', CKEY);

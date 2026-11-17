@@ -77,8 +77,47 @@ const SPEC = {
   }
 };
 
+// The 6 shop templates (site/templates/<code>/template.json): the same product list the page's data.js has (id, name,
+// price, sale price, photo, options with their extra prices) plus category and descriptions for WooCommerce; shipping West /
+// East Malaysia with free shipping from the same amount; the welcome code.
+const TEMPLATES = ['voltnest', 'chili-pantry', 'dewlane', 'lowlight', 'plainfold', 'tailmate'];
+function templateSite(slug) {
+  const t = JSON.parse(fs.readFileSync(path.join(ROOT, 'site', 'templates', slug, 'template.json'), 'utf8'));
+  const ship = t.shipping || { west: 8, east: 15, free_min: 150 };
+  const coupon = t.coupon || { code: 'WELCOME10', pct: 10 };
+  const data = {
+    PRODUCTS: t.products.map((p) => Object.assign({
+      id: p.id, n: p.name, p: p.price, s: p.sale || null, img: p.imgs[0],
+      o: (p.options || []).map((o) => ({ n: o.name, v: o.values.map((v) => (typeof v === 'object' ? [v.v, v.add || 0, v.img || ''] : [v, 0, ''])) })),
+      cat: p.cat, d: p.short || '', long: p.desc || []
+    }, p.per ? { u: p.per } : {}, (p.tags || []).includes('featured') ? { tags: ['pop'] } : {})),
+    CATS: t.categories.map((c) => [c.id, c.name]),
+    EAST: ['Sabah', 'Sarawak', 'Labuan'],
+    SHIP: { west: { std: ship.west, free: ship.free_min }, east: { std: ship.east, free: ship.free_min } },
+    COUPON: coupon,
+    BRAND: t.name
+  };
+  const spec = {
+    lists: [{ var: 'PRODUCTS', cats: 'CATS', fields: { name: 'n', price: 'p', sale: 's', desc: 'd', long: 'long', img: 'img', cat: 'cat' } }],
+    ship: { states_east: 'EAST', rates: 'SHIP', free_on: 'sub' },
+    coupons: [{ from: 'COUPON', code: 'code', percent: 'pct' }],
+    redirects: {},
+    shop: '/shop.html',
+    ref: t.order_prefix || t.name.slice(0, 2).toUpperCase()
+  };
+  return { slug, spec, data };
+}
+
 (async () => {
   const want = process.argv[2];
+  for (const slug of want === 'all' || want === 'templates' ? TEMPLATES : TEMPLATES.includes(want) ? [want] : []) {
+    const out = path.join(ROOT, 'sites', `demo-${slug}`, 'site.json');
+    const site = templateSite(slug);
+    fs.mkdirSync(path.dirname(out), { recursive: true });
+    fs.writeFileSync(out, JSON.stringify(site, null, 1) + '\n');
+    console.log(`${slug}: ${site.data.PRODUCTS.length} products → ${path.relative(ROOT, out)}`);
+  }
+  if (want === 'templates' || TEMPLATES.includes(want)) return;
   if (!want) { console.log('用法: node site/tools/export-demo-data.js <代号|all> [网址]'); process.exit(2); }
   const slugs = want === 'all' ? Object.keys(SPEC) : [want];
   const browser = await chromium.launch();

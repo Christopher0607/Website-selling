@@ -1,0 +1,226 @@
+{
+ "slug": "voltnest",
+ "spec": {
+  "lists": [
+   {
+    "var": "PRODUCTS",
+    "cats": "CATS",
+    "fields": {
+     "name": "n",
+     "price": "p",
+     "sale": "s",
+     "desc": "d",
+     "long": "long",
+     "img": "img",
+     "cat": "cat"
+    }
+   }
+  ],
+  "ship": {
+   "states_east": "EAST",
+   "rates": "SHIP",
+   "free_on": "sub"
+  },
+  "coupons": [
+   {
+    "from": "COUPON",
+    "code": "code",
+    "percent": "pct"
+   }
+  ],
+  "redirects": {},
+  "shop": "/shop.html",
+  "ref": "VN"
+ },
+ "data": {
+  "PRODUCTS": [
+   {
+    "id": "volt-20k",
+    "n": "Volt 20K Power Bank",
+    "p": 129,
+    "s": null,
+    "img": "pb20.webp",
+    "o": [
+     {
+      "n": "Colour",
+      "v": [
+       [
+        "Graphite",
+        0,
+        ""
+       ],
+       [
+        "Frost",
+        0,
+        ""
+       ]
+      ]
+     }
+    ],
+    "cat": "power",
+    "d": "Charges a phone 4 times, or a laptop once. 65 W USB-C in and out.",
+    "long": [
+     "Enough for a weekend away. The 65 W USB-C port fast-charges phones, tablets and many laptops; recharge the bank itself in about 2 hours.",
+     "74 Wh — under the 100 Wh limit most airlines allow in cabin bags (always check with your airline)."
+    ],
+    "tags": [
+     "pop"
+    ]
+   },
+   {
+    "id": "slim-10k",
+    "n": "Slim 10K Power Bank",
+    "p": 79,
+    "s": null,
+    "img": "pb10.webp",
+    "o": [],
+    "cat": "power",
+    "d": "Pocket-size. A full phone charge and then some.",
+    "long": [
+     "Thin aluminium body that slides into a pocket. Fast-charges most phones to 50% in about 30 minutes."
+    ],
+    "tags": [
+     "pop"
+    ]
+   },
+   {
+    "id": "gan-65w",
+    "n": "65W 3-Port Charger",
+    "p": 99,
+    "s": null,
+    "img": "charger.webp",
+    "o": [],
+    "cat": "charging",
+    "d": "One small charger for laptop, phone and earbuds.",
+    "long": [
+     "Charge three devices from one socket. Smart power sharing gives each device what it needs. UK 3-pin plug."
+    ],
+    "tags": [
+     "pop"
+    ]
+   },
+   {
+    "id": "wireless-pad",
+    "n": "15W Wireless Pad",
+    "p": 59,
+    "s": null,
+    "img": "pad.webp",
+    "o": [],
+    "cat": "charging",
+    "d": "Drop your phone on it. That's it.",
+    "long": [
+     "A slim pad for your desk or bedside. Works through most cases up to 5 mm thick. Cable included."
+    ]
+   },
+   {
+    "id": "braided-usb-c",
+    "n": "Braided USB-C Cable",
+    "p": 25,
+    "s": null,
+    "img": "cable.webp",
+    "o": [
+     {
+      "n": "Length",
+      "v": [
+       [
+        "1 m",
+        0,
+        ""
+       ],
+       [
+        "2 m",
+        8,
+        ""
+       ]
+      ]
+     }
+    ],
+    "cat": "cables",
+    "d": "Nylon-braided, tested to 20,000 bends.",
+    "long": [
+     "Charges laptops up to 100 W and syncs data. The braided jacket resists tangles and fraying."
+    ],
+    "tags": [
+     "pop"
+    ]
+   },
+   {
+    "id": "aurora-cable",
+    "n": "Aurora Cable",
+    "p": 29,
+    "s": null,
+    "img": "aurora.webp",
+    "o": [],
+    "cat": "cables",
+    "d": "A colour-shifting cable that's easy to find in your bag.",
+    "long": [
+     "Same reliable internals, with a metallic aurora finish."
+    ]
+   },
+   {
+    "id": "pocket-earbuds",
+    "n": "Pocket Earbuds",
+    "p": 149,
+    "s": null,
+    "img": "buds.webp",
+    "o": [],
+    "cat": "audio",
+    "d": "Noise-cancelling earbuds with a case that fits the coin pocket.",
+    "long": [
+     "Active noise cancelling for the LRT, transparency mode for the office, and 30 hours of total battery with the case."
+    ]
+   },
+   {
+    "id": "desk-stand",
+    "n": "Desk Phone Stand",
+    "p": 49,
+    "s": null,
+    "img": "stand.webp",
+    "o": [],
+    "cat": "audio",
+    "d": "Holds your phone at eye level for calls and recipes.",
+    "long": [
+     "Weighted aluminium base, adjustable angle, cable slot at the back."
+    ]
+   }
+  ],
+  "CATS": [
+   [
+    "power",
+    "Power banks"
+   ],
+   [
+    "charging",
+    "Charging"
+   ],
+   [
+    "cables",
+    "Cables"
+   ],
+   [
+    "audio",
+    "Audio & desk"
+   ]
+  ],
+  "EAST": [
+   "Sabah",
+   "Sarawak",
+   "Labuan"
+  ],
+  "SHIP": {
+   "west": {
+    "std": 8,
+    "free": 150
+   },
+   "east": {
+    "std": 15,
+    "free": 150
+   }
+  },
+  "COUPON": {
+   "code": "WELCOME10",
+   "pct": 10
+  },
+  "BRAND": "Voltnest"
+ }
+}

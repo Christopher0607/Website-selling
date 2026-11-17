@@ -1,0 +1,516 @@
+{
+ "slug": "plainfold",
+ "spec": {
+  "lists": [
+   {
+    "var": "PRODUCTS",
+    "cats": "CATS",
+    "fields": {
+     "name": "n",
+     "price": "p",
+     "sale": "s",
+     "desc": "d",
+     "long": "long",
+     "img": "img",
+     "cat": "cat"
+    }
+   }
+  ],
+  "ship": {
+   "states_east": "EAST",
+   "rates": "SHIP",
+   "free_on": "sub"
+  },
+  "coupons": [
+   {
+    "from": "COUPON",
+    "code": "code",
+    "percent": "pct"
+   }
+  ],
+  "redirects": {},
+  "shop": "/shop.html",
+  "ref": "PF"
+ },
+ "data": {
+  "PRODUCTS": [
+   {
+    "id": "everyday-tee",
+    "n": "Everyday Tee",
+    "p": 39,
+    "s": null,
+    "img": "everyday.webp",
+    "o": [
+     {
+      "n": "Colour",
+      "v": [
+       [
+        "White",
+        0,
+        ""
+       ],
+       [
+        "Black",
+        0,
+        "heavy-2.webp"
+       ],
+       [
+        "Sand",
+        0,
+        ""
+       ],
+       [
+        "Olive",
+        0,
+        ""
+       ]
+      ]
+     },
+     {
+      "n": "Size",
+      "v": [
+       [
+        "XS",
+        0,
+        ""
+       ],
+       [
+        "S",
+        0,
+        ""
+       ],
+       [
+        "M",
+        0,
+        ""
+       ],
+       [
+        "L",
+        0,
+        ""
+       ],
+       [
+        "XL",
+        0,
+        ""
+       ],
+       [
+        "XXL",
+        0,
+        ""
+       ]
+      ]
+     }
+    ],
+    "cat": "tees",
+    "d": "Our 180 gsm cotton tee. Soft, breathable, keeps its shape after washing.",
+    "long": [
+     "The one you'll wear three times a week. 100% combed cotton, pre-shrunk, with a neckline that doesn't stretch out.",
+     "Machine wash cold, hang dry."
+    ]
+   },
+   {
+    "id": "heavyweight-tee",
+    "n": "Heavyweight Tee",
+    "p": 59,
+    "s": null,
+    "img": "heavy.webp",
+    "o": [
+     {
+      "n": "Colour",
+      "v": [
+       [
+        "Bone",
+        0,
+        ""
+       ],
+       [
+        "Black",
+        0,
+        ""
+       ]
+      ]
+     },
+     {
+      "n": "Size",
+      "v": [
+       [
+        "S",
+        0,
+        ""
+       ],
+       [
+        "M",
+        0,
+        ""
+       ],
+       [
+        "L",
+        0,
+        ""
+       ],
+       [
+        "XL",
+        0,
+        ""
+       ]
+      ]
+     }
+    ],
+    "cat": "tees",
+    "d": "A thick 240 gsm tee with a structured drape. Not see-through.",
+    "long": [
+     "Heavier cotton that hangs well and hides less-than-perfect days. Dropped shoulder, slightly boxy body."
+    ]
+   },
+   {
+    "id": "boxy-tee",
+    "n": "Boxy Tee",
+    "p": 55,
+    "s": null,
+    "img": "boxy.webp",
+    "o": [
+     {
+      "n": "Colour",
+      "v": [
+       [
+        "Dusty Rose",
+        0,
+        ""
+       ],
+       [
+        "White",
+        0,
+        "everyday.webp"
+       ]
+      ]
+     },
+     {
+      "n": "Size",
+      "v": [
+       [
+        "S",
+        0,
+        ""
+       ],
+       [
+        "M",
+        0,
+        ""
+       ],
+       [
+        "L",
+        0,
+        ""
+       ],
+       [
+        "XL",
+        0,
+        ""
+       ]
+      ]
+     }
+    ],
+    "cat": "tees",
+    "d": "Wide and slightly cropped — looks good tucked or loose.",
+    "long": [
+     "A boxy cut with a shorter body and wide sleeves. Garment-dyed for a soft, lived-in colour."
+    ]
+   },
+   {
+    "id": "relaxed-tee",
+    "n": "Relaxed Tee",
+    "p": 45,
+    "s": null,
+    "img": "relaxed.webp",
+    "o": [
+     {
+      "n": "Size",
+      "v": [
+       [
+        "S",
+        0,
+        ""
+       ],
+       [
+        "M",
+        0,
+        ""
+       ],
+       [
+        "L",
+        0,
+        ""
+       ],
+       [
+        "XL",
+        0,
+        ""
+       ],
+       [
+        "XXL",
+        0,
+        ""
+       ]
+      ]
+     }
+    ],
+    "cat": "tees",
+    "d": "Easy fit, slightly longer body. The weekend tee.",
+    "long": [
+     "A little roomier than the Everyday Tee, with a longer back hem."
+    ]
+   },
+   {
+    "id": "oversized-hoodie",
+    "n": "Oversized Hoodie",
+    "p": 129,
+    "s": null,
+    "img": "hoodie.webp",
+    "o": [
+     {
+      "n": "Colour",
+      "v": [
+       [
+        "Dusty Rose",
+        0,
+        ""
+       ],
+       [
+        "Charcoal",
+        0,
+        ""
+       ]
+      ]
+     },
+     {
+      "n": "Size",
+      "v": [
+       [
+        "S",
+        0,
+        ""
+       ],
+       [
+        "M",
+        0,
+        ""
+       ],
+       [
+        "L",
+        0,
+        ""
+       ],
+       [
+        "XL",
+        0,
+        ""
+       ]
+      ]
+     }
+    ],
+    "cat": "layers",
+    "d": "A brushed-fleece hoodie for air-con offices and cold malls.",
+    "long": [
+     "Mid-weight fleece — warm enough for 18°C air-con, light enough to carry around."
+    ]
+   },
+   {
+    "id": "utility-overshirt",
+    "n": "Utility Overshirt",
+    "p": 139,
+    "s": null,
+    "img": "overshirt.webp",
+    "o": [
+     {
+      "n": "Colour",
+      "v": [
+       [
+        "Khaki",
+        0,
+        ""
+       ],
+       [
+        "Forest",
+        0,
+        ""
+       ]
+      ]
+     },
+     {
+      "n": "Size",
+      "v": [
+       [
+        "S",
+        0,
+        ""
+       ],
+       [
+        "M",
+        0,
+        ""
+       ],
+       [
+        "L",
+        0,
+        ""
+       ],
+       [
+        "XL",
+        0,
+        ""
+       ]
+      ]
+     }
+    ],
+    "cat": "layers",
+    "d": "A light cotton twill overshirt — wear it open over a tee.",
+    "long": [
+     "Two chest pockets, horn-look buttons, washed for softness."
+    ]
+   },
+   {
+    "id": "tee-3-pack",
+    "n": "Tee 3-Pack",
+    "p": 117,
+    "s": 99,
+    "img": "pack.webp",
+    "o": [
+     {
+      "n": "Size",
+      "v": [
+       [
+        "S",
+        0,
+        ""
+       ],
+       [
+        "M",
+        0,
+        ""
+       ],
+       [
+        "L",
+        0,
+        ""
+       ],
+       [
+        "XL",
+        0,
+        ""
+       ]
+      ]
+     }
+    ],
+    "cat": "packs",
+    "d": "Three Everyday Tees — black, white and olive. Save RM18.",
+    "long": [
+     "The easiest way to restock your basics. One each in Black, White and Olive."
+    ]
+   },
+   {
+    "id": "weekend-set",
+    "n": "Weekend Set",
+    "p": 179,
+    "s": 159,
+    "img": "weekend.webp",
+    "o": [
+     {
+      "n": "Tee size",
+      "v": [
+       [
+        "S",
+        0,
+        ""
+       ],
+       [
+        "M",
+        0,
+        ""
+       ],
+       [
+        "L",
+        0,
+        ""
+       ],
+       [
+        "XL",
+        0,
+        ""
+       ]
+      ]
+     },
+     {
+      "n": "Jeans waist",
+      "v": [
+       [
+        "28",
+        0,
+        ""
+       ],
+       [
+        "30",
+        0,
+        ""
+       ],
+       [
+        "32",
+        0,
+        ""
+       ],
+       [
+        "34",
+        0,
+        ""
+       ],
+       [
+        "36",
+        0,
+        ""
+       ]
+      ]
+     }
+    ],
+    "cat": "packs",
+    "d": "Heavyweight Tee + washed straight jeans.",
+    "long": [
+     "A ready outfit at a set price: our Heavyweight Tee in Bone plus straight-leg washed jeans."
+    ]
+   }
+  ],
+  "CATS": [
+   [
+    "tees",
+    "Tees"
+   ],
+   [
+    "layers",
+    "Layers"
+   ],
+   [
+    "packs",
+    "Packs & sets"
+   ]
+  ],
+  "EAST": [
+   "Sabah",
+   "Sarawak",
+   "Labuan"
+  ],
+  "SHIP": {
+   "west": {
+    "std": 8,
+    "free": 150
+   },
+   "east": {
+    "std": 15,
+    "free": 150
+   }
+  },
+  "COUPON": {
+   "code": "WELCOME10",
+   "pct": 10
+  },
+  "BRAND": "Plainfold"
+ }
+}
