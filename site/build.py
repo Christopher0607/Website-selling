@@ -1066,7 +1066,7 @@ class Studio:
     <p>Websites that take orders, for Malaysian restaurants, cafés, bakeries and local brands. Built, launched and looked after by one person you can actually reach.</p>
     <p><a class="s-ig" href="{e(ig['profile'])}" rel="noopener">{icon('ig')} @{e(ig['handle'])}</a></p></div>
   <div><h4>Studio</h4><ul><li><a href="{root}templates.html">Demo websites</a></li><li><a href="{root}pricing.html">Pricing</a></li><li><a href="{root}why-us.html">Why Cartsmith</a></li><li><a href="{root}process.html">How it works</a></li></ul></div>
-  <div><h4>Free tools</h4><ul><li><a href="{root}shopee-fee-calculator.html">Shopee fee calculator</a></li><li><a href="{root}start.html">Free quote</a></li><li><a href="{root}faq.html">FAQ</a></li></ul></div>
+  <div><h4>Free tools</h4><ul><li><a href="{root}delivery-commission-calculator.html">Delivery app commission calculator</a></li><li><a href="{root}shopee-fee-calculator.html">Shopee fee calculator</a></li><li><a href="{root}start.html">Free quote</a></li><li><a href="{root}faq.html">FAQ</a></li></ul></div>
   <div><h4>Talk to us</h4><ul><li><a href="{e(ig['dm'])}" rel="noopener">DM on Instagram</a></li><li><a href="{root}start.html">Request form</a></li><li><button class="s-linkbtn" type="button" data-chat-open>Ask the AI assistant</button></li></ul></div>
 </div>
 <div class="s-wrap s-ftr__bottom"><span>© {YEAR} Cartsmith Studio · Malaysia</span><span><a href="{root}privacy.html">Privacy</a> · Demos use fictional brands and Pexels photos.</span></div></footer>
@@ -1262,6 +1262,38 @@ class Studio:
 <p class="calc__note">Default rates last checked: {e(c['checked'])} ({src}). Rates differ by category and seller programme and change often — <strong>always follow the latest rates in your Shopee Seller Centre</strong>. This is an estimate, not financial advice. Nothing you type here is saved or sent. · 默认费率查于 {e(c['checked'])}，以 Shopee 卖家中心最新公布为准。你输入的资料不会被储存或传送。</p>
 </div>"""
 
+    def frag_commission(self, root):
+        """Delivery-app commission calculator (2026-11-17): the owner's own numbers, worked out in the browser."""
+        c = self.d["commission_calc"]
+        care = self.d["care"]["plans"][0]["price"]
+        setup = self.d["packages"][0]["price"]
+
+        def num(i, label, val, step="0.01", suffix="", hint=""):
+            suf = f'<span class="calc__suf">{e(suffix)}</span>' if suffix else ""
+            h = f'<small class="calc__hint">{hint}</small>' if hint else ""
+            return f'<p class="calc__f"><label for="{i}">{label}{h}</label><span class="calc__in"><input type="number" inputmode="decimal" min="0" step="{step}" id="{i}" data-cc="{i}" value="{val}">{suf}</span></p>'
+        src = ", ".join(f'<a href="{e(u)}" rel="noopener">Source {i + 1}</a>' for i, u in enumerate(c["sources"]))
+        return f"""<div class="calc" data-agc-commission data-care="{care}" data-setup="{setup}">
+<form class="calc__form" onsubmit="return false" autocomplete="off">
+<fieldset><legend>1. Your delivery-app orders · 外卖平台的订单</legend>{num('orders', 'Orders per month on the apps · 每月平台订单', c['orders'], '1')}{num('avg', 'Average order · 平均每单 (RM)', c['avg'])}</fieldset>
+<fieldset><legend>2. What the app takes · 平台收多少 <small>(use the rate in your own contract)</small></legend>{num('commission', 'Commission · 佣金', c['commission'], '0.1', '%', f"Not published by the platforms; 2026 guides say about {e(c['range'])}")}{num('sst', 'SST on the commission · 佣金的 SST', c['sst'], '0.1', '%')}</fieldset>
+<fieldset><legend>3. If regulars order from your own website · 熟客改在自己的网站下单</legend>{num('regulars', 'Share of those orders from regulars who would order direct · 会直接跟你订的熟客比例', c['regulars'], '1', '%', 'Only you know this. Start low.')}{num('gateway', 'Payment gateway fee · 付款网关手续费', c['gateway'], '0.01', '%')}{num('gateway_fixed', 'Fixed fee per payment · 每笔固定费用 (RM)', c['gateway_fixed'])}{num('own_cost', 'Your own cost per direct order · 自己网站每单的额外成本 (RM)', c['own_cost'], '0.01', '', 'e.g. the rider the app used to provide. Leave 0 for pick-up, or if the customer pays delivery.')}</fieldset>
+</form>
+<div class="calc__res" aria-live="polite">
+<p class="calc__k">You pay the apps now · 现在每月给平台</p>
+<p class="calc__big"><strong data-cc-out="now_m">–</strong> a month · <strong data-cc-out="now_y">–</strong> a year</p>
+<table><tbody>
+<tr><th scope="row">Orders moved to your website · 转到网站的订单</th><td data-cc-out="moved">–</td></tr>
+<tr><th scope="row">Commission + SST you no longer pay · 省下的佣金和 SST</th><td data-cc-out="saved">–</td></tr>
+<tr><th scope="row">Gateway fees and your own costs · 网关费和自己的成本</th><td data-cc-out="costs">–</td></tr>
+<tr><th scope="row">Our maintenance · 维护费</th><td>RM{care}</td></tr>
+<tr><th scope="row">Left for you each month · 每月多留</th><td data-cc-out="net">–</td></tr>
+</tbody></table>
+<p class="calc__big" data-cc-out="verdict">–</p>
+</div>
+<p class="calc__note">This is arithmetic on your own numbers, not a promise of sales: regulars only order direct if they know your link (QR on the table and in every bag, Instagram, WhatsApp). Delivery apps don't publish one commission rate — about {e(c['range'])} in 2026 guides, checked {e(c['checked'])} ({src}) — <strong>use the rate in your own contract or merchant portal</strong>. Website from RM{setup:,} one-time + RM{care} a month maintenance (first month free). Nothing you type here is saved or sent. · 这是用你自己的数字算的，不是销量保证。平台没有公布统一佣金，以你自己的合约为准。你输入的资料不会被储存或传送。</p>
+</div>"""
+
     def build(self):
         d = self.d
         pages_dir = os.path.join(HERE, "pages")
@@ -1291,6 +1323,7 @@ class Studio:
                 "FAQ_SHORT": lambda: self.frag_faq(root, 6),
                 "COMPARE": lambda: self.frag_compare(root),
                 "CALCULATOR": lambda: self.frag_calculator(root),
+                "COMMISSION_CALC": lambda: self.frag_commission(root),
                 "ADDONS": lambda: self.frag_addons(root),
                 "COMPARE_SOURCES": lambda: self.frag_compare_sources(root),
                 "HERO_PHONES": lambda: self.frag_hero_phones(root),

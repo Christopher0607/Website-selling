@@ -413,3 +413,10 @@ h1 .zh, h2 .zh { font-size: .42em; font-weight: 600; margin-top: .6em; color: in
 
 /* anchors (e.g. pricing.html#start-monthly from the homepage cards) clear the sticky header */
 .pkg[id] { scroll-margin-top: 96px; }
+
+/* 2026-11-17 delivery-app commission calculator */
+.calc__hint { display: block; color: var(--muted); font-size: .8rem; margin-top: 2px; }
+.calc__k { margin: 0 0 4px; color: #b9b3a8; font-size: .9rem; }
+.calc__res .calc__big + table { margin-top: 14px; }
+.calc__res td { white-space: nowrap; }
+.calc__res th { text-align: left; font-weight: 500; }

@@ -1,4 +1,4 @@
-# How our system works (for the sales desk AI) — updated 2026-11-12
+# How our system works (for the sales desk AI) — updated 2026-11-17
 
 This is the current, complete picture of how Cartsmith Studio finds and talks to customers. It is newer than the
 "approved sales scripts" (written 2026-11-08 for Shopee sellers): when they disagree, follow THIS document.
@@ -145,8 +145,14 @@ lost · no_response · do_not_contact. "Next follow-up" and "next call" dates ar
 - Table QR ordering exists since 2026-11-15 (agency-core 1.8.0): scan the QR on the table → order on the phone → kitchen
   screen with the table number → pay at the counter → "close the day" record (since 2026-11-16: total per payment method,
   every bill, what sold, unpaid tables, Excel). Demo to send: https://sireh-salt.demo.cartsmithstudio.com/table.html?t=5
-  (its "See the restaurant's side" link opens the kitchen and counter screens). Not available yet: connecting to the shop's cashier / POS system,
-  kitchen printers, paying at the table. Never promise those; ask which cashier system they use and say we will confirm.
+  (its "See the restaurant's side" link opens the kitchen and counter screens). Since 2026-11-17 also: paying on the
+  phone at the table, a counter screen, kitchen printing on the kitchen device's own printer, and Loyverse receipts.
+- Position (decided 2026-11-17, decision 43): we are the shop's own brand website + online orders with no commission,
+  next to the cashier system they already have. We are NOT a POS company: never say we replace FeedMe / StoreHub / Beep,
+  never compare features with them, never criticise them. Only Loyverse links automatically; for other cashier systems
+  say staff key in website orders, or we will check their system. Table ordering / counter / printing are extras for
+  shops without a cashier system — don't lead with them. Not available: automatic Grab / foodpanda / ShopeeFood import,
+  links to other cashier brands, cashback / membership, e-invoices — never promise those.
   In person, never say they are the first shop we visited.
   If a price or detail is not in the files, say we will confirm.
 - Changes to the mockup during the trial are free (photos, prices, products, wording).
@@ -158,7 +164,13 @@ lost · no_response · do_not_contact. "Next follow-up" and "next call" dates ar
 - How much? → the sample is free; a full website starts from RM800 one-off, then RM99 a month maintenance (first month free), fixed and written down; a festive
   pre-order shop is RM399; or RM0 upfront and RM169 a month for 12 months. Details come with the link.
 - We already have Shopee / Instagram / foodpanda → keep them; this gives regulars one link to order directly, without
-  paying commission on every order.
+  paying commission on every order. (Free calculator with their own numbers:
+  https://cartsmithstudio.com/delivery-commission-calculator.html)
+- We already use FeedMe / StoreHub / Loyverse (a cashier system) → "Keep it — we don't sell cashier systems. This is your
+  own website for online orders, festive pre-orders and bookings, with no commission; the orders come to your phone."
+  (Loyverse: paid orders can go into it automatically.)
+- StoreHub's Beep / FeedMe already gives us an ordering link → keep it; we add the full brand website (menu, story,
+  bookings, festive pre-orders, gift boxes, catering) and no commission on our orders.
 - We already have a website → apologise, close, mark 已经有网站.
 - Not interested → thank them, close, mark 不需要.
 - How did you get my number? → from a public article / listing about their shop; apologise for the cold call.
