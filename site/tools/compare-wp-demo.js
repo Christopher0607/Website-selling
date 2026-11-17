@@ -11,6 +11,7 @@ const { chromium } = require('playwright');
 const [STATIC, WP, DEMO, OUT, ONLY] = process.argv.slice(2);
 if (!OUT) { console.log('用法: node site/tools/compare-wp-demo.js <工作室网址> <WordPress 网址> <示范代号> <输出资料夹> [页面,…]'); process.exit(2); }
 const PAGES = (ONLY || 'index,menu,order,book,festive,catering,vouchers').split(',');
+const key = (pg) => pg.replace(/[?=&]/g, '-');
 const NOW = Date.parse('2026-11-18T13:05:00+08:00'); // a Wednesday lunchtime: open, festive pre-orders open
 fs.mkdirSync(OUT, { recursive: true });
 
@@ -28,15 +29,15 @@ fs.mkdirSync(OUT, { recursive: true });
       }, NOW);
       const p = await c.newPage();
       for (const pg of PAGES) {
-        await p.goto(side[1] + pg + '.html');
+        await p.goto(side[1] + (pg.includes('?') ? pg.replace('?', '.html?') : pg + '.html')); // "index?fest=cny" → index.html?fest=cny
         await p.waitForTimeout(900);
         await p.evaluate(async () => { for (let y = 0; y < document.body.scrollHeight; y += 600) { window.scrollTo(0, y); await new Promise((r) => setTimeout(r, 40)); } window.scrollTo(0, 0); });
         await p.waitForTimeout(400);
-        await p.screenshot({ path: path.join(OUT, `${DEMO}-${pg}-${vp.n}-${side[0]}.png`), fullPage: true });
+        await p.screenshot({ path: path.join(OUT, `${DEMO}-${key(pg)}-${vp.n}-${side[0]}.png`), fullPage: true });
       }
       await c.close();
     }
-    for (const pg of PAGES) rows.push([pg, vp.n]);
+    for (const pg of PAGES) rows.push([key(pg), vp.n]);
   }
   await b.close();
   const py = `

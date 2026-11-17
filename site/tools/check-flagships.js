@@ -509,9 +509,17 @@ const ok = (c, m) => { console.log((c ? '  ✅ ' : '  ❌ ') + m); if (!c) fail+
   await p.click('[data-sheet-add]');
   await p.goto(FB + 'checkout.html?fest=val');
   ok(await p.$eval('[data-mode="courier"]', (x) => x.disabled), "Valentine's: roses and cupcakes can't go by courier");
+
   await p.goto(FB + 'index.html?fest=raya');
   ok((await p.getAttribute('body', 'data-lang')) === 'ms' && /Kuih raya/.test(await p.textContent('[data-hero]')) && /Tart Nenas/.test(await p.textContent('#sets')), 'Hari Raya: Malay first, with Raya cookies');
   await shot('bl-raya');
+  await p.click('#i-bs .card__foot [data-item]');
+  await p.waitForSelector('[data-sheet].is-on');
+  await p.click('[data-sheet-add]');
+  await p.goto(FB + 'checkout.html?fest=raya');
+  await p.click('[data-mode="courier"]');
+  await p.fill('#c-pc', '88000');
+  ok(/RM25\.00/.test(await p.textContent('.summ')), 'courier: an East Malaysia postcode changes the fee in the summary to RM25 as you type');
   await p.goto(FB + 'index.html');
   ok(['cny', 'raya', 'xmas', 'val'].includes(await p.getAttribute('body', 'data-fest')), 'without ?fest the shop shows the next festival');
 

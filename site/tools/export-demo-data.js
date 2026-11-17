@@ -61,6 +61,19 @@ const SPEC = {
       shop: '/shop.html',
       ref: 'DD'
     }
+  },
+  'butter-lantern': {
+    page: 'index.html',
+    spec: {
+      // the page keeps its own words (Chinese / Malay / English): WooCommerce gives prices, stock and sold-out only
+      lists: [{ var: 'FESTS', items: 'items', stock: 'left', sku: '{g}-{id}', label: 'Festive', fields: { name: '', desc: '' } }],
+      preorder: { fests: 'FESTS', items: 'items', sku: '{g}-{id}', early: 10, cap: { collect: 6, kv: 10 }, slots: 'SLOTS',
+        modes: { kv: { fee: 15, free: 200, pc: [[40000, 48300], [50000, 60000], [62000, 68100]] }, courier: { fee: 12, free: 250, east: 25, east_pc: [[87000, 91399], [93000, 98859]], days: 3 } } },
+      duitnow: true,
+      redirects: {},
+      shop: '/index.html',
+      ref: 'BL'
+    }
   }
 };
 
@@ -83,7 +96,7 @@ const SPEC = {
     const out = path.join(ROOT, 'sites', `demo-${slug}`, 'site.json');
     fs.mkdirSync(path.dirname(out), { recursive: true });
     fs.writeFileSync(out, JSON.stringify({ slug, spec: S.spec, data }, null, 1) + '\n');
-    const n = S.spec.lists.reduce((a, l) => a + (l.items ? (data[l.var] || []).reduce((b, g) => b + (g[l.items] || []).length, 0) : (data[l.var] || []).length), 0);
+    const n = S.spec.lists.reduce((a, l) => a + (l.items ? Object.values(data[l.var] || {}).reduce((b, g) => b + (g[l.items] || []).length, 0) : (data[l.var] || []).length), 0);
     console.log(`${slug}: ${n} products → ${path.relative(ROOT, out)}`);
   }
   await browser.close();

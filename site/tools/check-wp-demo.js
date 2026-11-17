@@ -515,9 +515,192 @@ async function dulangDaun(b) {
   await restrictions(b);
 }
 
+async function butterLantern(b) {
+  await common(b, ['index', 'checkout', 'order', 'owner']);
+  const p = await newPage(b);
+  const myToday = new Date(Date.now() + 8 * 3600e3).toISOString().slice(0, 10);
+  const txt = async (sel) => ((await p.textContent(sel)) || '').replace(/\s+/g, ' ');
+  const left = async (id) => +(((await txt('#i-' + id)).match(/只剩 (\d+) 份/) || [])[1] || NaN);
+  const owner = (path, method, body) => p.evaluate(async ([path, method, body]) => (await fetch(window.AGC_OWNER.rest + path, { method: method || 'GET', headers: { 'X-WP-Nonce': window.AGC_OWNER.nonce, 'Content-Type': 'application/json' }, credentials: 'same-origin', body: body ? JSON.stringify(body) : undefined })).json(), [path, method, body]);
+  const mineOrder = (no) => p.evaluate((no) => { for (const k of Object.keys(localStorage)) if (/orders_/.test(k)) { const o = (JSON.parse(localStorage[k]) || []).find((x) => x.no === no); if (o) return o; } return null; }, no);
+
+  console.log('Prices, stock and sold-out from WooCommerce');
+  await p.goto(BASE + '/index.html?fest=cny');
+  ok((await p.$$('.card[id^="i-"]')).length === 8, 'Chinese New Year: 8 items (WooCommerce)');
+  ok(/已售完/.test(await txt('#i-ng')) && await p.$eval('#i-ng .card__foot button', (x) => x.disabled), 'Nian Gao: sold out in WooCommerce (stock 0), cannot be added');
+  const pb0 = await left('pb');
+  ok(pb0 > 2, 'Pineapple Balls: stock left from WooCommerce (' + pb0 + ')');
+  const a = await admin(b);
+  await editProduct(a, 'Peanut Cookies');
+  await a.fill('#_regular_price', '34');
+  await saveProduct(a);
+  await p.goto(BASE + '/index.html?fest=cny');
+  ok(/RM34\.00/.test(await txt('#i-pn')), 'price changed in WordPress admin (RM32 → RM34) shows on the website');
+  await a.fill('#_regular_price', '32');
+  await saveProduct(a);
+  await editProduct(a, 'Butter Cookies');
+  await a.click('a[href="#inventory_product_data"]');
+  const bc0 = await a.inputValue('#_stock');
+  await a.fill('#_stock', '0');
+  await saveProduct(a);
+  await p.goto(BASE + '/index.html?fest=cny');
+  ok(/已售完/.test(await txt('#i-bc')) && await p.$eval('#i-bc .card__foot button', (x) => x.disabled), 'stock set to 0 in WordPress admin: Butter Cookies sold out on the website');
+  await a.click('a[href="#inventory_product_data"]');
+  await a.fill('#_stock', bc0);
+  await saveProduct(a);
+
+  console.log('Order 1: Chinese New Year, collection, FPX, a gift');
+  await p.goto(BASE + '/index.html?fest=cny');
+  await p.click('#i-pb .card__foot [data-item]');
+  await p.waitForSelector('[data-sheet].is-on');
+  await p.click('[data-opt="l"]');
+  await p.click('[data-sq="1"]');
+  ok(/RM156\.00/.test(await txt('[data-sheet-add]')), 'options: big jar × 2 = RM156');
+  await p.click('[data-sheet-add]');
+  await p.waitForSelector('[data-drawer].is-on');
+  const cnyEarly = myToday <= '2026-12-31';
+  ok(cnyEarly ? /−RM15\.60/.test(await txt('[data-drawer]')) && /RM140\.40/.test(await txt('[data-drawer]')) : true, 'cart: early-bird 10% off, RM140.40');
+  await p.goto(BASE + '/checkout.html?fest=cny');
+  ok((await p.$$('.slot:not([disabled])')).length > 0, 'checkout: days and time slots with places left');
+  await p.click('[data-next]');
+  await p.fill('#c-name', 'Test Auntie');
+  await p.fill('#c-phone', '012-345 6789');
+  await p.fill('#c-email', 'auntie@example.com');
+  await p.check('[data-k="gift"]');
+  await p.fill('#c-gname', 'Uncle Lim');
+  await p.fill('#c-gphone', '012-777 8888');
+  await p.fill('#c-gmsg', '新年快乐');
+  await p.click('[data-next]');
+  await p.click('[data-bank="Maybank2u"]');
+  await p.click('[data-pay-go]');
+  await p.waitForSelector('[data-pay].is-on');
+  await Promise.all([p.waitForURL(/\/order(\.html)?\?.*no=BL-/, { timeout: 20000 }), p.click('[data-approve]')]);
+  await p.waitForSelector('.tl');
+  const no1 = ((await txt('main')).match(/BL-\d+/) || [''])[0];
+  ok(/订单已确认/.test(await txt('main')) && !!no1 && /Uncle Lim/.test(await txt('main')) && /Maybank2u/.test(await txt('main')) && (!cnyEarly || /RM140\.40/.test(await txt('main'))), 'a real WooCommerce order, paid (demo payment): ' + no1);
+  const o1 = await mineOrder(no1);
+  await p.goto(BASE + '/index.html?fest=cny');
+  ok(await left('pb') === pb0 - 2, 'stock goes down in WooCommerce (' + pb0 + ' → ' + (pb0 - 2) + ')');
+  ok(((await p.evaluate(() => window.AGC_LIVE.slotsUsed)) || {})[`cny|${o1.date}|collect|${o1.slot}`] >= 1, 'the time slot counts the order (' + o1.date + ' ' + o1.slot + ')');
+
+  console.log('Order lookup from another phone');
+  const q = await newPage(b);
+  await q.goto(BASE + '/order.html?fest=cny');
+  await q.fill('#t-no', no1);
+  await q.fill('#t-ph', '0123456789');
+  await Promise.all([q.waitForURL(/no=BL-/, { timeout: 15000 }), q.click('[data-track] button[type=submit]')]);
+  await q.waitForSelector('.tl');
+  ok(/已付款/.test((await q.textContent('.tl .is-now')) || '') && /Uncle Lim/.test(await q.textContent('main')), 'number + mobile finds the order on a phone that never saw it: paid, gift for Uncle Lim');
+
+  console.log('Order 2: Christmas, Klang Valley delivery, DuitNow + receipt');
+  await p.goto(BASE + '/index.html?fest=xmas');
+  await p.click('#i-gb .card__foot [data-item]');
+  await p.waitForSelector('[data-sheet].is-on');
+  await p.click('[data-sheet-add]');
+  await p.goto(BASE + '/checkout.html?fest=xmas');
+  await p.click('[data-mode="kv"]');
+  await p.fill('#c-addr', '12 Jalan SS2/24, Petaling Jaya');
+  await p.fill('#c-pc', '81300');
+  ok(/outside the Klang Valley/.test(await txt('[data-pcnote]')), 'delivery: a postcode outside the Klang Valley is caught');
+  await p.fill('#c-pc', '47300');
+  ok(/RM15\.00/.test(await txt('.summ')), 'delivery: RM15 under RM200');
+  await p.click('[data-next]');
+  await p.fill('#c-name', 'Sarah Test');
+  await p.fill('#c-phone', '012-345 6789');
+  await p.fill('#c-email', 'sarah@example.com');
+  await p.click('[data-next]');
+  await p.click('[data-pm="duitnow"]');
+  await p.setInputFiles('[data-receipt]', { name: 'receipt.png', mimeType: 'image/png', buffer: Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==', 'base64') });
+  await Promise.all([p.waitForURL(/\/order(\.html)?\?.*no=BL-/, { timeout: 20000 }), p.click('[data-pay-go]')]);
+  await p.waitForSelector('.tl');
+  const no2 = ((await txt('main')).match(/BL-\d+/) || [''])[0];
+  ok(/checking your payment/i.test(await txt('main')) && /receipt\.png/.test(await txt('main')), 'DuitNow order received, payment being checked, receipt attached: ' + no2);
+
+  console.log('Order 3: Hari Raya, courier to Sabah');
+  await p.goto(BASE + '/index.html?fest=raya');
+  await p.click('#i-bs .card__foot [data-item]');
+  await p.waitForSelector('[data-sheet].is-on');
+  await p.click('[data-sheet-add]');
+  await p.goto(BASE + '/checkout.html?fest=raya');
+  await p.click('[data-mode="courier"]');
+  await p.fill('#c-addr', '8 Jalan Test, Kota Kinabalu');
+  await p.fill('#c-pc', '88000');
+  ok(/RM25\.00/.test(await txt('.summ')), 'courier to East Malaysia: RM25');
+  await p.click('[data-next]');
+  await p.fill('#c-name', 'Aminah Test');
+  await p.fill('#c-phone', '013-222 3333');
+  await p.fill('#c-email', 'aminah@example.com');
+  await p.click('[data-next]');
+  await p.click('[data-pm="ewallet"]');
+  await p.click('[data-pay-go]');
+  await p.waitForSelector('[data-pay].is-on');
+  await Promise.all([p.waitForURL(/\/order(\.html)?\?.*no=BL-/, { timeout: 20000 }), p.click('[data-approve]')]);
+  await p.waitForSelector('.tl');
+  const no3 = ((await txt('main')).match(/BL-\d+/) || [''])[0];
+  ok(!!no3 && /88000/.test(await txt('main')), 'courier order placed (the shop agreed on the RM25 East Malaysia fee): ' + no3);
+
+  console.log('What the shop refuses');
+  const bad = await p.evaluate(async () => { const r = await fetch(window.AGC_LIVE.rest + 'site/order', { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ kind: 'preorder', fest: 'val', lines: [{ id: 'rv', qty: 1 }], mode: 'courier', date: '2027-02-12', addr: '1 Jalan A', pc: '47300', name: 'X', phone: '0123456789', pay: 'online' }) }); return r.status + ' ' + ((await r.json()).message || ''); });
+  p.errors = p.errors.filter((e) => !/status of 409/.test(e)); // the refusal above is expected
+  ok(/^409 .*courier/.test(bad), "Valentine's: red velvet cupcakes by courier refused by the shop (" + bad.slice(0, 60) + ')');
+  await p.goto(BASE + '/index.html?fest=val#i-cr');
+  await p.waitForSelector('[data-sheet].is-on');
+  await p.click('[data-sheet-add]');
+  await p.goto(BASE + '/checkout.html?fest=val');
+  ok(await p.$eval('[data-mode="courier"]', (x) => x.disabled), "Valentine's: the page doesn't offer courier for roses");
+  const nf = await p.evaluate(async () => (await fetch(window.AGC_LIVE.rest + 'site/notify', { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contact: '012-345 6789', name: 'Valentine’s' }) })).status);
+  ok(nf === 200, '"tell me when the next ones open" goes to the shop’s list');
+
+  console.log('The shop dashboard (/dian/)');
+  await p.goto(BASE + '/owner.html?fest=cny');
+  ok(!!(await p.$('[data-live-dian]')) && !!(await p.$('[data-live-admin]')), 'owner page: buttons into the real back office');
+  await p.click('[data-live-dian]');
+  await p.waitForURL(/\/dian\//);
+  await p.waitForFunction(() => /Overview/.test(document.body.textContent), null, { timeout: 20000 });
+  const all = ((await owner('orders?bucket=all')) || {}).orders || [];
+  const find = (no) => all.find((o) => 'BL-' + o.number === no);
+  const d1 = find(no1), d2 = find(no2), d3 = find(no3);
+  ok(d1 && d1.bucket === 'make' && d2 && d2.bucket === 'check' && d3 && d3.bucket === 'make', 'orders in the right lists: ' + no1 + ' and ' + no3 + ' to make, ' + no2 + ' payment to check');
+  const prod = await owner('production?day=' + o1.date);
+  ok(/Pineapple Balls/.test(JSON.stringify(prod)), 'what to bake on ' + o1.date + ': Pineapple Balls');
+  const one = await owner('orders/' + d1.id);
+  await p.goto(BASE + '/dian/#/order/' + d2.id);
+  await p.waitForSelector('button:has-text("Payment received")', { timeout: 20000 });
+  const det2 = (await p.textContent('.main')) || '';
+  ok(/Sarah Test/.test(det2) && !!(await p.$('a[href*="receipt"]')), 'order ' + no2 + ': the DuitNow receipt to look at');
+  await p.click('button:has-text("Payment received")');
+  await p.click('.sheet button:has-text("Yes")');
+  await p.waitForFunction(() => !/Payment received/.test([...document.querySelectorAll('.main button')].map((x) => x.textContent).join('|')), null, { timeout: 15000 });
+  await p.goto(BASE + '/dian/#/order/' + d1.id);
+  await p.waitForSelector('button:has-text("Ready for collection")', { timeout: 20000 });
+  ok(/Uncle Lim/.test((await p.textContent('.main')) || '') && new RegExp(o1.slot).test((await p.textContent('.main')) || ''), 'order ' + no1 + ': collection day and slot, gift note');
+  await p.click('button:has-text("Ready for collection")');
+  await p.waitForSelector('button:has-text("Done")', { timeout: 15000 });
+  ok(true, 'one tap: ' + no1 + ' ready for collection, ' + no2 + ' payment received');
+
+  console.log('The customer sees what the shop did');
+  await p.goto(BASE + `/order.html?fest=cny&no=${no1}`);
+  await p.waitForFunction(() => /可以取货/.test((document.querySelector('.tl .is-now') || {}).textContent || ''), null, { timeout: 15000 }).catch(() => {});
+  ok(/可以取货/.test((await p.textContent('.tl .is-now')) || ''), no1 + ': "ready to collect"');
+  await p.goto(BASE + `/order.html?fest=xmas&no=${no2}`);
+  await p.waitForFunction(() => /Paid/.test((document.querySelector('.tl .is-now') || {}).textContent || ''), null, { timeout: 15000 }).catch(() => {});
+  ok(/Paid/.test((await p.textContent('.tl .is-now')) || ''), no2 + ': payment confirmed');
+
+  console.log('WordPress admin');
+  const ord = (await adminText(a, '/wp-admin/admin.php?page=wc-orders')) + (await adminText(a, '/wp-admin/edit.php?post_type=shop_order'));
+  ok([no1, no2, no3].every((n) => ord.includes(n.replace('BL-', ''))), 'Orders: ' + [no1, no2, no3].join(', '));
+  const ed = await adminText(a, one.edit_url.replace(/^https?:\/\/[^/]+/, ''));
+  ok(/Uncle Lim/.test(ed) && /Early-bird discount|Collection/.test(ed) && new RegExp(o1.slot).test(ed), 'order ' + no1 + ' in WordPress admin: gift note, collection slot, early-bird line');
+  ok(p.errors.length === 0 && q.errors.length === 0, 'no JavaScript errors' + (p.errors.length + q.errors.length ? ': ' + p.errors.concat(q.errors).slice(0, 3).join(' | ') : ''));
+  await a.context().close();
+  await q.context().close();
+  await p.context().close();
+  await restrictions(b);
+}
+
 (async () => {
   const b = await chromium.launch();
-  const run = { 'sireh-salt': sirehSalt, 'maison-cendre': maisonCendre, 'dulang-daun': dulangDaun }[DEMO];
+  const run = { 'sireh-salt': sirehSalt, 'maison-cendre': maisonCendre, 'dulang-daun': dulangDaun, 'butter-lantern': butterLantern }[DEMO];
   if (!run) { console.log('还没有这个示范的测试：' + DEMO); process.exit(2); }
   try { await run(b); } catch (e) { ok(false, 'stopped: ' + e.message.split('\n')[0] + ' @ ' + ((e.stack || '').match(/check-wp-demo\.js:(\d+)/) || [])[1]); }
   await b.close();

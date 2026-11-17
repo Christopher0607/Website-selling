@@ -142,7 +142,35 @@
 
   // which festival: ?fest=, else the open one with the nearest last order day
   var settings0 = {};
-  function setOf(k) { return load('set_' + k, {}); }
+  // ------------------------------------------------------------------ the WordPress version (docs/14-wordpress-demos.md)
+  // On WordPress the page gets window.AGC_LIVE: each festival's items with prices, stock left and sold-out from
+  // WooCommerce (the page keeps its own words in three languages). Orders, receipts and "tell me" requests go to the real
+  // shop and its dashboard; the order page reads the real order's status.
+  var LIVE = window.AGC_LIVE || null;
+  if (LIVE && LIVE.data && LIVE.data.FESTS) {
+    Object.keys(FESTS).forEach(function (k) {
+      var got = (LIVE.data.FESTS[k] || {}).items || [], by = {};
+      got.forEach(function (x) { by[x.id] = x; });
+      FESTS[k].items = FESTS[k].items.filter(function (it) { return by[it.id]; }).map(function (it) {
+        var x = by[it.id];
+        if (typeof x.p === 'number' && !it.opts) it.p = x.p;
+        if (typeof x.left === 'number') it.left = x.left;
+        it.soldOut = !!x.soldOut;
+        return it;
+      });
+    });
+  }
+  function send(path, body, ok, fail) {
+    var btns = Array.prototype.slice.call(document.querySelectorAll('[data-pay-go],[data-approve],[data-track] button,[data-notify] button'));
+    btns.forEach(function (b) { b.disabled = true; });
+    fetch(LIVE.rest + path, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+      .then(function (r) { return r.json().then(function (j) { if (!r.ok) throw new Error((j && j.message) || 'Something went wrong. Please try again.'); return j; }); })
+      .then(function (j) { btns.forEach(function (b) { b.disabled = false; }); ok(j); })
+      .catch(function (e) { btns.forEach(function (b) { b.disabled = false; }); if (fail) fail(e); else toast(e.message || 'Something went wrong. Please try again.'); });
+  }
+  function liveOrder(no, pre) { var o = { no: no, fest: pre.fest, at: pre.at || Date.now(), status: pre.status, mode: pre.mode, date: pre.date, slot: pre.slot, addr: pre.addr, pc: pre.pc, name: pre.name, phone: pre.phone, email: pre.email || '', gift: pre.gift || null, notes: pre.notes || '', pm: pre.pm || 'fpx', bank: pre.bank || '', receipt: pre.receipt || '', items: pre.items, sub: pre.sub, disc: pre.disc, fee: pre.fee, total: pre.total }; return o; }
+  function keepOrder(o) { var all = load('orders_' + o.fest, null) || []; all = all.filter(function (x) { return x.no !== o.no; }); all.unshift(o); save('orders_' + o.fest, all.slice(0, 30)); var mine = load('mine', []).filter(function (m) { return m.no !== o.no; }); mine.unshift({ fest: o.fest, no: o.no, phone: o.phone }); save('mine', mine.slice(0, 10)); }
+  function setOf(k) { if (LIVE) return { paused: LIVE.owner && LIVE.owner.status === 'closed' }; return load('set_' + k, {}); }
   function cutoffOf(k) { return setOf(k).cutoff || FESTS[k].cutoff; }
   function closedOf(k) { return today() > cutoffOf(k); }
   function defaultFest() { var best = null; ORDER.forEach(function (k) { if (!closedOf(k) && (!best || cutoffOf(k) < cutoffOf(best))) best = k; }); return best || 'cny'; }
@@ -158,9 +186,9 @@
   var CAP = { collect: settings0.capCollect || 6, kv: settings0.capKv || 10 };
   function url(page, extra) { return page + '?fest=' + cur + (extra || ''); }
   function item(id) { return F.items.filter(function (x) { return x.id === id; })[0]; }
-  function leftOf(id) { var l = load('left_' + cur, {}); return id in l ? l[id] : item(id).left; }
-  function setLeft(id, n) { var l = load('left_' + cur, {}); l[id] = Math.max(0, n); save('left_' + cur, l); }
-  function isOff(id) { return !!load('off_' + cur, {})[id] || leftOf(id) <= 0; }
+  function leftOf(id) { if (LIVE) return item(id).left; var l = load('left_' + cur, {}); return id in l ? l[id] : item(id).left; }
+  function setLeft(id, n) { if (LIVE) return; var l = load('left_' + cur, {}); l[id] = Math.max(0, n); save('left_' + cur, l); }
+  function isOff(id) { if (LIVE) return !!item(id).soldOut || leftOf(id) <= 0; return !!load('off_' + cur, {})[id] || leftOf(id) <= 0; }
   function canOrder() { return !F.closed && !F.paused; }
   function earlyOn() { return today() <= F.early; }
   function unitPrice(it, opt) { var o = (it.opts || []).filter(function (x) { return x.id === opt; })[0]; return o ? o.p : it.p; }
@@ -297,7 +325,7 @@
       '<div class="season"><p>' + esc(L('本季 This season', 'Musim ini · This season', 'This season')) + '</p><ul>' + F.items.slice(0, 5).map(function (it) { return '<li><a href="#i-' + it.id + '" data-item="' + it.id + '"><img src="img/' + it.img + '.webp" alt="" width="70" height="70" loading="lazy">' + esc(T(it.n)) + '</a></li>'; }).join('') + '</ul></div>' +
       '</div>' + (closed ? '' : '<div class="hero__badge"><span>' + esc(L('截止', 'Tempah sebelum', 'Order by')) + '<b>' + esc(fmtShort(F.cutoff)) + '</b>' + '<i>' + esc(L('取货 ' + fmtShort(F.from) + ' 起', 'Ambil dari', 'Ready from')) + '</i>' + (LANG === 'zh' ? '' : '<i>' + esc(fmtShort(F.from)) + '</i>') + '</span></div>') + '</div>';
     var nf = $('[data-notify]', h);
-    if (nf) nf.addEventListener('submit', function (e) { e.preventDefault(); var v = nf.phone.value.trim(); if (!/^\+?6?0?1\d[\d\s-]{7,10}$/.test(v)) { toast(L('请填写手机号码', 'Masukkan nombor telefon', 'Please enter a mobile number')); return; } var w = load('notify', []); w.unshift({ fest: cur, phone: v, at: Date.now() }); save('notify', w.slice(0, 20)); nf.innerHTML = '<b>' + esc(L('好的，开放那天会通知你。', 'Baik, kami akan beritahu anda.', 'Done. We will message you once, on the day they open.')) + '</b>'; });
+    if (nf) nf.addEventListener('submit', function (e) { e.preventDefault(); var v = nf.phone.value.trim(); if (!/^\+?6?0?1\d[\d\s-]{7,10}$/.test(v)) { toast(L('请填写手机号码', 'Masukkan nombor telefon', 'Please enter a mobile number')); return; } if (LIVE) send('site/notify', { contact: v, name: T(F.name) }, function () {}); var w = load('notify', []); w.unshift({ fest: cur, phone: v, at: Date.now() }); save('notify', w.slice(0, 20)); nf.innerHTML = '<b>' + esc(L('好的，开放那天会通知你。', 'Baik, kami akan beritahu anda.', 'Done. We will message you once, on the day they open.')) + '</b>'; });
 
     $('[data-sets-head]').innerHTML = '<p class="kicker">' + esc(L('2027 年饼', 'Juadah Raya 2027', T(F.name) + ' ' + F.day.slice(0, 4))) + '</p><h2>' + B('小批量制作，卖完为止', 'Dibuat sedikit-sedikit, bila habis, habislah', 'Made in small batches, so they do run out') + '</h2><p>' + esc(T(F.when)) + (F.when[1] ? '<small class="en">' + esc(F.when[1]) + '</small>' : '') + '</p>';
     var cat = '';
@@ -344,10 +372,12 @@
   }
 
   // ------------------------------------------------------------------ slots and delivery rules
+  if (window.__agcExport) setTimeout(function () { window.__agcExport({ FESTS: FESTS, SLOTS: SLOTS, BRAND: 'Butter & Lantern' }); }, 0);
   var SLOTS = { collect: ['10:00–12:00', '12:00–14:00', '14:00–16:00', '16:00–18:00'], kv: ['10:00–13:00', '14:00–18:00'] };
   function orders() { return load('orders_' + cur, null) || seed(); }
   function setOrders(o) { save('orders_' + cur, o); }
   function booked(date, mode, slot) {
+    if (LIVE) return Math.min(CAP[mode], (LIVE.slotsUsed || {})[cur + '|' + date + '|' + mode + '|' + slot] || 0);
     var cap = CAP[mode], h = hash(cur + date + mode + slot), base = h % 7 === 0 ? cap : (h % Math.max(2, cap - 1));
     var mine = orders().filter(function (o) { return !o.demo && o.date === date && o.mode === mode && o.slot === slot; }).length;
     return Math.min(cap, base + mine);
@@ -374,6 +404,11 @@
     function region() { return S.mode === 'courier' && eastPostcode(S.pc) ? 'east' : 'west'; }
     function totals() { var c = calc(null, S.mode, region()); c.mode = S.mode; return c; }
     function err(msg) { var el = $('[data-err]', root); if (el) { el.innerHTML = '<p class="note note--bad">' + esc(msg) + '</p>'; el.scrollIntoView({ block: 'nearest' }); } }
+    function summInner(c) {
+      return '<h2>' + B('你的订单', 'Pesanan anda', 'Your order') + '</h2>' + c.lines.map(function (x) { return lineHTML(x, false); }).join('') +
+        '<p class="small muted" style="margin:10px 0">' + esc(modeName(S.mode)) + (S.date ? ' · ' + esc(fmtDay(S.date)) : '') + (S.slot ? ' · ' + esc(S.slot) : '') + '</p>' + sumHTML(c) +
+        '<button class="linkbtn small" type="button" data-cart-open style="margin-top:10px">' + esc(L('修改购物车', 'Ubah troli', 'Edit cart')) + '</button>';
+    }
     function paint() {
       var c = totals();
       if (!c.lines.length) { root.innerHTML = '<div class="ok"><h1>' + B('购物车是空的', 'Troli anda kosong', 'Your cart is empty') + '</h1><a class="btn" href="' + url('index.html') + '#sets">' + esc(L('去选购', 'Mula membeli', 'Start shopping')) + '</a></div>'; return; }
@@ -416,9 +451,7 @@
         }).join('') + '</div><p class="secure">' + ICON.lock + esc(L('付款经过付款网关加密处理，我们看不到你的卡号。', 'Bayaran diproses dengan selamat oleh gerbang pembayaran; kami tidak melihat nombor kad anda.', 'Payments go through an encrypted payment gateway; we never see your card number.')) + '</p></section>' +
           '<div data-err></div><div class="co__nav"><button class="btn btn--ghost" type="button" data-back>' + esc(L('上一步', 'Kembali', 'Back')) + '</button><button class="btn" type="button" data-pay-go>' + esc(S.pm === 'duitnow' ? L('提交订单', 'Hantar pesanan', 'Place order') : L('付款 ', 'Bayar ', 'Pay ') + rm(c.total)) + '</button></div>';
       }
-      h += '</div><aside class="panel summ"><h2>' + B('你的订单', 'Pesanan anda', 'Your order') + '</h2>' + c.lines.map(function (x) { return lineHTML(x, false); }).join('') +
-        '<p class="small muted" style="margin:10px 0">' + esc(modeName(S.mode)) + (S.date ? ' · ' + esc(fmtDay(S.date)) : '') + (S.slot ? ' · ' + esc(S.slot) : '') + '</p>' + sumHTML(c) +
-        '<button class="linkbtn small" type="button" data-cart-open style="margin-top:10px">' + esc(L('修改购物车', 'Ubah troli', 'Edit cart')) + '</button></aside></div>';
+      h += '</div><aside class="panel summ">' + summInner(c) + '</aside></div>';
       root.innerHTML = h;
     }
     function pcNote() {
@@ -460,10 +493,10 @@
       var k = e.target.getAttribute('data-k'); if (!k) return;
       S[k] = e.target.type === 'checkbox' ? e.target.checked : e.target.value; keep();
       if (k === 'gift') paint();
-      if (k === 'pc') { var n = $('[data-pcnote]', root); if (n) n.innerHTML = pcNote(); }
+      if (k === 'pc') { var n = $('[data-pcnote]', root); if (n) n.innerHTML = pcNote(); var sm = $('.summ', root); if (sm) sm.innerHTML = summInner(totals()); }
       if (k === 'gmsg') { var lab = $('label[for="c-gmsg"] small', root); if (lab) lab.textContent = '(' + (150 - S.gmsg.length) + ')'; }
     });
-    root.addEventListener('change', function (e) { if (e.target.matches('[data-receipt]') && e.target.files[0]) { S.receipt = e.target.files[0].name.slice(0, 60); keep(); paint(); } });
+    root.addEventListener('change', function (e) { if (e.target.matches('[data-receipt]') && e.target.files[0]) { receiptFile = e.target.files[0]; S.receipt = e.target.files[0].name.slice(0, 60); keep(); paint(); } });
     function gateway() {
       var c = totals(), p = $('[data-pay]');
       p.innerHTML = '<div class="pay__head"><span>' + ICON.lock.replace('<svg', '<svg width="16" height="16" style="vertical-align:-2px;margin-right:6px"') + 'Secure payment</span><small>Demo</small></div><div class="pay__body"><small>Butter &amp; Lantern</small><p class="pay__amt">' + rm(c.total) + '</p><dl><dt>' + esc(L('付款方式', 'Kaedah', 'Method')) + '</dt><dd>' + esc(L.apply(null, PM[S.pm].n)) + (S.pm === 'fpx' ? ' · ' + esc(S.bank) : '') + '</dd><dt>' + esc(L('订单', 'Pesanan', 'For')) + '</dt><dd>' + c.count + ' ' + esc(L('件', 'item', c.count === 1 ? 'item' : 'items')) + ' · ' + esc(fmtShort(S.date)) + '</dd></dl>' +
@@ -471,7 +504,22 @@
       p.onclick = function (e) { if (e.target.closest('[data-approve]')) { var b = e.target.closest('[data-approve]'); b.disabled = true; b.textContent = L('处理中…', 'Memproses…', 'Processing…'); setTimeout(function () { place('paid'); }, 900); } };
       openLayer(p);
     }
+    var receiptFile = null;
     function place(status) {
+      if (LIVE) {
+        var lc = totals();
+        return send('site/order', { kind: 'preorder', fest: cur, lines: lc.lines.map(function (x) { return { id: x.it.id, opt: x.l.opt, pers: x.l.pers, qty: x.l.qty }; }), mode: S.mode, date: S.date, slot: S.mode === 'courier' ? '' : S.slot, addr: S.addr.trim(), pc: S.pc, name: S.name.trim(), phone: S.phone.trim(), email: S.email.trim(), gift: S.gift ? { name: S.gname.trim(), phone: S.gphone.trim(), msg: S.gmsg.trim() } : null, notes: S.notes.trim(), pm: S.pm, bank: S.pm === 'fpx' ? S.bank : '', pay: S.pm === 'duitnow' ? 'duitnow' : 'online', total: lc.total }, function (r) {
+          var o = { no: r.no, fest: cur, at: Date.now(), status: r.paid ? 'paid' : 'verify', mode: S.mode, date: S.date, slot: S.mode === 'courier' ? '' : S.slot, addr: S.addr.trim(), pc: S.pc, name: S.name.trim(), phone: S.phone.trim(), email: S.email.trim(), gift: S.gift ? { name: S.gname.trim(), phone: S.gphone.trim(), msg: S.gmsg.trim() } : null, notes: S.notes.trim(), pm: S.pm, bank: S.pm === 'fpx' ? S.bank : '', receipt: S.pm === 'duitnow' && receiptFile ? S.receipt : '',
+            items: lc.lines.map(function (x) { return { id: x.it.id, opt: x.l.opt, pers: x.l.pers, qty: x.l.qty, unit: x.unit }; }), sub: r.sub, disc: r.disc, fee: r.fee, total: r.total };
+          keepOrder(o);
+          save('cart_' + cur, []); save('co_' + cur, null);
+          var go = function () { location.href = url('order.html', '&no=' + o.no + '&new=1'); };
+          if (!r.paid && receiptFile) {
+            var fd = new FormData(); fd.append('order', r.id); fd.append('key', r.key); fd.append('receipt', receiptFile);
+            fetch(LIVE.rest + 'site/receipt', { method: 'POST', credentials: 'same-origin', body: fd }).then(go, go);
+          } else go();
+        }, function (e) { var lay = document.querySelector('.layer'); if (lay) lay.remove(); toast(e.message); });
+      }
       var c = totals(), seq = load('seq', 1040) + 1; save('seq', seq);
       var o = { no: 'BL-' + seq, fest: cur, at: Date.now(), status: status, mode: S.mode, date: S.date, slot: S.mode === 'courier' ? '' : S.slot, addr: S.addr.trim(), pc: S.pc, name: S.name.trim(), phone: S.phone.trim(), email: S.email.trim(), gift: S.gift ? { name: S.gname.trim(), phone: S.gphone.trim(), msg: S.gmsg.trim() } : null, notes: S.notes.trim(), pm: S.pm, bank: S.pm === 'fpx' ? S.bank : '', receipt: S.pm === 'duitnow' ? S.receipt : '',
         items: c.lines.map(function (x) { return { id: x.it.id, opt: x.l.opt, pers: x.l.pers, qty: x.l.qty, unit: x.unit }; }), sub: c.sub, disc: c.disc, fee: c.fee, total: c.total };
@@ -505,12 +553,17 @@
   }
   function pageOrder() {
     var root = $('[data-order]'), o = findOrder(q('no'));
+    if (LIVE && o && o.phone && !pageOrder.synced) {
+      pageOrder.synced = true; // the status the shop set in its dashboard
+      send('site/track', { no: o.no, phone: o.phone }, function (r) { if (r.pre && r.pre.status !== o.status) { o.status = r.pre.status; keepOrder(o); pageOrder(); } }, function () { /* keep what this phone has */ });
+    }
     if (!o) {
       var mine = load('mine', []).filter(function (m) { return m.fest === cur; });
       root.innerHTML = '<div style="max-width:560px;margin:0 auto"><h1>' + B('查订单', 'Semak pesanan', 'Track your order') + '</h1><form class="panel" data-track><div class="field"><label for="t-no">' + esc(L('订单编号', 'Nombor pesanan', 'Order number')) + '</label><input class="input" id="t-no" name="no" placeholder="BL-1041" required></div><div class="field"><label for="t-ph">' + esc(L('下单时的手机号码', 'Nombor telefon semasa tempahan', 'Mobile number used for the order')) + '</label><input class="input" id="t-ph" name="phone" type="tel" placeholder="012-345 6789" required></div><div data-err></div><button class="btn btn--block" type="submit">' + esc(L('查看', 'Semak', 'Find my order')) + '</button></form>' +
         (mine.length ? '<p class="muted small">' + esc(L('这台设备最近的订单：', 'Pesanan terkini di peranti ini:', 'Recent orders on this device:')) + ' ' + mine.map(function (m) { return '<a href="' + url('order.html', '&no=' + m.no) + '">' + esc(m.no) + '</a>'; }).join(', ') + '</p>' : '<p class="muted small">' + esc(L('示范：可以试 BL-1031，电话 012-555 0131。', 'Demo: cuba BL-1031, telefon 012-555 0131.', 'Demo: try BL-1031 with 012-555 0131.')) + '</p>') + '</div>';
       $('[data-track]').addEventListener('submit', function (e) {
         e.preventDefault(); var f = e.target, x = findOrder(f.no.value), digits = function (s) { return String(s).replace(/\D/g, '').replace(/^60/, '0'); };
+        if (LIVE) return send('site/track', { no: f.no.value, phone: f.phone.value }, function (r) { if (!r.pre) throw new Error('none'); keepOrder(liveOrder(r.no, r.pre)); location.href = url('order.html', '&no=' + r.no); }, function () { $('[data-err]').innerHTML = '<p class="note note--bad">' + esc(L('找不到这张订单，请检查编号和电话。', 'Pesanan tidak dijumpai; semak nombor dan telefon.', 'We could not find that order; check the number and mobile.')) + '</p>'; });
         if (!x || digits(x.phone) !== digits(f.phone.value)) { $('[data-err]').innerHTML = '<p class="note note--bad">' + esc(L('找不到这张订单，请检查编号和电话。', 'Pesanan tidak dijumpai; semak nombor dan telefon.', 'We could not find that order; check the number and mobile.')) + '</p>'; return; }
         location.href = url('order.html', '&no=' + x.no);
       });
@@ -548,7 +601,15 @@
   }
 
   // ------------------------------------------------------------------ owner dashboard
+  function liveOwner() {
+    var dl = LIVE.demoLogin || {}, root = $('[data-owner]');
+    root.innerHTML = '<div class="panel" style="padding:26px;max-width:720px;margin:40px auto"><p class="kicker">' + esc(L('店家后台', 'Untuk pemilik kedai', 'For the shop owner')) + '</p><h1 style="margin-top:6px">' + esc(L('真正的后台', 'Bahagian belakang sebenar', 'The real back office')) + '</h1>' +
+      '<p class="muted">' + esc(L('订单、付款收据、取货和送货的日子与时段、要做多少、库存、暂停接单，都在店家自己的手机后台。这个示范不用密码。', 'Pesanan, resit bayaran, hari dan slot ambil atau hantar, apa yang perlu dibakar, stok dan henti tempahan, semua dalam papan pemuka telefon kedai. Demo ini tanpa kata laluan.', 'Orders, payment receipts, collection and delivery days and slots, what to bake, stock and pausing orders, in the shop’s own phone dashboard. No password for this demo.')) + '</p>' +
+      '<div class="btns" style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap"><a class="btn btn--gold" data-live-dian href="' + esc(dl.dian || LIVE.dian) + '">' + esc(L('打开手机后台', 'Buka papan pemuka', 'Open the shop dashboard')) + '</a><a class="btn" data-live-admin href="' + esc(dl.admin || LIVE.admin) + '">' + esc(L('打开 WordPress 后台', 'Buka WordPress admin', 'Open WordPress admin')) + '</a></div>' +
+      '<p class="small muted" style="margin-top:14px">' + esc(L('这个示范是真的 WordPress + WooCommerce，每晚会还原。', 'Demo ini WordPress + WooCommerce sebenar, ditetapkan semula setiap malam.', 'This demo is real WordPress + WooCommerce, put back every night.')) + '</p></div>';
+  }
   function pageOwner() {
+    if (LIVE) return liveOwner();
     var root = $('[data-owner]'), tab = q('tab') || 'orders', filter = 'all', pday = '';
     var NEXT = { verify: 'paid', paid: 'baking', baking: 'ready', ready: 'done' };
     function nextLabel(o) { if (o.status === 'verify') return L('确认收款', 'Sahkan bayaran', 'Payment received'); if (o.status === 'paid') return L('开始制作', 'Mula bakar', 'Start baking'); if (o.status === 'baking') return L(o.mode === 'collect' ? '已做好，通知取货' : o.mode === 'kv' ? '已出车' : '已寄出', o.mode === 'collect' ? 'Sedia, beritahu pelanggan' : o.mode === 'kv' ? 'Sudah keluar' : 'Sudah dipos', o.mode === 'collect' ? 'Ready: tell the customer' : o.mode === 'kv' ? 'Out for delivery' : 'Shipped'); if (o.status === 'ready') return L(o.mode === 'collect' ? '已取货' : '已送达', o.mode === 'collect' ? 'Sudah diambil' : 'Sudah sampai', o.mode === 'collect' ? 'Collected' : 'Delivered'); return ''; }
