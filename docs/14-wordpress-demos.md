@@ -72,9 +72,11 @@
 | Butter & Lantern | 43/43 | 客人页面一样（时段剩几个名额是真的数字）；店家页 = 进真后台的按钮 |
 | 6 个电商模板 | 各 35 项（同一套测试，读模板自己的产品） | 只有示范横幅和结账说明的字不同（WordPress 版写「真的订单、不收钱」） |
 
-测试：`node site/tools/check-wp-demo.js http://<代号>.demo.kedailab.test <代号>`；对比：`node site/tools/compare-wp-demo.js http://localhost:8790 <WordPress 网址> <代号> <输出资料夹> <页面,...>`。
+**线上（2026-11-17，服务器 ops job 013–015 建好）：10 个网站在 `https://<代号>.demo.cartsmithstudio.com/`，线上端到端全部通过**（S&S 43、MC 36、D&D 33、B&L 43、6 个模板各 35）；每晚 04:20 还原（`/etc/cron.d/agency-demo-reset`）。服务器 2 GB / 1 CPU：每页约 2 秒（WordPress 本身，旧的 demo-festive 也一样）；10 个新站同时跑背景工作时测试偶尔 30 秒超时，单独重跑就过。以后示范多人同时用、或 TBT 上线后觉得慢，可以考虑加大服务器（要花钱，先问俊宇）。
+
+测试：`node site/tools/check-wp-demo.js http://<代号>.demo.kedailab.test <代号>`（线上把网址换成 https://<代号>.demo.cartsmithstudio.com）；对比：`node site/tools/compare-wp-demo.js http://localhost:8790 <WordPress 网址> <代号> <输出资料夹> <页面,...>`。
 
 ## 俊宇要做的
 
-- **现在（任何时候）：** Cloudflare 加一条 DNS 记录（步骤在聊天里）。
-- 最后换之前：自己用手机走一次（下单 → 看后台）。
+- ~~Cloudflare 加一条 DNS 记录~~（2026-11-17 做好了）。
+- 换好之后：自己用手机走一次（下单 → 按「看后台」→ 看到这张单）。

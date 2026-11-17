@@ -193,7 +193,9 @@ async function sirehSalt(b) {
   const bref = (await p.textContent('.done .ref')).trim();
   ok(/^SS-B\d+$/.test(bref) && /Table for 4/.test(await p.textContent('.done')), 'booking saved: ' + bref);
   await p.goto(BASE + '/book.html');
-  const after = await p.textContent('.slot >> nth=0');
+  await p.click('[data-pax="4"]');
+  const hm = (slotTxt.match(/\d{1,2}:\d{2}\s*[ap]m/i) || [''])[0]; // the same time again (an earlier time may have passed meanwhile)
+  const after = await p.textContent(`.slot:has-text("${hm}") >> nth=0`);
   const nT = (x) => +((x.match(/(\d+) tables?/) || [])[1] || (/1 table left/.test(x) ? 1 : 0));
   ok(nT(after) === nT(slotTxt) - 1, `that time now shows one table fewer ("${slotTxt.trim()}" → "${after.trim()}")`);
 
@@ -233,7 +235,7 @@ async function sirehSalt(b) {
   await p.waitForURL(/\/dian\//);
   await p.waitForFunction(() => /Overview/.test(document.body.textContent), null, { timeout: 20000 });
   await p.goto(BASE + '/dian/#/orders');
-  await p.waitForTimeout(2500);
+  await p.waitForFunction((no) => ((document.querySelector('.main') || {}).textContent || '').includes(no), orderNo, { timeout: 20000 }).catch(() => {});
   ok(((await p.textContent('.main')) || '').includes(orderNo), 'shop dashboard (demo account): the order is there #' + orderNo);
 
   console.log('WordPress admin shows the same order, booking and enquiry');
@@ -385,7 +387,7 @@ async function maisonCendre(b) {
   await p.waitForURL(/\/dian\//);
   await p.waitForFunction(() => /Overview/.test(document.body.textContent), null, { timeout: 20000 });
   await p.goto(BASE + '/dian/#/orders');
-  await p.waitForTimeout(2500);
+  await p.waitForFunction((no) => ((document.querySelector('.main') || {}).textContent || '').includes(no), tref.replace('MC-', ''), { timeout: 20000 }).catch(() => {});
   ok(((await p.textContent('.main')) || '').includes(tref.replace('MC-', '')), 'shop dashboard: the takeaway order');
   const a = await admin(b);
   const bk = await adminText(a, '/wp-admin/edit.php?post_type=agc_booking');
