@@ -53,6 +53,8 @@ if [[ " ${NEW[*]:-} " != *" --no-ssl "* ]]; then
 fi
 wpx "$SLUG_ARG" eval-file "$TMPD/site-setup.php" || die "网店设定失败（site-setup.php）"
 rm -rf "$TMPD"
+# plugins a demo doesn't use (its pages are its own design, reset nightly, not in Google, no email): less code per page
+wpx "$SLUG_ARG" plugin deactivate kadence-blocks updraftplus seo-by-rank-math fluent-smtp >/dev/null 2>&1 || true
 clear_cache "$SLUG_ARG"
 
 # A clean copy for the nightly reset (scripts/server/demo-reset.sh).
