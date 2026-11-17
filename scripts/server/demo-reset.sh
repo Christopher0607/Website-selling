@@ -4,7 +4,7 @@
 #
 #   sudo scripts/server/demo-reset.sh demo-sireh-salt --save   save the clean copy (build-wp-demo.sh does this)
 #   sudo scripts/server/demo-reset.sh demo-sireh-salt          put it back
-#   sudo scripts/server/demo-reset.sh --all                    every demo website that has a clean copy (cron, 04:00 MYT)
+#   sudo scripts/server/demo-reset.sh --all                    every demo website that has a clean copy (cron /etc/cron.d/agency-demo-reset, 04:20 MYT)
 # Only for sites made by build-wp-demo.sh (sites/<site>/site.json); never for a client's shop.
 source "$(dirname "$0")/../lib/common.sh"
 usage() { echo "用法: sudo $0 <demo-代号> [--save] | --all"; }
