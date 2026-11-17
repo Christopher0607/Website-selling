@@ -244,22 +244,41 @@ async function sirehSalt(b) {
   ok((await adminText(a, '/wp-admin/edit.php?post_type=agc_enquiry')).includes(eref), 'Enquiries: ' + eref);
   ok((await adminText(a, '/wp-admin/edit.php?post_type=shop_coupon')).toLowerCase().includes(vcode.toLowerCase()), 'Coupons: the voucher code ' + vcode + ' (WooCommerce keeps codes in lower case)');
 
-  console.log('Table QR → the real table page → the kitchen');
+  // 2026-11-17: guests choose — pay on the phone now (demo: nothing is charged), or send it and pay at the counter
+  console.log('Table QR → pay on the phone or at the counter → the kitchen');
   const t = await newPage(b);
   await t.goto(BASE + '/table.html?t=5');
   ok(/\/table\/\?t=5&k=/.test(t.url()), 'table.html?t=5 opens the real table page (with the table key)');
   await t.waitForSelector('.tq-item');
-  await t.locator('.tq-item:has-text("Kopi Ais") .tq-add').click();
-  await t.click('.tq-sheet--item .tq-btn');
-  await t.click('.tq-bar__btn');
-  await t.click('.tq-sheet--cart .tq-btn');
+  const tqAdd = async () => {
+    await t.locator('.tq-item:has-text("Kopi Ais") .tq-add').click();
+    await t.click('.tq-sheet--item .tq-btn');
+    await t.click('.tq-bar__btn');
+  };
+  await tqAdd();
+  const cartT = await t.textContent('.tq-sheet--cart');
+  ok(/Pay RM6\.50 now/.test(cartT) && /pay at the counter/.test(cartT), 'cart: "Pay RM6.50 now" or "Send · pay at the counter"');
+  await t.click('.tq-sheet--cart .tq-btn:has-text("now")');
   await t.waitForSelector('.tq-sheet--sent .tq-sent [data-order]', { timeout: 20000 });
   const tno = await t.getAttribute('.tq-sheet--sent .tq-sent [data-order]', 'data-order');
+  ok(/Paid on your phone/.test(await t.textContent('.tq-sheet--sent')), 'paid on the phone and sent to the kitchen: #' + tno);
+  await t.click('.tq-sheet--sent .tq-btn:has-text("Order more")');
+  await t.waitForTimeout(400);
+  await tqAdd();
+  await t.click('.tq-sheet--cart .tq-btn:has-text("counter")');
+  await t.waitForFunction((n) => { const x = document.querySelector('.tq-sheet--sent .tq-sent [data-order]'); return x && x.getAttribute('data-order') !== n; }, tno, { timeout: 20000 });
+  const tno2 = await t.getAttribute('.tq-sheet--sent .tq-sent [data-order]', 'data-order');
+  ok(!/Paid on your phone/.test(await t.textContent('.tq-sheet--sent')), 'second round sent, to pay at the counter: #' + tno2);
+  await t.click('.tq-sheet--sent .tq-btn:has-text("My bill")');
+  await t.waitForSelector('.tq-sheet--bill .tq-billcard', { timeout: 10000 });
+  ok(/To pay at the counter\s*RM6\.50/.test(await t.textContent('.tq-sheet--bill')), 'my bill: only the round not paid yet (RM6.50)');
   const link = await t.getAttribute('.tq-demo a', 'href');
   ok(!!link && /agc_demo=dian/.test(link), '"See the restaurant’s side" goes to the real kitchen screen');
   await t.goto(link);
   await t.waitForSelector('.kt', { timeout: 20000 });
-  ok((await t.textContent('.main')).includes(tno) && /Table 5/.test(await t.textContent('.main')), 'kitchen screen: table 5’s order ' + tno);
+  ok((await t.textContent('.main')).includes(tno2) && /Table 5/.test(await t.textContent('.main')), 'kitchen screen: table 5’s orders ' + tno + ' and ' + tno2);
+  const paidTag = await t.$$eval('.kt', (ks, n) => ks.filter((k) => (k.querySelector('.kt__no') || {}).textContent === '#' + n).map((k) => !!k.querySelector('.kt__paid')), tno);
+  ok(paidTag.length === 1 && paidTag[0], 'kitchen: the order paid on the phone says "Paid"');
   await t.context().close();
 
   // 2026-11-17: the counter (轻量收银): takeaway paid in cash, GrabFood with its order number → kitchen → close of day
@@ -295,6 +314,7 @@ async function sirehSalt(b) {
   await k.waitForSelector('.closecard', { timeout: 20000 });
   const cl = await k.textContent('.main');
   ok(/By order type/.test(cl) && /Takeaway/.test(cl) && /GrabFood/.test(cl), 'close of day: totals by order type (takeaway, GrabFood)');
+  ok(/Paid online/.test(cl), 'close of day: the table order paid on the phone is under "Paid online"');
   ok(k.errors.length === 0, 'counter: no JavaScript errors' + (k.errors.length ? ': ' + k.errors.slice(0, 2).join(' | ') : ''));
   await k.context().close();
 

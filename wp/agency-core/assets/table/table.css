@@ -291,3 +291,11 @@
 }
 
 .tq-demo a { color: var(--tq-gold); font-weight: 800; white-space: nowrap; }
+
+/* pay on the phone (2026-11-17) */
+.tq-state--unpaid { background: #fbe9e6; color: #a12626; text-decoration: none; }
+.tq-payinfo--ok { background: color-mix(in srgb, var(--tq-ok) 12%, var(--tq-card)); }
+.tq-payinfo--ok .tq-i, .tq-payinfo--ok svg { color: var(--tq-ok); }
+.tq-sentview > a.tq-btn { margin-top: 12px; text-decoration: none; }
+.tq-sent--unpaid .tq-sent__icon { background: #b7791f; box-shadow: 0 10px 26px rgba(183, 121, 31, .3); }
+.tq-sentview > .tq-btn--ghost { margin-top: 8px; width: 100%; }

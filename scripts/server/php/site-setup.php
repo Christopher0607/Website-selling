@@ -40,7 +40,7 @@ if ( ! empty( $spec['tables'] ) ) {
 	$s['table_on']   = 1;
 	$s['table_list'] = (string) $spec['tables'];
 	$s['table_note'] = (string) ( $spec['table']['note'] ?? '' );
-	$s['table_pay']  = 'table' === ( $spec['table']['pay'] ?? '' ) ? 'table' : 'counter';
+	$s['table_pay']  = in_array( $spec['table']['pay'] ?? '', array( 'table', 'online', 'choose' ), true ) ? (string) $spec['table']['pay'] : 'counter';
 	$s['counter_on'] = 1; // the counter screen (2026-11-17)
 }
 update_option( AGC_Settings::OPTION, $s );

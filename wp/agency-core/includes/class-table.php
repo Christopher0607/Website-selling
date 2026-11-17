@@ -29,6 +29,8 @@ class AGC_Table {
 	const PAID_BY = '_agc_paid_by';
 	const SECRET  = 'agc_table_secret';
 	const BILL    = '_agc_bill';
+	const AWAIT   = '_agc_await_pay'; // pay on the phone (2026-11-17): sent, not paid yet — the kitchen doesn't see it
+	const PREPAID = '_agc_prepaid';   // paid on the phone when ordering
 	const CHANNEL = '_agc_channel'; // counter orders (2026-11-17): dine, takeaway, grab, shopee, phone; table QR orders have none
 
 	/**
@@ -86,6 +88,9 @@ class AGC_Table {
 		}
 		add_action( 'template_redirect', array( __CLASS__, 'route' ), 0 );
 		add_action( 'rest_api_init', array( __CLASS__, 'rest' ) );
+		add_action( 'woocommerce_payment_complete', array( __CLASS__, 'paid_online' ) );
+		add_filter( 'woocommerce_get_return_url', array( __CLASS__, 'back_to_table' ), 20, 2 );
+		add_filter( 'woocommerce_get_cancel_order_url_raw', array( __CLASS__, 'cancel_to_table' ), 20, 2 );
 	}
 
 	/**
@@ -114,7 +119,58 @@ class AGC_Table {
 	 * @return bool
 	 */
 	public static function is_open( $o ) {
-		return self::is_table( $o ) && in_array( $o->get_status(), array( 'on-hold', 'pending', 'processing' ), true ) && ! $o->get_date_paid();
+		return self::is_table( $o ) && in_array( $o->get_status(), array( 'on-hold', 'pending', 'processing' ), true ) && ! $o->get_date_paid() && ! $o->get_meta( self::AWAIT );
+	}
+
+	/**
+	 * Where guests pay: counter, table (the bill comes to them), online (on the phone when ordering), choose (they pick).
+	 *
+	 * @return string
+	 */
+	public static function pay_at() {
+		$v = (string) agc_get( 'table_pay' );
+		return in_array( $v, array( 'counter', 'table', 'online', 'choose' ), true ) ? $v : 'counter';
+	}
+
+	/**
+	 * Paid on the phone: now the kitchen sees it, and close of day counts it as "paid online".
+	 *
+	 * @param int $id Order.
+	 */
+	public static function paid_online( $id ) {
+		$o = wc_get_order( $id );
+		if ( ! $o || ! self::is_table( $o ) || ! $o->get_meta( self::AWAIT ) ) {
+			return;
+		}
+		$o->delete_meta_data( self::AWAIT );
+		$o->update_meta_data( self::PAID_BY, 'online' );
+		$o->update_meta_data( self::BILL, substr( md5( $o->get_id() . '|' . microtime( true ) . '|' . wp_rand() ), 0, 12 ) );
+		$o->save();
+	}
+
+	/**
+	 * After paying (or giving up), back to the table's own page instead of the shop's thank-you page.
+	 *
+	 * @param string   $url   URL.
+	 * @param WC_Order $order Order.
+	 * @return string
+	 */
+	public static function back_to_table( $url, $order = null ) {
+		if ( $order instanceof WC_Order && self::is_table( $order ) && $order->get_meta( self::PREPAID ) && 'table' === $order->get_created_via() ) {
+			return add_query_arg( 'paid', $order->get_id(), self::link( (string) $order->get_meta( self::META ) ) );
+		}
+		return $url;
+	}
+
+	/**
+	 * Cancelled on the payment page: back to the table page too.
+	 *
+	 * @param string   $url   URL.
+	 * @param WC_Order $order Order.
+	 * @return string
+	 */
+	public static function cancel_to_table( $url, $order = null ) {
+		return $order instanceof WC_Order && self::is_table( $order ) && $order->get_meta( self::PREPAID ) ? self::link( (string) $order->get_meta( self::META ) ) : $url;
 	}
 
 	/**
@@ -426,7 +482,7 @@ class AGC_Table {
 			'cur'     => html_entity_decode( get_woocommerce_currency_symbol(), ENT_QUOTES, 'UTF-8' ),
 			'menu'    => $t ? self::menu() : array( 'cats' => array(), 'items' => array() ),
 			'note'    => (string) agc_get( 'table_note' ),
-			'payAt'   => 'table' === agc_get( 'table_pay' ) ? 'table' : 'counter',
+			'payAt'   => self::pay_at(),
 			'stopped' => $t ? self::stopped() : '',
 			'demo'    => (bool) agc_get( 'demo_mode' ),
 			// studio demo websites: "See the restaurant's side" opens the real kitchen screen with the demo account
@@ -476,6 +532,7 @@ class AGC_Table {
 	public static function rest() {
 		register_rest_route( self::NS, '/table/order', array( 'methods' => 'POST', 'callback' => array( __CLASS__, 'rest_order' ), 'permission_callback' => array( __CLASS__, 'same_site' ) ) );
 		register_rest_route( self::NS, '/table/status', array( 'methods' => 'GET', 'callback' => array( __CLASS__, 'rest_status' ), 'permission_callback' => '__return_true' ) );
+		register_rest_route( self::NS, '/table/counter', array( 'methods' => 'POST', 'callback' => array( __CLASS__, 'rest_to_counter' ), 'permission_callback' => array( __CLASS__, 'same_site' ) ) );
 		$staff = static fn() => current_user_can( 'edit_shop_orders' );
 		register_rest_route( self::NS, '/owner/kitchen', array( 'methods' => 'GET', 'callback' => array( __CLASS__, 'kitchen' ), 'permission_callback' => $staff ) );
 		register_rest_route( self::NS, '/owner/kitchen/(?P<id>\d+)', array( 'methods' => 'POST', 'callback' => array( __CLASS__, 'kitchen_mark' ), 'permission_callback' => $staff ) );
@@ -531,13 +588,39 @@ class AGC_Table {
 		if ( is_wp_error( $lines ) ) {
 			return $lines;
 		}
-		$o = self::create( $lines, $t, 'table', (string) ( $b['notes'] ?? '' ) );
+		$o   = self::create( $lines, $t, 'table', (string) ( $b['notes'] ?? '' ) );
+		$at  = self::pay_at();
+		$now = 'online' === $at || ( 'choose' === $at && 'online' === ( $b['pay'] ?? '' ) );
 		$o->set_payment_method( '' );
 		$o->set_payment_method_title( __( 'Pay at the counter', 'agency-core' ) );
 		$o->calculate_totals( false );
 		if ( isset( $b['total'] ) && abs( (float) $b['total'] - (float) $o->get_total() ) > 0.01 ) {
 			$o->delete( true );
 			return $err( __( 'Some prices have just changed. Please check your order again.', 'agency-core' ), 409 );
+		}
+		if ( $now ) {
+			// pay on the phone first; the kitchen sees it once it is paid (paid_online)
+			$o->update_meta_data( self::PREPAID, 1 );
+			$o->update_meta_data( self::AWAIT, 1 );
+			$o->set_payment_method_title( __( 'Pay on the phone', 'agency-core' ) ); // the gateway puts its own name once it is paid
+			$o->save();
+			set_transient( $flood, $n + 1, HOUR_IN_SECONDS );
+			$gws = WC()->payment_gateways() ? WC()->payment_gateways()->payment_gateways() : array();
+			if ( isset( $gws['agc_demo_pay'] ) && $gws['agc_demo_pay']->is_available() ) { // demo websites: nothing is charged
+				$o->set_payment_method( $gws['agc_demo_pay'] );
+				$o->save();
+				$o->add_order_note( __( 'Demo payment: nothing was charged.', 'agency-core' ) );
+				$o->payment_complete();
+				$o = wc_get_order( $o->get_id() );
+			}
+			return array(
+				'id'     => $o->get_id(),
+				'number' => $o->get_order_number(),
+				'key'    => $o->get_order_key(),
+				'total'  => (float) $o->get_total(),
+				'paid'   => (bool) $o->get_date_paid(),
+				'payUrl' => $o->get_date_paid() ? '' : $o->get_checkout_payment_url(),
+			);
 		}
 		$o->save();
 		/* translators: %s: table */
@@ -768,16 +851,47 @@ class AGC_Table {
 			if ( ! $o || ! self::is_table( $o ) || ! hash_equals( $o->get_order_key(), (string) ( $keys[ $i ] ?? '' ) ) ) {
 				continue;
 			}
-			$st = $o->get_status();
+			$st   = $o->get_status();
+			$pre  = (bool) $o->get_meta( self::PREPAID );
+			$made = 'done' === $o->get_meta( self::KITCHEN ) ? 'ready' : 'kitchen';
 			$out[] = array(
 				'id'      => $o->get_id(),
 				'number'  => $o->get_order_number(),
-				'state'   => 'cancelled' === $st ? 'cancelled' : ( $o->get_date_paid() ? 'paid' : ( 'done' === $o->get_meta( self::KITCHEN ) ? 'ready' : 'kitchen' ) ),
+				'state'   => 'cancelled' === $st || 'failed' === $st ? 'cancelled' : ( $o->get_meta( self::AWAIT ) ? 'unpaid' : ( $pre ? $made : ( $o->get_date_paid() ? 'paid' : $made ) ) ),
+				'paid'    => (bool) $o->get_date_paid(),
+				'payUrl'  => $o->get_meta( self::AWAIT ) ? $o->get_checkout_payment_url() : '',
 				'total'   => (float) $o->get_total(),
 			);
 		}
 		nocache_headers();
 		return array( 'orders' => $out );
+	}
+
+	/**
+	 * Guest: the phone payment didn't work → pay at the counter instead (only where the shop lets guests choose).
+	 *
+	 * @param WP_REST_Request $req Request.
+	 * @return array|WP_Error
+	 */
+	public static function rest_to_counter( $req ) {
+		$b = (array) $req->get_json_params();
+		$o = wc_get_order( absint( $b['o'] ?? 0 ) );
+		if ( ! $o || ! self::is_table( $o ) || ! hash_equals( $o->get_order_key(), (string) ( $b['k'] ?? '' ) ) ) {
+			return new WP_Error( 'agc_no_order', __( 'Order not found.', 'agency-core' ), array( 'status' => 404 ) );
+		}
+		if ( $o->get_meta( self::AWAIT ) && ! $o->get_date_paid() && in_array( $o->get_status(), array( 'pending', 'on-hold', 'failed' ), true ) ) {
+			if ( 'choose' !== self::pay_at() ) {
+				return new WP_Error( 'agc_pay_online', __( 'Please pay on your phone, or ask the staff.', 'agency-core' ), array( 'status' => 409 ) );
+			}
+			$o->delete_meta_data( self::AWAIT );
+			$o->delete_meta_data( self::PREPAID );
+			$o->set_payment_method( '' );
+			$o->set_payment_method_title( __( 'Pay at the counter', 'agency-core' ) );
+			$o->set_status( 'on-hold' );
+			$o->save();
+			$o->add_order_note( __( 'Table order: the guest will pay at the counter instead of on the phone.', 'agency-core' ) );
+		}
+		return array( 'ok' => true );
 	}
 
 	/* ------------------------------------------------------------------ REST: shop dashboard */
@@ -851,6 +965,7 @@ class AGC_Table {
 			'ref'     => (string) $o->get_meta( '_agc_platform_ref' ),
 			'created' => $o->get_date_created() ? $o->get_date_created()->getTimestamp() : 0,
 			'done'    => $done,
+			'prepaid' => $o->get_meta( self::PREPAID ) && $o->get_date_paid(),
 			'done_at' => (int) $o->get_meta( self::DONE_AT ),
 			'items'   => $items,
 			'note'    => $o->get_customer_note(),
@@ -870,6 +985,14 @@ class AGC_Table {
 		$done = array();
 		foreach ( self::recent() as $o ) {
 			if ( 'cancelled' === $o->get_status() ) {
+				continue;
+			}
+			if ( $o->get_meta( self::AWAIT ) ) {
+				// paying on the phone: the kitchen starts once it is paid; never paid after 2 hours → cancelled, so it doesn't sit in the orders list
+				$c = $o->get_date_created();
+				if ( $c && $c->getTimestamp() < time() - 2 * HOUR_IN_SECONDS && in_array( $o->get_status(), array( 'pending', 'on-hold' ), true ) ) {
+					$o->update_status( 'cancelled', __( 'Table order: the guest did not finish paying on the phone.', 'agency-core' ) );
+				}
 				continue;
 			}
 			$r = self::row( $o );

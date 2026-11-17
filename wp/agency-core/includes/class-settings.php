@@ -216,7 +216,7 @@ class AGC_Settings {
 					'table_on'   => array( 'checkbox', __( 'Customers scan the QR on their table, order on their phone and pay at the counter (kitchen and bill screens in the shop dashboard)', 'agency-core' ) ),
 					'table_list' => array( 'text', __( 'Tables (e.g. 1-12, or 1,2,3,Patio)', 'agency-core' ) ),
 					'table_note' => array( 'textarea', __( 'Message on the table menu (e.g. "Drinks are served at the counter")', 'agency-core' ) ),
-					'table_pay'  => array( 'select', __( 'Where guests pay', 'agency-core' ), array( 'counter' => 'At the counter', 'table' => 'The bill comes to the table' ) ),
+					'table_pay'  => array( 'select', __( 'Where guests pay', 'agency-core' ), array( 'counter' => 'At the counter', 'table' => 'The bill comes to the table', 'online' => 'On their phone when they order (FPX, card, e-wallet)', 'choose' => 'They choose: pay now on the phone, or at the counter' ) ),
 					'counter_on' => array( 'checkbox', __( 'Counter screen in the shop dashboard: staff key in dine-in, takeaway, phone, GrabFood and ShopeeFood orders; they go to the same kitchen screen and close of day', 'agency-core' ) ),
 					'table_cats' => array( 'text', __( 'Only these categories on the table menu (slugs, comma separated; empty = all)', 'agency-core' ) ),
 				),

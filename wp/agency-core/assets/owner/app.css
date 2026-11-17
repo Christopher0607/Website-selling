@@ -289,6 +289,7 @@ h1, h2, h3 { margin: 0; line-height: 1.25; }
 .kt__hd { display: flex; align-items: baseline; gap: 8px; }
 .kt__table { font-size: 1.5rem; line-height: 1.1; }
 .kt__no { color: var(--muted); font-weight: 700; }
+.kt__paid { padding: 2px 8px; border-radius: 999px; background: var(--s-make-bg); color: var(--s-make); font-size: 12px; font-weight: 800; }
 .kt__age { margin-left: auto; font-weight: 800; color: var(--muted); font-variant-numeric: tabular-nums; }
 .kt--late .kt__age { color: var(--s-check); }
 .kt__items { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }

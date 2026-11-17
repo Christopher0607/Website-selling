@@ -36,6 +36,19 @@
     send: ['Send to the kitchen', '送到厨房', 'Hantar ke dapur'],
     sending: ['Sending…', '送出中…', 'Menghantar…'],
     pay_now: ['Nothing to pay now', '现在不用付钱', 'Tiada bayaran sekarang'],
+    pay_go: ['Pay {0} now', '现在付 {0}', 'Bayar {0} sekarang'],
+    pay_counter: ['Send · pay at the counter', '送出 · 到柜台付', 'Hantar · bayar di kaunter'],
+    pay_online_h: ['Pay on your phone', '用手机付款', 'Bayar di telefon'],
+    pay_online_info: ['FPX, card or e-wallet. The kitchen starts as soon as it is paid.', 'FPX、卡或电子钱包。付好厨房马上开始做。', 'FPX, kad atau e-dompet. Dapur mula sebaik dibayar.'],
+    pay_choose_info: ['Pay now on your phone, or send it and pay at the counter when you leave.', '现在用手机付，或者先送出、离开时到柜台付。', 'Bayar sekarang di telefon, atau hantar dan bayar di kaunter bila pulang.'],
+    paid_phone: ['Paid on your phone', '已用手机付款', 'Sudah dibayar di telefon'],
+    paid_phone_info: ['Nothing more to pay for this order.', '这一单不用再付钱。', 'Tiada lagi bayaran untuk pesanan ini.'],
+    st_unpaid: ['Payment not finished', '还没付好', 'Bayaran belum selesai'],
+    pay_finish: ['Finish paying', '继续付款', 'Selesai bayar'],
+    opening_pay: ['Opening the payment page…', '打开付款页…', 'Membuka halaman bayaran…'],
+    unpaid_h: ['Not paid yet', '还没付款', 'Belum dibayar'],
+    unpaid_sub: ['The kitchen starts on it as soon as it is paid.', '付好了厨房就马上开始做。', 'Dapur mula sebaik sahaja dibayar.'],
+    to_counter: ['Pay at the counter instead', '改成到柜台付', 'Bayar di kaunter sahaja'],
     pay_info: ['When you are done, pay at the counter and tell them Table {0}.', '吃完到柜台付款，说「{0} 号桌」就可以。', 'Bila selesai, bayar di kaunter dan sebut Meja {0}.'],
     sent: ['Sent to the kitchen', '已经送到厨房', 'Sudah dihantar ke dapur'],
     sent_sub: ['This page shows when it is ready. You can keep ordering.', '做好了这里会显示，你可以继续点。', 'Halaman ini akan tunjuk bila siap. Anda boleh terus memesan.'],
@@ -186,7 +199,9 @@
     save(); refresh(); buzz(); toast(t('added'));
     if (bar.firstChild) { bar.classList.remove('is-pop'); void bar.offsetWidth; bar.classList.add('is-pop'); }
   }
-  function due() { return orders.reduce(function (s, o) { var st = states[o.id] || 'kitchen'; return s + (st === 'paid' || st === 'cancelled' ? 0 : Number(o.total || 0)); }, 0); }
+  // pay on the phone (2026-11-17): C.payAt "online" = always, "choose" = the guest picks; orders paid that way carry o.paid
+  var PAY_ONLINE = C.payAt === 'online' || C.payAt === 'choose';
+  function due() { return orders.reduce(function (s, o) { var st = states[o.id] || 'kitchen'; return s + (o.paid || st === 'paid' || st === 'cancelled' || st === 'unpaid' ? 0 : Number(o.total || 0)); }, 0); }
 
   /* ------------------------------------------------------------------ page */
   var billBtn, bar, toastEl;
@@ -401,7 +416,8 @@
     var notes = h('textarea', { rows: '2', maxlength: '300', placeholder: t('note_ph') });
     var msg = h('p', { class: 'tq-err', role: 'alert', hidden: true });
     var totalEl = h('b');
-    var btn = h('button', { class: 'tq-btn', type: 'button', onclick: send, disabled: !!C.stopped }, icon('pot'), h('span', null, t('send')));
+    var btn = h('button', { class: 'tq-btn' + (C.payAt === 'choose' ? ' tq-btn--ghost' : ''), type: 'button', onclick: function () { send('counter'); }, disabled: !!C.stopped }, icon('pot'), h('span', null, C.payAt === 'choose' ? t('pay_counter') : t('send')));
+    var payBtn = PAY_ONLINE ? h('button', { class: 'tq-btn', type: 'button', onclick: function () { send('online'); }, disabled: !!C.stopped }, icon('card'), h('span', null, '')) : null;
     function drawLines() {
       body.innerHTML = '';
       if (!cart.length) { closeSheet(); refresh(); return; }
@@ -418,14 +434,18 @@
           h('span', { class: 'tq-lines__p' }, money(unit(l) * l.qty)));
       })));
       put(body, h('label', { class: 'tq-field' }, h('span', null, t('note'), h('small', null, t('optional'))), notes));
-      put(body, h('div', { class: 'tq-payinfo' }, icon('card'), h('div', null, h('b', null, t('pay_now')), h('span', null, t('pay_info', C.table)))));
+      if (C.payAt === 'online') put(body, h('div', { class: 'tq-payinfo' }, icon('card'), h('div', null, h('b', null, t('pay_online_h')), h('span', null, t('pay_online_info')))));
+      else if (C.payAt === 'choose') put(body, h('div', { class: 'tq-payinfo' }, icon('card'), h('div', null, h('b', null, t('pay_online_h')), h('span', null, t('pay_choose_info')))));
+      else put(body, h('div', { class: 'tq-payinfo' }, icon('card'), h('div', null, h('b', null, t('pay_now')), h('span', null, t('pay_info', C.table)))));
       totalEl.textContent = money(sum());
+      if (payBtn) payBtn.lastChild.textContent = t('pay_go', money(sum()));
     }
-    function send() {
-      btn.disabled = true; btn.lastChild.textContent = t('sending'); msg.hidden = true;
+    function send(how) {
+      var b0 = how === 'online' ? payBtn : btn, label0 = b0.lastChild.textContent;
+      btn.disabled = true; if (payBtn) payBtn.disabled = true; b0.lastChild.textContent = t('sending'); msg.hidden = true;
       fetch(url('order'), {
         method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ t: C.table, k: C.key, items: cart.map(function (l) { return { id: l.id, qty: l.qty, sel: l.sel, note: l.note }; }), notes: notes.value.trim(), total: Math.round(sum() * 100) / 100 })
+        body: JSON.stringify({ t: C.table, k: C.key, pay: how === 'online' ? 'online' : 'counter', items: cart.map(function (l) { return { id: l.id, qty: l.qty, sel: l.sel, note: l.note }; }), notes: notes.value.trim(), total: Math.round(sum() * 100) / 100 })
       }).then(function (r) {
         return r.json().catch(function () { return {}; }).then(function (d) {
           if (!r.ok) throw new Error(d && d.message ? d.message : t('error'));
@@ -433,19 +453,20 @@
         });
       }).then(function (d) {
         var lines = cart.map(function (l) { return { n: BY[l.id].n, o: optText(l), note: l.note, qty: l.qty, p: unit(l) * l.qty }; });
-        orders.unshift({ id: d.id, key: d.key, number: d.number, total: d.total, at: Date.now(), lines: lines, note: notes.value.trim() });
-        states[d.id] = 'kitchen';
+        orders.unshift({ id: d.id, key: d.key, number: d.number, total: d.total, at: Date.now(), lines: lines, note: notes.value.trim(), paid: !!d.paid, payUrl: d.payUrl || '' });
+        states[d.id] = d.payUrl ? 'unpaid' : 'kitchen';
         keepOrders();
         cart = []; save(); refresh();
+        if (d.payUrl) { b0.lastChild.textContent = t('opening_pay'); location.href = d.payUrl; return; } // the shop's payment page, then back here
         closeSheet();
         setTimeout(function () { openSent(orders[0]); }, 230);
       }).catch(function (e) {
         msg.textContent = e && e.message ? e.message : t('error'); msg.hidden = false;
-        btn.disabled = !!C.stopped; btn.lastChild.textContent = t('send');
+        btn.disabled = !!C.stopped; if (payBtn) payBtn.disabled = !!C.stopped; b0.lastChild.textContent = label0;
       });
     }
     drawLines();
-    sheet(t('yours') + ' · ' + t('table', C.table), [body, msg], [h('div', { class: 'tq-total' }, h('span', null, t('total')), totalEl), btn], 'tq-sheet--cart');
+    sheet(t('yours') + ' · ' + t('table', C.table), [body, msg], [h('div', { class: 'tq-total' }, h('span', null, t('total')), totalEl)].concat(C.payAt === 'online' ? [payBtn] : payBtn ? [payBtn, btn] : [btn]), 'tq-sheet--cart');
   }
   function keepOrders() {
     orders.forEach(function (o) { o.state = states[o.id] || o.state; });
@@ -464,7 +485,8 @@
   }
   function stateChip(o) {
     var s = states[o.id] || 'kitchen';
-    return h('span', { class: 'tq-state tq-state--' + s }, t('st_' + s));
+    if (s === 'unpaid' && o.payUrl) return h('a', { class: 'tq-state tq-state--unpaid', href: o.payUrl }, t('st_unpaid') + ' · ' + t('pay_finish'));
+    return h('span', { class: 'tq-state tq-state--' + s }, o.paid && s !== 'cancelled' && s !== 'ready' ? t('st_' + s) + ' · ' + t('st_paid') : t('st_' + s));
   }
   function orderLines(o) {
     return h('ul', { class: 'tq-olines' }, (o.lines || []).map(function (l) {
@@ -476,10 +498,26 @@
     var body = h('div', { class: 'tq-sentview' });
     function drawIt() {
       body.innerHTML = '';
-      put(body, h('div', { class: 'tq-sent' }, h('span', { class: 'tq-sent__icon' }, icon('check')), h('h3', null, t('sent')), h('p', { 'data-order': o.number }, t('order_no', o.number) + ' · ' + t('table', C.table) + ' · ' + hhmm(o.at)), h('p', { class: 'tq-muted' }, t('sent_sub'))));
+      var unpaid = (states[o.id] || '') === 'unpaid';
+      put(body, h('div', { class: 'tq-sent' + (unpaid ? ' tq-sent--unpaid' : '') }, h('span', { class: 'tq-sent__icon' }, icon(unpaid ? 'card' : 'check')), h('h3', null, t(unpaid ? 'unpaid_h' : 'sent')), h('p', { 'data-order': o.number }, t('order_no', o.number) + ' · ' + t('table', C.table) + ' · ' + hhmm(o.at)), h('p', { class: 'tq-muted' }, t(unpaid ? 'unpaid_sub' : 'sent_sub'))));
+      if (unpaid) {
+        put(body, h('a', { class: 'tq-btn', href: o.payUrl || '#' }, icon('card'), h('span', null, t('pay_finish'))));
+        if (C.payAt === 'choose') {
+          var sw = h('button', { class: 'tq-btn tq-btn--ghost', type: 'button', onclick: function () {
+            sw.disabled = true;
+            fetch(url('counter'), { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ o: o.id, k: o.key }) })
+              .then(function (r) { if (!r.ok) throw new Error(); states[o.id] = 'kitchen'; o.paid = false; o.payUrl = ''; keepOrders(); refresh(); drawIt(); poll(); })
+              .catch(function () { sw.disabled = false; });
+          } }, icon('pot'), h('span', null, t('to_counter')));
+          put(body, sw);
+        }
+        put(body, h('div', { class: 'tq-card' }, h('div', { class: 'tq-card__hd' }, h('b', null, t('order_no', o.number)), stateChip(o)), orderLines(o), h('div', { class: 'tq-total' }, h('span', null, t('total')), h('b', null, money(o.total)))));
+        return;
+      }
       put(body, track(o));
       put(body, h('div', { class: 'tq-card' }, h('div', { class: 'tq-card__hd' }, h('b', null, t('order_no', o.number)), stateChip(o)), orderLines(o), h('div', { class: 'tq-total' }, h('span', null, t('total')), h('b', null, money(o.total)))));
-      put(body, h('div', { class: 'tq-payinfo' }, icon('card'), h('div', null, h('b', null, t('pay_now')), h('span', null, t('pay_info', C.table)))));
+      if (o.paid) put(body, h('div', { class: 'tq-payinfo tq-payinfo--ok' }, icon('check'), h('div', null, h('b', null, t('paid_phone')), h('span', null, t('paid_phone_info')))));
+      else put(body, h('div', { class: 'tq-payinfo' }, icon('card'), h('div', null, h('b', null, t('pay_now')), h('span', null, t('pay_info', C.table)))));
     }
     drawIt();
     redraw = drawIt;
@@ -508,13 +546,16 @@
   var timer = null;
   function poll() {
     clearTimeout(timer);
-    var open = orders.filter(function (o) { var s = states[o.id]; return s !== 'paid' && s !== 'cancelled'; });
+    var open = orders.filter(function (o) { var s = states[o.id]; return s !== 'paid' && s !== 'cancelled' && !(o.paid && s === 'ready'); });
     if (!open.length) return;
     fetch(url('status', 'o=' + open.map(function (o) { return o.id; }).join(',') + '&k=' + open.map(function (o) { return o.key; }).join(',')), { credentials: 'same-origin', cache: 'no-store' })
       .then(function (r) { return r.ok ? r.json() : { orders: [] }; })
       .then(function (d) {
         var changed = false;
-        (d.orders || []).forEach(function (x) { if (states[x.id] !== x.state) { states[x.id] = x.state; changed = true; } });
+        (d.orders || []).forEach(function (x) {
+          if (states[x.id] !== x.state) { states[x.id] = x.state; changed = true; }
+          orders.forEach(function (o) { if (o.id === x.id && (!!o.paid !== !!x.paid || (o.payUrl || '') !== (x.payUrl || ''))) { o.paid = !!x.paid; o.payUrl = x.payUrl || ''; changed = true; } });
+        });
         if (changed) { keepOrders(); refresh(); if (scrim && redraw) redraw(); }
       })
       .catch(function () {})
@@ -523,4 +564,12 @@
 
   draw();
   if (orders.length) poll();
+  var back = Number(new URLSearchParams(location.search).get('paid') || 0);
+  var backO = back && orders.filter(function (o) { return o.id === back; })[0];
+  if (backO) {
+    fetch(url('status', 'o=' + backO.id + '&k=' + backO.key), { credentials: 'same-origin', cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : { orders: [] }; }).then(function (d) {
+      (d.orders || []).forEach(function (x) { states[x.id] = x.state; backO.paid = !!x.paid; backO.payUrl = x.payUrl || ''; });
+      keepOrders(); refresh(); openSent(backO);
+    }).catch(function () { openSent(backO); });
+  }
 })();

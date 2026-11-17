@@ -23,7 +23,7 @@ const SPEC = {
       book: { hours: 'HOURS', first: 0, last: 90, step: 30, prep: 30, days: 15,
         seats: { '*': { cap: 6, count: 'booking', max: 'BOOK.max', deposit: { from: 'BOOK.depositFrom', amount: 'BOOK.deposit', per: 'booking', pay: 'later' } } } },
       voucher: { product: 'gift-voucher', name: 'Gift voucher', min: 30, max: 1000, months: 12, prefix: 'GIFT-' },
-      table: { menu: 'MENU', cats: 'CATS', hero: 'interior', note: 'Drinks come first; mains in about 15 minutes.' },
+      table: { menu: 'MENU', cats: 'CATS', hero: 'interior', pay: 'choose', note: 'Drinks come first; mains in about 15 minutes.' },
       redirects: { 'dian.html': '/?agc_demo=dian&hash=/kitchen', 'table.html': '@table' },
       shop: '/menu.html',
       coupons: [{ from: 'PROMO', code: 'code', percent: 'pct' }],

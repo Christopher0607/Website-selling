@@ -41,7 +41,7 @@ async function customerOrder(browser, link, note) {
   await p.waitForSelector('.tq-bar.is-on .tq-bar__btn');
   await p.click('.tq-bar__btn');
   if (note) await p.fill('.tq-sheet--cart textarea', note);
-  await p.click('.tq-sheet--cart .tq-btn');
+  await p.click('.tq-sheet--cart .tq-btn >> nth=-1'); // the last button sends it to pay at the counter (also where guests may choose to pay now)
   await p.waitForSelector('.tq-sent [data-order]', { timeout: 15000 });
   const number = await p.getAttribute('.tq-sent [data-order]', 'data-order');
   return { c, p, number, errs };
@@ -101,7 +101,7 @@ async function customerOrder(browser, link, note) {
   await cp.waitForTimeout(250);
   if (await cp.locator('.tq-sheet--item .tq-btn').count()) await cp.locator('.tq-sheet--item .tq-btn').click();
   await cp.click('.tq-bar__btn');
-  await cp.click('.tq-sheet--cart .tq-btn');
+  await cp.click('.tq-sheet--cart .tq-btn >> nth=-1');
   await cp.waitForSelector('.tq-sheet--sent .tq-sent [data-order]');
   const second = await cp.getAttribute('.tq-sheet--sent .tq-sent [data-order]', 'data-order');
   await cp.click('.tq-sheet--sent .tq-btn--ghost'); // My bill
