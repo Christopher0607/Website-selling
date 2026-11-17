@@ -33,7 +33,7 @@ class AGC_Receipts {
 	 *
 	 * @return array
 	 */
-	private static function mimes() {
+	public static function mimes() {
 		return array(
 			'jpg|jpeg' => 'image/jpeg',
 			'png'      => 'image/png',
@@ -166,7 +166,7 @@ class AGC_Receipts {
 	 *
 	 * @param WC_Order $order Order.
 	 */
-	private static function tell_shop( $order ) {
+	public static function tell_shop( $order ) {
 		$to = get_option( 'woocommerce_new_order_settings' );
 		$to = is_array( $to ) && ! empty( $to['recipient'] ) ? $to['recipient'] : get_option( 'admin_email' );
 		/* translators: 1: order number, 2: shop name */

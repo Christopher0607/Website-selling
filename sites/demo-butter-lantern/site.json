@@ -1,0 +1,1276 @@
+{
+ "slug": "butter-lantern",
+ "spec": {
+  "lists": [
+   {
+    "var": "FESTS",
+    "items": "items",
+    "stock": "left",
+    "sku": "{g}-{id}",
+    "label": "Festive",
+    "fields": {
+     "name": "",
+     "desc": ""
+    }
+   }
+  ],
+  "preorder": {
+   "fests": "FESTS",
+   "items": "items",
+   "sku": "{g}-{id}",
+   "early": 10,
+   "cap": {
+    "collect": 6,
+    "kv": 10
+   },
+   "slots": "SLOTS",
+   "modes": {
+    "kv": {
+     "fee": 15,
+     "free": 200,
+     "pc": [
+      [
+       40000,
+       48300
+      ],
+      [
+       50000,
+       60000
+      ],
+      [
+       62000,
+       68100
+      ]
+     ]
+    },
+    "courier": {
+     "fee": 12,
+     "free": 250,
+     "east": 25,
+     "east_pc": [
+      [
+       87000,
+       91399
+      ],
+      [
+       93000,
+       98859
+      ]
+     ],
+     "days": 3
+    }
+   }
+  },
+  "duitnow": true,
+  "redirects": {},
+  "shop": "/index.html",
+  "ref": "BL"
+ },
+ "data": {
+  "FESTS": {
+   "cny": {
+    "lang": "zh",
+    "btn": "农历新年",
+    "dot": "#c62828",
+    "name": [
+     "农历新年",
+     "Chinese New Year"
+    ],
+    "day": "2027-02-06",
+    "cutoff": "2027-01-31",
+    "from": "2027-02-01",
+    "to": "2027-02-05",
+    "early": "2026-12-31",
+    "hero": "cny-hero",
+    "band": "cny-table",
+    "orn": "lantern",
+    "kicker": [
+     "2027 羊年 · 年饼预购开放",
+     "Chinese New Year 2027 · pre-orders open"
+    ],
+    "h1": [
+     "手工年饼，<br><em>团圆的味道</em>",
+     "Handmade Chinese New Year cookies"
+    ],
+    "lead": [
+     "黄梨球、蛋卷、花生饼、牛油曲奇，每一罐都在你取货的那个星期新鲜烘焙。网上下单付款，再选好取货或送货的日子。",
+     "Pineapple balls, love letters, peanut cookies and butter cookies, baked fresh the week you collect. Order and pay online, then pick your day."
+    ],
+    "when": [
+     "农历新年是 2027 年 2 月 6 日（星期六）。",
+     "Chinese New Year falls on Saturday 6 February 2027."
+    ],
+    "cats": [
+     [
+      "cookie",
+      [
+       "年饼",
+       "Cookies"
+      ]
+     ],
+     [
+      "cake",
+      [
+       "年糕",
+       "Nian gao"
+      ]
+     ],
+     [
+      "gift",
+      [
+       "礼盒",
+       "Gift boxes"
+      ]
+     ]
+    ],
+    "items": [
+     {
+      "id": "pb",
+      "img": "cny-pineapple-balls",
+      "cat": "cookie",
+      "n": [
+       "黄梨球",
+       "Pineapple Balls"
+      ],
+      "d": [
+       "手工熬煮八小时的黄梨酱，包进入口即化的牛油酥皮。",
+       "Pineapple jam cooked for eight hours, in melt-in-the-mouth butter pastry."
+      ],
+      "opts": [
+       {
+        "id": "s",
+        "l": [
+         "小罐 · 40 粒",
+         "Small jar · 40 pcs"
+        ],
+        "p": 42
+       },
+       {
+        "id": "l",
+        "l": [
+         "大罐 · 80 粒",
+         "Big jar · 80 pcs"
+        ],
+        "p": 78
+       }
+      ],
+      "total": 120,
+      "left": 37,
+      "badge": [
+       "招牌",
+       "Best seller"
+      ],
+      "keep": [
+       "密封保存三星期",
+       "Keeps 3 weeks sealed"
+      ],
+      "has": [
+       "麦、牛油、蛋",
+       "wheat, butter, egg"
+      ]
+     },
+     {
+      "id": "pt",
+      "img": "cny-pineapple-tarts",
+      "cat": "cookie",
+      "n": [
+       "金凤梨挞",
+       "Golden Pineapple Tarts"
+      ],
+      "d": [
+       "凤梨造型的开口挞，酸甜黄梨馅，摆在桌上就很好看。",
+       "Pineapple-shaped open tarts with a sweet-sour filling. They look good on the table."
+      ],
+      "u": [
+       "一盒 30 粒",
+       "Box of 30"
+      ],
+      "p": 48,
+      "total": 60,
+      "left": 18,
+      "badge": [
+       "新品",
+       "New"
+      ],
+      "keep": [
+       "密封保存三星期",
+       "Keeps 3 weeks sealed"
+      ],
+      "has": [
+       "麦、牛油、蛋",
+       "wheat, butter, egg"
+      ]
+     },
+     {
+      "id": "ll",
+      "img": "cny-love-letters",
+      "cat": "cookie",
+      "n": [
+       "蛋卷",
+       "Love Letters"
+      ],
+      "d": [
+       "椰浆蛋卷，炭火慢烤，酥脆不油腻。",
+       "Coconut-milk egg rolls, slow-baked over charcoal: crisp, not oily."
+      ],
+      "opts": [
+       {
+        "id": "o",
+        "l": [
+         "原味 · 约 60 条",
+         "Original · about 60 rolls"
+        ],
+        "p": 38
+       },
+       {
+        "id": "p",
+        "l": [
+         "香兰 · 约 60 条",
+         "Pandan · about 60 rolls"
+        ],
+        "p": 40
+       }
+      ],
+      "total": 80,
+      "left": 41,
+      "keep": [
+       "密封保存一个月",
+       "Keeps a month sealed"
+      ],
+      "has": [
+       "麦、蛋、椰浆",
+       "wheat, egg, coconut"
+      ]
+     },
+     {
+      "id": "pn",
+      "img": "cny-peanut",
+      "cat": "cookie",
+      "n": [
+       "花生饼",
+       "Peanut Cookies"
+      ],
+      "d": [
+       "现炒花生磨碎，一咬就散，满口花生香。",
+       "Freshly roasted peanuts, ground and baked. They melt as you bite."
+      ],
+      "u": [
+       "一罐 50 粒",
+       "Jar of 50"
+      ],
+      "p": 32,
+      "total": 100,
+      "left": 64,
+      "keep": [
+       "密封保存三星期",
+       "Keeps 3 weeks sealed"
+      ],
+      "has": [
+       "花生、麦",
+       "peanut, wheat"
+      ]
+     },
+     {
+      "id": "bc",
+      "img": "cny-butter-cookies",
+      "cat": "cookie",
+      "n": [
+       "牛油曲奇",
+       "Butter Cookies"
+      ],
+      "d": [
+       "纽西兰牛油，五种造型，一罐刚好送长辈。",
+       "New Zealand butter, five shapes, a tin to give the elders."
+      ],
+      "u": [
+       "500 克铁罐",
+       "500 g tin"
+      ],
+      "p": 45,
+      "total": 60,
+      "left": 9,
+      "keep": [
+       "密封保存一个月",
+       "Keeps a month sealed"
+      ],
+      "has": [
+       "麦、牛油、蛋",
+       "wheat, butter, egg"
+      ]
+     },
+     {
+      "id": "ac",
+      "img": "cny-almond-crisps",
+      "cat": "cookie",
+      "n": [
+       "杏仁瓦片",
+       "Almond Crisps"
+      ],
+      "d": [
+       "薄薄一片，满满杏仁片，配茶刚好。",
+       "Thin crisps full of almond flakes. Good with tea."
+      ],
+      "u": [
+       "250 克",
+       "250 g box"
+      ],
+      "p": 36,
+      "total": 50,
+      "left": 22,
+      "keep": [
+       "密封保存三星期",
+       "Keeps 3 weeks sealed"
+      ],
+      "has": [
+       "杏仁、蛋",
+       "almond, egg"
+      ]
+     },
+     {
+      "id": "ng",
+      "img": "cny-nian-gao",
+      "cat": "cake",
+      "n": [
+       "年糕",
+       "Nian Gao"
+      ],
+      "d": [
+       "红糖年糕，年年高升。可以煎，也可以蒸。",
+       "Brown-sugar rice cake for a higher year. Pan-fry it or steam it."
+      ],
+      "u": [
+       "1 公斤",
+       "1 kg"
+      ],
+      "p": 28,
+      "total": 40,
+      "left": 0,
+      "keep": [
+       "冷藏两个月",
+       "Keeps 2 months in the fridge"
+      ],
+      "has": [
+       "糯米",
+       "glutinous rice"
+      ]
+     },
+     {
+      "id": "gb",
+      "img": "cny-gift-box",
+      "cat": "gift",
+      "n": [
+       "新年礼盒",
+       "Prosperity Gift Box"
+      ],
+      "d": [
+       "黄梨球、蛋卷、花生饼三罐装，红色礼盒配贺卡，可以直接送到对方家。",
+       "Pineapple balls, love letters and peanut cookies in a red gift box with a card. We can send it straight to them."
+      ],
+      "u": [
+       "三罐装 + 贺卡",
+       "Three jars + a card"
+      ],
+      "p": 118,
+      "total": 30,
+      "left": 11,
+      "badge": [
+       "送礼",
+       "Gift"
+      ],
+      "gold": true,
+      "keep": [
+       "密封保存三星期",
+       "Keeps 3 weeks sealed"
+      ],
+      "has": [
+       "麦、牛油、蛋、花生、椰浆",
+       "wheat, butter, egg, peanut, coconut"
+      ]
+     }
+    ],
+    "faq": [
+     [
+      [
+       "最后下单日期是？",
+       "What is the last day to order?"
+      ],
+      null
+     ],
+     [
+      [
+       "怎么付款？",
+       "How do I pay?"
+      ],
+      null
+     ],
+     [
+      [
+       "可以送货吗？",
+       "Do you deliver?"
+      ],
+      null
+     ],
+     [
+      [
+       "可以改取货日期吗？",
+       "Can I change my day?"
+      ],
+      null
+     ],
+     [
+      [
+       "年饼可以放多久？",
+       "How long do the cookies keep?"
+      ],
+      null
+     ]
+    ]
+   },
+   "raya": {
+    "lang": "ms",
+    "btn": "Hari Raya",
+    "dot": "#138060",
+    "name": [
+     "Hari Raya",
+     "Hari Raya"
+    ],
+    "day": "2027-03-10",
+    "cutoff": "2027-03-03",
+    "from": "2027-03-04",
+    "to": "2027-03-08",
+    "early": "2027-02-14",
+    "hero": "raya-hero",
+    "band": "raya-street",
+    "orn": "ketupat",
+    "kicker": [
+     "Hari Raya Aidilfitri 2027 · Tempahan dibuka",
+     "Hari Raya 2027 · pre-orders open"
+    ],
+    "h1": [
+     "Kuih raya untuk <em>rumah terbuka</em>",
+     "Raya cookies for the open house"
+    ],
+    "lead": [
+     "Tart nenas, biskut salju, biskut keju dan dulang kuih, dibakar segar minggu anda ambil. Tempah dan bayar dalam talian, kemudian pilih hari.",
+     "Pineapple tarts, snowball crescents, cheese sticks and kuih trays, baked fresh the week you collect. Order and pay online, then pick your day."
+    ],
+    "when": [
+     "Hari Raya Aidilfitri dijangka pada 10 Mac 2027, tertakluk kepada pengumuman rasmi.",
+     "Hari Raya Aidilfitri is expected on 10 March 2027, subject to the official announcement."
+    ],
+    "cats": [
+     [
+      "kuih",
+      [
+       "Kuih raya",
+       "Raya cookies"
+      ]
+     ],
+     [
+      "tray",
+      [
+       "Dulang",
+       "Trays"
+      ]
+     ],
+     [
+      "gift",
+      [
+       "Hamper",
+       "Hampers"
+      ]
+     ]
+    ],
+    "items": [
+     {
+      "id": "tn",
+      "img": "raya-tart-nenas",
+      "cat": "kuih",
+      "n": [
+       "Tart Nenas",
+       "Pineapple Tarts"
+      ],
+      "d": [
+       "Jem nanas dimasak perlahan, pastri mentega yang cair di mulut.",
+       "Slow-cooked pineapple jam in melt-in-the-mouth butter pastry."
+      ],
+      "opts": [
+       {
+        "id": "s",
+        "l": [
+         "Balang kecil · 40 biji",
+         "Small jar · 40 pcs"
+        ],
+        "p": 40
+       },
+       {
+        "id": "l",
+        "l": [
+         "Balang besar · 80 biji",
+         "Big jar · 80 pcs"
+        ],
+        "p": 75
+       }
+      ],
+      "total": 120,
+      "left": 52,
+      "badge": [
+       "Paling laris",
+       "Best seller"
+      ],
+      "keep": [
+       "Tahan 3 minggu bertutup",
+       "Keeps 3 weeks sealed"
+      ],
+      "has": [
+       "gandum, mentega, telur",
+       "wheat, butter, egg"
+      ]
+     },
+     {
+      "id": "bs",
+      "img": "raya-salju",
+      "cat": "kuih",
+      "n": [
+       "Biskut Salju",
+       "Snowball Crescents"
+      ],
+      "d": [
+       "Biskut bulan sabit bersalut gula aising, lembut dan rapuh.",
+       "Crescent cookies under powdered sugar, soft and crumbly."
+      ],
+      "u": [
+       "Balang 300 g",
+       "300 g jar"
+      ],
+      "p": 32,
+      "total": 80,
+      "left": 30,
+      "keep": [
+       "Tahan 3 minggu bertutup",
+       "Keeps 3 weeks sealed"
+      ],
+      "has": [
+       "gandum, mentega, kacang",
+       "wheat, butter, nuts"
+      ]
+     },
+     {
+      "id": "bk",
+      "img": "raya-keju",
+      "cat": "kuih",
+      "n": [
+       "Biskut Keju",
+       "Cheese Sticks"
+      ],
+      "d": [
+       "Keju cheddar dan edam, rangup dan masin manis.",
+       "Cheddar and edam: crisp, salty and a little sweet."
+      ],
+      "u": [
+       "Balang 300 g",
+       "300 g jar"
+      ],
+      "p": 38,
+      "total": 60,
+      "left": 12,
+      "keep": [
+       "Tahan 3 minggu bertutup",
+       "Keeps 3 weeks sealed"
+      ],
+      "has": [
+       "gandum, keju, telur",
+       "wheat, cheese, egg"
+      ]
+     },
+     {
+      "id": "km",
+      "img": "raya-makmur",
+      "cat": "kuih",
+      "n": [
+       "Kuih Makmur",
+       "Makmur Cookies"
+      ],
+      "d": [
+       "Inti kacang tanah, bersalut gula halus. Kuih raya yang wajib ada.",
+       "Peanut filling under fine sugar. A Raya must-have."
+      ],
+      "u": [
+       "Balang 50 biji",
+       "Jar of 50"
+      ],
+      "p": 35,
+      "total": 80,
+      "left": 44,
+      "keep": [
+       "Tahan 3 minggu bertutup",
+       "Keeps 3 weeks sealed"
+      ],
+      "has": [
+       "gandum, kacang tanah, minyak sapi",
+       "wheat, peanut, ghee"
+      ]
+     },
+     {
+      "id": "bb",
+      "img": "raya-bulan-bintang",
+      "cat": "kuih",
+      "n": [
+       "Biskut Bulan Bintang",
+       "Star & Crescent Cookies"
+      ],
+      "d": [
+       "Bentuk bulan dan bintang untuk meja raya.",
+       "Moon and star shapes for the Raya table."
+      ],
+      "u": [
+       "Balang 300 g",
+       "300 g jar"
+      ],
+      "p": 34,
+      "total": 60,
+      "left": 25,
+      "badge": [
+       "Baru",
+       "New"
+      ],
+      "keep": [
+       "Tahan 3 minggu bertutup",
+       "Keeps 3 weeks sealed"
+      ],
+      "has": [
+       "gandum, mentega, badam",
+       "wheat, butter, almond"
+      ]
+     },
+     {
+      "id": "kt",
+      "img": "raya-kuih-tray",
+      "cat": "tray",
+      "n": [
+       "Dulang Kuih Rumah Terbuka",
+       "Open-House Kuih Tray"
+      ],
+      "d": [
+       "Kuih lapis, seri muka, onde-onde dan tart. Siap untuk tetamu.",
+       "Kuih lapis, seri muka, onde-onde and tarts, ready for guests."
+      ],
+      "u": [
+       "Untuk 20 orang",
+       "Serves 20"
+      ],
+      "p": 120,
+      "total": 20,
+      "left": 6,
+      "noCourier": true,
+      "keep": [
+       "Makan pada hari yang sama",
+       "Eat on the day"
+      ],
+      "has": [
+       "santan, telur, gandum",
+       "coconut milk, egg, wheat"
+      ]
+     },
+     {
+      "id": "hr",
+      "img": "raya-hamper",
+      "cat": "gift",
+      "n": [
+       "Hamper Raya",
+       "Raya Gift Hamper"
+      ],
+      "d": [
+       "Empat balang kuih raya dalam dulang hadiah dengan kad ucapan. Boleh dihantar terus.",
+       "Four jars of Raya cookies on a gift tray with a greeting card. We can send it straight to them."
+      ],
+      "u": [
+       "4 balang + kad ucapan",
+       "4 jars + a greeting card"
+      ],
+      "p": 158,
+      "total": 30,
+      "left": 9,
+      "badge": [
+       "Hadiah",
+       "Gift"
+      ],
+      "gold": true,
+      "keep": [
+       "Tahan 3 minggu bertutup",
+       "Keeps 3 weeks sealed"
+      ],
+      "has": [
+       "gandum, mentega, telur, kacang",
+       "wheat, butter, egg, nuts"
+      ]
+     }
+    ],
+    "faq": [
+     [
+      [
+       "Bila tarikh akhir tempahan?",
+       "What is the last day to order?"
+      ],
+      null
+     ],
+     [
+      [
+       "Bagaimana cara bayar?",
+       "How do I pay?"
+      ],
+      null
+     ],
+     [
+      [
+       "Ada penghantaran?",
+       "Do you deliver?"
+      ],
+      null
+     ],
+     [
+      [
+       "Boleh tukar hari ambil?",
+       "Can I change my day?"
+      ],
+      null
+     ]
+    ]
+   },
+   "xmas": {
+    "lang": "en",
+    "btn": "Christmas",
+    "dot": "#b3263a",
+    "name": [
+     "Christmas"
+    ],
+    "day": "2026-12-25",
+    "cutoff": "2026-12-19",
+    "from": "2026-12-21",
+    "to": "2026-12-24",
+    "early": "2026-12-05",
+    "hero": "xmas-hero",
+    "band": "xmas-bokeh",
+    "orn": "bauble",
+    "kicker": [
+     "Christmas 2026 · pre-orders open"
+    ],
+    "h1": [
+     "Christmas bakes, <em>ready to share</em>"
+    ],
+    "lead": [
+     "Gingerbread, panettone, a rum-soaked fruit cake and a chocolate yule log, baked in small batches for the week before Christmas. Order and pay online, then pick your day."
+    ],
+    "when": [
+     "Collect or receive your bakes between 21 and 24 December."
+    ],
+    "cats": [
+     [
+      "cookie",
+      [
+       "Cookies"
+      ]
+     ],
+     [
+      "cake",
+      [
+       "Cakes"
+      ]
+     ],
+     [
+      "gift",
+      [
+       "Gift boxes"
+      ]
+     ]
+    ],
+    "items": [
+     {
+      "id": "gb",
+      "img": "xmas-gingerbread",
+      "cat": "cookie",
+      "n": [
+       "Gingerbread Box"
+      ],
+      "d": [
+       "Twelve gingerbread cookies, hand-iced: trees, stars and little houses."
+      ],
+      "u": [
+       "Box of 12"
+      ],
+      "p": 58,
+      "total": 80,
+      "left": 34,
+      "badge": [
+       "Best seller"
+      ],
+      "keep": [
+       "Keeps 3 weeks sealed"
+      ],
+      "has": [
+       "wheat, butter, egg"
+      ]
+     },
+     {
+      "id": "cs",
+      "img": "xmas-stars",
+      "cat": "cookie",
+      "n": [
+       "Cinnamon Star Cookies"
+      ],
+      "d": [
+       "Almond and cinnamon stars under a crisp white glaze."
+      ],
+      "u": [
+       "Tin of 20"
+      ],
+      "p": 36,
+      "total": 60,
+      "left": 22,
+      "keep": [
+       "Keeps 3 weeks sealed"
+      ],
+      "has": [
+       "almond, egg"
+      ]
+     },
+     {
+      "id": "yl",
+      "img": "xmas-log-cake",
+      "cat": "cake",
+      "n": [
+       "Chocolate Yule Log"
+      ],
+      "d": [
+       "Chocolate sponge rolled with ganache, finished with pine and berries."
+      ],
+      "opts": [
+       {
+        "id": "c",
+        "l": [
+         "Classic chocolate · serves 8–10"
+        ],
+        "p": 98
+       },
+       {
+        "id": "o",
+        "l": [
+         "Chocolate orange · serves 8–10"
+        ],
+        "p": 104
+       }
+      ],
+      "total": 30,
+      "left": 7,
+      "noCourier": true,
+      "keep": [
+       "Keeps 3 days in the fridge"
+      ],
+      "has": [
+       "wheat, egg, dairy"
+      ]
+     },
+     {
+      "id": "pa",
+      "img": "xmas-panettone",
+      "cat": "cake",
+      "n": [
+       "Panettone"
+      ],
+      "d": [
+       "Slow-proved for two days, with candied orange and raisins."
+      ],
+      "u": [
+       "750 g"
+      ],
+      "p": 78,
+      "total": 40,
+      "left": 15,
+      "keep": [
+       "Keeps 2 weeks wrapped"
+      ],
+      "has": [
+       "wheat, egg, butter"
+      ]
+     },
+     {
+      "id": "fc",
+      "img": "xmas-fruit-cake",
+      "cat": "cake",
+      "n": [
+       "Rum Fruit Cake"
+      ],
+      "d": [
+       "Fruit and nuts soaked in rum for six weeks. Even better on Boxing Day."
+      ],
+      "u": [
+       "1 kg"
+      ],
+      "p": 88,
+      "total": 40,
+      "left": 17,
+      "keep": [
+       "Keeps a month wrapped"
+      ],
+      "has": [
+       "wheat, egg, nuts, alcohol"
+      ]
+     },
+     {
+      "id": "sc",
+      "img": "xmas-decorated",
+      "cat": "cookie",
+      "n": [
+       "Decorated Sugar Cookies"
+      ],
+      "d": [
+       "Santa, snowmen and gifts, iced by hand."
+      ],
+      "u": [
+       "Set of 9"
+      ],
+      "p": 48,
+      "total": 60,
+      "left": 26,
+      "keep": [
+       "Keeps 3 weeks sealed"
+      ],
+      "has": [
+       "wheat, butter, egg"
+      ]
+     },
+     {
+      "id": "hb",
+      "img": "xmas-cookie-box",
+      "cat": "gift",
+      "n": [
+       "Holiday Cookie Gift Box"
+      ],
+      "d": [
+       "Four kinds of cookies in a gift box with a ribbon and your card. We can send it straight to them."
+      ],
+      "u": [
+       "Four kinds, ribbon and card"
+      ],
+      "p": 128,
+      "total": 40,
+      "left": 12,
+      "badge": [
+       "Gift"
+      ],
+      "gold": true,
+      "keep": [
+       "Keeps 3 weeks sealed"
+      ],
+      "has": [
+       "wheat, butter, egg, almond"
+      ]
+     }
+    ],
+    "faq": [
+     [
+      [
+       "What is the last day to order?"
+      ],
+      null
+     ],
+     [
+      [
+       "How do I pay?"
+      ],
+      null
+     ],
+     [
+      [
+       "Do you deliver?"
+      ],
+      null
+     ],
+     [
+      [
+       "Can I change my day?"
+      ],
+      null
+     ]
+    ],
+    "closed": false,
+    "paused": false
+   },
+   "val": {
+    "lang": "en",
+    "btn": "Valentine's",
+    "dot": "#d6336c",
+    "name": [
+     "Valentine's Day"
+    ],
+    "day": "2027-02-14",
+    "cutoff": "2027-02-10",
+    "from": "2027-02-12",
+    "to": "2027-02-14",
+    "early": "2027-02-01",
+    "hero": "val-hero",
+    "band": "val-roses",
+    "orn": "heart",
+    "kicker": [
+     "Valentine's Day 2027 · pre-orders open"
+    ],
+    "h1": [
+     "Sweet things, <em>said properly</em>"
+    ],
+    "lead": [
+     "Iced heart cookies, chocolate truffles, red velvet cupcakes and roses, ready from 12 to 14 February. Order and pay online, add a card, or send it straight to them."
+    ],
+    "when": [
+     "Valentine's Day falls on Sunday 14 February 2027."
+    ],
+    "cats": [
+     [
+      "cookie",
+      [
+       "Cookies"
+      ]
+     ],
+     [
+      "choc",
+      [
+       "Chocolates & cakes"
+      ]
+     ],
+     [
+      "gift",
+      [
+       "Gifts"
+      ]
+     ]
+    ],
+    "items": [
+     {
+      "id": "hc",
+      "img": "val-heart-box",
+      "cat": "cookie",
+      "n": [
+       "Love Letter Cookie Box"
+      ],
+      "d": [
+       "Six iced heart cookies in a box with red paper and a note."
+      ],
+      "u": [
+       "Six iced hearts"
+      ],
+      "p": 48,
+      "total": 60,
+      "left": 20,
+      "badge": [
+       "Best seller"
+      ],
+      "keep": [
+       "Keeps 2 weeks sealed"
+      ],
+      "has": [
+       "wheat, butter, egg"
+      ]
+     },
+     {
+      "id": "tr",
+      "img": "val-truffles",
+      "cat": "choc",
+      "n": [
+       "Chocolate Truffle Box"
+      ],
+      "d": [
+       "Twelve dark-chocolate truffles, tied with a red ribbon."
+      ],
+      "u": [
+       "Box of 12"
+      ],
+      "p": 68,
+      "total": 50,
+      "left": 14,
+      "keep": [
+       "Keeps 2 weeks in a cool place"
+      ],
+      "has": [
+       "dairy, soy"
+      ]
+     },
+     {
+      "id": "rv",
+      "img": "val-red-velvet",
+      "cat": "choc",
+      "n": [
+       "Red Velvet Cupcakes"
+      ],
+      "d": [
+       "Red velvet with cream-cheese frosting and a strawberry."
+      ],
+      "u": [
+       "Box of 6"
+      ],
+      "p": 42,
+      "total": 40,
+      "left": 18,
+      "noCourier": true,
+      "keep": [
+       "Best on the day"
+      ],
+      "has": [
+       "wheat, egg, dairy"
+      ]
+     },
+     {
+      "id": "hk",
+      "img": "val-heart-chocs",
+      "cat": "choc",
+      "n": [
+       "Heart Chocolates Tin"
+      ],
+      "d": [
+       "Twenty-four foil-wrapped chocolate hearts in a heart-shaped tin."
+      ],
+      "u": [
+       "24 hearts"
+      ],
+      "p": 58,
+      "total": 30,
+      "left": 9,
+      "keep": [
+       "Keeps a month in a cool place"
+      ],
+      "has": [
+       "dairy, soy"
+      ]
+     },
+     {
+      "id": "cr",
+      "img": "val-chocs-roses",
+      "cat": "gift",
+      "n": [
+       "Chocolates & Roses"
+      ],
+      "d": [
+       "A box of chocolates with fresh red roses, delivered together."
+      ],
+      "opts": [
+       {
+        "id": "6",
+        "l": [
+         "Six roses"
+        ],
+        "p": 168
+       },
+       {
+        "id": "12",
+        "l": [
+         "Twelve roses"
+        ],
+        "p": 208
+       }
+      ],
+      "total": 20,
+      "left": 5,
+      "badge": [
+       "Gift"
+      ],
+      "gold": true,
+      "noCourier": true,
+      "keep": [
+       "Roses last about a week"
+      ],
+      "has": [
+       "dairy, soy"
+      ]
+     },
+     {
+      "id": "tb",
+      "img": "val-teddy",
+      "cat": "cookie",
+      "n": [
+       "Teddy Cookie Box"
+      ],
+      "d": [
+       "Two teddy-bear cookies with your names iced on them."
+      ],
+      "u": [
+       "Two teddies with your names"
+      ],
+      "p": 55,
+      "total": 30,
+      "left": 11,
+      "badge": [
+       "New"
+      ],
+      "personal": "Names on the teddies",
+      "keep": [
+       "Keeps 2 weeks sealed"
+      ],
+      "has": [
+       "wheat, butter, egg"
+      ]
+     },
+     {
+      "id": "ih",
+      "img": "val-heart-cookies",
+      "cat": "cookie",
+      "n": [
+       "Iced Heart Cookies"
+      ],
+      "d": [
+       "Nine hearts with royal icing: pinks, reds and little words."
+      ],
+      "u": [
+       "Set of 9"
+      ],
+      "p": 45,
+      "total": 60,
+      "left": 24,
+      "keep": [
+       "Keeps 2 weeks sealed"
+      ],
+      "has": [
+       "wheat, butter, egg"
+      ]
+     }
+    ],
+    "faq": [
+     [
+      [
+       "What is the last day to order?"
+      ],
+      null
+     ],
+     [
+      [
+       "Can you deliver to someone else?"
+      ],
+      null
+     ],
+     [
+      [
+       "How do I pay?"
+      ],
+      null
+     ],
+     [
+      [
+       "Do you deliver roses and cupcakes by courier?"
+      ],
+      null
+     ]
+    ]
+   }
+  },
+  "SLOTS": {
+   "collect": [
+    "10:00–12:00",
+    "12:00–14:00",
+    "14:00–16:00",
+    "16:00–18:00"
+   ],
+   "kv": [
+    "10:00–13:00",
+    "14:00–18:00"
+   ]
+  },
+  "BRAND": "Butter & Lantern"
+ }
+}

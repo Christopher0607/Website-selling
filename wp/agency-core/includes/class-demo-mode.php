@@ -155,6 +155,7 @@ class AGC_Demo_Mode {
 			'customer_new_account',
 			'customer_failed_order',
 			'customer_cancelled_order',
+			'customer_agc_ready', // "your order is ready" (class-festive-email.php)
 		);
 		foreach ( $ids as $id ) {
 			add_filter( 'woocommerce_email_enabled_' . $id, '__return_false', 999 );

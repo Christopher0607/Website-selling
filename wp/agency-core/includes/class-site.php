@@ -265,6 +265,7 @@ class AGC_Site {
 			'booked' => self::booked(),
 			'tables' => (int) ( self::spec( 'book', array() )['seats']['*']['cap'] ?? 6 ),
 			'bookedBy' => self::booked_by(),
+			'slotsUsed' => self::slots_used(),
 			'seatCap'  => array_map( static fn( $x ) => (int) ( $x['cap'] ?? 6 ), (array) ( self::spec( 'book', array() )['seats'] ?? array() ) ),
 			'dian'   => home_url( '/dian/' ),
 			'admin'  => admin_url( 'edit.php?post_type=shop_order' ),
@@ -314,14 +315,17 @@ class AGC_Site {
 				'cat'   => 'cat',
 				'stock' => (string) ( $l['stock'] ?? '' ),
 			);
-			$fix = static function ( $it ) use ( $f, &$owner ) {
-				$p = self::product( (string) ( $it[ $f['id'] ] ?? '' ) );
+			$tpl = (string) ( $l['sku'] ?? '' ); // "{g}-{id}": the same item code in two festivals (Butter & Lantern)
+			$fix = static function ( $it, $gk = '' ) use ( $f, $tpl, &$owner ) {
+				$id = (string) ( $it[ $f['id'] ] ?? '' );
+				$p  = self::product( $tpl ? str_replace( array( '{g}', '{id}' ), array( (string) $gk, $id ), $tpl ) : $id );
 				if ( ! $p ) {
 					return null; // deleted or hidden in WooCommerce: not on the website either.
 				}
-				$id                    = (string) $it[ $f['id'] ];
-				$it[ $f['name'] ]      = html_entity_decode( $p->get_name(), ENT_QUOTES );
-				if ( '' !== (string) $p->get_price() ) {
+				if ( $f['name'] ) { // "" = the page keeps its own wording (several languages)
+					$it[ $f['name'] ] = html_entity_decode( $p->get_name(), ENT_QUOTES );
+				}
+				if ( '' !== (string) $p->get_price() && $f['price'] && ( array_key_exists( $f['price'], $it ) || empty( $it['opts'] ) ) ) {
 					$it[ $f['price'] ] = (float) $p->get_price();
 				}
 				$sd = trim( wp_strip_all_tags( $p->get_short_description() ) );
@@ -334,6 +338,7 @@ class AGC_Site {
 				}
 				if ( ! $p->is_in_stock() ) {
 					$owner['sold']->{$id} = true;
+					$it['soldOut']        = true;
 				}
 				if ( $f['stock'] && $p->managing_stock() && null !== $p->get_stock_quantity() ) {
 					$it[ $f['stock'] ]    = max( 0, (int) $p->get_stock_quantity() );
@@ -343,7 +348,8 @@ class AGC_Site {
 			};
 			if ( ! empty( $l['items'] ) ) { // groups with their own items (festive seasons).
 				foreach ( $src as $gi => $g ) {
-					$src[ $gi ][ $l['items'] ] = array_values( array_filter( array_map( $fix, (array) ( $g[ $l['items'] ] ?? array() ) ) ) );
+					$gk                        = (string) ( $g['id'] ?? $gi );
+					$src[ $gi ][ $l['items'] ] = array_values( array_filter( array_map( static fn( $it ) => $fix( $it, $gk ), (array) ( $g[ $l['items'] ] ?? array() ) ) ) );
 				}
 			} else {
 				$known = array_column( $src, $f['id'] );
@@ -467,6 +473,7 @@ class AGC_Site {
 		$same = array( 'AGC_Skin', 'same_site' );
 		register_rest_route( self::NS, '/site/data', array( 'methods' => 'GET', 'callback' => array( __CLASS__, 'live' ), 'permission_callback' => $pub ) );
 		register_rest_route( self::NS, '/site/coupon', array( 'methods' => 'POST', 'callback' => array( 'AGC_Skin', 'rest_coupon' ), 'permission_callback' => $same ) );
+		register_rest_route( self::NS, '/site/receipt', array( 'methods' => 'POST', 'callback' => array( __CLASS__, 'rest_receipt' ), 'permission_callback' => $same ) );
 		foreach ( array( 'order', 'book', 'voucher', 'enquiry', 'track', 'notify' ) as $r ) {
 			register_rest_route( self::NS, '/site/' . $r, array( 'methods' => 'POST', 'callback' => array( __CLASS__, 'rest_' . $r ), 'permission_callback' => $same ) );
 		}
@@ -815,6 +822,9 @@ class AGC_Site {
 		if ( is_wp_error( $who ) ) {
 			return $who;
 		}
+		if ( 'preorder' === ( $b['kind'] ?? '' ) ) {
+			return self::preorder( $b, $who );
+		}
 		$lines = self::lines( $b['lines'] ?? array() );
 		if ( is_wp_error( $lines ) ) {
 			return $lines;
@@ -1122,6 +1132,251 @@ class AGC_Site {
 			);
 			update_option( AGC_Festive::NOTIFY, $list, false );
 		}
+		return array( 'ok' => true );
+	}
+
+	/**
+	 * Festival pre-order shop (Butter & Lantern): the items of one festival, a day inside its window, collection / local
+	 * delivery / courier with their own fees and time slots, early-bird discount, online payment or DuitNow + receipt.
+	 *
+	 * Spec "preorder": { "fests": "FESTS", "items": "items", "sku": "{g}-{id}", "early": 10, "cap": { "collect": 6, "kv": 10 },
+	 *   "slots": "SLOTS", "modes": { "kv": { "fee": 15, "free": 200, "pc": [[40000,48300],…] }, "courier": { "fee": 12,
+	 *   "free": 250, "east": 25, "east_pc": [[87000,91399],…], "days": 3 } } }
+	 *
+	 * @param array $b   Body: { fest, lines: [{ id, opt, pers, qty }], mode, date, slot, addr, pc, gift, pay, total }.
+	 * @param array $who Customer.
+	 * @return array|WP_Error
+	 */
+	private static function preorder( $b, $who ) {
+		$r     = (array) self::spec( 'preorder', array() );
+		$fests = (array) self::val( (string) ( $r['fests'] ?? 'FESTS' ), array() );
+		$fk    = sanitize_key( (string) ( $b['fest'] ?? '' ) );
+		$fest  = (array) ( $fests[ $fk ] ?? array() );
+		if ( ! $fest ) {
+			return self::err( __( 'Choose a festival.', 'agency-core' ) );
+		}
+		list( $today ) = self::now();
+		if ( $today > (string) ( $fest['cutoff'] ?? '' ) ) {
+			return self::err( __( 'Pre-orders for this festival have closed.', 'agency-core' ), 409 );
+		}
+		$mode  = in_array( $b['mode'] ?? '', array( 'collect', 'kv', 'courier' ), true ) ? (string) $b['mode'] : 'collect';
+		$date  = (string) ( $b['date'] ?? '' );
+		$slot  = sanitize_text_field( (string) ( $b['slot'] ?? '' ) );
+		$win   = array();
+		for ( $d = max( $today, (string) ( $fest['from'] ?? '' ) ); $d <= (string) ( $fest['to'] ?? '' ) && count( $win ) < 60; $d = gmdate( 'Y-m-d', strtotime( $d . ' +1 day' ) ) ) {
+			$win[] = $d;
+		}
+		$m    = (array) ( $r['modes'][ $mode ] ?? array() );
+		$days = 'courier' === $mode ? array_slice( $win, 0, (int) ( $m['days'] ?? 3 ) ) : $win;
+		if ( ! in_array( $date, $days, true ) ) {
+			return self::err( __( 'Choose a day.', 'agency-core' ), 409 );
+		}
+		if ( 'courier' !== $mode ) {
+			$sl    = (array) self::val( (string) ( $r['slots'] ?? 'SLOTS' ), array() );
+			$slots = (array) ( $sl[ $mode ] ?? array() );
+			if ( ! in_array( $slot, $slots, true ) ) {
+				return self::err( __( 'Choose a time.', 'agency-core' ), 409 );
+			}
+			$used = (array) self::slots_used();
+			if ( (int) ( $used[ $fk . '|' . $date . '|' . $mode . '|' . $slot ] ?? 0 ) >= (int) ( $r['cap'][ $mode ] ?? 6 ) ) {
+				return self::err( __( 'That time is full. Please choose another time.', 'agency-core' ), 409 );
+			}
+		} else {
+			$slot = '';
+		}
+		$pc   = preg_replace( '/\D/', '', (string) ( $b['pc'] ?? '' ) );
+		$addr = sanitize_text_field( (string) ( $b['addr'] ?? '' ) );
+		$in   = static function ( $n, $ranges ) {
+			foreach ( (array) $ranges as $x ) {
+				if ( $n >= (int) $x[0] && $n <= (int) $x[1] ) {
+					return true;
+				}
+			}
+			return false;
+		};
+		if ( 'collect' !== $mode && ( '' === $addr || 5 !== strlen( $pc ) ) ) {
+			return self::err( __( 'Add the delivery address with a 5-digit postcode.', 'agency-core' ) );
+		}
+		if ( 'kv' === $mode && ! $in( (int) $pc, $m['pc'] ?? array() ) ) {
+			return self::err( __( 'That postcode is outside our delivery area. Choose courier or collection.', 'agency-core' ), 409 );
+		}
+		// The items: this festival's, priced here (option prices from the page, the rest from WooCommerce), stock checked.
+		$tpl   = (string) ( $r['sku'] ?? '{g}-{id}' );
+		$list  = array();
+		foreach ( (array) ( $fest[ $r['items'] ?? 'items' ] ?? array() ) as $it ) {
+			$list[ (string) $it['id'] ] = $it;
+		}
+		$lines = array();
+		$want  = array();
+		foreach ( array_slice( (array) ( $b['lines'] ?? array() ), 0, 30 ) as $row ) {
+			$id  = sanitize_key( (string) ( $row['id'] ?? '' ) );
+			$it  = $list[ $id ] ?? null;
+			$p   = $it ? self::product( str_replace( array( '{g}', '{id}' ), array( $fk, $id ), $tpl ) ) : null;
+			$qty = max( 1, min( 50, (int) ( $row['qty'] ?? 1 ) ) );
+			if ( ! $p ) {
+				return self::err( __( 'Something in your cart is no longer available. Please check your cart again.', 'agency-core' ), 409 );
+			}
+			$want[ $p->get_id() ] = ( $want[ $p->get_id() ] ?? 0 ) + $qty;
+			if ( ! $p->is_in_stock() || ( $p->managing_stock() && $p->get_stock_quantity() < $want[ $p->get_id() ] ) ) {
+				/* translators: %s: product */
+				return self::err( sprintf( __( 'Sorry, %s just sold out.', 'agency-core' ), $p->get_name() ), 409 );
+			}
+			if ( 'courier' === $mode && ! empty( $it['noCourier'] ) ) {
+				/* translators: %s: product */
+				return self::err( sprintf( __( '%s can’t go by courier. Choose collection or local delivery.', 'agency-core' ), $p->get_name() ), 409 );
+			}
+			$unit  = (float) $p->get_price();
+			$label = '';
+			foreach ( (array) ( $it['opts'] ?? array() ) as $o ) {
+				if ( (string) $o['id'] === (string) ( $row['opt'] ?? '' ) ) {
+					$unit  = (float) $o['p'];
+					$label = is_array( $o['l'] ) ? (string) end( $o['l'] ) : (string) $o['l'];
+				}
+			}
+			if ( ! empty( $it['opts'] ) && '' === $label ) {
+				return self::err( __( 'Choose an option for each item.', 'agency-core' ) );
+			}
+			$lines[] = array( $p, $qty, $unit, $label, sanitize_text_field( (string) ( $row['pers'] ?? '' ) ), $it + array( 'opt' => (string) ( $row['opt'] ?? '' ) ) );
+		}
+		if ( ! $lines ) {
+			return self::err( __( 'Your cart is empty.', 'agency-core' ) );
+		}
+		$o = self::new_order( $lines );
+		foreach ( array_values( $o->get_items() ) as $i => $item ) {
+			$item->add_meta_data( '_agc_item', (string) $lines[ $i ][5]['id'], true );
+			$item->add_meta_data( '_agc_opt', (string) $lines[ $i ][5]['opt'], true );
+			$item->save();
+		}
+		self::set_who( $o, $who );
+		$sub = 0.0;
+		foreach ( $lines as $x ) {
+			$sub += $x[2] * $x[1];
+		}
+		$early = (string) ( $fest['early'] ?? '' );
+		$disc  = $early && $today <= $early ? round( $sub * (float) ( $r['early'] ?? 10 ) / 100, 2 ) : 0.0;
+		if ( $disc > 0 ) {
+			$fee = new WC_Order_Item_Fee();
+			$fee->set_name( __( 'Early-bird discount', 'agency-core' ) );
+			$fee->set_amount( -$disc );
+			$fee->set_total( -$disc );
+			$fee->set_tax_status( 'none' );
+			$o->add_item( $fee );
+		}
+		$after = $sub - $disc;
+		$cost  = 0.0;
+		if ( 'kv' === $mode ) {
+			$cost = $after >= (float) ( $m['free'] ?? PHP_INT_MAX ) ? 0.0 : (float) ( $m['fee'] ?? 0 );
+		} elseif ( 'courier' === $mode ) {
+			$cost = $in( (int) $pc, $m['east_pc'] ?? array() ) ? (float) ( $m['east'] ?? 0 ) : ( $after >= (float) ( $m['free'] ?? PHP_INT_MAX ) ? 0.0 : (float) ( $m['fee'] ?? 0 ) );
+		}
+		$ship = new WC_Order_Item_Shipping();
+		$ship->set_method_title( 'collect' === $mode ? __( 'Collection', 'agency-core' ) : ( 'kv' === $mode ? __( 'Local delivery', 'agency-core' ) : __( 'Courier', 'agency-core' ) ) );
+		$ship->set_method_id( 'collect' === $mode ? 'local_pickup' : 'flat_rate' );
+		$ship->set_total( $cost );
+		$o->add_item( $ship );
+		if ( 'collect' !== $mode ) {
+			$o->set_shipping_first_name( $who[0] );
+			$o->set_shipping_address_1( $addr );
+			$o->set_shipping_postcode( $pc );
+			$o->set_shipping_country( 'MY' );
+			$o->set_shipping_phone( $who[1] );
+		}
+		$gift  = (array) ( $b['gift'] ?? array() );
+		$notes = sanitize_textarea_field( mb_substr( (string) ( $b['notes'] ?? '' ), 0, 500 ) );
+		$note  = array();
+		if ( ! empty( $gift['name'] ) ) {
+			$o->update_meta_data( '_agc_gift', array_map( 'sanitize_text_field', array_map( 'strval', $gift ) ) );
+			/* translators: 1: who, 2: card message */
+			$note[] = sprintf( __( 'Gift for %1$s. Card: %2$s', 'agency-core' ), sanitize_text_field( (string) $gift['name'] ), sanitize_text_field( (string) ( $gift['msg'] ?? '-' ) ) );
+		}
+		if ( '' !== $notes ) {
+			$o->update_meta_data( '_agc_notes', $notes );
+			$note[] = $notes;
+		}
+		if ( $note ) {
+			$o->set_customer_note( implode( "\n", $note ) );
+		}
+		// how the customer chose to pay on the page (FPX + bank, e-wallet, card, DuitNow)
+		$pm = in_array( $b['pm'] ?? '', array( 'fpx', 'ewallet', 'card', 'duitnow' ), true ) ? (string) $b['pm'] : ( 'duitnow' === ( $b['pay'] ?? '' ) ? 'duitnow' : 'fpx' );
+		$o->update_meta_data( '_agc_pm', $pm );
+		if ( 'fpx' === $pm ) {
+			$o->update_meta_data( '_agc_bank', sanitize_text_field( mb_substr( (string) ( $b['bank'] ?? '' ), 0, 40 ) ) );
+		}
+		$o->update_meta_data( '_agc_fest', $fk );
+		$o->update_meta_data( '_agc_pmode', $mode );
+		$o->update_meta_data( AGC_Festive::MODE, 'collect' === $mode ? 'collect' : 'delivery' );
+		$o->update_meta_data( AGC_Festive::DATE, $date );
+		$o->update_meta_data( AGC_Festive::SLOT, '' !== $slot ? $slot : __( 'Courier', 'agency-core' ) );
+		$o->calculate_totals( false );
+		if ( isset( $b['total'] ) && abs( (float) $b['total'] - (float) $o->get_total() ) > 0.05 ) {
+			$o->delete( true );
+			return self::err( __( 'Some prices have just changed. Please check your cart again.', 'agency-core' ), 409 );
+		}
+		$go = self::pay( $o, 'duitnow' === ( $b['pay'] ?? '' ) ? 'duitnow' : 'online' );
+		$o  = wc_get_order( $o->get_id() );
+		return array_merge(
+			self::summary( $o ),
+			array(
+				'payUrl' => $go,
+				'disc'   => $disc, // the early-bird discount (a negative fee line in WooCommerce)
+				'fee'    => $cost,
+			)
+		);
+	}
+
+	/**
+	 * Pre-orders per festival, day, delivery mode and time slot ("cny|2027-02-01|collect|10:00–12:00" => 3).
+	 *
+	 * @return object
+	 */
+	public static function slots_used() {
+		if ( ! self::spec( 'preorder', null ) || ! function_exists( 'wc_get_orders' ) ) {
+			return new stdClass();
+		}
+		$out = array();
+		foreach ( wc_get_orders(
+			array(
+				'limit'      => 1000,
+				'status'     => array( 'pending', 'on-hold', 'processing', 'agc-ready', 'completed' ),
+				'meta_key'   => '_agc_fest', // phpcs:ignore WordPress.DB.SlowDBQuery
+				'meta_compare' => 'EXISTS',
+			)
+		) as $o ) {
+			$k         = $o->get_meta( '_agc_fest' ) . '|' . $o->get_meta( AGC_Festive::DATE ) . '|' . $o->get_meta( '_agc_pmode' ) . '|' . $o->get_meta( AGC_Festive::SLOT );
+			$out[ $k ] = ( $out[ $k ] ?? 0 ) + 1;
+		}
+		return (object) $out;
+	}
+
+	/**
+	 * DuitNow receipt from the website's own checkout (multipart: order, key, receipt).
+	 *
+	 * @param WP_REST_Request $req Request.
+	 * @return array|WP_Error
+	 */
+	public static function rest_receipt( $req ) {
+		$o    = wc_get_order( absint( $req->get_param( 'order' ) ) );
+		$file = $req->get_file_params()['receipt'] ?? null;
+		if ( ! $o || ! hash_equals( $o->get_order_key(), (string) $req->get_param( 'key' ) ) || ! class_exists( 'AGC_Receipts' ) || ! AGC_Receipts::wants_receipt( $o ) ) {
+			return self::err( __( 'This order does not need a receipt.', 'agency-core' ), 403 );
+		}
+		if ( ! is_array( $file ) || UPLOAD_ERR_OK !== (int) $file['error'] || (int) $file['size'] <= 0 || (int) $file['size'] > AGC_Receipts::MAX_SIZE ) {
+			return self::err( __( 'Choose a photo or PDF of your receipt (up to 5 MB).', 'agency-core' ) );
+		}
+		$check = wp_check_filetype_and_ext( $file['tmp_name'], sanitize_file_name( $file['name'] ), AGC_Receipts::mimes() );
+		if ( empty( $check['ext'] ) || empty( $check['type'] ) ) {
+			return self::err( __( 'Choose a photo or PDF of your receipt (up to 5 MB).', 'agency-core' ) );
+		}
+		$name = bin2hex( random_bytes( 16 ) ) . '.' . $check['ext'];
+		if ( ! @move_uploaded_file( $file['tmp_name'], AGC_Receipts::dir() . '/' . $name ) ) { // phpcs:ignore WordPress.PHP.NoSilencedErrors, Generic.PHP.ForbiddenFunctions
+			return self::err( __( 'Sorry, the receipt could not be saved. Please try again.', 'agency-core' ), 500 );
+		}
+		chmod( AGC_Receipts::dir() . '/' . $name, 0640 ); // phpcs:ignore WordPress.WP.AlternativeFunctions
+		$o->update_meta_data( AGC_Receipts::META, $name );
+		$o->update_meta_data( '_agc_receipt_name', sanitize_file_name( mb_substr( (string) $file['name'], 0, 60 ) ) );
+		$o->add_order_note( __( 'The customer uploaded a payment receipt. Check it, then mark the order "Processing" (payment received).', 'agency-core' ) );
+		$o->save();
+		AGC_Receipts::tell_shop( $o );
 		return array( 'ok' => true );
 	}
 
@@ -1558,6 +1813,55 @@ class AGC_Site {
 			'total'   => (float) $o->get_total(),
 			'tracking' => (string) $o->get_meta( '_agc_tracking' ),
 			'courier'  => (string) $o->get_meta( '_agc_courier' ),
+			'pre'      => $o->get_meta( '_agc_fest' ) ? self::pre_detail( $o ) : null,
+		);
+	}
+
+	/**
+	 * A festival pre-order as the shop's order page shows it.
+	 *
+	 * @param WC_Order $o Order.
+	 * @return array
+	 */
+	private static function pre_detail( $o ) {
+		$items = array();
+		foreach ( $o->get_items() as $it ) {
+			$items[] = array(
+				'id'   => (string) $it->get_meta( '_agc_item' ),
+				'opt'  => (string) $it->get_meta( '_agc_opt' ),
+				'pers' => (string) $it->get_meta( __( 'Note', 'agency-core' ) ),
+				'qty'  => (int) $it->get_quantity(),
+				'unit' => $it->get_quantity() ? (float) $it->get_subtotal() / (int) $it->get_quantity() : 0,
+			);
+		}
+		$disc = 0.0;
+		foreach ( $o->get_fees() as $fe ) {
+			$disc -= (float) $fe->get_total();
+		}
+		$st   = $o->get_status();
+		$gift = (array) $o->get_meta( '_agc_gift' );
+		return array(
+			'fest'   => (string) $o->get_meta( '_agc_fest' ),
+			'status' => in_array( $st, array( 'on-hold', 'pending' ), true ) ? 'verify' : ( 'agc-ready' === $st ? 'ready' : ( 'completed' === $st ? 'done' : 'paid' ) ),
+			'mode'   => (string) $o->get_meta( '_agc_pmode' ),
+			'date'   => (string) $o->get_meta( AGC_Festive::DATE ),
+			'slot'   => 'courier' === $o->get_meta( '_agc_pmode' ) ? '' : (string) $o->get_meta( AGC_Festive::SLOT ),
+			'addr'   => (string) $o->get_shipping_address_1(),
+			'pc'     => (string) $o->get_shipping_postcode(),
+			'name'   => (string) $o->get_billing_first_name(),
+			'phone'  => (string) $o->get_billing_phone(),
+			'email'  => (string) $o->get_billing_email(),
+			'gift'   => ! empty( $gift['name'] ) ? $gift : null,
+			'notes'  => (string) $o->get_meta( '_agc_notes' ),
+			'pm'     => $o->get_meta( '_agc_pm' ) ? (string) $o->get_meta( '_agc_pm' ) : ( 'agc_duitnow' === $o->get_payment_method() ? 'duitnow' : 'fpx' ),
+			'bank'   => (string) $o->get_meta( '_agc_bank' ),
+			'receipt' => (string) $o->get_meta( '_agc_receipt_name' ),
+			'items'  => $items,
+			'sub'    => (float) $o->get_subtotal(),
+			'disc'   => $disc,
+			'fee'    => (float) $o->get_shipping_total(),
+			'total'  => (float) $o->get_total(),
+			'at'     => $o->get_date_created() ? $o->get_date_created()->getTimestamp() * 1000 : 0,
 		);
 	}
 

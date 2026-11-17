@@ -123,11 +123,13 @@ $save     = static function ( $it, $cat_ids, $stock_field, $fl = array() ) use (
 	$pid = wc_get_product_id_by_sku( $sku );
 	$p   = $pid ? wc_get_product( $pid ) : new WC_Product_Simple();
 	$p->set_sku( $sku );
-	$p->set_name( (string) ( $it['n'] ?? $sku ) );
+	$txt = static fn( $v ) => is_array( $v ) ? implode( ' / ', array_map( 'strval', $v ) ) : (string) $v; // several languages: "黄梨球 / Pineapple Balls"
+	$p->set_name( $txt( $it['n'] ?? $sku ) );
 	$p->set_status( 'publish' );
 	$p->set_catalog_visibility( 'visible' );
-	$p->set_regular_price( isset( $it['p'] ) && is_numeric( $it['p'] ) ? (string) $it['p'] : '' );
-	$p->set_short_description( (string) ( $it[ $fl['desc'] ] ?? ( isset( $it['has'] ) ? implode( ', ', (array) $it['has'] ) : '' ) ) );
+	$price = isset( $it['p'] ) && is_numeric( $it['p'] ) ? (string) $it['p'] : ( ! empty( $it['opts'] ) ? (string) min( array_map( static fn( $o ) => (float) $o['p'], (array) $it['opts'] ) ) : '' ); // options: the lowest ("from")
+	$p->set_regular_price( $price );
+	$p->set_short_description( $txt( $it[ $fl['desc'] ] ?? ( isset( $it['has'] ) ? implode( ', ', array_map( $txt, (array) $it['has'] ) ) : '' ) ) );
 	if ( $fl['long'] && isset( $it[ $fl['long'] ] ) ) {
 		$p->set_description( (string) $it[ $fl['long'] ] );
 	}
@@ -155,9 +157,14 @@ foreach ( (array) ( $spec['lists'] ?? array() ) as $l ) {
 	$list = (array) ( $data[ $l['var'] ] ?? array() );
 	if ( ! empty( $l['items'] ) ) { // groups (festive seasons): a parent category and one per group.
 		$parent = $term( strtolower( $l['var'] ), ucfirst( strtolower( (string) ( $l['label'] ?? 'Festive' ) ) ) );
-		foreach ( $list as $g ) {
-			$cid = $term( 'festive-' . sanitize_title( (string) ( $g['id'] ?? '' ) ), (string) ( $g['name'] ?? $g['id'] ), $parent );
+		foreach ( $list as $gk => $g ) {
+			$gid   = (string) ( $g['id'] ?? $gk );
+			$gname = is_array( $g['name'] ?? null ) ? implode( ' / ', array_unique( array_map( 'strval', $g['name'] ) ) ) : (string) ( $g['name'] ?? $gid );
+			$cid   = $term( 'festive-' . sanitize_title( $gid ), $gname, $parent );
 			foreach ( (array) ( $g[ $l['items'] ] ?? array() ) as $it ) {
+				if ( ! empty( $l['sku'] ) ) { // the same item code in two festivals: "{g}-{id}" (cny-gb, val-gb)
+					$it['id'] = str_replace( array( '{g}', '{id}' ), array( $gid, (string) $it['id'] ), (string) $l['sku'] );
+				}
 				$save( $it, array_filter( array( $parent, $cid ) ), (string) ( $l['stock'] ?? '' ) );
 				++$count;
 			}
@@ -289,6 +296,11 @@ update_option(
 $duit            = get_option( 'woocommerce_agc_duitnow_settings', array() );
 $duit            = is_array( $duit ) ? $duit : array();
 $duit['enabled'] = ! empty( $spec['duitnow'] ) ? 'yes' : 'no';
+if ( ! empty( $spec['duitnow'] ) ) {
+	$duit['title']       = 'DuitNow QR';
+	$duit['description'] = 'Scan the QR with any banking or e-wallet app, then upload your receipt. Demo website: do not pay.';
+	$duit['account']     = get_bloginfo( 'name' );
+}
 update_option( 'woocommerce_agc_duitnow_settings', $duit );
 foreach ( array( 'bacs', 'cheque', 'cod' ) as $g ) {
 	$o            = get_option( "woocommerce_{$g}_settings", array() );
