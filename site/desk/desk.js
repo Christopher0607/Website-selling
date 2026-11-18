@@ -492,7 +492,7 @@
     return `<div class="send"><span class="send__label">发送</span><div class="send__btns">${b.map((x) => x[1]).join('')}</div></div>${hint}`;
   }
   function mini(p) {
-    return `<div class="mini" data-expand="${p.id}"><div class="mini__l"><b>${esc(p.business_name)}</b><small>${esc([p.instagram ? '@' + p.instagram : '', STATUS[p.status], p.next_followup_date ? '跟进 ' + p.next_followup_date : ''].filter(Boolean).join(' · '))}</small></div><div class="score ${scoreClass(p.score)}">${p.score}</div></div>${S.open[p.id] ? card(p, 'full') : ''}`;
+    return `<div class="mini" data-expand="${p.id}"><div class="mini__l"><b>${esc(p.business_name)}</b><small>${esc([SHOPK[p.kind] || '', p.instagram ? '@' + p.instagram : '', STATUS[p.status], p.next_followup_date ? '跟进 ' + p.next_followup_date : ''].filter(Boolean).join(' · '))}</small></div><div class="score ${scoreClass(p.score)}">${p.score}</div></div>${S.open[p.id] ? card(p, 'full') : ''}`;
   }
 
   // ------------------------------------------------------------ views
@@ -542,6 +542,7 @@
   function sect(title, n, inner, emptyMsg, id) {
     return `<section class="sect"${id ? ` id="${id}"` : ''}><div class="sect__head"><h2>${esc(title)}</h2><small>${n}</small></div>${inner || (emptyMsg ? `<div class="empty">${esc(emptyMsg)}</div>` : '')}</section>`;
   }
+  const SHOPK = { food: '餐厅', bakery: '饼家·糕点', gift: '礼盒·食品', other: '其他' }; // 2026-11-18
   const FILTERS = [['all', '全部'], ['table', '样板表'], ['visit', '拜访清单'], ['new', '未联系'], ['contacted', '已联系'], ['replied', '有回复'], ['preview_sent', '样板'], ['won', '成交'], ['low', '低分'], ['do_not_contact', '不再联系']];
   // ------------------------------------------------------------ mockup table (2026-11-09): every merchant's mockup, password and details in one place
   const ST_ORDER = ['new', 'contacted', 'replied', 'preview_sent', 'call_booked', 'proposal_sent', 'won', 'no_response', 'lost', 'do_not_contact'];
@@ -580,12 +581,16 @@
   }
 
   function renderList() {
-    $('[data-filters]').innerHTML = FILTERS.map(([k, l]) => `<button class="chip${S.filter === k ? ' is-on' : ''}" data-filter="${k}">${l}</button>`).join('');
+    S.kindF = S.kindF || 'all';
+    const kc = (k) => S.items.filter((p) => p.kind === k).length;
+    $('[data-filters]').innerHTML = FILTERS.map(([k, l]) => `<button class="chip${S.filter === k ? ' is-on' : ''}" data-filter="${k}">${l}</button>`).join('')
+      + `<div class="kinds">${[['all', '全部类别']].concat(Object.entries(SHOPK)).map(([k, l]) => `<button class="chip chip--kind${S.kindF === k ? ' is-on' : ''}" data-act="kind-f" data-kind="${k}">${l}${k === 'all' ? '' : ' ' + kc(k)}</button>`).join('')}</div>`;
     const q = S.q.trim().toLowerCase();
     if (S.filter === 'visit') { $('[data-all-list]').innerHTML = visitList(q); return; }
     if (S.filter === 'table') { $('[data-all-list]').innerHTML = pvTable(q); return; }
     const items = S.items.filter((p) => {
       if (S.filter === 'low') { if (!(p.score < 3 || p.fit === 'skip')) return false; } else if (S.filter !== 'all' && p.status !== S.filter) return false;
+      if (S.kindF && S.kindF !== 'all' && p.kind !== S.kindF) return false;
       return !q || [p.business_name, p.instagram, p.niche, p.id, p.email, p.whatsapp].join(' ').toLowerCase().includes(q);
     });
     $('[data-all-list]').innerHTML = items.length ? items.map(mini).join('') : '<div class="empty">没有符合的商家</div>';
@@ -886,6 +891,7 @@
       <p class="hint">只用对方公开给客人的联系方式（IG 简介、Linktree、Google 商家资料、报道）。</p>
       <label>店铺链接<input type="url" data-e="store_url" value="${esc(p.store_url)}"></label>
       <label>卖什么<input type="text" data-e="niche" value="${esc(p.niche)}"></label>
+      <label>类别<select data-e="kind"><option value=""${p.kind_set ? '' : ' selected'}>自动（现在：${SHOPK[p.kind] || '其他'}）</option>${Object.entries(SHOPK).map(([k, l]) => `<option value="${k}"${p.kind_set && p.kind === k ? ' selected' : ''}>${l}</option>`).join('')}</select></label>
       <label>具体观察<textarea rows="3" data-e="observation">${esc(p.observation)}</textarea></label>
       <label>备注<textarea rows="2" data-e="notes">${esc(p.notes || '')}</textarea></label>
       <div class="sheet__label">分数条件</div>
@@ -901,6 +907,7 @@
     if (t.dataset.tab) { S.tab = t.dataset.tab; $$('[data-tab]').forEach((b) => b.classList.toggle('is-on', b === t)); $$('[data-view]').forEach((v) => { v.hidden = v.dataset.view !== S.tab; }); render(); window.scrollTo(0, 0); return; }
     if (t.dataset.filter) { S.filter = t.dataset.filter; renderList(); return; }
     if (t.dataset.expand) { S.open[t.dataset.expand] = !S.open[t.dataset.expand]; renderList(); return; }
+    if (t.dataset.act === 'kind-f') { S.kindF = t.dataset.kind || 'all'; renderList(); return; }
     if (t.dataset.act === 'tr-days') { TR.days = Number(t.dataset.days) || 7; TR.sel = -1; renderTraffic(); return; }
     if (t.dataset.act === 'tr-refresh') { loadTraffic(true); toast('更新中…'); return; }
     if (t.dataset.act === 'tr-bar') {

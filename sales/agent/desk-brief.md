@@ -147,6 +147,15 @@ lost · no_response · do_not_contact. "Next follow-up" and "next call" dates ar
   every bill, what sold, unpaid tables, Excel). Demo to send: https://sireh-salt.demo.cartsmithstudio.com/table.html?t=5
   (its "See the restaurant's side" link opens the kitchen and counter screens). Since 2026-11-17 also: paying on the
   phone at the table, a counter screen, kitchen printing on the kitchen device's own printer, and Loyverse receipts.
+- Focus 2026-11-18 to about 2026-12-02 (decision 44): ONLY the RM399 festive pre-order shop for Chinese New Year 2027
+  (CNY is on 6 Feb 2027; cookie / kuih / gift orders start in December) to shops that sell CNY cookies, pineapple tarts,
+  kuih, cakes or gift boxes. Lead with one sentence: their CNY orders in one link (customers pick items, date and slot, and
+  pay by DuitNow QR or online), live in 3 working days, instead of answering every WhatsApp one by one. Show the CNY demo
+  https://butter-lantern.demo.cartsmithstudio.com/?fest=cny. Offer for the first 3 shops: we put it live first and they
+  pay the RM399 only after their first online order (items, prices and photos within 2 working days; link in their IG bio
+  and WhatsApp status; we may show it as an example; no online order by 6 Feb 2027 = nothing to pay, we take it down).
+  Deadline to use in messages: to take orders from early December, send the items by 5 December. Do not pitch the other
+  packages unless they ask.
 - Position (decided 2026-11-17, decision 43): we are the shop's own brand website + online orders with no commission,
   next to the cashier system they already have. We are NOT a POS company: never say we replace FeedMe / StoreHub / Beep,
   never compare features with them, never criticise them. Only Loyverse links automatically; for other cashier systems

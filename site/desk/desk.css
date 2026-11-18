@@ -359,3 +359,7 @@ input[type=file] { display: block; width: 100%; margin-top: 6px; font: 400 .88re
 .ai__log { overflow-x: hidden; }
 .ai__msg { min-width: 0; overflow-wrap: anywhere; word-break: break-word; }
 .ai__drafttext { overflow-wrap: anywhere; }
+
+/* 2026-11-18 kinds of shop in 名单 */
+.kinds { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; width: 100%; }
+.chip--kind { font-size: .78rem; }

@@ -420,3 +420,7 @@ h1 .zh, h2 .zh { font-size: .42em; font-weight: 600; margin-top: .6em; color: in
 .calc__res .calc__big + table { margin-top: 14px; }
 .calc__res td { white-space: nowrap; }
 .calc__res th { text-align: left; font-weight: 500; }
+
+/* 2026-11-18 CNY 2027 offer line in the hero */
+.s-hero__offer { margin: 14px 0 0; padding: 10px 14px; border-radius: 12px; background: color-mix(in srgb, var(--ember, #e8562a) 10%, transparent); font-size: .92rem; line-height: 1.5; }
+.s-hero__offer .ic, .s-hero__offer svg { width: 16px; height: 16px; vertical-align: -3px; }

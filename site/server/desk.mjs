@@ -319,8 +319,32 @@ async function chatAsk(messages, maxTokens = 1400) {
   }
   throw Object.assign(new Error(last), { code: 'ai_failed' });
 }
+// 2026-11-18: what kind of shop (the 名单 filter): set by hand (p.kind) or guessed from what they sell, then the name / notes
+const KINDS = ['food', 'bakery', 'gift', 'other'];
+const RX_BAKERY_ZH = /饼|糕|烘焙|蛋糕|甜点|面包|月饼|年饼|曲奇|千层|kek|kuih|kueh/i;
+const RX_FOOD_ZH = /餐|饭|面|茶室|咖啡馆|酒楼|海鲜|煮炒|小吃|美食/;
+const RX_GIFT = /hamper|gift|礼盒|礼篮|礼品|伴手礼|酱|辣椒|零食|咖啡豆|茶叶|蜂蜜|platter|grazing/i;
+function kindOf(p) {
+  if (KINDS.includes(p.kind)) return p.kind;
+  // 1. a restaurant (named before any baking) is a restaurant; 2. anyone who bakes is a 饼家 (cafés that sell whole cakes,
+  // pineapple tarts and kuih are festive pre-order shops too); 3. roasters, tea, sambal, hampers are 礼盒·食品; 4. other cafés are 餐厅
+  const at = (s, rxs) => Math.min(...rxs.map((rx) => { const i = s.search(rx); return i < 0 ? Infinity : i; }));
+  const RX_REST = /restaurant|restoran|izakaya|dining|bistro|kaiseki|omakase|seafood|tze ?char|zi ?char|dai ?chow|hawker|mamak|nasi kandar|steamboat|hotpot|\bbbq\b|grill|餐厅|酒楼|海鲜|煮炒/;
+  const RX_ROAST = /roaster|roastery|coffee beans?|tea store|tea house|\bteas?\b|咖啡豆|茶叶/;
+  const guess = (t) => {
+    const s = String(t || '').toLowerCase();
+    if (!s.trim()) return '';
+    const bake = at(s, [RX_BAKERY, RX_BAKERY_ZH]);
+    if (at(s, [RX_REST]) < bake) return 'food';
+    if (bake < Infinity) return 'bakery';
+    if (at(s, [RX_ROAST, RX_GIFT, RX_PANTRY, RX_DRINKS]) < Infinity) return 'gift';
+    if (at(s, [RX_FOOD, RX_FINE, RX_CASUAL, RX_FOOD_ZH]) < Infinity) return 'food';
+    return '';
+  };
+  return guess(p.niche) || guess(p.business_name) || guess(p.observation) || 'other';
+}
 // what the phone needs for the list: no AI conversation (opened on demand), no research notes / mockup facts (only the AI reads them)
-function slimItem(p) { const { ai_chat, input, preview_facts, ...rest } = p; return { ...rest, ai_count: (ai_chat || []).length, demo: demoFor(p), fest_demo: festDemo(p) }; }
+function slimItem(p) { const { ai_chat, input, preview_facts, ...rest } = p; return { ...rest, kind: kindOf(p), kind_set: KINDS.includes(p.kind), ai_count: (ai_chat || []).length, demo: demoFor(p), fest_demo: festDemo(p) }; }
 async function chatInto(p, text) {
   const q = String(text || '').trim().slice(0, 4000);
   if (!q) throw Object.assign(new Error('先输入问题或贴上对方的信息'), { code: 'bad_input' });
@@ -1180,6 +1204,7 @@ async function handle(action, b, doc) {
       if (b.fields && 'whatsapp' in b.fields) { p.whatsapp = waOf(p.whatsapp); if (String(b.fields.whatsapp).trim() && !p.whatsapp) throw Object.assign(new Error('WhatsApp 号码格式不对（例：012-345 6789）'), { code: 'bad_input' }); }
       if (b.fields && 'email' in b.fields) { p.email = emailOf(p.email); if (String(b.fields.email).trim() && !p.email) throw Object.assign(new Error('Email 格式不对'), { code: 'bad_input' }); }
       if (b.fields && 'phone' in b.fields) { p.phone = waOf(p.phone); if (String(b.fields.phone).trim() && !p.phone) throw Object.assign(new Error('电话号码格式不对（例：03-2201 1710）'), { code: 'bad_input' }); }
+      if (b.fields && 'kind' in b.fields) { if (KINDS.includes(b.fields.kind)) p.kind = b.fields.kind; else delete p.kind; } // '' = guess again
       if (b.fields && 'area' in b.fields) p.area = String(p.area).slice(0, 60);
       if (b.fields && 'address' in b.fields) p.address = String(p.address).slice(0, 200);
       p.score = CRITERIA.filter((c) => p[c]).length;
