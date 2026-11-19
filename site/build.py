@@ -21,6 +21,14 @@ import re
 import shutil
 import sys
 
+# Build output contains Chinese text and symbols.  Windows PowerShell can still
+# start Python with a legacy code page (for example cp1252), which otherwise
+# makes a successful build fail while printing its final status line.
+try:
+    sys.stdout.reconfigure(encoding="utf-8")
+except (AttributeError, OSError):
+    pass
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 DIST = os.path.join(HERE, "dist")
 WP = False  # build_wp(): the same shop template as a real WordPress + WooCommerce site (orders really are created there)

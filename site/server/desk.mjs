@@ -499,6 +499,10 @@ async function analyzeInto(doc, input, lang, lead) {
     if (lead.template && TEMPLATES.includes(lead.template)) p.template = lead.template;
   }
   p.score = CRITERIA.filter((c) => p[c]).length;
+  if (cnyEligible(p)) {
+    p.message = cnyMessage(p, 'first');
+    p.campaign = 'cny-2027';
+  }
   const dup = doc.items.find((x) => (p.instagram && x.instagram === p.instagram) || (p.store_url && x.store_url === p.store_url) || (p.whatsapp && x.whatsapp === p.whatsapp));
   if (dup) p.duplicate_of = dup.id;
   doc.next += 1;
@@ -655,6 +659,32 @@ function demoFor(p) {
 // nothing is charged.
 const FESTIVE_SHOP = FESTIVE_DEMO + '?fest=cny';
 const isRealShop = (u) => String(u || '').startsWith(FESTIVE_DEMO);
+// The two-week CNY campaign is deliberately limited to bakers and food-gift
+// shops.  These are drafts only: the desk opens WhatsApp for the owner, who
+// remains responsible for reviewing and sending every message.
+const CNY_CAMPAIGN_END = '2026-12-02';
+const CNY_MESSAGES = {
+  zh: {
+    first: '你好 {店名}，这里是 Cartsmith Studio。2027 年新年是 2 月 6 日，年饼订单通常 12 月就开始了。我们帮做年饼的店家开「新年预购网店」：客人自己选年饼、选取货或送货日期、用 DuitNow QR 付款，你拿到一张整齐的订单表，不用再一则一则回 WhatsApp。\n\n新年示范网店，可以用手机试：' + FESTIVE_SHOP + '\n\n这一季前 3 家：我们先帮你做好上线，收到第一张网上订单之后才付 RM399。想 12 月初就开始接单的话，12 月 5 日前把产品和价钱发给我们就可以。直接回复这里，我们就帮你开始。\n\n— Cartsmith Studio',
+    second: '你好 {店名}，Cartsmith Studio 再跟你说一声新年预购网店的事。客人在网店下单、付款、选取货时间，你每天打开手机就看到要做多少罐、哪天谁来拿。前 3 家先上线、有网上订单才付 RM399，满了我们会照实说。12 月 5 日前给产品和价钱，12 月初就能开始接单。回复「好」，我们就把需要的资料清单发给你。\n\n— Cartsmith Studio',
+    last: '你好 {店名}，这是我们关于新年预购网店的最后一则信息。今年不适合也完全没关系，我们不会再为这件事打扰你。示范网店一直在这里，想看的时候可以打开：' + FESTIVE_SHOP + ' 祝新年生意兴隆。\n\n— Cartsmith Studio',
+  },
+  en: {
+    first: 'Hi {店名}, this is Cartsmith Studio. Chinese New Year falls on 6 February, and CNY cookie orders usually start in December. We set up festive pre-order shops for bakers: customers pick their jars, choose a collection or delivery date and pay by DuitNow QR, and you get one tidy order list instead of answering every WhatsApp.\n\nA CNY demo you can try on your phone: ' + FESTIVE_SHOP + '\n\nFor the first 3 shops this season, we put it live first and you pay the RM399 only after your first online order. To start taking orders in early December, send us your items and prices by 5 December. Just reply here and we will set it up.\n\nCartsmith Studio',
+    second: 'Hi {店名}, Cartsmith Studio again about the CNY pre-order shop. Customers order, pay and choose their collection time on the shop, and each day your phone shows how many jars to bake and who is collecting when. The first 3 shops go live first and pay the RM399 only after their first online order; we will tell you honestly once those places are taken. Send your items and prices by 5 December to start taking orders in early December. Reply "OK" and we will send you the short list of what we need.\n\nCartsmith Studio',
+    last: 'Hi {店名}, this is our last message about the CNY pre-order shop. If this season is not the right time, that is completely fine, and we will not message you about it again. The demo stays here whenever you want a look: ' + FESTIVE_SHOP + ' Wishing you a busy and prosperous CNY season.\n\nCartsmith Studio',
+  },
+  ms: {
+    first: 'Salam {店名}, ini Cartsmith Studio. Tahun Baru Cina jatuh pada 6 Februari, dan tempahan kuih Tahun Baru Cina biasanya bermula Disember. Kami sediakan kedai pra-tempahan perayaan: pelanggan pilih balang, pilih tarikh ambil atau hantar dan bayar dengan DuitNow QR, dan anda dapat satu senarai tempahan yang kemas, tanpa membalas setiap WhatsApp.\n\nDemo CNY yang boleh dicuba di telefon: ' + FESTIVE_SHOP + '\n\nUntuk 3 kedai pertama musim ini, kami siapkan dan lancarkan dahulu, dan anda bayar RM399 hanya selepas tempahan online pertama. Untuk mula terima tempahan awal Disember, hantar item dan harga sebelum 5 Disember. Balas sahaja di sini dan kami mulakan.\n\nCartsmith Studio',
+    second: 'Hai {店名}, Cartsmith Studio sekali lagi tentang kedai pra-tempahan CNY. Pelanggan buat pesanan, bayar dan pilih masa ambil di kedai, dan setiap hari telefon anda menunjukkan berapa balang perlu dibakar dan siapa yang datang ambil. Tiga kedai pertama akan dilancarkan dahulu dan bayar RM399 hanya selepas pesanan online pertama; kami akan beritahu dengan jujur apabila tempat itu sudah penuh. Hantar item dan harga sebelum 5 Disember untuk mula terima pesanan awal Disember. Balas "OK" dan kami hantar senarai ringkas yang kami perlukan.\n\nCartsmith Studio',
+    last: 'Hai {店名}, ini mesej terakhir kami tentang kedai pra-tempahan CNY. Jika musim ini bukan masa yang sesuai, tidak mengapa dan kami tidak akan menghubungi anda lagi tentang perkara ini. Demo ini sentiasa ada jika mahu melihatnya: ' + FESTIVE_SHOP + ' Semoga musim CNY anda sibuk dan makmur.\n\nCartsmith Studio',
+  },
+};
+function cnyEligible(p) { return myDate() <= CNY_CAMPAIGN_END && ['bakery', 'gift'].includes(kindOf(p)); }
+function cnyMessage(p, stage) {
+  const messages = CNY_MESSAGES[p.language] || CNY_MESSAGES.en;
+  return messages[stage].replaceAll('{店名}', p.business_name || 'there');
+}
 // which festive demo to send: Chinese-speaking or Chinese / Peranakan / Taiwanese shops → the real Chinese New Year shop,
 // Malay-speaking or Malay shops → the Hari Raya demo (Malay first), everyone else → the demo on the nearest festival
 function festDemo(p) {
@@ -1221,6 +1251,13 @@ async function handle(action, b, doc) {
 
     case 'followup': {
       const p = find(doc, b.id);
+      if (cnyEligible(p) && ['new', 'contacted', 'no_response'].includes(p.status) && !p.preview_url) {
+        const stage = (p.touches || 0) <= 1 ? 'second' : 'last';
+        p.followup = cnyMessage(p, stage);
+        p.campaign = 'cny-2027';
+        delete p.cfollow_v;
+        return { item: p, saved: true };
+      }
       const hasPv = !!(p.preview_url && p.preview_password);
       const n = p.pv_followups || 0;
       const kind = p.status === 'preview_sent' && n === 0
