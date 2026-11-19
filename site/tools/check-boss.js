@@ -71,11 +71,15 @@ async function deskApi(action, payload) {
   const r = await fetch(`http://localhost:${DESK_PORT}/api/desk`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-desk-key': KEY }, body: JSON.stringify(Object.assign({ action }, payload || {})) });
   return r.json();
 }
+async function mausApi(body) {
+  const r = await fetch(`http://localhost:${DESK_PORT}/api/maus`, { method: 'POST', headers: { Authorization: 'Bearer maus-research-test', 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  return { status: r.status, body: await r.json() };
+}
 
 (async () => {
   await new Promise((r) => ai.listen(AI_PORT, r));
   const dev = spawn(process.execPath, [path.join(ROOT, 'site/tools/dev-server.mjs'), String(DESK_PORT)], {
-    cwd: ROOT, env: Object.assign({}, process.env, { DESK_LOCAL_FILE: FILE, SALES_DESK_KEY: KEY, DEEPSEEK_API_KEY: 'sk-test', DEEPSEEK_BASE_URL: 'http://localhost:' + AI_PORT, LEADS_URL: 'off' }), stdio: 'ignore',
+    cwd: ROOT, env: Object.assign({}, process.env, { DESK_LOCAL_FILE: FILE, SALES_DESK_KEY: KEY, DEEPSEEK_API_KEY: 'sk-test', DEEPSEEK_BASE_URL: 'http://localhost:' + AI_PORT, LEADS_URL: 'off', MAUS_RESEARCH_KEY: 'maus-research-test' }), stdio: 'ignore',
   });
   let b;
   try {
@@ -158,15 +162,25 @@ async function deskApi(action, payload) {
     ok(/Roti Lane 老板只看 Email/.test(await p.textContent('.boss__mem')) && !/Bangsar 的店都在/.test(await p.textContent('.boss__mem')), 'add a memory line by hand, delete another');
     ok(errs.length === 0, 'no JavaScript errors' + (errs.length ? ': ' + errs.slice(0, 2).join(' | ') : ''));
 
+    console.log('Project MAUS owner review');
+    const mr = await mausApi({ action: 'submit_review', kind: 'lead_research', lead_id: 'c1', title: 'Public source check', summary: 'A test recommendation; no message was sent.' });
+    ok(mr.status === 201 && mr.body.review.status === 'pending_owner_review', 'department can submit an internal recommendation only');
+    await p.click('[data-tab="maus"]');
+    await p.waitForSelector('[data-maus] [data-act="maus-decide"]');
+    ok(/机器人自动外联[\s\S]*0/.test(await p.textContent('[data-maus]')), 'MAUS tab states that it has no automatic external outreach');
+    await p.click('[data-maus] [data-act="maus-decide"][data-decision="approved"]');
+    await p.waitForFunction(() => /已采纳/.test(document.querySelector('[data-maus]').textContent));
+    ok(/已采纳/.test(await p.textContent('[data-maus]')), 'owner can approve a recommendation without triggering an external action');
+
     console.log('Phone');
     const m = await (await b.newContext({ ...devices['iPhone 13'] })).newPage();
     await m.goto(`http://localhost:${DESK_PORT}/desk/`);
     await m.fill('#pw', KEY);
     await m.click('[data-login] button[type=submit], [data-login] .btn');
     await m.waitForSelector('#app:not([hidden])', { timeout: 15000 });
-    await m.click('[data-tab="boss"]');
-    await m.waitForSelector('[data-boss-text]');
-    ok(await m.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth) <= 0 && (await m.$$('.tabs button')).length === 6, 'phone: six tabs fit, nothing sticks out');
+    await m.click('[data-tab="maus"]');
+    await m.waitForSelector('[data-maus]');
+    ok(await m.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth) <= 0 && (await m.$$('.tabs button')).length === 7, 'phone: seven tabs fit, nothing sticks out');
     if (process.argv[2]) await m.screenshot({ path: process.argv[2], fullPage: false });
   } catch (e) {
     fail++; console.log('  ❌ stopped: ' + e.message.split('\n')[0]);

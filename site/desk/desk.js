@@ -727,6 +727,36 @@
     const log = $('[data-boss-log]'); if (log) log.scrollTop = log.scrollHeight;
   }
 
+  // ------------------------------------------------------------ Project MAUS: department recommendations
+  // These records arrive through the separate, narrow /api/maus bridge. They
+  // are recommendations only: the owner must decide each one and no decision
+  // can trigger an outbound message from this screen.
+  const MAUS = { loaded: false, reviews: [] };
+  const MAUS_ROLE = { research: '线索情报', sales: '转化文案', delivery: '交付质量', finance: '财务与学习', ops: '运营总监' };
+  const MAUS_KIND = { lead_research: '线索研究', message_draft: '文案建议', delivery_check: '交付检查', weekly_report: '每周复盘', operating_plan: '运营计划' };
+  const MAUS_STATUS = { pending_owner_review: '待你审核', approved: '已采纳', rejected: '未采纳' };
+  const mausReady = () => S.items.filter((p) => p.status === 'new' && p.fit !== 'skip' && !p.duplicate_of && (p.instagram || p.store_url || p.whatsapp || p.email || p.phone)).length;
+  async function renderMaus(force) {
+    const el = $('[data-maus]');
+    if (!MAUS.loaded || force) {
+      if (!MAUS.loaded) el.innerHTML = '<h2>Project MAUS</h2><p class="hint">读取部门建议中…</p>';
+      try { const j = await api('maus-reviews'); MAUS.reviews = j.reviews || []; MAUS.loaded = true; } catch (e) { el.innerHTML = `<h2>Project MAUS</h2><p class="hint">读不到部门建议：${esc(e.message)}</p>`; return; }
+    }
+    const pending = MAUS.reviews.filter((r) => r.status === 'pending_owner_review');
+    const rows = MAUS.reviews.map((r) => {
+      const evidence = (r.evidence || []).map((x) => x.url ? `<a href="${esc(x.url)}" target="_blank" rel="noopener">资料来源</a>${x.note ? `：${esc(x.note)}` : ''}` : esc(x.note || '')).join('<br>');
+      const lead = r.lead_id ? `<button class="linkbtn" data-act="maus-open-lead" data-id="${esc(r.lead_id)}">打开 ${esc(r.lead_id)}</button>` : '';
+      const actions = r.status === 'pending_owner_review'
+        ? `<div class="btnrow"><button class="btn btn--sm" data-act="maus-decide" data-decision="approved" data-review="${esc(r.id)}">采纳</button><button class="btn btn--ghost btn--sm" data-act="maus-decide" data-decision="rejected" data-review="${esc(r.id)}">不采纳</button></div>` : '';
+      return `<article class="card"><div class="card__top"><div class="card__head"><div class="card__name">${esc(r.title)}<small>${esc(r.id)}</small></div><div class="card__sub">${esc(MAUS_ROLE[r.role] || r.role)} · ${esc(MAUS_KIND[r.kind] || r.kind)} · ${esc(r.created_at ? r.created_at.slice(0, 16).replace('T', ' ') : '')}</div></div><span class="tag tag--status s-${esc(r.status)}">${esc(MAUS_STATUS[r.status] || r.status)}</span></div><p class="obs">${esc(r.summary)}</p>${evidence ? `<p class="note">${evidence}</p>` : ''}${lead}${actions}</article>`;
+    }).join('');
+    el.innerHTML = `<h2>Project MAUS</h2>
+      <p class="hint">业务闭环：获取 → 转化 → 交付 → 留存 → 学习。MAUS 只读工作队列并提交内部建议；它不能向客户发信息、改客户资料或碰付款。你在这里审核后，再决定是否执行。</p>
+      <div class="statgrid"><div class="stat"><b>${Math.min(30, mausReady())}</b><small>今天可研究队列 / 目标 30</small></div><div class="stat"><b>${pending.length}</b><small>待你审核的建议</small></div><div class="stat"><b>5</b><small>已建立的部门</small></div><div class="stat"><b>0</b><small>机器人自动外联</small></div></div>
+      <div class="funnel"><div><span>运营总监</span><b>排优先级与约束</b></div><div><span>线索情报</span><b>公开来源研究、去重、评分</b></div><div><span>转化文案</span><b>起草，不发送</b></div><div><span>交付质量</span><b>测试与回滚检查</b></div><div><span>财务与学习</span><b>成本、结果与停损</b></div></div>
+      <div class="sect__head"><h2>部门提交的建议</h2><small>${MAUS.reviews.length}</small></div>${rows || '<div class="empty">还没有建议。部门接入工作台后，提交的研究、文案和复盘会在这里等待你审核。</div>'}`;
+  }
+
   function render() {
     $('[data-today]').textContent = S.today;
     const n = sentToday();
@@ -744,6 +774,7 @@
     if (S.tab === 'stats') renderStats();
     if (S.tab === 'traffic') renderTraffic();
     if (S.tab === 'boss') renderBoss();
+    if (S.tab === 'maus') renderMaus();
   }
 
   // ------------------------------------------------------------ "sent?" bar after opening a channel
@@ -940,6 +971,23 @@
         renderBoss();
         if (t.dataset.act !== 'boss-send') { const d = $('.boss__mem'); if (d) d.open = true; }
       } catch (e) { busy(t, false); if (e.message !== 'unauthorised') toast(e.message); }
+      return;
+    }
+    if (t.dataset.act === 'maus-open-lead') {
+      S.tab = 'list'; S.filter = 'all'; S.open[t.dataset.id] = true;
+      $$('[data-tab]').forEach((b) => b.classList.toggle('is-on', b.dataset.tab === 'list'));
+      $$('[data-view]').forEach((v) => { v.hidden = v.dataset.view !== 'list'; });
+      renderList();
+      const el = document.getElementById('l-' + t.dataset.id); if (el) el.scrollIntoView({ block: 'start' });
+      return;
+    }
+    if (t.dataset.act === 'maus-decide') {
+      try {
+        busy(t, true, '保存审核结果…');
+        await api('maus-review', { review_id: t.dataset.review, decision: t.dataset.decision });
+        await renderMaus(true);
+        toast(t.dataset.decision === 'approved' ? '已采纳。外部动作仍需你自己确认和执行。' : '已记录为不采纳。');
+      } catch (e) { busy(t, false); toast(e.message); }
       return;
     }
     const p = S.items.find((x) => x.id === t.dataset.id);

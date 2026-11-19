@@ -16,8 +16,10 @@ import { BRIEF } from './brief.mjs';
 import { INBOX, PREVIEWS as BUNDLED_PREVIEWS } from './inbox.mjs';
 import { BOT_UA, deviceKind, trafficSummary } from './traffic.mjs';
 import { wpDemoUrl } from './demos.mjs';
+import { reviewSummary } from './maus.mjs';
 
 const DOC = 'prospects-v1';
+const MAUS_REVIEWS = 'maus-reviews-v1';
 const MAX_INPUT = 3000;
 const TEMPLATES = ['dewlane', 'plainfold', 'chili-pantry', 'lowlight', 'tailmate', 'voltnest'];
 const CRITERIA = ['brand_clear', 'sales_signal', 'active_social', 'no_or_weak_website', 'budget_signal'];
@@ -117,6 +119,21 @@ async function storage() {
   return { load: () => PLAT.store.get(DOC), save: (d) => PLAT.store.set(DOC, d) };
 }
 const emptyDoc = () => ({ next: 1, items: [], settings: { dailyLimit: 10 } });
+
+// MAUS can only add a recommendation through /api/maus. The desk owner is the
+// only actor that may accept or reject it. Approval never sends an external
+// message or changes a lead automatically.
+async function mausReviews() { return reviewSummary(await PLAT.store.get(MAUS_REVIEWS)); }
+async function decideMausReview(id, decision) {
+  if (!['approved', 'rejected'].includes(decision)) throw Object.assign(new Error('不认识的审核结果'), { code: 'bad_input' });
+  const s = (await PLAT.store.get(MAUS_REVIEWS)) || { next: 1, records: [] };
+  const r = (s.records || []).find((x) => x.id === id);
+  if (!r) throw Object.assign(new Error('找不到这份 MAUS 建议'), { code: 'not_found' });
+  if (r.status !== 'pending_owner_review') throw Object.assign(new Error('这份建议已经审核过了'), { code: 'bad_input' });
+  r.status = decision; r.decided_at = new Date().toISOString();
+  await PLAT.store.set(MAUS_REVIEWS, s);
+  return r;
+}
 
 // ------------------------------------------------------------------ auth (constant-time) + failed-attempt limit
 const fails = new Map();
@@ -1356,6 +1373,12 @@ ${text}
       return bossOut(s2);
     }
 
+    case 'maus-reviews':
+      return { reviews: await mausReviews() };
+
+    case 'maus-review':
+      return { review: await decideMausReview(String(b.review_id || ''), String(b.decision || '')) };
+
     case 'chat-get': {
       const p = find(doc, b.id);
       return { chat: p.ai_chat || [], summary: p.ai_summary || '' };
@@ -1377,7 +1400,7 @@ ${text}
     }
 
     case 'backup': {
-      return { backup: { exported: myDate(), version: 1, doc, boss: await bossLoad() } }; // 2026-11-17: with the 总助理's conversation and memory
+      return { backup: { exported: myDate(), version: 2, doc, boss: await bossLoad(), maus_reviews: (await PLAT.store.get(MAUS_REVIEWS)) || { next: 1, records: [] } } }; // also retains owner decisions on MAUS recommendations
     }
 
     case 'settings': {
@@ -1397,6 +1420,10 @@ ${text}
         if (b.backup.boss && Array.isArray(b.backup.boss.chat)) { // the 总助理: take the backup's if this desk has none yet
           const cur = await bossLoad();
           if (!cur.chat.length && !cur.memory.length) await bossSave(Object.assign({ chat: [], summary: '', sum_at: 0, memory: [] }, b.backup.boss));
+        }
+        if (b.backup.maus_reviews && Array.isArray(b.backup.maus_reviews.records)) {
+          const curReviews = (await PLAT.store.get(MAUS_REVIEWS)) || { records: [] };
+          if (!(curReviews.records || []).length) await PLAT.store.set(MAUS_REVIEWS, b.backup.maus_reviews);
         }
         if (!src || !Array.isArray(src.items) || !src.items.length || !src.items.every((x) => x && typeof x.id === 'string' && x.business_name)) throw Object.assign(new Error('这不是工作台下载的完整备份（JSON）'), { code: 'bad_input' });
         if (src.items.length > 3000) throw Object.assign(new Error('备份档案太大'), { code: 'bad_input' });

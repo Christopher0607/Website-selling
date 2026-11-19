@@ -6,8 +6,9 @@ import { handleChat } from './server/chat.mjs';
 import { d1Store } from './server/store-d1.mjs';
 import { handleHit } from './server/traffic.mjs';
 import { demoMove } from './server/demos.mjs';
+import { handleMaus } from './server/maus.mjs';
 
-const ROUTES = { '/api/desk': handleDesk, '/api/track': handleTrack, '/api/form': handleForm, '/api/chat': handleChat, '/api/hit': handleHit };
+const ROUTES = { '/api/desk': handleDesk, '/api/maus': handleMaus, '/api/track': handleTrack, '/api/form': handleForm, '/api/chat': handleChat, '/api/hit': handleHit };
 
 export default {
   async fetch(request, env) {
