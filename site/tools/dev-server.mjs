@@ -43,7 +43,7 @@ http.createServer(async (req, res) => {
   }
   let f = path.join(DIST, decodeURIComponent(url.pathname));
   if (!f.startsWith(DIST)) { res.writeHead(403); res.end(); return; }
-  if (f.endsWith('/')) f += 'index.html';
+  if (url.pathname.endsWith('/')) f = path.join(f, 'index.html');
   if (!fs.existsSync(f) || fs.statSync(f).isDirectory()) { res.writeHead(404); res.end('not found'); return; }
   res.writeHead(200, { 'Content-Type': types[path.extname(f)] || 'application/octet-stream' });
   fs.createReadStream(f).pipe(res);

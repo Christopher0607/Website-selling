@@ -88,7 +88,7 @@ async function mausApi(body) {
     ok(rs.added === 3, 'test desk: 3 shop cards');
 
     console.log('The 总助理 tab');
-    b = await chromium.launch();
+    b = await chromium.launch({ executablePath: process.env.DESK_TEST_BROWSER || undefined });
     const p = await (await b.newContext({ viewport: { width: 1100, height: 900 } })).newPage();
     const errs = [];
     p.on('pageerror', (e) => errs.push(e.message));
@@ -163,14 +163,18 @@ async function mausApi(body) {
     ok(errs.length === 0, 'no JavaScript errors' + (errs.length ? ': ' + errs.slice(0, 2).join(' | ') : ''));
 
     console.log('Project MAUS owner review');
-    const mr = await mausApi({ action: 'submit_review', kind: 'lead_research', lead_id: 'c1', title: 'Public source check', summary: 'A test recommendation; no message was sent.' });
+    await deskApi('restore', { backup: { items: [{ id: 'c4', business_name: 'New Bakery', status: 'new', instagram: 'bakery' }] } });
+    const sample = { action: 'submit_review', kind: 'lead_research', lead_id: 'c4', title: '公开资料核对', summary: '已核对这家面包店的资料。' };
+    const mr = await mausApi(sample);
     ok(mr.status === 201 && mr.body.review.status === 'pending_owner_review', 'department can submit an internal recommendation only');
     await p.click('[data-tab="maus"]');
     await p.waitForSelector('[data-maus] [data-act="maus-decide"]');
-    ok(/机器人自动外联[\s\S]*0/.test(await p.textContent('[data-maus]')), 'MAUS tab states that it has no automatic external outreach');
+    ok(/0 \/ 30今天已首次联系/.test(await p.textContent('[data-maus]')), 'research does not count toward the daily outreach goal');
     await p.click('[data-maus] [data-act="maus-decide"][data-decision="approved"]');
     await p.waitForFunction(() => /已采纳/.test(document.querySelector('[data-maus]').textContent));
     ok(/已采纳/.test(await p.textContent('[data-maus]')), 'owner can approve a recommendation without triggering an external action');
+    const next = await mausApi(sample);
+    ok(next.status === 201 && next.body.review.status === 'accepted_under_policy', 'later submissions inherit the first approval');
 
     console.log('Phone');
     const m = await (await b.newContext({ ...devices['iPhone 13'] })).newPage();
@@ -179,7 +183,8 @@ async function mausApi(body) {
     await m.click('[data-login] button[type=submit], [data-login] .btn');
     await m.waitForSelector('#app:not([hidden])', { timeout: 15000 });
     await m.click('[data-tab="maus"]');
-    await m.waitForSelector('[data-maus]');
+    await m.waitForSelector('[data-maus] .card');
+    ok((await m.textContent('[data-maus]')).includes('已自动收录'), 'approved policy persists on a second device');
     ok(await m.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth) <= 0 && (await m.$$('.tabs button')).length === 7, 'phone: seven tabs fit, nothing sticks out');
     if (process.argv[2]) await m.screenshot({ path: process.argv[2], fullPage: false });
   } catch (e) {

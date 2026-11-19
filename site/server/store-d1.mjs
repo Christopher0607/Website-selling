@@ -17,6 +17,13 @@ export function d1Store(db) {
   const partsOf = async (k) => (await db.prepare('SELECT v FROM kv WHERE k >= ? AND k < ? ORDER BY k').bind(k + '#', k + '#~').all()).results.map((r) => r.v).join('');
 
   return {
+    async compareRevision(k, revision, value) {
+      await init();
+      const result = await db.prepare(
+        "INSERT INTO kv(k,v,t) VALUES(?,?,?) ON CONFLICT(k) DO UPDATE SET v=excluded.v, t=excluded.t WHERE coalesce(json_extract(kv.v,'$.revision'),0)=?"
+      ).bind(k, JSON.stringify(value), Date.now(), revision).run();
+      return result.meta.changes === 1;
+    },
     async get(k) {
       await init();
       const row = await db.prepare('SELECT v FROM kv WHERE k = ?').bind(k).first();

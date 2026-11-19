@@ -17,6 +17,14 @@ export function fileStore(file) {
     return { f: file + '.misc.json', sub: k };
   };
   const api = {
+    async compareRevision(k, revision, value) {
+      const w = where(k);
+      const all = read(w.f, {});
+      if ((all[k]?.revision || 0) !== revision) return false;
+      all[k] = value;
+      fs.writeFileSync(w.f, JSON.stringify(all));
+      return true;
+    },
     async get(k) {
       const w = where(k);
       if (!w.sub) return read(w.f, null);

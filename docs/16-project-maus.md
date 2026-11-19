@@ -1,15 +1,15 @@
 # Project MAUS · Cartsmith operating loop
 
-The Sales Desk remains the customer system of record. Project MAUS is a set of
-internal departments around it, not a second CRM.
+The Sales Desk holds customer records. Project MAUS coordinates four specialist
+departments through an Operations Director.
 
 ```text
-Public research → qualified daily queue → owner-reviewed draft → owner sends
+Public research → qualified daily queue → approved internal workflow → contact
       ↑                                                        ↓
 weekly learning ← delivery quality ← interested customer / project outcome
 ```
 
-## What is live in this branch
+## Implemented in this branch
 
 - `/api/maus` is a separate, bearer-token protected bridge for MAUS.
 - It exposes at most 30 eligible new leads for a day, sorted by score.
@@ -20,8 +20,18 @@ weekly learning ← delivery quality ← interested customer / project outcome
 - A department may submit a bounded internal recommendation. It cannot change a
   lead, send a message, call a number, delete data, deploy code or access
   Cloudflare administration.
-- The Desk has a **MAUS** tab where the owner accepts or rejects recommendations.
-  Approval is a record of the decision, never an automatic external action.
+- The Desk has a **MAUS** tab for the first approval and department work history.
+  The first accepted recommendation enables automatic collection of pending and
+  future internal work across all departments. Each automatic receipt references
+  that approval. Rejected work stays rejected.
+- The review history uses revision checks to preserve concurrent submissions and
+  approval decisions. The first approval persists independently of rolling history.
+- Reports submitted through the bridge reject model protocol markers and fenced
+  code. Bot instructions require short, conversational Chinese for the owner.
+- `ops/maus/team.yaml` defines the four departments, the Operations Director and
+  the room **总监汇报室**. Ordinary room messages use the Director as responder.
+  Lead Intelligence has public-page browser tools. The Director has coordination
+  tools.
 
 ## Department capabilities
 
@@ -56,27 +66,41 @@ POST /api/maus
 }
 ```
 
-The caller's token fixes its department and permitted `kind`; a caller cannot
-choose another department in the body. Recommendations stay
-`pending_owner_review` until the owner decides in `/desk/`.
+The caller's token fixes its department and permitted `kind`. Before the first
+approval, recommendations have `pending_owner_review` status. The accepted
+example has `approved` status. Later work has `accepted_under_policy` status
+and an `approval_id` pointing to that example.
 
-## Safe rollout
+## Cloud handoff · 20 November 2026
 
-1. Run the local checks below and deploy the Worker only after they pass.
-2. Add the five independent Cloudflare secrets. Start with the research token
-   only; keep all other integrations disabled until their work is reviewed.
-3. Give Lead Intelligence a browser limited to public, no-login research. Do
-   not give it the Desk password, SSH, Docker, Cloudflare, WordPress, email,
-   WhatsApp, payment or deployment credentials.
-4. When 2–3 days of recommendations are useful, add the Sales Conversion token
-   so it can submit drafts to the owner review queue. It still must not send.
-5. Turn on each remaining department only after a useful weekly output exists.
+Continue from branch `feature/maus-departments`. The owner requested this GitHub
+snapshot to continue in a Cloud environment.
 
-The 30/day target means **30 qualified, deduplicated and reviewable prospects in
-the work queue**, not 30 unsolicited automated messages. Contact is only via an
-approved official channel with a documented lawful basis, rate limit, audit
-trail and immediate do-not-contact handling; the owner takes the final send
-action.
+The owner approved the first public-browser research task and subsequent work
+of the same kind in this chat. This covers internal research, drafts, quality
+checks and learning. Preserve that approval when continuing.
+
+The live MAUS instance already has the five bots and **总监汇报室**. A real room
+test returned one plain-Chinese Director response. A Lead Intelligence browser
+call reached the platform's first permission card. Applying the owner's approval
+to that card and verifying the resulting page read remain pending.
+
+The code in this branch has local verification. Production deployment of the
+updated Desk bridge and its five role secrets remains pending. The MAUS server
+holds its own live configuration and data. A GitHub clone supplies the source
+and team definition. Configure credentials through the Cloud environment's
+secret settings.
+
+Next integration work is to connect the departments to the deployed Desk
+bridge, verify a real research-to-report batch and persist the first approval
+receipt. Then add a recurring MAUS routine with quota and overlap handling.
+A recurring daily routine has yet to be created.
+
+The business target is **30 actual customers contacted per day**. The Desk
+shows actual first contacts separately from eligible research candidates.
+Configured external sending channels and verified delivery receipts are still
+needed to automate that target. Current bridge submissions perform internal
+work. Actual automated contacts completed in this setup so far total zero.
 
 ## Local checks
 
@@ -85,4 +109,10 @@ node --check site/worker.mjs
 node --check site/server/maus.mjs
 node site/tools/check-maus.js
 python site/build.py
+node site/tools/check-boss.js
 ```
+
+The browser check needs Playwright and Chromium. An installed Chrome can be
+selected with `DESK_TEST_BROWSER`. Local verification passed 15 bridge contract
+checks and 22 browser checks, including first approval, concurrent submissions,
+automatic collection, persistence on another device and phone layout.

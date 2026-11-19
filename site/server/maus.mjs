@@ -3,7 +3,7 @@
 // This is deliberately a narrow, capability-based API.  It gives the internal
 // departments a daily work queue and a place to submit recommendations, but it
 // cannot send a message, change a lead, read customer conversations, or expose
-// a contact address.  The desk owner reviews every recommendation in /desk.
+// a contact address. The owner reviews the first internal submission.
 
 const DOC = 'prospects-v1';
 const REVIEWS = 'maus-reviews-v1';
@@ -36,7 +36,8 @@ async function same(a, b) {
 }
 
 async function authorise(req, env) {
-  const token = (req.headers.get('authorization') || '').replace(/^Bearer\s+/i, '').trim();
+  const token = /^Bearer\s+(\S+)$/i.exec(req.headers.get('authorization') || '')?.[1];
+  if (!token) return null;
   for (const [role, cfg] of Object.entries(ROLES)) if (await same(env(cfg.env) || '', token)) return { role, cfg };
   return null;
 }
@@ -71,30 +72,49 @@ function metrics(doc) {
   const by_status = {};
   let sent_today = 0;
   let replies_today = 0;
+  let first_contacts_today = 0;
   let won_total = 0;
   for (const p of items) {
     const status = safe(p.status || 'new', 50);
     by_status[status] = (by_status[status] || 0) + 1;
     if (status === 'won') won_total++;
+    if (p.first_contact_date === todayMY()) first_contacts_today++;
     for (const h of Array.isArray(p.history) ? p.history : []) {
       if (h && h.d === todayMY() && h.e === 'sent') sent_today++;
       if (h && h.d === todayMY() && h.e === 'replied') replies_today++;
     }
   }
-  return { date: todayMY(), leads_total: items.length, by_status, sent_today, replies_today, won_total };
+  return { date: todayMY(), leads_total: items.length, by_status, first_contacts_today, sent_today, replies_today, won_total };
 }
 
 function reviewStore(value) {
   const s = value && typeof value === 'object' ? value : {};
-  return { next: Math.max(1, parseInt(s.next, 10) || 1), records: Array.isArray(s.records) ? s.records : [] };
+  return { next: Math.max(1, parseInt(s.next, 10) || 1), records: Array.isArray(s.records) ? s.records : [],
+    revision: s.revision || 0, firstApproval: s.firstApproval || null };
+}
+
+export async function editReviews(store, change) {
+  for (let attempt = 0; attempt < 8; attempt++) {
+    const state = reviewStore(structuredClone(await store.get(REVIEWS)));
+    const revision = state.revision++;
+    const result = change(state);
+    // Keep the receipt for the first approval independently of the rolling history.
+    while (state.records.length > MAX_REVIEWS || new TextEncoder().encode(JSON.stringify(state)).length > 1500000) {
+      const oldest = state.records.findIndex(r => r.status !== 'pending_owner_review' && r.id !== result?.id);
+      if (oldest < 0) throw Object.assign(new Error('请先处理待审建议'), {code: 'busy'});
+      state.records.splice(oldest, 1);
+    }
+    if (await store.compareRevision(REVIEWS, revision, state)) return result;
+  }
+  throw Object.assign(new Error('请稍后重试'), {code: 'busy'});
 }
 
 function recordFrom(body, role, doc, store) {
   const kind = safe(body.kind, 40);
   if (!ROLES[role].kinds.includes(kind)) throw Object.assign(new Error('this department cannot submit that review kind'), { code: 'forbidden' });
   const leadId = safe(body.lead_id, 80);
-  if (['lead_research', 'message_draft'].includes(kind) && !doc.items.some((p) => p.id === leadId)) {
-    throw Object.assign(new Error('lead_id is not in the desk'), { code: 'bad_input' });
+  if (['lead_research', 'message_draft'].includes(kind) && !doc.items.some((p) => p.id === leadId && eligible(p))) {
+    throw Object.assign(new Error('lead is not eligible for the queue'), { code: 'bad_input' });
   }
   const title = safe(body.title, 180);
   const summary = safe(body.summary, MAX_TEXT);
@@ -104,12 +124,15 @@ function recordFrom(body, role, doc, store) {
     note: safe(x && x.note, 300),
   })).filter((x) => x.url || x.note) : [];
   const id = 'mr' + String(store.next++).padStart(5, '0');
-  return { id, role, kind, lead_id: leadId, title, summary, evidence, status: 'pending_owner_review', created_at: new Date().toISOString() };
+  if (/DSML|<\/?(?:tool_call|invoke|parameter)\b|```/i.test([title,summary,...evidence.map(e => e.note)].join(' ')))
+    throw Object.assign(new Error('请用普通文字提交业务结果'), {code:'bad_input'});
+  const status = store.firstApproval ? 'accepted_under_policy' : 'pending_owner_review';
+  return { id, role, kind, lead_id: leadId, title, summary, evidence, status, approval_id: store.firstApproval?.id, created_at: new Date().toISOString() };
 }
 
 export function reviewSummary(value, limit = 60) {
   const s = reviewStore(value);
-  return s.records.slice(-Math.max(1, Math.min(100, limit))).reverse();
+  return s.records.slice(-Math.max(1, Math.min(MAX_REVIEWS, limit))).reverse();
 }
 
 // /api/maus — internal bot API. Configure one independent secret per role:
@@ -122,9 +145,9 @@ export async function handleMaus(req, plat) {
   const doc = (await plat.store.get(DOC)) || { items: [] };
   if (req.method === 'GET') {
     const resource = new URL(req.url).searchParams.get('resource') || 'capabilities';
-    if (resource === 'capabilities') return json({ role: access.role, resources: access.cfg.resources, submit_kinds: access.cfg.kinds, external_contact: false, owner_approval_required: true });
+    if (resource === 'capabilities') return json({ role: access.role, resources: access.cfg.resources, submit_kinds: access.cfg.kinds, external_contact: false, owner_approval_required: !(await plat.store.get(REVIEWS))?.firstApproval });
     if (!access.cfg.resources.includes(resource)) return json({ error: 'forbidden' }, 403);
-    if (resource === 'metrics') return json({ metrics: metrics(doc), owner_approval_required: true });
+    if (resource === 'metrics') return json({ metrics: metrics(doc) });
     const limit = Math.max(1, Math.min(30, parseInt(new URL(req.url).searchParams.get('limit'), 10) || 30));
     const queue = (Array.isArray(doc.items) ? doc.items : []).filter(eligible)
       .sort((a, b) => (Number(b.score) || 0) - (Number(a.score) || 0) || String(a.created || '').localeCompare(String(b.created || '')) || String(a.id).localeCompare(String(b.id)))
@@ -133,15 +156,17 @@ export async function handleMaus(req, plat) {
   }
   let body;
   try { body = await req.json(); } catch (e) { return json({ error: 'bad_json' }, 400); }
-  if (body.action !== 'submit_review') return json({ error: 'bad_input', message: 'only submit_review is allowed' }, 400);
+  if (body?.action !== 'submit_review') return json({ error: 'bad_input', message: 'only submit_review is allowed' }, 400);
   try {
-    const saved = reviewStore(await plat.store.get(REVIEWS));
-    const record = recordFrom(body, access.role, doc, saved);
-    saved.records = [...saved.records, record].slice(-MAX_REVIEWS);
-    await plat.store.set(REVIEWS, saved);
-    return json({ accepted: true, review: record, owner_approval_required: true }, 201);
+    const record = await editReviews(plat.store, state => {
+      const entry = recordFrom(body, access.role, doc, state);
+      state.records.push(entry);
+      return entry;
+    });
+    return json({ accepted: true, review: record, owner_approval_required: record.status === 'pending_owner_review' }, 201);
   } catch (e) {
-    const status = e.code === 'forbidden' ? 403 : 400;
+    const status = {forbidden:403, bad_input:400, busy:409}[e.code] || 500;
+    if (status === 500) return json({error:'storage_failed'}, 500);
     return json({ error: e.code || 'bad_input', message: e.message }, status);
   }
 }

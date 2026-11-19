@@ -16,7 +16,7 @@ import { BRIEF } from './brief.mjs';
 import { INBOX, PREVIEWS as BUNDLED_PREVIEWS } from './inbox.mjs';
 import { BOT_UA, deviceKind, trafficSummary } from './traffic.mjs';
 import { wpDemoUrl } from './demos.mjs';
-import { reviewSummary } from './maus.mjs';
+import { reviewSummary, editReviews } from './maus.mjs';
 
 const DOC = 'prospects-v1';
 const MAUS_REVIEWS = 'maus-reviews-v1';
@@ -123,16 +123,24 @@ const emptyDoc = () => ({ next: 1, items: [], settings: { dailyLimit: 10 } });
 // MAUS can only add a recommendation through /api/maus. The desk owner is the
 // only actor that may accept or reject it. Approval never sends an external
 // message or changes a lead automatically.
-async function mausReviews() { return reviewSummary(await PLAT.store.get(MAUS_REVIEWS)); }
 async function decideMausReview(id, decision) {
   if (!['approved', 'rejected'].includes(decision)) throw Object.assign(new Error('不认识的审核结果'), { code: 'bad_input' });
-  const s = (await PLAT.store.get(MAUS_REVIEWS)) || { next: 1, records: [] };
-  const r = (s.records || []).find((x) => x.id === id);
-  if (!r) throw Object.assign(new Error('找不到这份 MAUS 建议'), { code: 'not_found' });
-  if (r.status !== 'pending_owner_review') throw Object.assign(new Error('这份建议已经审核过了'), { code: 'bad_input' });
-  r.status = decision; r.decided_at = new Date().toISOString();
-  await PLAT.store.set(MAUS_REVIEWS, s);
-  return r;
+  return editReviews(PLAT.store, s => {
+    const r = s.records.find((x) => x.id === id);
+    if (!r) throw Object.assign(new Error('找不到这份建议'), { code: 'not_found' });
+    if (r.status !== 'pending_owner_review') throw Object.assign(new Error('这份建议已经审核过了'), { code: 'bad_input' });
+    r.status = decision;
+    r.decided_at = new Date().toISOString();
+    if (decision === 'approved' && !s.firstApproval) {
+      s.firstApproval = { id, at: r.decided_at };
+      for (const other of s.records) {
+        if (other.status !== 'pending_owner_review') continue;
+        other.status = 'accepted_under_policy';
+        other.approval_id = id;
+      }
+    }
+    return r;
+  });
 }
 
 // ------------------------------------------------------------------ auth (constant-time) + failed-attempt limit
@@ -1373,8 +1381,10 @@ ${text}
       return bossOut(s2);
     }
 
-    case 'maus-reviews':
-      return { reviews: await mausReviews() };
+    case 'maus-reviews': {
+      const state = await PLAT.store.get(MAUS_REVIEWS);
+      return { reviews: reviewSummary(state, 300), enabled: !!state?.firstApproval };
+    }
 
     case 'maus-review':
       return { review: await decideMausReview(String(b.review_id || ''), String(b.decision || '')) };
@@ -1417,16 +1427,21 @@ ${text}
       // full backup (JSON from "下载完整备份"): everything on each card comes back, including the AI assistant's conversations
       if (b.backup) {
         const src = b.backup.doc || b.backup;
+        if (!src || !Array.isArray(src.items) || !src.items.length || !src.items.every((x) => x && typeof x.id === 'string' && x.business_name)) throw Object.assign(new Error('这不是工作台下载的完整备份（JSON）'), { code: 'bad_input' });
+        if (src.items.length > 3000) throw Object.assign(new Error('备份档案太大'), { code: 'bad_input' });
         if (b.backup.boss && Array.isArray(b.backup.boss.chat)) { // the 总助理: take the backup's if this desk has none yet
           const cur = await bossLoad();
           if (!cur.chat.length && !cur.memory.length) await bossSave(Object.assign({ chat: [], summary: '', sum_at: 0, memory: [] }, b.backup.boss));
         }
         if (b.backup.maus_reviews && Array.isArray(b.backup.maus_reviews.records)) {
-          const curReviews = (await PLAT.store.get(MAUS_REVIEWS)) || { records: [] };
-          if (!(curReviews.records || []).length) await PLAT.store.set(MAUS_REVIEWS, b.backup.maus_reviews);
+          const backup = b.backup.maus_reviews;
+          await editReviews(PLAT.store, state => {
+            if (state.records.length || state.firstApproval) return;
+            state.records = backup.records.filter(r => r && typeof r.id === 'string' && typeof r.title === 'string' && typeof r.summary === 'string');
+            state.next = Math.max(Number(backup.next) || 1, ...state.records.map(r => (Number(r.id.slice(2)) || 0) + 1));
+            if (backup.firstApproval?.id && backup.firstApproval?.at) state.firstApproval = { id: backup.firstApproval.id, at: backup.firstApproval.at };
+          });
         }
-        if (!src || !Array.isArray(src.items) || !src.items.length || !src.items.every((x) => x && typeof x.id === 'string' && x.business_name)) throw Object.assign(new Error('这不是工作台下载的完整备份（JSON）'), { code: 'bad_input' });
-        if (src.items.length > 3000) throw Object.assign(new Error('备份档案太大'), { code: 'bad_input' });
         let added = 0, skipped = 0, chats = 0;
         if (!doc.items.length) { // new, empty desk: take the whole backup as it is
           for (const k of Object.keys(doc)) delete doc[k];
@@ -1490,7 +1505,7 @@ export async function handleDesk(req, plat) {
     if (out.saved) await st.save(doc);
     return json(out);
   } catch (e) {
-    const status = { bad_input: 400, not_found: 404, no_ai: 503, ai_auth: 502, ai_failed: 502 }[e.code] || 500;
+    const status = { bad_input: 400, not_found: 404, busy: 409, no_ai: 503, ai_auth: 502, ai_failed: 502 }[e.code] || 500;
     if (status === 500) console.error('desk error', e);
     return json({ error: e.code || 'server_error', message: e.message || '出错了' }, status);
   }
