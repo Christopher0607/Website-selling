@@ -99,6 +99,8 @@
 
 ## 建议区（Claude Code 想到但还没做的改进）
 
+- **2026-11-22 一人公司（OPC）计划：** `docs/17-one-person-company.md`（6 个 agent + 「待批准」；分 3 阶段），等俊宇说可以才开始第 1 阶段。
+
 - **2026-11-22 Codex 做的 Project MAUS（分支 `feature/maus-departments`，没合并、没部署）：** 在俊宇的 VPS 上用 OpenMaus 开了 5 个 DeepSeek 机器人（运营总监 + 找客户、写信息、品质、财务 4 个部门），工作台多一个 MAUS 分页和 `/api/maus` 接口。Claude Code 建议**先停**：现在卡住的不是研究和写信息（收件箱 33 家、信息草稿都有），是真的发出去和跟老板谈；它的目标「每天自动联系 30 家」要靠 WhatsApp Business API 自动发，这违反 WhatsApp 规则（要对方先同意才可以发，2026-11-22 查 whatsappbusiness.com/policy）和我们「信息由俊宇手动发」的规则；「第一次批准后全部自动通过」等于不再审核；也跟「总助理」重复。值得留的：Windows 上 build 的编码修正（已拿过来）、新年信息放进工作台（跟 `sales/cny-2027-messages.md` 一字不差，等俊宇说可以）。VPS 如果只为 MAUS 开，确认没有要留的东西后可以关掉省钱（俊宇同意才做）。
 
 - **2026-11-17 向 StoreHub / Beep 学习**（`docs/15-storehub-beep-study.md`）：桌上「点单就付款」、柜台收银（轻量版）、接 Loyverse 收银机（StoreHub 没有公开 API）、会员回馈金、外送自动叫 Lalamove、店家自己开通、厨房打印机、LHDN 电子发票——等俊宇选要先做哪几个。
