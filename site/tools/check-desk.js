@@ -742,6 +742,32 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
     fs.writeFileSync(STORE, before);
   }
 
+  // Chinese New Year push (decision 44, 2026-11-22: Junyu approved sales/cny-2027-messages.md): bakers and food-gift shops
+  // without a mockup get the CNY follow-ups until 2 December; restaurants keep the usual ones
+  {
+    const api5 = (body) => fetch(`${BASE}/api/desk`, { method: 'POST', headers: { 'content-type': 'application/json', 'x-desk-key': KEY }, body: JSON.stringify(body) }).then((r) => r.json());
+    const before = fs.readFileSync(STORE, 'utf8');
+    const d8 = JSON.parse(before);
+    const base8 = { created: '2026-11-18', platform: 'instagram', store_url: '', instagram: '', email: '', input: 'x', notes: '', score: 4, fit: 'good', history: [], touches: 1, status: 'contacted', followup: '' };
+    d8.items.unshift({ ...base8, id: 'p971', business_name: 'Kuih Kapit House', niche: 'CNY cookies and kuih bakery', language: 'zh', whatsapp: '60122000111' });
+    d8.items.unshift({ ...base8, id: 'p972', business_name: 'Kuih Kapit House Two', niche: 'CNY cookies and kuih bakery', language: 'en', whatsapp: '60122000112', touches: 2 });
+    d8.items.unshift({ ...base8, id: 'p973', business_name: 'Noodle Corner', niche: 'Chinese restaurant', language: 'en', whatsapp: '60122000113' });
+    fs.writeFileSync(STORE, JSON.stringify(d8));
+    const on = new Date(Date.now() + 8 * 3600e3).toISOString().slice(0, 10) <= '2026-12-02';
+    const f1 = ((await api5({ action: 'followup', id: 'p971' })).item || {}).followup || '';
+    const f2 = ((await api5({ action: 'followup', id: 'p972' })).item || {}).followup || '';
+    const f3 = ((await api5({ action: 'followup', id: 'p973' })).item || {}).followup || '';
+    const noQ = (t) => !/[?？]/.test(t.replace(/https?:\/\/\S+/g, ''));
+    if (on) {
+      ok(/新年预购网店/.test(f1) && /Kuih Kapit House/.test(f1) && /RM399/.test(f1) && /12 月 5 日/.test(f1) && /Cartsmith Studio/.test(f1) && noQ(f1), 'CNY push: a baker contacted once gets the second CNY message (Chinese, RM399 after the first order, 5 Dec, no questions)');
+      ok(/last message about the CNY pre-order shop/.test(f2) && /butter-lantern\.demo\.cartsmithstudio\.com\/\?fest=cny/.test(f2) && noQ(f2), 'CNY push: after two messages, the last one (English, with the CNY demo)');
+      ok(f3 && !/CNY pre-order shop|新年预购网店/.test(f3), 'CNY push: a restaurant keeps the usual follow-up');
+    } else {
+      ok(f1 && !/新年预购网店/.test(f1), 'after 2 December: bakers get the usual follow-up again');
+    }
+    fs.writeFileSync(STORE, before);
+  }
+
   // corrections by Claude Code: calls and replies that happened outside the desk, with their real dates
   {
     const api3 = (body) => fetch(`${BASE}/api/desk`, { method: 'POST', headers: { 'content-type': 'application/json', 'x-desk-key': KEY }, body: JSON.stringify(body) }).then((r) => r.json());
