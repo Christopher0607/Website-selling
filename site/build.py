@@ -21,6 +21,13 @@ import re
 import shutil
 import sys
 
+# Windows PowerShell can start Python with a legacy code page (cp1252), and printing the Chinese status lines then
+# fails a build that worked (2026-11-19, found by Junyu's Codex session on Windows).
+try:
+    sys.stdout.reconfigure(encoding="utf-8")
+except (AttributeError, OSError):
+    pass
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 DIST = os.path.join(HERE, "dist")
 WP = False  # build_wp(): the same shop template as a real WordPress + WooCommerce site (orders really are created there)
