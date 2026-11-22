@@ -13,5 +13,5 @@
 - **资料：** 只存在浏览器 localStorage（`bl_*`：购物车、库存、订单、设定）。后台的 12 张订单是示范资料；后台「重设示范」可以清掉。
 - **程式：** `layout.html`（Demo 横幅、节日切换、页首、购物车抽屉、商品选项、付款视窗）+ `pages/`（`index`、`checkout`、`order`、`owner`）+ `style.css`（每个节日的颜色、花纹、吊饰都用 CSS 变数）+ `app.js`（节日资料、库存、运费、时段、付款、订单、后台）。
 - **测试：** `node site/tools/check-flagships.js http://localhost:8790`（下单、库存、付款、查订单、后台）+ `node site/tools/check-times.js http://localhost:8790`（深夜、截止前后）。
-- **照片：** Pexels（来源和授权在 `image-sources.md`）。Pexels 找不到真的花生饼照片：`cny-peanut.webp` 是从 36824910 手动裁掉盖子上开斋节吊饰的部分。真正交付时用客户自己拍的产品照。
+- **照片：** Pexels，和新年的 5 张年饼照（黄梨挞、蛋卷、花生饼、牛油曲奇、番婆饼，2026-11-22 换成 Flickr 上 Choo Yut Shing 的公有领域照片，白盘子同一个拍法；新年礼盒是 Pexels 6692120 手动裁的）。来源和授权在 `image-sources.md`。真正交付时用客户自己拍的产品照。
 - **卖给客户时：** 示范是静态的 JS 模仿；真正交付做在 **WordPress + WooCommerce**（客户名义的付款网关，审批要几天；在那之前先用 DuitNow QR + 上传收据），换成客户的店名、产品、价钱、照片、日期，3 个工作天上线。包 3 个月主机和维护；之后免费暂停、下个节日 RM149 重开，或 RM49 / 月继续开；换节日造型 RM99。

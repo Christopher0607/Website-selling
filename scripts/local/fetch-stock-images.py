@@ -15,6 +15,9 @@ stock.json 格式:
   crop: square（1:1，产品图）、portrait（4:5）、wide（16:9，主视觉 / 横幅）、none（只缩小）
   gravity: center（默认）、north（人像，保留头部）、south 等（ImageMagick gravity）
   dest: 相对于站点文件夹的输出位置（默认 images）
+  不是 Pexels 的照片（2026-11-22）：不写 "pexels"，改写 "url"（图片直接网址）、"landing"（来源页）、
+  "credit"（例如 Flickr 55167105368 (Choo Yut Shing)）、"license"（例如 Public Domain Mark 1.0）。
+  只放公有领域 / CC0 / 明确可商用的照片。
 
 授权（2026-11-07 查）：Pexels License —— 免费、可商用、不需要署名；
 不可以：原样转售照片、暗示照片中的人或品牌为你的产品代言、用负面方式呈现照片中的人。
@@ -30,8 +33,8 @@ import urllib.request
 SIZES = {"square": (1200, 1200), "portrait": (1200, 1500), "wide": (1920, 1080), "none": None}
 
 
-def download(pid, width, dst):
-    url = f"https://images.pexels.com/photos/{pid}/pexels-photo-{pid}.jpeg?auto=compress&cs=tinysrgb&w={width}"
+def download(pid, width, dst, url=None):
+    url = url or f"https://images.pexels.com/photos/{pid}/pexels-photo-{pid}.jpeg?auto=compress&cs=tinysrgb&w={width}"
     req = urllib.request.Request(url, headers={"User-Agent": "cartsmith-stock-fetch/1.0"})
     with urllib.request.urlopen(req, timeout=60) as r, open(dst, "wb") as fh:
         fh.write(r.read())
@@ -45,7 +48,7 @@ def main():
     site = sys.argv[2]
     rows = []
     for img in spec["images"]:
-        pid = int(img["pexels"])
+        pid = int(img["pexels"]) if img.get("pexels") else None
         crop = img.get("crop", "square")
         gravity = img.get("gravity", "center")
         dest = os.path.join(site, img.get("dest", "images"))
@@ -53,7 +56,7 @@ def main():
         out = os.path.join(dest, img["file"])
         with tempfile.TemporaryDirectory() as d:
             raw = os.path.join(d, "raw.jpg")
-            download(pid, 2000, raw)
+            download(pid, 2000, raw, img.get("url"))
             tmp = os.path.join(d, "out.png")
             size = SIZES.get(crop)
             cmd = ["convert", raw, "-auto-orient", "-strip"]
@@ -68,8 +71,11 @@ def main():
             else:
                 subprocess.run(["convert", tmp, "-quality", "80", "-interlace", "Plane", out], check=True)
         kb = os.path.getsize(out) // 1024
-        print(f"  {img.get('dest', 'images')}/{img['file']:<28} pexels {pid:<10} {crop:<8} {kb} KB")
-        rows.append(f"| {img.get('dest', 'images')}/{img['file']} | [Pexels {pid}](https://www.pexels.com/photo/{pid}/) | {img.get('note', '')} | Pexels License（免费商用，不需署名） |")
+        print(f"  {img.get('dest', 'images')}/{img['file']:<28} {pid or img.get('credit', ''):<10} {crop:<8} {kb} KB")
+        if pid:
+            rows.append(f"| {img.get('dest', 'images')}/{img['file']} | [Pexels {pid}](https://www.pexels.com/photo/{pid}/) | {img.get('note', '')} | Pexels License（免费商用，不需署名） |")
+        else:
+            rows.append(f"| {img.get('dest', 'images')}/{img['file']} | [{img.get('credit', 'source')}]({img.get('landing', img['url'])}) | {img.get('note', '')} | {img.get('license', '?')} |")
     md = os.path.join(site, "image-sources.md")
     if os.path.exists(md):
         # 2026-11-16: only replace the rows of the photos fetched this time; keep every other row (a one-photo

@@ -178,8 +178,8 @@
        "Golden Pineapple Tarts"
       ],
       "d": [
-       "凤梨造型的开口挞，酸甜黄梨馅，摆在桌上就很好看。",
-       "Pineapple-shaped open tarts with a sweet-sour filling. They look good on the table."
+       "花形开口挞，铺满自家熬的黄梨酱，摆在桌上就很好看。",
+       "Open flower-shaped tarts topped with home-cooked pineapple jam. They look good on the table."
       ],
       "u": [
        "一盒 30 粒",
@@ -299,20 +299,20 @@
       ]
      },
      {
-      "id": "ac",
-      "img": "cny-almond-crisps",
+      "id": "kb",
+      "img": "cny-kuih-bangkit",
       "cat": "cookie",
       "n": [
-       "杏仁瓦片",
-       "Almond Crisps"
+       "番婆饼",
+       "Kuih Bangkit"
       ],
       "d": [
-       "薄薄一片，满满杏仁片，配茶刚好。",
-       "Thin crisps full of almond flakes. Good with tea."
+       "木薯粉、椰浆和蛋做的传统饼，入口即化，淡淡椰香。",
+       "Traditional tapioca-flour cookies with coconut milk and egg. They melt in the mouth."
       ],
       "u": [
-       "250 克",
-       "250 g box"
+       "一罐 60 粒",
+       "Jar of 60"
       ],
       "p": 36,
       "total": 50,
@@ -322,8 +322,8 @@
        "Keeps 3 weeks sealed"
       ],
       "has": [
-       "杏仁、蛋",
-       "almond, egg"
+       "木薯粉、椰浆、蛋",
+       "tapioca flour, coconut, egg"
       ]
      },
      {
