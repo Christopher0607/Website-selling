@@ -2,6 +2,22 @@
 
 Claude Code 上网找到的商家写在这里。`python3 site/build.py` 会把所有 `*.json` 合成 `site/server/inbox.mjs` 和 `sales/leads/inbox.json`。push 到 `leads` 分支后（不部署），工作台直接读取，工作台「今天」最上面就会出现「新商家 · Claude Code 找的」。俊宇按「全部加入」，AI 就逐家打分、写开场白，**资料不用复制粘贴**。
 
+## 找客户机器人（2026-11-24 起，不用 Claude 也会每天跑）
+
+`.github/workflows/find-leads.yml` 每天早上 06:23（马来西亚时间）在 GitHub Actions 跑 `scripts/robot/find-leads.mjs`：
+按季节搜索公开文章（新年饼、黄梨挞、kuih raya、kek lapis、月饼、圣诞蛋糕、home baker……× 各地区），用 DeepSeek 把文章里的店家整理出来，
+写进 `sales/leads/<日期>-robot.json`，重建 `inbox.json` 再 push 到 `leads` 分支，工作台收件箱 5 分钟内出现（最多 100 家 / 天，`ROBOT_MAX_LEADS`）。
+
+- **只留真的：** 手机号码一定要出现在那篇文章里（AI 抄错或编出来的会被丢掉）；IG 帐号不在文章里就不写；酒店、连锁、新加坡的不要；
+  `.com / .com.my / .my` 打得开、标题有他们名字的算「有网站」，不放；同名网域但标题不同的，只在卡片「发之前确认」里提醒。
+- **不碰的：** 不开 Instagram / Facebook / Shopee / TikTok 页面，不登录，不发任何信息。加进名单、发信息还是俊宇自己按。
+- **不重复：** 跟 `sales/leads/*.json` 全部比对（名字、IG、号码）；读过的文章和用过的搜索记在 `robot-state.json`（一年后忘掉）。
+- **要的钥匙（GitHub → Settings → Secrets and variables → Actions → New repository secret）：** `DEEPSEEK_API_KEY`，
+  和搜索服务其中一个：`EXA_API_KEY`（默认推荐：每月免费额度，不用信用卡）/ `TAVILY_API_KEY` / `SERPER_API_KEY` / `BRAVE_API_KEY`。
+- **手动跑一次：** GitHub → Actions → Lead robot (daily new shops) → Run workflow；结果写在那次执行的 Summary。
+- **测试：** `node site/tools/check-robot.js`（假的搜索、文章、DeepSeek，17 项）。改机器人要跑。
+- **数量要实在：** 公开文章大多是旧的，越找越少；12 月到 1 月新年清单出来时会多。每天实际几家看 Summary，不够就加搜索词（`topics()`）。
+
 ## 每天的定时任务（2026-11-08 起）
 
 > **2026-11-15 起不再做免费样板**（地推、实地拜访除外；见 `docs/00-decisions.md` 第 39 条）。定时任务已经全部停用。之后找到的商家只放进收件箱（有电话、没有网站），工作台按行业自动配一个示范网站（4 个精品示范 + 6 个电商模板），电话说可以就发示范网站 + 价钱，对方要就发书面报价。下面做样板的说明只留给地推时用。
