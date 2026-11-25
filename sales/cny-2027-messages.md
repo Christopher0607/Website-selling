@@ -11,33 +11,33 @@
 
 > 你好 {店名}，这里是 Cartsmith Studio。2027 年新年是 2 月 6 日，年饼订单通常 12 月就开始了。我们帮做年饼的店家开「新年预购网店」：客人自己选年饼、选取货或送货日期、用 DuitNow QR 付款，你拿到一张整齐的订单表，不用再一则一则回 WhatsApp。
 > 新年示范网店，可以用手机试：https://butter-lantern.demo.cartsmithstudio.com/?fest=cny
-> 这一季前 3 家：我们先帮你做好上线，收到第一张网上订单之后才付 RM399。想 12 月初就开始接单的话，12 月 5 日前把产品和价钱发给我们就可以。直接回复这里，我们就帮你开始。
+> 不用先付钱：我们先帮你做好上线，这一季网上订单收 8% 服务费，最多 RM399，没有网上订单就不用付。想一次付清也可以：RM399，不抽成。想 12 月初就开始接单的话，12 月 5 日前把产品和价钱发给我们就可以。直接回复这里，我们就帮你开始。
 > —— Cartsmith Studio
 
 **English**
 
 > Hi {店名}, this is Cartsmith Studio. Chinese New Year falls on 6 February, and CNY cookie orders usually start in December. We set up festive pre-order shops for bakers: customers pick their jars, choose a collection or delivery date and pay by DuitNow QR, and you get one tidy order list instead of answering every WhatsApp.
 > A CNY demo you can try on your phone: https://butter-lantern.demo.cartsmithstudio.com/?fest=cny
-> For the first 3 shops this season, we put it live first and you pay the RM399 only after your first online order. To start taking orders in early December, send us your items and prices by 5 December. Just reply here and we will set it up.
+> Nothing to pay upfront: we put it live first, and you pay 8% of this season's online orders, never more than RM399. No online orders, nothing to pay. Or pay RM399 once, with no fees on orders. To start taking orders in early December, send us your items and prices by 5 December. Just reply here and we will set it up.
 > Cartsmith Studio
 
 **Bahasa Malaysia**
 
 > Salam {店名}, ini Cartsmith Studio. Tahun Baru Cina jatuh pada 6 Februari, dan tempahan kuih Tahun Baru Cina biasanya bermula Disember. Kami sediakan kedai pra-tempahan perayaan: pelanggan pilih balang, pilih tarikh ambil atau hantar dan bayar dengan DuitNow QR, dan anda dapat satu senarai tempahan yang kemas, tanpa membalas setiap WhatsApp.
 > Demo CNY yang boleh dicuba di telefon: https://butter-lantern.demo.cartsmithstudio.com/?fest=cny
-> Untuk 3 kedai pertama musim ini, kami siapkan dan lancarkan dahulu, dan anda bayar RM399 hanya selepas tempahan online pertama. Untuk mula terima tempahan awal Disember, hantar item dan harga sebelum 5 Disember. Balas sahaja di sini dan kami mulakan.
+> Tiada bayaran pendahuluan: kami siapkan dan lancarkan dahulu, dan anda bayar 8% daripada tempahan online musim ini, tidak lebih daripada RM399. Tiada tempahan online, tiada bayaran. Atau bayar RM399 sekali, tanpa caj atas tempahan. Untuk mula terima tempahan awal Disember, hantar item dan harga sebelum 5 Disember. Balas sahaja di sini dan kami mulakan.
 > Cartsmith Studio
 
 ## 2. 第二条（第一条发出 3 天后还没回）
 
 **中文**
 
-> 你好 {店名}，Cartsmith Studio 再跟你说一声新年预购网店的事。客人在网店下单、付款、选取货时间，你每天打开手机就看到要做多少罐、哪天谁来拿。前 3 家先上线、有网上订单才付 RM399，满了我们会照实说。12 月 5 日前给产品和价钱，12 月初就能开始接单。回复「好」，我们就把需要的资料清单发给你。
+> 你好 {店名}，Cartsmith Studio 再跟你说一声新年预购网店的事。客人在网店下单、付款、选取货时间，你每天打开手机就看到要做多少罐、哪天谁来拿。可以先不付钱：网上订单收 8%，最多 RM399；或一次付 RM399，不抽成。12 月 5 日前给产品和价钱，12 月初就能开始接单。回复「好」，我们就把需要的资料清单发给你。
 > —— Cartsmith Studio
 
 **English**
 
-> Hi {店名}, Cartsmith Studio again about the CNY pre-order shop. Customers order, pay and choose their collection time on the shop, and each day your phone shows how many jars to bake and who is collecting when. The first 3 shops go live first and pay the RM399 only after their first online order; we will tell you honestly once those places are taken. Send your items and prices by 5 December to start taking orders in early December. Reply "OK" and we will send you the short list of what we need.
+> Hi {店名}, Cartsmith Studio again about the CNY pre-order shop. Customers order, pay and choose their collection time on the shop, and each day your phone shows how many jars to bake and who is collecting when. You can start with nothing upfront and pay 8% of the online orders, never more than RM399, or pay RM399 once with no fees on orders. Send your items and prices by 5 December to start taking orders in early December. Reply "OK" and we will send you the short list of what we need.
 > Cartsmith Studio
 
 ## 3. 最后一条（第二条发出 4–5 天后还没回）
@@ -67,4 +67,4 @@
 
 - 号码是旧报道里的（工作台卡片的「先确认」会写）：先看对方 IG / Facebook 最近有没有在卖，号码打不通或已经不做就标「不需要」。
 - 对方说不要：照规矩标「不再联系」，不要再发。
-- 「前 3 家」是真的：第 3 家开始做之后，就把这句改成「这一季的名额已经满了」或拿掉，不要假装还有名额。
+- 2026-11-25 起（决定第 45 条）不再限「前 3 家」：节日网店一律可以「先不付钱，网上订单收 8%，最多 RM399」或「一次付 RM399，不抽成」。8% 怎么算：经网店下的订单（不含运费，取消 / 退款的不算），每月底按网店的订单报表开单，7 天内 DuitNow 转账；收满 RM399 就不再收。

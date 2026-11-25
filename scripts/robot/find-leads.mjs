@@ -90,7 +90,7 @@ async function post(url, body, headers) {
   return res.json();
 }
 // pages we never open: social networks and marketplaces (their terms), delivery apps, video, and Singapore-only guides
-const SKIP_HOST = /(^|\.)(instagram|facebook|fb|tiktok|youtube|twitter|x|threads|shopee|lazada|grab|foodpanda|carousell|mudah|pinterest|lemon8-app|reddit|wikipedia|linkedin)\.|\.sg$|honeycombers|eatbook|sethlui\.com\/.*singapore|timeout\.com\/singapore|hungrygowhere/i;
+const SKIP_HOST = /(^|\.)(instagram|facebook|fb|tiktok|youtube|twitter|x|threads|shopee|lazada|grab|foodpanda|carousell|mudah|pinterest|lemon8-app|reddit|wikipedia|linkedin)\.|\.sg$|honeycombers|eatbook|sethlui\.com\/.*singapore|timeout\.com\/singapore|hungrygowhere|(^|\.)(exa\.ai|google\.|beecost|priceprice|iprice)|\/search\?/i;
 
 // ---------------------------------------------------------------- page text
 function pageText(html) {
@@ -118,8 +118,9 @@ async function getPage(url) {
 const SYSTEM = `You read a web article and list the small Malaysian food businesses it recommends that sell baked goods, festive cookies, kuih, cakes, desserts or food gift boxes.
 Rules: copy names, Instagram handles and phone numbers EXACTLY as written in the article (a number may also appear inside a [https://wa.me/60...] link); never guess or complete a number; leave a field empty when the article does not say it.
 Skip businesses in Singapore or outside Malaysia, hotels, restaurant groups, supermarkets, big brands and chains with 5 or more outlets.
-Answer with ONE json object only: {"article_title":"","article_year":"","malaysia":true,"businesses":[{"name":"","instagram":"","whatsapp":"","phone":"","email":"","website":"","area":"","address":"","sells":"","price":"","notes":"","language":"zh | en | ms","hotel_or_chain":false}]}
-"language": zh for Chinese-run shops (Chinese names, CNY bakers), ms for Malay-run shops (Malay names, kuih raya, kek lapis), otherwise en. "notes": years in business, awards, outlets, anything that shows they do well (short). "website": a website or online shop the article gives for this business (own domain, Shopify, EasyStore, StoreHub, Beepit, Oddle and the like), else empty.`;
+Answer with ONE json object only: {"article_title":"","article_year":"","malaysia":true,"own_page":false,"businesses":[{"name":"","instagram":"","whatsapp":"","phone":"","email":"","website":"","area":"","address":"","sells":"","price":"","notes":"","language":"zh | en | ms","hotel_or_chain":false}]}
+"language": zh for Chinese-run shops (Chinese names, CNY bakers), ms for Malay-run shops (Malay names, kuih raya, kek lapis), otherwise en. "notes": years in business, awards, outlets, anything that shows they do well (short). "website": a website or online shop the article gives for this business (own domain, Shopify, EasyStore, StoreHub, Beepit, Oddle and the like), else empty.
+"own_page": true when this page is not an article about other businesses but a business's OWN website or online shop (its home, shop, order, about, FAQ or contact page); then that business already has a website.`;
 async function extract(url, page) {
   const key = E.DEEPSEEK_API_KEY;
   const base = (E.DEEPSEEK_BASE_URL || 'https://api.deepseek.com').replace(/\/$/, '');
@@ -149,7 +150,11 @@ function mobile(s) { // Malaysian mobile in 01x form, or ''
 const fmtMobile = (d) => d.slice(0, 3) + '-' + d.slice(3, d.length - 4) + ' ' + d.slice(-4);
 const norm = (s) => String(s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
 const handle = (s) => String(s || '').trim().replace(/^@/, '').replace(/^https?:\/\/(www\.)?instagram\.com\//i, '').replace(/[/?#].*$/, '').toLowerCase();
-const OWN_SITE_OK = /facebook|instagram|linktr|wa\.me|whatsapp|carrd|heylink|blogspot|wixsite|shopee|lazada|tiktok|google\.com\/forms|forms\.gle|jotform/i;
+const OWN_SITE_OK = /facebook|instagram|linktr|wa\.me|whatsapp|carrd|heylink|blogspot|wixsite|msha\.ke|shopee|lazada|tiktok|google\.com\/forms|forms\.gle|jotform/i;
+// a page on the shop's own domain (bakingmommymiri.com, tartnenas.my ...) means they already have a website; free link pages and
+// free site builders (msha.ke, linktree, wixsite, blogspot, carrd) do not count, like scripts/local/check-domains.sh
+const ownDomainPage = (url, out) => { try { const h = new URL(url).hostname; return !!out.own_page && !OWN_SITE_OK.test(h); } catch { return false; } };
+const hostHasName = (url, b) => { try { const h = norm(new URL(url).hostname.replace(/^www\./, '').split('.')[0]); return [norm(b.name), norm(handle(b.instagram))].some((n) => n.length >= 5 && (h.includes(n) || (h.length >= 5 && n.includes(h)))); } catch { return false; } };
 function slugsOf(b) {
   const n = b.name.toLowerCase().replace(/\(.*?\)/g, '').replace(/&/g, 'and');
   const s = new Set([n.replace(/[^a-z0-9]/g, ''), n.replace(/\b(and|the)\b/g, '').replace(/[^a-z0-9]/g, ''), handle(b.instagram).replace(/[^a-z0-9]/g, '')]);
@@ -237,6 +242,7 @@ async function main() {
     stats.pages++;
     const out = await extract(url, page);
     if (!out || out.malaysia === false || !Array.isArray(out.businesses)) return;
+    if (ownDomainPage(url, out)) { stats.ownSite += out.businesses.length; return; }
     const pageDigits = digits(page.text);
     const pageLow = page.text.toLowerCase();
     const year = String(out.article_year || page.date || '').slice(0, 4);
@@ -255,7 +261,7 @@ async function main() {
       if (b.instagram && !pageLow.includes(b.instagram)) b.instagram = '';
       if (b.hotel_or_chain) { stats.chain++; continue; }
       if (isKnown(kn, b) || leads.some((l) => digits(l.whatsapp).slice(-9) === m.slice(-9))) { stats.known++; continue; }
-      if (b.website && !OWN_SITE_OK.test(b.website)) { stats.ownSite++; continue; }
+      if ((b.website && !OWN_SITE_OK.test(b.website)) || (hostHasName(url, b) && !OWN_SITE_OK.test(url))) { stats.ownSite++; continue; }
       const site = await websiteOf(b);
       if (site.own) { stats.ownSite++; continue; }
       const id = `r${TODAY.replace(/-/g, '')}-${norm(b.name).slice(0, 30) || m.slice(-6)}`;
@@ -280,7 +286,7 @@ async function main() {
           `Website check ${TODAY} (${slugsOf(b).join(' ')} .com/.com.my/.my): ${site.maybe ? `a same-name domain ${site.maybe.domain} is up (title "${site.maybe.title}"), maybe not theirs` : 'no own website found'}.`,
           old ? 'The article is a few years old: they may have changed the number or stopped.' : '',
           'Found automatically by the lead robot; check the article before sending.',
-          'Angle: festive pre-order shop (RM399, live in 3 working days; first 3 shops pay only after their first online order), or the RM800 starter website. Demo: Butter & Lantern ?fest=cny (?fest=raya for Malay bakers).'].filter(Boolean).join(' ').slice(0, 2900),
+          'Angle: festive pre-order shop (live in 3 working days; RM399 once, or nothing upfront and 8% of the online orders, never more than RM399), or the RM800 starter website. Demo: Butter & Lantern ?fest=cny (?fest=raya for Malay bakers).'].filter(Boolean).join(' ').slice(0, 2900),
       });
       sources.add(url);
       stats.kept++;

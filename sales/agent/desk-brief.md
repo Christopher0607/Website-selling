@@ -151,9 +151,10 @@ lost · no_response · do_not_contact. "Next follow-up" and "next call" dates ar
   (CNY is on 6 Feb 2027; cookie / kuih / gift orders start in December) to shops that sell CNY cookies, pineapple tarts,
   kuih, cakes or gift boxes. Lead with one sentence: their CNY orders in one link (customers pick items, date and slot, and
   pay by DuitNow QR or online), live in 3 working days, instead of answering every WhatsApp one by one. Show the CNY demo
-  https://butter-lantern.demo.cartsmithstudio.com/?fest=cny. Offer for the first 3 shops: we put it live first and they
-  pay the RM399 only after their first online order (items, prices and photos within 2 working days; link in their IG bio
-  and WhatsApp status; we may show it as an example; no online order by 6 Feb 2027 = nothing to pay, we take it down).
+  https://butter-lantern.demo.cartsmithstudio.com/?fest=cny. Two ways to pay (decision 45, 2026-11-25): RM399 once
+  with no fees on orders, or nothing upfront and 8% of the season's online orders, never more than RM399 (no online orders =
+  nothing to pay; billed monthly from the order report; items, prices and photos within 2 working days; link in their IG bio
+  and WhatsApp status). Full websites never take a cut of orders.
   Deadline to use in messages: to take orders from early December, send the items by 5 December. Do not pitch the other
   packages unless they ask.
 - Position (decided 2026-11-17, decision 43): we are the shop's own brand website + online orders with no commission,

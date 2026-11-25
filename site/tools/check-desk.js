@@ -759,7 +759,7 @@ const KEY = process.env.DESK_TEST_KEY || 'testpass123';
     const f3 = ((await api5({ action: 'followup', id: 'p973' })).item || {}).followup || '';
     const noQ = (t) => !/[?？]/.test(t.replace(/https?:\/\/\S+/g, ''));
     if (on) {
-      ok(/新年预购网店/.test(f1) && /Kuih Kapit House/.test(f1) && /RM399/.test(f1) && /12 月 5 日/.test(f1) && /Cartsmith Studio/.test(f1) && noQ(f1), 'CNY push: a baker contacted once gets the second CNY message (Chinese, RM399 after the first order, 5 Dec, no questions)');
+      ok(/新年预购网店/.test(f1) && /Kuih Kapit House/.test(f1) && /RM399/.test(f1) && /8%/.test(f1) && !/前 3 家/.test(f1) && /12 月 5 日/.test(f1) && /Cartsmith Studio/.test(f1) && noQ(f1), 'CNY push: a baker contacted once gets the second CNY message (Chinese, RM0 upfront and 8% up to RM399 or RM399 once, 5 Dec, no questions)');
       ok(/last message about the CNY pre-order shop/.test(f2) && /butter-lantern\.demo\.cartsmithstudio\.com\/\?fest=cny/.test(f2) && noQ(f2), 'CNY push: after two messages, the last one (English, with the CNY demo)');
       ok(f3 && !/CNY pre-order shop|新年预购网店/.test(f3), 'CNY push: a restaurant keeps the usual follow-up');
     } else {

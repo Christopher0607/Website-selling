@@ -21,7 +21,9 @@ ${'<p>More words about cookies and the new year so the page is long enough.</p>'
 const PAGE_B = `<html><head><title>Kuih raya sellers</title></head><body><h2>Epsilon Tarts</h2><p>Tart nenas, WhatsApp +6017-111 2222, Shah Alam.</p>
 ${'<p>Raya cookies and more text for length.</p>'.repeat(15)}</body></html>`;
 
+const PAGE_C = `<html><head><title>Theta Bakes | Order online</title></head><body><h1>Theta Bakes</h1><p>Order our CNY cookies. WhatsApp 012-777 8888.</p>${'<p>Shop text.</p>'.repeat(40)}</body></html>`;
 const AI = {
+  [`${B}/page/c`]: { article_title: 'Theta Bakes', malaysia: true, own_page: true, businesses: [{ name: 'Theta Bakes', whatsapp: '012-777 8888', sells: 'CNY cookies', language: 'zh' }] },
   [`${B}/page/a`]: { article_title: '10 home bakers for CNY cookies', article_year: '2025', malaysia: true, businesses: [
     { name: 'Alpha Bakes', instagram: '@alphabakes', whatsapp: '012-345 6789', area: 'Cheras', sells: 'Pineapple tarts, peanut cookies', language: 'zh', hotel_or_chain: false },
     { name: 'Beta Kuih', whatsapp: '60198765432', sells: 'Kuih kapit, kuih bangkit', language: 'zh', hotel_or_chain: false },
@@ -43,14 +45,14 @@ const server = http.createServer((req, res) => {
     if (req.url === '/search') {
       if (req.headers['x-api-key'] !== 'exa-test') return json({ error: 'bad key' }, 401);
       return json({ results: [{ url: `${B}/page/a`, title: 'a' }, { url: `${B}/page/b`, title: 'b' }, { url: 'https://www.instagram.com/someone/', title: 'ig' },
-        { url: 'https://thehoneycombers.com/singapore/cookies', title: 'sg' }, { url: `${B}/page/missing`, title: 'gone' }] });
+        { url: 'https://thehoneycombers.com/singapore/cookies', title: 'sg' }, { url: `${B}/page/missing`, title: 'gone' }, { url: `${B}/page/c`, title: 'own site' }, { url: 'https://exa.ai/library/place/abc', title: 'exa' }] });
     }
     if (req.url === '/chat/completions') {
       const user = JSON.parse(body).messages[1].content;
       const url = (user.match(/^URL: (\S+)/) || [])[1];
       return json({ choices: [{ message: { content: JSON.stringify(AI[url] || { malaysia: true, businesses: [] }) } }] });
     }
-    if (req.url === '/page/a' || req.url === '/page/b') { res.writeHead(200, { 'content-type': 'text/html' }); return res.end(req.url === '/page/a' ? PAGE_A : PAGE_B); }
+    if (req.url === '/page/a' || req.url === '/page/b' || req.url === '/page/c') { res.writeHead(200, { 'content-type': 'text/html' }); return res.end({ '/page/a': PAGE_A, '/page/b': PAGE_B, '/page/c': PAGE_C }[req.url]); }
     if (req.url === '/dom/deltacakes.com') { res.writeHead(200, { 'content-type': 'text/html' }); return res.end('<title>Delta Cakes | Order online</title>'); }
     if (req.url === '/dom/alphabakes.com') { res.writeHead(200, { 'content-type': 'text/html' }); return res.end('<title>alphabakes.com is for sale</title> domain is for sale'); }
     if (req.url === '/dom/betakuih.my') { res.writeHead(200, { 'content-type': 'text/html' }); return res.end('<title>Beta Engineering Sdn Bhd</title>'); }
@@ -82,13 +84,14 @@ server.listen(PORT, () => {
     ok(!by['Zeta Fake'], 'a shop whose number is not on the page is left out (AI mistake)');
     ok(!by['Gamma Hotel'], 'hotels and chains are left out');
     ok(!by['Delta Cakes'], 'a shop with its own website (deltacakes.com, title has the name) is left out');
+    ok(!by['Theta Bakes'], 'a shop found on its own website (not an article) is left out: it already has a website');
     ok(!by['Known Shop'] && !by['No Number Bakery'], 'shops already in the inbox and shops without a mobile number are left out');
     ok(by['Beta Kuih'] && /betakuih\.my/.test(by['Beta Kuih'].verify) && by['Alpha Bakes'] && !/alphabakes\.com/.test(by['Alpha Bakes'].verify),
       'a same-name domain with another title is only a note to check; a parked domain is ignored');
     ok(doc.leads.every((l) => /^r20261125-[a-z0-9]+$/.test(l.id) && l.name && l.input && l.why && l.verify && l.area && l.address && ['zh', 'en', 'ms'].includes(l.language) && l.template && l.priority),
       'every lead has the inbox fields (id, name, input, why, verify, area, address, language, template, priority)');
     ok(by['Alpha Bakes'] && /2025/.test(by['Alpha Bakes'].verify) && /localhost:9940\/page\/a/.test(by['Alpha Bakes'].contact_source), 'the card says where the number came from and how old the article is');
-    ok(!hits.some((h) => /instagram|honeycombers/.test(h)), 'Instagram and Singapore pages are never opened');
+    ok(!hits.some((h) => /instagram|honeycombers|exa\.ai/.test(h)), 'Instagram, Singapore and search-engine pages are never opened');
     const state = JSON.parse(fs.readFileSync(path.join(dir, 'robot-state.json'), 'utf8'));
     ok(state.urls[`${B}/page/a`] === '2026-11-25' && Object.keys(state.queries).length === 3, 'remembers the pages it read and the searches it made');
 
